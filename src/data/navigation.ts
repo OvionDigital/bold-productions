@@ -18,6 +18,11 @@ export interface NavGroup extends NavLink {
 
 export const cta: NavLink = { label: 'Bold to Action', href: '/offerte-aanvragen' };
 
+export const breadcrumbLabels = {
+  nav: 'Breadcrumb',
+  home: 'Home',
+};
+
 export const header = {
   menuLabel: 'Menu',
   logoAlt: 'Logo Bold Productions.',

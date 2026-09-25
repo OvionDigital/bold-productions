@@ -57,6 +57,7 @@ npm run deploy:preview  # build + wrangler pages deploy (branch preview)
 - **Twee sectie-afstanden**: `--section-padding` (Webflow `.section`: 96, ≤991 48) en `--section-space` (Webflow `var(--section-padding)` elders: altijd 96). Kijk in de Webflow-CSS welke van toepassing is.
 - **Scroll-in-animatie**: zet `data-animate` op een element (Webflow: `.animate-on-scroll`).
 - Regeleinden in titels: `\n` in de data. `Heading` zet dat om naar `<br>`.
+- **Gedeelde inhoud** staat in eigen databestanden en wordt op id gekozen: `src/data/testimonials.ts` (`pickTestimonials`), `src/data/logos.ts`, `src/data/cases.ts`. Nooit kopiëren per pagina.
 - Opgemaakte tekst in data: het model uit `src/lib/rich.ts` (geen HTML-strings), renderen met `RichText`.
 - Fonts: Gate 400 normal/italic (Webflow-300 → 400), Inter variabel 300–700 (Webflow-400/600/800 → 300/500/700). Gebruik `--fw-light|medium|bold|display`.
 
@@ -108,6 +109,7 @@ Houd dit bij bij elk nieuw component.
 | Component          | Uitleg                                                                      |
 | ------------------ | --------------------------------------------------------------------------- |
 | `Header.astro`     | Vaste navigatiebalk: logo, MegaMenu, CTA en menuknop (+ MenuPanel).         |
+| `Breadcrumbs.astro` | Kruimelpad onder de hero (home-icoon, stappen, huidige pagina).          |
 | `MegaMenu.astro`   | Desktop-dropdowns (≥1280px), CSS hover/focus-within.                        |
 | `MenuPanel.astro`  | Volledig menupaneel met overlay en accordeongroepen (gedrag: `menu.ts`).     |
 | `Footer.astro`     | Footer: linkkolommen (data), contact, logo + socials, juridische links, copyright. |

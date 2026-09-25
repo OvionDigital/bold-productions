@@ -16,7 +16,8 @@ import { tokensByPrefix } from '../lib/tokens';
 import Header from '../components/layout/Header.astro';
 import WhatsAppButton from '../components/layout/WhatsAppButton.astro';
 import Footer from '../components/layout/Footer.astro';
-import { contact, copyright, cta, footerColumns, footerLogoAlt, header, legalLinks, mainNav, socials } from '../data/navigation';
+import Breadcrumbs from '../components/layout/Breadcrumbs.astro';
+import { breadcrumbLabels, contact, copyright, cta, footerColumns, footerLogoAlt, header, legalLinks, mainNav, socials } from '../data/navigation';
 import Hero from '../components/sections/Hero.astro';
 import LogoMarquee from '../components/sections/LogoMarquee.astro';
 import IntroHighlight from '../components/sections/IntroHighlight.astro';
@@ -453,6 +454,17 @@ const nav = [
       />
       <WhatsAppButton href={contact.whatsapp.href} label={contact.whatsapp.label} />
     </div>
+
+    <Container>
+      <p class="sg-note sg-note--spaced">
+        <code>&lt;Breadcrumbs items homeLabel label /&gt;</code>: kruimelpad onder de hero; laatste item = huidige pagina.
+      </p>
+    </Container>
+    <Breadcrumbs
+      items={[{ label: 'Events', href: '/events' }, { label: 'Aftermovie' }]}
+      homeLabel={breadcrumbLabels.home}
+      label={breadcrumbLabels.nav}
+    />
 
     <Container>
       <p class="sg-note sg-note--spaced"><code>Footer</code>: kolommen, contact, logo en socials, juridische links.</p>

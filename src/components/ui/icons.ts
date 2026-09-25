@@ -11,6 +11,16 @@ export const icons = {
   'arrow-left': { viewBox: '0 0 24 24', stroke: true, paths: ['m12 19-7-7 7-7', 'M19 12H5'] },
   'arrow-down': { viewBox: '0 0 24 24', stroke: true, paths: ['M12 5v14', 'm19 12-7 7-7-7'] },
   'chevron-down': { viewBox: '0 0 24 24', stroke: true, paths: ['m6 9 6 6 6-6'] },
+  'chevron-right': { viewBox: '0 0 24 24', stroke: true, paths: ['m9 18 6-6-6-6'] },
+  plus: { viewBox: '0 0 24 24', stroke: true, paths: ['M5 12h14', 'M12 5v14'] },
+  home: {
+    viewBox: '0 0 24 24',
+    stroke: true,
+    paths: [
+      'M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8',
+      'M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z',
+    ],
+  },
   menu: { viewBox: '0 0 24 24', stroke: true, paths: ['M4 5h16', 'M4 12h16', 'M4 19h16'] },
   close: { viewBox: '0 0 24 24', stroke: true, paths: ['M18 6 6 18', 'm6 6 12 12'] },
   quote: {

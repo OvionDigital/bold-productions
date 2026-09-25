@@ -16,24 +16,12 @@ import polaroid4 from '../assets/images/polaroids/polaroid-4.jpg';
 import polaroid5 from '../assets/images/polaroids/polaroid-5.jpg';
 import polaroid6 from '../assets/images/polaroids/polaroid-6.jpg';
 import polaroid7 from '../assets/images/polaroids/polaroid-7.jpg';
-import testimonialReinier from '../assets/images/testimonials/reinier-peters.jpg';
-import testimonialRalph from '../assets/images/testimonials/ralph-buisman.jpg';
-import testimonialMerijn from '../assets/images/testimonials/merijn-peters.jpg';
-import testimonialManon from '../assets/images/testimonials/manon-diks.jpg';
-import testimonialDorpsfeest from '../assets/images/testimonials/dorpsfeest-wehl.jpg';
 import timelineVoor from '../assets/images/home/tijdlijn-voor-legends-of-rock.jpg';
 import timelineTijdens from '../assets/images/home/tijdlijn-tijdens-gitarist.jpg';
 import timelineNa from '../assets/images/home/tijdlijn-na-festivalgangers.jpg';
 import heroImage from '../assets/images/home/hero-festival-optreden.jpg';
-import logoVunzigeDeuntjes from '../assets/logos/vunzige-deuntjes.png';
-import logoProost from '../assets/logos/proost.png';
-import logoZinInDeZomer from '../assets/logos/zin-in-de-zomer.png';
-import logoDorpsfeestWehl from '../assets/logos/dorpsfeest-wehl.png';
-import logoSoenda from '../assets/logos/soenda.webp';
-import logoBospop from '../assets/logos/bospop.svg';
-import logoZwarteCross from '../assets/logos/zwarte-cross.svg';
-import logoDrift from '../assets/logos/drift.svg';
-import logoDoorgedraaid from '../assets/logos/doorgedraaid.png';
+import { clientLogos, trustedByTitle } from './logos';
+import { pickTestimonials } from './testimonials';
 
 export const meta = {
   title: 'Bold Productions | Event & Artiesten Content',
@@ -57,18 +45,8 @@ export const hero: HeroProps = {
 };
 
 export const trustedBy: LogoMarqueeProps = {
-  title: 'Vertrouwd door',
-  logos: [
-    { src: logoVunzigeDeuntjes, alt: 'Vunzige Deuntjes' },
-    { src: logoProost, alt: 'Proost' },
-    { src: logoZinInDeZomer, alt: 'Zin in de Zomer' },
-    { src: logoDorpsfeestWehl, alt: 'Dorpsfeest Wehl' },
-    { src: logoSoenda, alt: 'Soenda' },
-    { src: logoBospop, alt: 'Bospop' },
-    { src: logoZwarteCross, alt: 'Zwarte Cross' },
-    { src: logoDrift, alt: 'Drift' },
-    { src: logoDoorgedraaid, alt: 'Doorgedraaid' },
-  ],
+  title: trustedByTitle,
+  logos: clientLogos,
 };
 
 export const intro: IntroHighlightProps = {
@@ -164,42 +142,7 @@ export const testimonials: TestimonialsProps = {
   title: 'En dit vonden ze',
   gradient: 'orange',
   carousel: { label: 'Testimonials', prevLabel: 'Vorige', nextLabel: 'Volgende' },
-  items: [
-    {
-      quote:
-        'Een promo laten maken door BOLD Productions! Laagdrempelig contact met veel persoonlijke aandacht. Een supergave promo geschoten uiteindelijk met leuke mensen!',
-      // Artiesten- en privénaam zijn gelijk: één keer tonen
-      name: 'Reinier Peters',
-      image: { src: testimonialReinier, alt: 'Reinier Peters' },
-    },
-    {
-      quote:
-        'Wanneer je next level content vraagt, maar er nog een schepje bovenop gedaan wordt. Fijn in de samenwerking, denkt volledig mee om uw event in video en zelfs fotografie nog mooier vast te leggen dan het al was.',
-      name: 'Ralph Buisman',
-      organisation: 'RHBFOTO',
-      image: { src: testimonialRalph, alt: 'Ralph Buisman' },
-    },
-    {
-      quote:
-        'Wij hebben Bold Productions de opdracht gegeven om een bandpromo te maken en het resultaat mag er zeker zijn! Wij zijn zeer tevreden en we kijken nu al uit naar een volgende samenwerking.',
-      name: 'Merijn Peters',
-      organisation: 'KARAKTER',
-      image: { src: testimonialMerijn, alt: 'Merijn Peters' },
-    },
-    {
-      quote:
-        'Bold snapt wat ik en de klant willen qua beeld zonder teveel te zeggen en voert dat uit in detail. Tevens zijn ze ook hele fijne jongens in de omgang! Altijd een feestje om samen te werken.',
-      name: 'Manon Diks',
-      organisation: 'De Live Formule',
-      image: { src: testimonialManon, alt: 'Manon Diks' },
-    },
-    {
-      quote:
-        'Dankzij de foto’s en video’s leefde Dorpsfeest Wehl al weken vóór het eerste biertje. Tijdens het weekend voelden we de kracht van content.',
-      organisation: 'Dorpsfeest Wehl',
-      image: { src: testimonialDorpsfeest, alt: 'Dorpsfeest Wehl' },
-    },
-  ],
+  items: pickTestimonials(['reinier-peters', 'ralph-buisman', 'merijn-peters', 'manon-diks', 'dorpsfeest-wehl']),
 };
 
 export const backstage: PolaroidStackProps = {

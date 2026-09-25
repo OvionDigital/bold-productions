@@ -16,7 +16,7 @@ export interface HeroProps {
   title: string;
   titleAccent: string;
   eyebrow: string;
-  primaryCta: { label: string; href: string };
+  primaryCta?: { label: string; href: string };
   secondaryCta?: { label: string; href: string; icon?: IconName };
   image: { src: ImageMetadata; alt: string };
   video?: { id: string; hash?: string; title: string; loadOnMobile?: boolean };
@@ -76,7 +76,7 @@ const fallback = await getImage({ src: image.src, width: 1280, format: 'jpg' });
       <div class="hero__bottom-inner">
         <Eyebrow text={eyebrow} class="hero__eyebrow" />
         <div class="hero__buttons">
-          <Button label={primaryCta.label} href={primaryCta.href} size="large" />
+          {primaryCta && <Button label={primaryCta.label} href={primaryCta.href} size="large" />}
           {
             secondaryCta && (
               <Button

@@ -1,0 +1,99 @@
+---
+/**
+ * Kruimelpad onder de hero (Webflow .breadcrumbs): home-icoon, tussenstappen en de
+ * huidige pagina. Het laatste item is de huidige pagina (zonder link).
+ */
+import Icon from '../ui/Icon.astro';
+
+export interface Crumb {
+  label: string;
+  href?: string;
+}
+
+interface Props {
+  /** Stappen na 'home'; het laatste item is de huidige pagina */
+  items: Crumb[];
+  homeLabel: string;
+  label: string;
+}
+
+const { items, homeLabel, label } = Astro.props;
+---
+
+<nav class="breadcrumbs" aria-label={label}>
+  <ol class="breadcrumbs__list" role="list">
+    <li class="breadcrumbs__item">
+      <a href="/" class="breadcrumbs__link" aria-label={homeLabel}>
+        <Icon name="home" size="var(--icon-lg)" />
+      </a>
+    </li>
+    {
+      items.map((item, index) => {
+        const isCurrent = index === items.length - 1;
+        return (
+          <li class="breadcrumbs__item">
+            <Icon name="chevron-right" size="var(--icon-sm)" class="breadcrumbs__sep" />
+            {isCurrent || !item.href ? (
+              <span class="breadcrumbs__link breadcrumbs__link--current" aria-current={isCurrent ? 'page' : undefined}>
+                {item.label}
+              </span>
+            ) : (
+              <a href={item.href} class="breadcrumbs__link">
+                {item.label}
+              </a>
+            )}
+          </li>
+        );
+      })
+    }
+  </ol>
+</nav>
+
+<style>
+  .breadcrumbs {
+    padding: var(--space-24) var(--container-padding-wide);
+  }
+
+  .breadcrumbs__list {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: var(--space-16);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .breadcrumbs__item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-16);
+  }
+
+  .breadcrumbs__item :global(.breadcrumbs__sep) {
+    color: var(--color-gray-light);
+  }
+
+  .breadcrumbs__link {
+    display: flex;
+    color: var(--color-gray-light);
+    font-size: var(--fs-base);
+    text-decoration: none;
+    transition: color var(--duration-fast);
+  }
+
+  a.breadcrumbs__link:hover {
+    color: var(--color-orange);
+  }
+
+  .breadcrumbs__link--current {
+    color: var(--color-white);
+  }
+
+  @media (max-width: 479px) {
+    .breadcrumbs__list,
+    .breadcrumbs__item {
+      gap: var(--space-12);
+    }
+  }
+</style>

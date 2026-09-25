@@ -1,0 +1,14 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/sections/Hero.astro';
+import Breadcrumbs from '../components/layout/Breadcrumbs.astro';
+import LogoMarquee from '../components/sections/LogoMarquee.astro';
+import { breadcrumbLabels } from '../data/navigation';
+import { breadcrumbs, hero, meta, trustedBy } from '../data/events';
+---
+
+<BaseLayout title={meta.title} description={meta.description}>
+  <Hero {...hero} />
+  <Breadcrumbs items={breadcrumbs} homeLabel={breadcrumbLabels.home} label={breadcrumbLabels.nav} />
+  <LogoMarquee {...trustedBy} />
+</BaseLayout>
