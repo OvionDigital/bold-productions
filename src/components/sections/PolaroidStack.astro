@@ -89,10 +89,17 @@ const rotations = ['-1.5deg', '1.2deg', '-0.8deg', '2deg', '-1.8deg', '0.6deg', 
    * Sticky en verticaal gecentreerd in de ruimte onder de vaste navbar.
    * De polaroidhoogte volgt uit de kolombreedte (cqi = breedte van de lijst):
    * container → rij (+ goten) → kolom → foto (min witte rand) / verhouding + randen.
+   * De breedte is begrensd zodat de polaroid maximaal --polaroid-max-fill van de
+   * vrije schermhoogte (onder de navbar) inneemt.
    */
   .polaroids__item {
     --pl-inner: calc(min(var(--pl-max), 100cqi) - 2 * var(--container-padding));
-    --pl-col: calc((var(--pl-inner) + 2 * var(--column-gap)) * var(--pl-fraction) - 2 * var(--column-gap));
+    --pl-col-by-width: calc((var(--pl-inner) + 2 * var(--column-gap)) * var(--pl-fraction) - 2 * var(--column-gap));
+    --pl-col-by-height: calc(
+      ((100svh - var(--navbar-height)) * var(--polaroid-max-fill) - var(--space-12) - var(--space-24)) *
+        var(--polaroid-ratio) + 2 * var(--space-12)
+    );
+    --pl-col: min(var(--pl-col-by-width), var(--pl-col-by-height));
     --pl-height: calc(
       (var(--pl-col) - 2 * var(--space-12)) / var(--polaroid-ratio) + var(--space-12) + var(--space-24)
     );
@@ -103,7 +110,7 @@ const rotations = ['-1.5deg', '1.2deg', '-0.8deg', '2deg', '-1.8deg', '0.6deg', 
   }
 
   .polaroids__col {
-    width: calc(var(--pl-fraction) * 100%);
+    width: calc(var(--pl-col) + 2 * var(--column-gap));
     padding-inline: var(--column-gap);
   }
 

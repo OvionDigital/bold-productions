@@ -247,6 +247,7 @@
   --testimonials-heading-max: 900px;
   --polaroids-header-top: 144px; /* min-hoogte kop polaroidgalerij op mobiel (≤479: 120) */
   --polaroid-ratio: 1.5; /* beeldverhouding polaroidfoto's (3:2) */
+  --polaroid-max-fill: 0.75; /* max. deel van de vrije schermhoogte onder de navbar */
   --navbar-side-width: 350px; /* logo- en actieblok ≥1440 */
   --dropdown-min-width: 250px;
   --menu-panel-min-width: 500px;
