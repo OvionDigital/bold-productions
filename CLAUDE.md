@@ -124,7 +124,7 @@ Houd dit bij bij elk nieuw component.
 | `Hero.astro` | Schermvullende hero: titel + italic accentregel, eyebrow, 2 knoppen, poster-afbeelding (LCP) en optionele Vimeo-video. |
 | `LogoMarquee.astro` | Logostrip met kop tussen lijnen en eindeloze CSS-marquee van logo-tegels. |
 | `IntroHighlight.astro` | Gecentreerde Gate-introtekst met groene accenten en scroll-highlight per letter. |
-| `Timeline.astro` | Kop (titel + rich text) met genummerde stappen: foto + tekstblok met rookvideo, CTA; `reverse`, `gradient`. |
+| `Timeline.astro` | Kop (titel + rich text) met genummerde stappen: foto + tekstblok met rookvideo (knop per stap optioneel), CTA; `reverse`, `gradient`. |
 | `Testimonials.astro` | Kop + carousel met TestimonialCards over de volle breedte, rook- en B-achtergrond. |
 | `PolaroidStack.astro` | Kop + polaroids die bij scrollen over elkaar schuiven (pure CSS). |
 | `TextMedia.astro` | Tekst naast beeld (2:3) of Vimeo (1:1); `reverse`, `triangles`, `spacing` (margin/section), `intro` erboven, slot `content` voor bv. een formulier; `id="cinema"` = popcorn-cursor. |

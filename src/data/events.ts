@@ -5,8 +5,12 @@ import type { HeroProps } from '../components/sections/Hero.astro';
 import type { LogoMarqueeProps } from '../components/sections/LogoMarquee.astro';
 import type { Crumb } from '../components/layout/Breadcrumbs.astro';
 import type { TextMediaProps } from '../components/sections/TextMedia.astro';
+import type { TimelineProps } from '../components/sections/Timeline.astro';
 import heroImage from '../assets/images/events/hero-hrieps-festival.jpg';
 import optredenInTent from '../assets/images/events/optreden-in-tent.jpg';
+import preProductie from '../assets/images/events/tijdlijn-pre-productie.jpg';
+import productie from '../assets/images/events/tijdlijn-productie.jpg';
+import postProductie from '../assets/images/events/tijdlijn-post-productie.jpg';
 import { clientLogos, trustedByTitle } from './logos';
 
 export const meta = {
@@ -76,4 +80,71 @@ export const biggerThanTheDay: TextMediaProps = {
   triangles: true,
   spacing: 'section',
   animate: false,
+};
+
+export const timeline: TimelineProps = {
+  title: 'We schieten geen\nlosse flodders',
+  gradient: 'yellow',
+  reverse: true,
+  intro: [
+    {
+      p: [
+        'We schieten gericht, volgens plan. En dat plan maken we samen met jou. ',
+        { text: 'Wat wil je bereiken? Bij wie wil je dat bereiken? Wat moeten zij voelen?', em: true },
+      ],
+    },
+    {
+      p: [
+        'Klinkt misschien abstract, maar wij maken het concreet voor je. Je krijgt van ons een contentstrategie waarmee je ',
+        { text: 'visuele impact', strong: true },
+        ' maakt. Voor, tijdens en na je event.',
+      ],
+    },
+  ],
+  steps: [
+    {
+      number: '01',
+      title: 'Pre-productie',
+      text: [
+        {
+          p: [
+            'Hier wordt strategie ',
+            { text: 'tactiek', em: true },
+            '. Concept, draaiplanning en crew.. we brengen alles in lijn met de strategie.',
+          ],
+        },
+      ],
+      image: { src: preProductie, alt: 'Team Bold Productions tijdens een opname van een aftermovie.' },
+    },
+    {
+      number: '02',
+      title: 'Productie',
+      text: [
+        {
+          p: [
+            'Op locatie leggen we het ',
+            { text: 'moment suprême', em: true },
+            ' vast. Sfeer, actie en emotie. Alles komt voorbij, maar altijd met jouw doelstellingen in het vizier.',
+          ],
+        },
+      ],
+      image: { src: productie, alt: 'Team Bold Productions tijdens opname van Legends of Rock.' },
+    },
+    {
+      number: '03',
+      title: 'Post-productie',
+      text: [
+        {
+          p: [
+            'We monteren en editten het geschoten materiaal. En een deel daarvan is direct inzetbaar, als same-day edits. Ook krijg je advies over de juiste timing en kanalen.',
+          ],
+        },
+      ],
+      image: {
+        src: postProductie,
+        alt: 'Mike Ampting, eigenaar van Bold Productions, tijdens het editen van videobeelden.',
+      },
+    },
+  ],
+  cta: { label: "Let's talk strategy", href: '/offerte-aanvragen', accent: 'yellow' },
 };
