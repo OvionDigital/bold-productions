@@ -206,6 +206,7 @@
   --container-padding: 12px;
   --container-padding-wide: 48px; /* hero, navbar, fluid */
   --navbar-padding-y: 24px;
+  --navbar-height: 112px; /* vaste navbar, ≤767: 100 */
   --page-shapes-offset: 120vh; /* B-vormen beginnen onder de hero */
   --page-shapes-gap: 50vh;
 
@@ -245,7 +246,7 @@
   --testimonial-line-width: 200px;
   --testimonials-heading-max: 900px;
   --polaroids-header-top: 144px; /* min-hoogte kop polaroidgalerij op mobiel (≤479: 120) */
-  --polaroids-item-top: 290px; /* sticky polaroids, per breakpoint */
+  --polaroid-ratio: 1.5; /* beeldverhouding polaroidfoto's (3:2) */
   --navbar-side-width: 350px; /* logo- en actieblok ≥1440 */
   --dropdown-min-width: 250px;
   --menu-panel-min-width: 500px;
@@ -323,7 +324,6 @@
 
 @media (min-width: 1440px) {
   :root {
-    --polaroids-item-top: 293px;
     --testimonial-height: 624px;
     --container-max: 1320px;
     --container-max-plain: 1320px;
@@ -332,7 +332,6 @@
 
 @media (min-width: 1920px) {
   :root {
-    --polaroids-item-top: 301px;
     --testimonial-height: 804px;
     --container-max: 1680px;
     --container-max-plain: 1680px;
@@ -351,8 +350,8 @@
 
 @media (max-width: 767px) {
   :root {
+    --navbar-height: 100px;
     --polaroids-header-top: 120px;
-    --polaroids-item-top: 306px;
     --testimonial-height: 736.5px;
     --container-max: none;
     --container-max-plain: none;
@@ -365,7 +364,6 @@
 
 @media (max-width: 479px) {
   :root {
-    --polaroids-item-top: 264px;
     --testimonial-height: 547.5px;
     --container-padding: 16px;
     --container-padding-wide: 16px;

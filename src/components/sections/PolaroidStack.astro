@@ -75,31 +75,53 @@ const rotations = ['-1.5deg', '1.2deg', '-0.8deg', '2deg', '-1.8deg', '0.6deg', 
   }
 
   .polaroids__list {
+    /* Kolombreedte als deel van de rij; per breakpoint aangepast */
+    --pl-fraction: 0.833333;
+    --pl-max: var(--container-max);
+
     margin: 0;
     padding: 0;
     list-style: none;
+    container-type: inline-size;
   }
 
+  /*
+   * Sticky en verticaal gecentreerd in de ruimte onder de vaste navbar.
+   * De polaroidhoogte volgt uit de kolombreedte (cqi = breedte van de lijst):
+   * container → rij (+ goten) → kolom → foto (min witte rand) / verhouding + randen.
+   */
   .polaroids__item {
+    --pl-inner: calc(min(var(--pl-max), 100cqi) - 2 * var(--container-padding));
+    --pl-col: calc((var(--pl-inner) + 2 * var(--column-gap)) * var(--pl-fraction) - 2 * var(--column-gap));
+    --pl-height: calc(
+      (var(--pl-col) - 2 * var(--space-12)) / var(--polaroid-ratio) + var(--space-12) + var(--space-24)
+    );
+
     position: sticky;
-    top: var(--polaroids-item-top);
+    top: max(var(--navbar-height), calc(var(--navbar-height) + (100svh - var(--navbar-height) - var(--pl-height)) / 2));
     z-index: var(--z-base);
   }
 
   .polaroids__col {
-    width: 83.3333%;
+    width: calc(var(--pl-fraction) * 100%);
     padding-inline: var(--column-gap);
   }
 
   @media (min-width: 1440px) {
-    .polaroids__col {
-      width: 66.6667%;
+    .polaroids__list {
+      --pl-fraction: 0.666667;
     }
   }
 
   @media (max-width: 991px) {
-    .polaroids__col {
-      width: 100%;
+    .polaroids__list {
+      --pl-fraction: 1;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .polaroids__list {
+      --pl-max: 100cqi;
     }
   }
 
