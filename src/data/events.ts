@@ -7,12 +7,14 @@ import type { Crumb } from '../components/layout/Breadcrumbs.astro';
 import type { TextMediaProps } from '../components/sections/TextMedia.astro';
 import type { TimelineProps } from '../components/sections/Timeline.astro';
 import type { CaseSpotlightProps } from '../components/sections/CaseSpotlight.astro';
+import type { TestimonialsProps } from '../components/sections/Testimonials.astro';
 import heroImage from '../assets/images/events/hero-hrieps-festival.jpg';
 import optredenInTent from '../assets/images/events/optreden-in-tent.jpg';
 import preProductie from '../assets/images/events/tijdlijn-pre-productie.jpg';
 import productie from '../assets/images/events/tijdlijn-productie.jpg';
 import postProductie from '../assets/images/events/tijdlijn-post-productie.jpg';
 import { clientLogos, trustedByTitle } from './logos';
+import { pickTestimonials } from './testimonials';
 
 export const meta = {
   title: 'Eventcontent laten maken? | Bold Productions',
@@ -154,4 +156,12 @@ export const caseSpotlight: CaseSpotlightProps = {
   title: 'Uitgelichte case',
   gradient: 'green',
   caseSlug: 'pluggerz-x-zwarte-cross-2026',
+};
+
+export const testimonials: TestimonialsProps = {
+  eyebrow: 'Dit zeggen de',
+  title: 'Festivals',
+  gradient: 'orange',
+  carousel: { label: 'Testimonials', prevLabel: 'Vorige', nextLabel: 'Volgende' },
+  items: pickTestimonials(['ralph-buisman', 'dorpsfeest-wehl', 'siemen-peters']),
 };
