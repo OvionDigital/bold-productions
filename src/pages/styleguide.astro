@@ -14,7 +14,8 @@ import Heading from '../components/ui/Heading.astro';
 import SectionHeading from '../components/ui/SectionHeading.astro';
 import { tokensByPrefix } from '../lib/tokens';
 import Header from '../components/layout/Header.astro';
-import { cta, header, mainNav } from '../data/navigation';
+import WhatsAppButton from '../components/layout/WhatsAppButton.astro';
+import { contact, cta, header, mainNav } from '../data/navigation';
 import Hero from '../components/sections/Hero.astro';
 import { hero } from '../data/home';
 
@@ -410,7 +411,9 @@ const nav = [
         <h2 class="sg-title">Layout</h2>
         <p class="sg-note">
           <code>Header</code> (met <code>MegaMenu</code> en <code>MenuPanel</code>). De dropdowns verschijnen vanaf 1280px bij
-          hover of focus. De menuknop opent het paneel; dit kader houdt de vaste header en het paneel binnen de demo.
+          hover of focus. De menuknop opent het paneel; dit kader houdt de vaste header, het paneel en de
+          <code>WhatsAppButton</code> binnen de demo. <code>PageBackground</code> (textuur + B-vormen) staat om elke
+          pagina heen via <code>BaseLayout</code>; de textuur zie je ook achter deze styleguide.
         </p>
       </section>
     </Container>
@@ -423,6 +426,7 @@ const nav = [
         homeTitle={header.homeTitle}
         currentPath="/events"
       />
+      <WhatsAppButton href={contact.whatsapp.href} label={contact.whatsapp.label} />
     </div>
 
     <Container>

@@ -101,6 +101,8 @@ Houd dit bij bij elk nieuw component.
 | `MegaMenu.astro`   | Desktop-dropdowns (≥1280px), CSS hover/focus-within.                        |
 | `MenuPanel.astro`  | Volledig menupaneel met overlay en accordeongroepen (gedrag: `menu.ts`).     |
 | `Footer.astro`     | _Placeholder_: footer met kolommen, contact, socials, juridisch (stap 7).   |
+| `PageBackground.astro` | Textuur (AVIF, na window.load) + grote B-outlines achter de pagina; `shapes` instelbaar.   |
+| `WhatsAppButton.astro` | Zwevende WhatsApp-knop rechtsonder.                                           |
 | `Analytics.astro`  | GTM + CookieFirst, alleen bij `PUBLIC_ENABLE_TRACKING=true` (TODO).         |
 
 ### Secties (`src/components/sections/`)

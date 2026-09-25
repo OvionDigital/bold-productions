@@ -1,0 +1,126 @@
+---
+/**
+ * Pagina-achtergrond (Webflow .main + .bold-b-background):
+ * donkere textuur over de volle breedte en grote B-outlines die links/rechts
+ * uit beeld steken. De textuur laadt pas na window.load (html.is-loaded) om
+ * de LCP niet te vertragen; zonder JS direct.
+ */
+import { getImage } from 'astro:assets';
+import texture from '../../assets/decor/bold-background.jpg';
+import boldBGreen from '../../assets/decor/bold-b-green.svg';
+import boldBOrange from '../../assets/decor/bold-b-orange.svg';
+
+type Shape = { color: 'green' | 'orange'; side: 'left' | 'right' };
+
+interface Props {
+  /** B-vormen tonen. Standaard de volgorde van de homepage. */
+  shapes?: Shape[] | false;
+}
+
+const defaultShapes: Shape[] = [
+  { color: 'green', side: 'left' },
+  { color: 'orange', side: 'right' },
+  { color: 'green', side: 'left' },
+  { color: 'green', side: 'right' },
+  { color: 'orange', side: 'left' },
+];
+const { shapes = defaultShapes } = Astro.props;
+const shapeSrc = { green: boldBGreen.src, orange: boldBOrange.src };
+
+const [sm, md, lg] = await Promise.all(
+  [800, 1440, 2560].map((width) => getImage({ src: texture, width, format: 'avif', quality: 50 })),
+);
+const bgSm = `url("${sm.src}")`;
+const bgMd = `url("${md.src}")`;
+const bgLg = `url("${lg.src}")`;
+---
+
+<div class="page-bg">
+  {
+    shapes && (
+      <div class="page-bg__shapes" aria-hidden="true">
+        {shapes.map((shape) => (
+          <img
+            src={shapeSrc[shape.color]}
+            alt=""
+            loading="lazy"
+            decoding="async"
+            width="1819"
+            height="2183"
+            class:list={['page-bg__shape', `page-bg__shape--${shape.side}`]}
+          />
+        ))}
+      </div>
+    )
+  }
+  <slot />
+</div>
+
+<style define:vars={{ bgSm, bgMd, bgLg }}>
+  .page-bg {
+    --page-bg-image: var(--bgLg);
+    position: relative;
+    background-color: var(--color-page);
+  }
+
+  :global(html.is-loaded) .page-bg,
+  :global(html:not(.js)) .page-bg {
+    background-image: linear-gradient(var(--color-page-a70), var(--color-page-a70)), var(--page-bg-image);
+    background-position:
+      0 0,
+      50% 0;
+    background-repeat: repeat, repeat-y;
+    background-size: auto, 100%;
+  }
+
+  @media (max-width: 767px) {
+    .page-bg {
+      --page-bg-image: var(--bgSm);
+    }
+  }
+
+  @media (min-width: 768px) and (max-width: 1440px) {
+    .page-bg {
+      --page-bg-image: var(--bgMd);
+    }
+  }
+
+  .page-bg__shapes {
+    position: absolute;
+    top: var(--page-shapes-offset);
+    bottom: 0;
+    z-index: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    gap: var(--page-shapes-gap);
+    width: 100%;
+    overflow: hidden;
+    opacity: 0.3;
+    mix-blend-mode: difference;
+    pointer-events: none;
+  }
+
+  .page-bg__shape {
+    width: 60%;
+    height: auto;
+    max-width: none;
+  }
+
+  .page-bg__shape--left {
+    align-self: flex-start;
+    transform: translate(-15vw);
+  }
+
+  .page-bg__shape--right {
+    align-self: flex-end;
+    transform: translate(15vw) rotateY(180deg);
+  }
+
+  @media (max-width: 991px) {
+    .page-bg__shape {
+      width: 80%;
+    }
+  }
+</style>

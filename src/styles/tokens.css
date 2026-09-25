@@ -172,6 +172,7 @@
   --ls-caption: 0.05em;
 
   /* ─── Spacing ───────────────────────────────────────────────────── */
+  --space-1: 1px;
   --space-2: 2px;
   --space-4: 4px;
   --space-8: 8px;
@@ -199,6 +200,8 @@
   --container-padding: 12px;
   --container-padding-wide: 48px; /* hero, navbar, fluid */
   --navbar-padding-y: 24px;
+  --page-shapes-offset: 120vh; /* B-vormen beginnen onder de hero */
+  --page-shapes-gap: 50vh;
 
   /* ─── Containers ────────────────────────────────────────────────── */
   --container-max: 940px; /* 992–1279 */
@@ -217,6 +220,7 @@
   --icon-lg: 20px;
   --icon-xl: 24px;
   --icon-touch: 36px;
+  --icon-whatsapp: 28px;
   --carousel-nav-size: 48px;
   --whatsapp-size: 56px;
   --logo-width: 154px;

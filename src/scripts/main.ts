@@ -11,6 +11,11 @@ import { initAnchorLinks, initScrollAnimations } from './scroll-animations';
 
 gsap.registerPlugin(ScrollTrigger);
 
+// Niet-kritieke achtergronden (PageBackground) pas na window.load
+const markLoaded = () => document.documentElement.classList.add('is-loaded');
+if (document.readyState === 'complete') markLoaded();
+else window.addEventListener('load', markLoaded, { once: true });
+
 initLenis();
 initScrollAnimations();
 initAnchorLinks();
