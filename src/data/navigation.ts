@@ -16,6 +16,12 @@ export interface NavGroup extends NavLink {
 
 export const cta: NavLink = { label: 'Bold to Action', href: '/offerte-aanvragen' };
 
+export const header = {
+  menuLabel: 'Menu',
+  logoAlt: 'Logo Bold Productions.',
+  homeTitle: 'Naar home',
+};
+
 export const mainNav: NavGroup[] = [
   {
     label: 'Events',

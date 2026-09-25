@@ -1,0 +1,146 @@
+---
+/**
+ * Desktop-navigatie met dropdowns (zichtbaar vanaf 1280px).
+ * Openen via hover of toetsenbordfocus, puur CSS (Webflow-IX: fade 0,4 s, chevron gedraaid).
+ */
+import Icon from '../ui/Icon.astro';
+import type { NavGroup } from '../../data/navigation';
+
+interface Props {
+  groups: NavGroup[];
+  currentPath: string;
+}
+
+const { groups, currentPath } = Astro.props;
+const isCurrent = (href: string) => (href === currentPath ? 'page' : undefined);
+---
+
+<nav class="mega-menu" aria-label="Hoofdmenu">
+  <ul class="mega-menu__list" role="list">
+    {
+      groups.map((group) => (
+        <li class="mega-menu__item">
+          <a href={group.href} class="mega-menu__link" aria-current={isCurrent(group.href)}>
+            <span>{group.label}</span>
+            <Icon name="chevron-down" class="mega-menu__arrow" />
+          </a>
+          <ul class="mega-menu__dropdown" role="list">
+            {group.children.map((child) => (
+              <li>
+                <a href={child.href} class="mega-menu__dropdown-link" aria-current={isCurrent(child.href)}>
+                  {child.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </li>
+      ))
+    }
+  </ul>
+</nav>
+
+<style>
+  .mega-menu {
+    display: none;
+  }
+
+  .mega-menu__list {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--space-8);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .mega-menu__item {
+    position: relative;
+  }
+
+  .mega-menu__link {
+    display: inline-flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: var(--space-10);
+    padding: var(--space-16) var(--space-32);
+    color: var(--color-white);
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: color var(--duration-fast) var(--ease-nav);
+  }
+
+  .mega-menu__link:hover,
+  .mega-menu__link[aria-current='page'] {
+    color: var(--color-orange);
+  }
+
+  .mega-menu__link :global(.mega-menu__arrow) {
+    --icon-size: var(--icon-lg);
+    pointer-events: none;
+  }
+
+  .mega-menu__item:hover :global(.mega-menu__arrow),
+  .mega-menu__item:focus-within :global(.mega-menu__arrow) {
+    transform: rotateX(180deg);
+  }
+
+  .mega-menu__dropdown {
+    position: absolute;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    min-width: var(--dropdown-min-width);
+    margin: 0;
+    padding: var(--space-24) var(--space-32);
+    list-style: none;
+    border: var(--border-width) solid var(--color-gray-dark);
+    background-color: var(--color-black-a48);
+    -webkit-backdrop-filter: blur(var(--blur-md));
+    backdrop-filter: blur(var(--blur-md));
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  .mega-menu__dropdown > li {
+    width: 100%;
+  }
+
+  .mega-menu__item:hover .mega-menu__dropdown,
+  .mega-menu__item:focus-within .mega-menu__dropdown {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity var(--duration-dropdown) var(--ease-out);
+  }
+
+  .mega-menu__dropdown-link {
+    display: block;
+    width: 100%;
+    padding-block: var(--space-12);
+    color: var(--color-white);
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: color var(--duration-fast) var(--ease-nav);
+  }
+
+  .mega-menu__dropdown-link:hover,
+  .mega-menu__dropdown-link[aria-current='page'] {
+    color: var(--color-orange);
+  }
+
+  @media (min-width: 1280px) {
+    .mega-menu {
+      display: flex;
+    }
+  }
+
+  @media (min-width: 1920px) {
+    .mega-menu__link {
+      font-size: var(--fs-intro);
+    }
+  }
+</style>

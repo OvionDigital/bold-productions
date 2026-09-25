@@ -1,0 +1,228 @@
+---
+/**
+ * Volledig menupaneel (rechts, schermhoogte) met accordeongroepen en overlay.
+ * Gedrag (openen, sluiten, accordeon, focus, scroll-lock) in scripts/menu.ts.
+ */
+import { getImage } from 'astro:assets';
+import Button from '../ui/Button.astro';
+import Icon from '../ui/Icon.astro';
+import type { NavGroup, NavLink } from '../../data/navigation';
+import smoke from '../../assets/decor/smoke.png';
+import boldBGreen from '../../assets/decor/bold-b-green.svg';
+
+interface Props {
+  id: string;
+  groups: NavGroup[];
+  cta: NavLink;
+  currentPath: string;
+}
+
+const { id, groups, cta, currentPath } = Astro.props;
+const isCurrent = (href: string) => (href === currentPath ? 'page' : undefined);
+
+const smokeImage = await getImage({ src: smoke, format: 'webp', width: 828 });
+const smokeBg = `url("${smokeImage.src}")`;
+const boldBBg = `url("${boldBGreen.src}")`;
+---
+
+<div class="menu-overlay" data-menu-overlay hidden></div>
+<div
+  class="menu-panel"
+  id={id}
+  data-menu-panel
+  data-lenis-prevent
+  role="dialog"
+  aria-modal="true"
+  aria-label="Menu"
+  hidden
+>
+  <Button label={cta.label} href={cta.href} size="small" class="menu-panel__cta" />
+  {
+    groups.map((group, index) => {
+      const childrenId = `${id}-group-${index}`;
+      return (
+        <div class="menu-panel__group" data-menu-group>
+          <div class="menu-panel__parent">
+            <a href={group.href} class="menu-panel__parent-link" aria-current={isCurrent(group.href)}>
+              {group.label}
+            </a>
+            <button
+              type="button"
+              class="menu-panel__toggle"
+              aria-expanded="false"
+              aria-controls={childrenId}
+              data-menu-accordion
+            >
+              <span class="visually-hidden">{group.label} submenu</span>
+              <Icon name="chevron-down" class="menu-panel__chevron" />
+            </button>
+          </div>
+          <ul class="menu-panel__children" id={childrenId} role="list">
+            {group.children.map((child) => (
+              <li>
+                <a href={child.href} class="menu-panel__child-link" aria-current={isCurrent(child.href)}>
+                  {child.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      );
+    })
+  }
+</div>
+
+<style define:vars={{ smokeBg, boldBBg }}>
+  :global(html.is-menu-open) {
+    overflow: hidden;
+  }
+
+  .menu-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-menu-overlay);
+    width: 100%;
+    height: 100%;
+    background-color: var(--color-black-a70);
+    -webkit-backdrop-filter: blur(var(--blur-md));
+    backdrop-filter: blur(var(--blur-md));
+    opacity: 0;
+  }
+
+  .menu-panel {
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: var(--z-menu-panel);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: var(--space-16);
+    min-width: var(--menu-panel-min-width);
+    height: 100vh;
+    height: 100dvh;
+    padding: var(--menu-panel-padding-top) var(--space-48) var(--space-48);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    transform-origin: 100% 0;
+    opacity: 0;
+    background-color: var(--color-black-a70);
+    background-image: var(--smokeBg), linear-gradient(var(--color-black-a80), var(--color-black-a80)), var(--boldBBg);
+    background-position:
+      0%,
+      0 0,
+      50% 5%;
+    background-repeat: no-repeat, repeat, no-repeat;
+    background-size:
+      cover,
+      auto,
+      auto 105%;
+    background-attachment: fixed, scroll, fixed;
+    -webkit-backdrop-filter: blur(var(--blur-md));
+    backdrop-filter: blur(var(--blur-md));
+  }
+
+  .menu-overlay[hidden],
+  .menu-panel[hidden] {
+    display: none;
+  }
+
+  .menu-panel :global(.menu-panel__cta) {
+    display: none;
+  }
+
+  .menu-panel__parent {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: var(--space-12);
+  }
+
+  .menu-panel__parent-link,
+  .menu-panel__child-link {
+    display: block;
+    color: var(--color-white);
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: color var(--duration-fast) var(--ease-nav);
+  }
+
+  .menu-panel__parent-link {
+    padding-block: var(--space-16);
+    color: var(--color-orange);
+    font-size: var(--fs-nav-parent);
+  }
+
+  .menu-panel__parent-link:hover {
+    color: var(--color-orange-light);
+  }
+
+  .menu-panel__toggle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: var(--icon-touch);
+    height: var(--icon-touch);
+    padding: var(--space-4);
+    color: var(--color-white);
+  }
+
+  .menu-panel__toggle:hover {
+    color: var(--color-gray-light);
+  }
+
+  .menu-panel__toggle :global(.menu-panel__chevron) {
+    --icon-size: var(--icon-xl);
+    pointer-events: none;
+    transition: transform var(--duration-base) var(--ease-out);
+  }
+
+  .menu-panel__toggle[aria-expanded='true'] :global(.menu-panel__chevron) {
+    transform: rotate(180deg);
+  }
+
+  .menu-panel__children {
+    height: 0;
+    margin: 0;
+    padding: 0 0 0 var(--space-32);
+    overflow: hidden;
+    list-style: none;
+  }
+
+  .menu-panel__child-link {
+    padding-block: var(--space-12);
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  .menu-panel__child-link:hover,
+  .menu-panel__child-link[aria-current='page'] {
+    color: var(--color-orange);
+  }
+
+  @media (max-width: 767px) {
+    .menu-panel {
+      width: 100vw;
+      min-width: auto;
+      padding-inline: var(--space-16);
+    }
+  }
+
+  @media (max-width: 479px) {
+    .menu-panel :global(.menu-panel__cta) {
+      display: inline-flex;
+    }
+
+    .menu-panel__parent-link,
+    .menu-panel__child-link {
+      line-height: var(--lh-compact);
+    }
+
+    .menu-panel__child-link {
+      font-size: var(--fs-base);
+    }
+  }
+</style>

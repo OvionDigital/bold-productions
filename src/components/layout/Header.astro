@@ -1,6 +1,140 @@
 ---
 /**
- * Vaste navigatiebalk met logo, drie dropdowns, CTA en menuknop.
- * TODO(stap 7): bouwen volgens docs/homepage-secties.md (sectie "Header").
+ * Vaste navigatiebalk: logo, desktop-dropdowns (≥1280px), CTA en menuknop.
+ * De menuknop opent MenuPanel (gedrag in scripts/menu.ts).
  */
+import { Picture } from 'astro:assets';
+import Button from '../ui/Button.astro';
+import MegaMenu from './MegaMenu.astro';
+import MenuPanel from './MenuPanel.astro';
+import type { NavGroup, NavLink } from '../../data/navigation';
+import logo from '../../assets/brand/bold-productions-logo.png';
+
+interface Props {
+  nav: NavGroup[];
+  cta: NavLink;
+  menuLabel: string;
+  logoAlt: string;
+  homeTitle: string;
+  currentPath: string;
+}
+
+const { nav, cta, menuLabel, logoAlt, homeTitle, currentPath } = Astro.props;
+const isHome = currentPath === '/';
 ---
+
+<header class="navbar" data-navbar>
+  <div class="navbar__inner">
+    <div class="navbar__brand">
+      <a href="/" title={homeTitle} aria-current={isHome ? 'page' : undefined} class="navbar__logo">
+        <Picture
+          src={logo}
+          alt={logoAlt}
+          widths={[124, 154, 248, 308]}
+          sizes="(max-width: 767px) 124px, 154px"
+          formats={['avif', 'webp']}
+          loading="eager"
+          class="navbar__logo-img"
+        />
+      </a>
+    </div>
+
+    <MegaMenu groups={nav.filter((group) => group.inHeader)} currentPath={currentPath} />
+
+    <div class="navbar__actions">
+      <Button label={cta.label} href={cta.href} size="small" class="navbar__cta" />
+      <div class="navbar__menu">
+        <Button
+          label={menuLabel}
+          variant="ghost"
+          size="compact"
+          icon="menu"
+          iconExpanded="close"
+          iconOnlyOnMobile
+          class="navbar__toggle"
+          attrs={{ 'aria-expanded': 'false', 'aria-controls': 'menu-panel', 'data-menu-toggle': '' }}
+        />
+        <MenuPanel id="menu-panel" groups={nav} cta={cta} currentPath={currentPath} />
+      </div>
+    </div>
+  </div>
+</header>
+
+<style>
+  .navbar {
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: var(--z-navbar);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-block: var(--navbar-padding-y);
+    background-image: var(--gradient-navbar);
+  }
+
+  .navbar__inner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding-inline: var(--container-padding-wide);
+  }
+
+  .navbar__brand {
+    position: relative;
+    z-index: var(--z-menu-controls);
+    margin-right: auto;
+  }
+
+  .navbar__logo {
+    display: inline-block;
+    max-width: 100%;
+  }
+
+  .navbar__logo :global(img) {
+    width: var(--logo-width);
+    height: auto;
+    vertical-align: middle;
+  }
+
+  .navbar__actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: var(--space-16);
+    margin-left: auto;
+  }
+
+  .navbar__actions :global(.navbar__cta) {
+    position: relative;
+    z-index: var(--z-menu-controls);
+  }
+
+  .navbar__menu {
+    position: relative;
+  }
+
+  .navbar__menu :global(.navbar__toggle) {
+    position: relative;
+    z-index: var(--z-menu-controls);
+  }
+
+  @media (min-width: 1440px) {
+    .navbar__brand,
+    .navbar__actions {
+      width: var(--navbar-side-width);
+    }
+  }
+
+  @media (max-width: 767px) {
+    .navbar__logo :global(img) {
+      width: var(--logo-width-mobile);
+    }
+  }
+
+  @media (max-width: 479px) {
+    .navbar__actions :global(.navbar__cta) {
+      display: none;
+    }
+  }
+</style>

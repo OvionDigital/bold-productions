@@ -13,6 +13,8 @@ import Eyebrow from '../components/ui/Eyebrow.astro';
 import Heading from '../components/ui/Heading.astro';
 import SectionHeading from '../components/ui/SectionHeading.astro';
 import { tokensByPrefix } from '../lib/tokens';
+import Header from '../components/layout/Header.astro';
+import { cta, header, mainNav } from '../data/navigation';
 
 const colors = tokensByPrefix('--color-');
 const gradients = tokensByPrefix('--gradient-');
@@ -45,6 +47,7 @@ const nav = [
   ['tekst', 'Eyebrow & Heading'],
   ['section-heading', 'SectionHeading'],
   ['container', 'Container'],
+  ['layout', 'Layout'],
   ['secties', 'Secties'],
 ];
 ---
@@ -400,6 +403,27 @@ const nav = [
     </div>
 
     <Container>
+      <!-- ─── Layout ──────────────────────────────────────────────── -->
+      <section class="sg-section" id="layout">
+        <h2 class="sg-title">Layout</h2>
+        <p class="sg-note">
+          <code>Header</code> (met <code>MegaMenu</code> en <code>MenuPanel</code>). De dropdowns verschijnen vanaf 1280px bij
+          hover of focus. De menuknop opent het paneel; dit kader houdt de vaste header en het paneel binnen de demo.
+        </p>
+      </section>
+    </Container>
+    <div class="sg-frame">
+      <Header
+        nav={mainNav}
+        cta={cta}
+        menuLabel={header.menuLabel}
+        logoAlt={header.logoAlt}
+        homeTitle={header.homeTitle}
+        currentPath="/events"
+      />
+    </div>
+
+    <Container>
       <!-- ─── Secties ─────────────────────────────────────────────── -->
       <section class="sg-section" id="secties">
         <h2 class="sg-title">Secties</h2>
@@ -662,6 +686,15 @@ const nav = [
     padding: var(--space-16);
     border: var(--border-width) dashed var(--color-orange);
     background: var(--color-orange-a8);
+  }
+
+  .sg-frame {
+    position: relative;
+    height: 720px;
+    margin-top: var(--space-24);
+    overflow: hidden;
+    transform: translateZ(0);
+    background: var(--color-gray-dark);
   }
 
   @media (max-width: 767px) {

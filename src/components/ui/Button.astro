@@ -12,7 +12,7 @@ import type { HTMLAttributes } from 'astro/types';
 import Icon, { type IconName } from './Icon.astro';
 
 export type ButtonVariant = 'primary' | 'outline' | 'ghost';
-export type ButtonSize = 'small' | 'default' | 'large';
+export type ButtonSize = 'compact' | 'small' | 'default' | 'large';
 export type Accent = 'orange' | 'yellow' | 'green';
 
 interface Props {
@@ -23,6 +23,8 @@ interface Props {
   accent?: Accent;
   /** Icoon rechts van de tekst. `null` voor geen icoon. */
   icon?: IconName | null;
+  /** Tweede icoon, zichtbaar zolang de knop aria-expanded="true" heeft (bijv. menu ↔ close). */
+  iconExpanded?: IconName;
   /** Toon op mobiel (≤767px) alleen het icoon, als vierkante knop. */
   iconOnlyOnMobile?: boolean;
   type?: 'button' | 'submit';
@@ -39,6 +41,7 @@ const {
   size = 'default',
   accent,
   icon = 'arrow-right',
+  iconExpanded,
   iconOnlyOnMobile = false,
   type = 'button',
   target,
@@ -61,7 +64,8 @@ const iconMotion = icon === 'arrow-down' ? 'down' : icon === 'arrow-right' ? 'ri
   {...attrs}
 >
   <span class="button__label">{label}</span>
-  {icon && <Icon name={icon} class:list={['button__icon', iconMotion && `button__icon--${iconMotion}`]} />}
+  {icon && <Icon name={icon} class:list={['button__icon', iconMotion && `button__icon--${iconMotion}`, iconExpanded && 'button__icon--collapsed']} />}
+  {iconExpanded && <Icon name={iconExpanded} class="button__icon button__icon--expanded" />}
 </Tag>
 
 <style>
@@ -150,7 +154,33 @@ const iconMotion = icon === 'arrow-down' ? 'down' : icon === 'arrow-right' ? 'ri
     backdrop-filter: blur(var(--blur-md));
   }
 
+  .button :global(.button__icon--expanded),
+  .button[aria-expanded='true'] :global(.button__icon--collapsed) {
+    display: none;
+  }
+
+  .button[aria-expanded='true'] :global(.button__icon--expanded) {
+    display: inline-block;
+  }
+
   /* ─── Groottes ─── */
+  /* compact: Webflow .menu-open (menuknop) */
+  .button--compact {
+    gap: var(--space-10);
+    height: var(--button-height-small);
+    padding-inline: var(--space-16);
+  }
+
+  .button--compact :global(.button__icon) {
+    --icon-size: var(--icon-sm);
+  }
+
+  @media (min-width: 1920px) {
+    .button--compact {
+      padding-inline: var(--space-24);
+    }
+  }
+
   .button--small {
     height: var(--button-height-small);
     padding-inline: var(--button-padding-x-small);

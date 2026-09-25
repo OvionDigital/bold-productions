@@ -83,7 +83,7 @@ Houd dit bij bij elk nieuw component.
 
 | Component              | Uitleg                                                                                                     |
 | ---------------------- | ---------------------------------------------------------------------------------------------------------- |
-| `Button.astro`         | Link of knop. Varianten `primary`/`outline`/`ghost`, groottes `small`/`default`/`large`, `accent`, `icon`, `iconOnlyOnMobile`. |
+| `Button.astro`         | Link of knop. Varianten `primary`/`outline`/`ghost`, groottes `compact`/`small`/`default`/`large`, `accent`, `icon`, `iconExpanded` (bij aria-expanded), `iconOnlyOnMobile`. |
 | `Icon.astro`           | Inline SVG-icoon uit het register in `icons.ts` (pijlen, chevron, menu, close, quote, WhatsApp, socials).  |
 | `icons.ts`             | Iconenregister (paden + viewBox). Nieuwe iconen hier toevoegen.                                            |
 | `Container.astro`      | Horizontale container: `default` (max-breedte per breakpoint) of `wide` (volle breedte, ruime goot).       |
@@ -95,7 +95,9 @@ Houd dit bij bij elk nieuw component.
 
 | Component          | Uitleg                                                                      |
 | ------------------ | --------------------------------------------------------------------------- |
-| `Header.astro`     | _Placeholder_: navigatiebalk met dropdowns, CTA en menuknop (stap 7).       |
+| `Header.astro`     | Vaste navigatiebalk: logo, MegaMenu, CTA en menuknop (+ MenuPanel).         |
+| `MegaMenu.astro`   | Desktop-dropdowns (≥1280px), CSS hover/focus-within.                        |
+| `MenuPanel.astro`  | Volledig menupaneel met overlay en accordeongroepen (gedrag: `menu.ts`).     |
 | `Footer.astro`     | _Placeholder_: footer met kolommen, contact, socials, juridisch (stap 7).   |
 | `Analytics.astro`  | GTM + CookieFirst, alleen bij `PUBLIC_ENABLE_TRACKING=true` (TODO).         |
 
@@ -111,3 +113,4 @@ _Nog geen. Zie `docs/homepage-secties.md` voor de geplande secties._
 | `env.ts`               | `isStatic`, `prefersReducedMotion`, `motionEnabled`.                       |
 | `lenis.ts`             | Lenis smooth scroll gekoppeld aan GSAP ticker/ScrollTrigger; `scrollToTarget`. |
 | `scroll-animations.ts` | `[data-animate]` fade-in-up (top 70%, eenmalig) en anchor-links met offset. |
+| `menu.ts`              | Menupaneel openen/sluiten (GSAP), overlay, Escape, focus-trap, scroll-lock, accordeon. |
