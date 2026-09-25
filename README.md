@@ -2,7 +2,7 @@
 
 Snelle, pixel-getrouwe herbouw van [weareboldproductions.com](https://www.weareboldproductions.com/) (nu Webflow) in Astro. Statisch gebouwd, gehost op Cloudflare Pages.
 
-Werkafspraken, regels en het componentenoverzicht staan in [CLAUDE.md](CLAUDE.md). De inventaris van de homepage staat in [docs/homepage-secties.md](docs/homepage-secties.md).
+Werkafspraken, regels en het componentenoverzicht staan in [CLAUDE.md](CLAUDE.md). De inventaris van de homepage staat in [docs/homepage-secties.md](docs/homepage-secties.md), de snelheidsmetingen in [docs/performance.md](docs/performance.md).
 
 ## Vereisten
 

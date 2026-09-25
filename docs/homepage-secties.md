@@ -67,7 +67,7 @@ Geen sectie, maar hoort bij de layout (Webflow `.main` en `.bold-b-background`).
 - **Gedrag**:
   - Laadanimatie `fade-in-up` (CSS): titel 0,2 s, accent 0,35 s, eyebrow 0,5 s, knoppen 0,65 s vertraging.
   - `scripts/hero-video.ts`: iframe-`src` pas zetten na `window.load`. Op ≤767 alleen als `loadVideoOnMobile`. Iframe cover-scaling: 177.78vh × 56.25vw (+120px), gecentreerd.
-  - **Afwijking t.o.v. live (voorstel)**: live ligt er op de homepage een zwarte loader met spinner óver de hero-afbeelding (`.home .hero .video-hero-loader { display:flex }`), dus de afbeelding is daar niet te zien. Volgens de brief is de afbeelding de poster. Voorstel: afbeelding zichtbaar en de video er pas overheen faden als hij speelt. Geen spinner.
+  - **Afwijking t.o.v. live (akkoord)**: live ligt er op de homepage een zwarte loader met spinner óver de hero-afbeelding (`.home .hero .video-hero-loader { display:flex }`), dus de afbeelding is daar niet te zien. Volgens de brief is de afbeelding de poster. Voorstel: afbeelding zichtbaar en de video er pas overheen faden als hij speelt. Geen spinner.
 - **Hergebruik**: alle dienst- en doelgroeppagina's (met andere tekst, beeld, video en accent). Webflow heeft varianten groen en geel.
 
 ## 3. Logostrip "Vertrouwd door"
