@@ -24,7 +24,9 @@ import Timeline from '../components/sections/Timeline.astro';
 import BackgroundVideo from '../components/ui/BackgroundVideo.astro';
 import Testimonials from '../components/sections/Testimonials.astro';
 import TestimonialCard from '../components/ui/TestimonialCard.astro';
-import { hero, intro, testimonials, timeline, trustedBy } from '../data/home';
+import PolaroidStack from '../components/sections/PolaroidStack.astro';
+import Polaroid from '../components/ui/Polaroid.astro';
+import { backstage, hero, intro, testimonials, timeline, trustedBy } from '../data/home';
 
 const colors = tokensByPrefix('--color-');
 const gradients = tokensByPrefix('--gradient-');
@@ -518,6 +520,20 @@ const nav = [
       </p>
     </Container>
     <Testimonials {...testimonials} />
+
+    <Container>
+      <h3 class="sg-subtitle">Polaroid (ui) + PolaroidStack</h3>
+      <p class="sg-note">
+        <code>&lt;Polaroid src alt caption /&gt;</code> en <code>&lt;PolaroidStack eyebrow title gradient photos /&gt;</code>.
+        Kanteling per positie; de foto's schuiven sticky over elkaar.
+      </p>
+      <div class="sg-row">
+        <div class="sg-polaroid-demo" style="--polaroid-rotate:-1.5deg">
+          <Polaroid {...backstage.photos[0]!} caption="Voorbeeldcaption" sizes="320px" />
+        </div>
+      </div>
+    </Container>
+    <PolaroidStack {...backstage} photos={backstage.photos.slice(0, 3)} />
   </div>
 </BaseLayout>
 
@@ -771,6 +787,10 @@ const nav = [
     padding: var(--space-16);
     border: var(--border-width) dashed var(--color-orange);
     background: var(--color-orange-a8);
+  }
+
+  .sg-polaroid-demo {
+    width: 320px;
   }
 
   .sg-card-demo {

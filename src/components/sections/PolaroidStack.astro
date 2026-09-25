@@ -1,0 +1,123 @@
+---
+/**
+ * Polaroidgalerij "Bold backstage": sticky kop en polaroids die bij het scrollen
+ * als een stapel over elkaar schuiven (pure CSS, position: sticky).
+ */
+import Container from '../ui/Container.astro';
+import SectionHeading from '../ui/SectionHeading.astro';
+import Polaroid, { type PolaroidPhoto } from '../ui/Polaroid.astro';
+import type { HeadingGradient } from '../ui/Heading.astro';
+
+export interface PolaroidStackProps {
+  eyebrow: string;
+  title: string;
+  gradient?: HeadingGradient;
+  photos: PolaroidPhoto[];
+}
+
+type Props = PolaroidStackProps;
+
+const { eyebrow, title, gradient = 'green', photos } = Astro.props;
+/** Kantelingen per positie (Webflow custom CSS), herhalend na 8 */
+const rotations = ['-1.5deg', '1.2deg', '-0.8deg', '2deg', '-1.8deg', '0.6deg', '-2.2deg', '1.5deg'];
+---
+
+<section class="polaroids">
+  <div class="polaroids__header" data-animate>
+    <Container>
+      <div class="polaroids__row">
+        <div class="polaroids__header-col">
+          <SectionHeading eyebrow={eyebrow} title={title} gradient={gradient} spacing="none" />
+        </div>
+      </div>
+    </Container>
+  </div>
+
+  <ul class="polaroids__list" role="list" data-animate>
+    {
+      photos.map((photo, index) => (
+        <li class="polaroids__item" style={`--polaroid-rotate:${rotations[index % rotations.length]}`}>
+          <Container>
+            <div class="polaroids__row">
+              <div class="polaroids__col">
+                <Polaroid {...photo} sizes="(max-width: 991px) 100vw, (max-width: 1439px) 900px, 860px" />
+              </div>
+            </div>
+          </Container>
+        </li>
+      ))
+    }
+  </ul>
+</section>
+
+<style>
+  .polaroids {
+    position: relative;
+    margin-block: var(--section-space);
+  }
+
+  .polaroids__header {
+    position: sticky;
+    top: var(--polaroids-header-top);
+    z-index: 0;
+    margin-bottom: var(--space-48);
+  }
+
+  .polaroids__row {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    margin-inline: var(--row-margin);
+  }
+
+  .polaroids__header-col {
+    width: 100%;
+    padding-inline: var(--column-gap);
+  }
+
+  .polaroids__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .polaroids__item {
+    position: sticky;
+    top: var(--polaroids-item-top);
+    z-index: var(--z-base);
+  }
+
+  .polaroids__col {
+    width: 83.3333%;
+    padding-inline: var(--column-gap);
+  }
+
+  @media (min-width: 1440px) {
+    .polaroids__col {
+      width: 66.6667%;
+    }
+  }
+
+  @media (max-width: 991px) {
+    .polaroids__col {
+      width: 100%;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .polaroids {
+      padding-block: var(--space-96);
+    }
+  }
+
+  @media (max-width: 479px) {
+    .polaroids {
+      margin-block: 0;
+    }
+
+    .polaroids__header {
+      min-height: var(--polaroids-header-top);
+      margin-bottom: var(--space-30);
+    }
+  }
+</style>

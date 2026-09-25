@@ -182,6 +182,7 @@
   --space-20: 20px;
   --space-24: 24px;
   --space-28: 28px;
+  --space-30: 30px;
   --space-32: 32px;
   --space-36: 36px;
   --space-42: 42px;
@@ -194,7 +195,8 @@
   --space-192: 192px;
 
   /* Semantisch (responsive, zie media queries onderaan) */
-  --section-padding: 96px;
+  --section-padding: 96px; /* .section: 96, ≤991 48 */
+  --section-space: 96px; /* Webflow var(--section-padding) buiten .section: altijd 96 */
   --column-gap: 12px; /* halve goot tussen kolommen */
   --row-margin: -12px;
   --container-padding: 12px;
@@ -237,6 +239,8 @@
   --quote-icon-max: 42px;
   --testimonial-line-width: 200px;
   --testimonials-heading-max: 900px;
+  --polaroids-header-top: 144px; /* sticky kop polaroidgalerij */
+  --polaroids-item-top: 290px; /* sticky polaroids, per breakpoint */
   --navbar-side-width: 350px; /* logo- en actieblok ≥1440 */
   --dropdown-min-width: 250px;
   --menu-panel-min-width: 500px;
@@ -314,6 +318,7 @@
 
 @media (min-width: 1440px) {
   :root {
+    --polaroids-item-top: 293px;
     --testimonial-height: 624px;
     --container-max: 1320px;
     --container-max-plain: 1320px;
@@ -322,6 +327,7 @@
 
 @media (min-width: 1920px) {
   :root {
+    --polaroids-item-top: 301px;
     --testimonial-height: 804px;
     --container-max: 1680px;
     --container-max-plain: 1680px;
@@ -340,6 +346,8 @@
 
 @media (max-width: 767px) {
   :root {
+    --polaroids-header-top: 120px;
+    --polaroids-item-top: 306px;
     --testimonial-height: 736.5px;
     --container-max: none;
     --container-max-plain: none;
@@ -352,6 +360,7 @@
 
 @media (max-width: 479px) {
   :root {
+    --polaroids-item-top: 264px;
     --testimonial-height: 547.5px;
     --container-padding: 16px;
     --container-padding-wide: 16px;

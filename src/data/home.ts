@@ -7,6 +7,14 @@ import type { LogoMarqueeProps } from '../components/sections/LogoMarquee.astro'
 import type { IntroHighlightProps } from '../components/sections/IntroHighlight.astro';
 import type { TimelineProps } from '../components/sections/Timeline.astro';
 import type { TestimonialsProps } from '../components/sections/Testimonials.astro';
+import type { PolaroidStackProps } from '../components/sections/PolaroidStack.astro';
+import polaroid1 from '../assets/images/polaroids/polaroid-1.jpg';
+import polaroid2 from '../assets/images/polaroids/polaroid-2.jpg';
+import polaroid3 from '../assets/images/polaroids/polaroid-3.jpg';
+import polaroid4 from '../assets/images/polaroids/polaroid-4.jpg';
+import polaroid5 from '../assets/images/polaroids/polaroid-5.jpg';
+import polaroid6 from '../assets/images/polaroids/polaroid-6.jpg';
+import polaroid7 from '../assets/images/polaroids/polaroid-7.jpg';
 import testimonialReinier from '../assets/images/testimonials/reinier-peters.jpg';
 import testimonialRalph from '../assets/images/testimonials/ralph-buisman.jpg';
 import testimonialMerijn from '../assets/images/testimonials/merijn-peters.jpg';
@@ -190,5 +198,20 @@ export const testimonials: TestimonialsProps = {
       organisation: 'Dorpsfeest Wehl',
       image: { src: testimonialDorpsfeest, alt: 'Dorpsfeest Wehl' },
     },
+  ],
+};
+
+export const backstage: PolaroidStackProps = {
+  eyebrow: 'Bold backstage',
+  title: 'We kennen onze plek',
+  gradient: 'green',
+  photos: [
+    { src: polaroid1, alt: 'Cameraman van Bold Productions filmt backstage in roze licht.' },
+    { src: polaroid2, alt: 'Dronepiloot van Bold Productions met FPV-bril in oranje licht.' },
+    { src: polaroid3, alt: 'Cameraman filmt een rapper op een podium met vuureffecten.' },
+    { src: polaroid4, alt: 'Twee fotografen van Bold Productions lopen met hun camera’s over een festivalterrein.' },
+    { src: polaroid5, alt: 'Crew van Bold Productions poseert backstage met een artiest.' },
+    { src: polaroid6, alt: 'Selfie van drie crewleden van Bold Productions in blauw licht.' },
+    { src: polaroid7, alt: 'Cameraman van Bold Productions voor het podium tijdens een concert in groen licht.' },
   ],
 };
