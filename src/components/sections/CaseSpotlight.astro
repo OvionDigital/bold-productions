@@ -1,0 +1,61 @@
+---
+/**
+ * Uitgelichte case (Webflow .case-spotlight): kop en één grote casekaart.
+ * De case komt uit src/data/cases.ts, op slug.
+ */
+import SectionHeading from '../ui/SectionHeading.astro';
+import CaseCard from '../ui/CaseCard.astro';
+import type { HeadingGradient } from '../ui/Heading.astro';
+import { getCase } from '../../data/cases';
+
+export interface CaseSpotlightProps {
+  title: string;
+  gradient?: HeadingGradient;
+  /** Slug uit src/data/cases.ts */
+  caseSlug: string;
+}
+
+type Props = CaseSpotlightProps;
+
+const { title, gradient = 'green', caseSlug } = Astro.props;
+const item = getCase(caseSlug);
+---
+
+<section class="case-spotlight">
+  <div class="case-spotlight__inner">
+    <SectionHeading title={title} gradient={gradient} spacing="compact" />
+    <CaseCard item={item} class="case-spotlight__card" />
+  </div>
+</section>
+
+<style>
+  .case-spotlight {
+    position: relative;
+    z-index: var(--z-base);
+    padding-inline: var(--container-padding-wide);
+  }
+
+  .case-spotlight__inner {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    padding-block: var(--space-96);
+  }
+
+  .case-spotlight__inner :global(.case-spotlight__card) {
+    width: 66.6667%;
+  }
+
+  @media (min-width: 1440px) {
+    .case-spotlight__inner :global(.case-spotlight__card) {
+      width: 50%;
+    }
+  }
+
+  @media (max-width: 991px) {
+    .case-spotlight__inner :global(.case-spotlight__card) {
+      width: 100%;
+    }
+  }
+</style>

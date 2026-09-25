@@ -30,7 +30,8 @@ import PolaroidStack from '../components/sections/PolaroidStack.astro';
 import Polaroid from '../components/ui/Polaroid.astro';
 import TextMedia from '../components/sections/TextMedia.astro';
 import { backstage, hero, intro, micDrop, testimonials, timeline, trustedBy } from '../data/home';
-import { biggerThanTheDay } from '../data/events';
+import CaseSpotlight from '../components/sections/CaseSpotlight.astro';
+import { biggerThanTheDay, caseSpotlight } from '../data/events';
 
 const colors = tokensByPrefix('--color-');
 const gradients = tokensByPrefix('--gradient-');
@@ -578,6 +579,15 @@ const nav = [
       </p>
     </Container>
     <TextMedia {...biggerThanTheDay} id="sg-image-variant" />
+
+    <Container>
+      <h3 class="sg-subtitle">CaseCard (ui) + CaseSpotlight</h3>
+      <p class="sg-note">
+        <code>&lt;CaseSpotlight title gradient caseSlug /&gt;</code> haalt de case uit <code>src/data/cases.ts</code>.
+        <code>&lt;CaseCard item /&gt;</code> is de losse kaart (ook bruikbaar voor een casesoverzicht).
+      </p>
+    </Container>
+    <CaseSpotlight {...caseSpotlight} />
   </div>
 </BaseLayout>
 

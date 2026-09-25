@@ -5,8 +5,9 @@ import Breadcrumbs from '../components/layout/Breadcrumbs.astro';
 import LogoMarquee from '../components/sections/LogoMarquee.astro';
 import TextMedia from '../components/sections/TextMedia.astro';
 import Timeline from '../components/sections/Timeline.astro';
+import CaseSpotlight from '../components/sections/CaseSpotlight.astro';
 import { breadcrumbLabels } from '../data/navigation';
-import { biggerThanTheDay, breadcrumbs, hero, meta, timeline, trustedBy } from '../data/events';
+import { biggerThanTheDay, breadcrumbs, caseSpotlight, hero, meta, timeline, trustedBy } from '../data/events';
 ---
 
 <BaseLayout title={meta.title} description={meta.description}>
@@ -15,4 +16,5 @@ import { biggerThanTheDay, breadcrumbs, hero, meta, timeline, trustedBy } from '
   <LogoMarquee {...trustedBy} />
   <TextMedia {...biggerThanTheDay} />
   <Timeline {...timeline} />
+  <CaseSpotlight {...caseSpotlight} />
 </BaseLayout>

@@ -3,26 +3,32 @@
  * Gecentreerde sectiekop: eyebrow + h2 met gradient (Webflow: .section-heading).
  * Gebruikt in o.a. testimonials ("Dit deden we / En dit vonden ze") en
  * polaroidgalerij ("Bold backstage / We kennen onze plek").
+ * Optioneel een tekst onder de titel (Webflow .five-blocks-paragraph).
  */
 import Eyebrow from './Eyebrow.astro';
 import Heading, { type HeadingGradient } from './Heading.astro';
+import RichText from './RichText.astro';
+import type { Rich } from '../../lib/rich';
 
 interface Props {
   eyebrow?: string;
   title: string;
   gradient?: HeadingGradient;
   titleAs?: 'h1' | 'h2' | 'h3';
-  /** Ondermarge: default 64/48/36px, none 0 */
-  spacing?: 'default' | 'none';
+  /** Tekst onder de titel */
+  text?: Rich;
+  /** Ondermarge: default 64/48/36px, compact 48px (≥1920 96px), none 0 */
+  spacing?: 'default' | 'compact' | 'none';
   class?: string;
 }
 
-const { eyebrow, title, gradient = 'accent', titleAs = 'h2', spacing = 'default', class: className } = Astro.props;
+const { eyebrow, title, text, gradient = 'accent', titleAs = 'h2', spacing = 'default', class: className } = Astro.props;
 ---
 
 <header class:list={['section-heading', `section-heading--${spacing}`, className]}>
   {eyebrow && <Eyebrow text={eyebrow} align="center" />}
   <Heading as={titleAs} size="h2" text={title} gradient={gradient} align="center" flush />
+  {text && <RichText content={text} plain class="section-heading__text" />}
 </header>
 
 <style>
@@ -41,6 +47,14 @@ const { eyebrow, title, gradient = 'accent', titleAs = 'h2', spacing = 'default'
     margin-bottom: var(--space-64);
   }
 
+  .section-heading--compact {
+    margin-bottom: var(--space-48);
+  }
+
+  .section-heading :global(.section-heading__text p) {
+    margin-bottom: 0;
+  }
+
   .section-heading--none {
     margin-bottom: 0;
   }
@@ -54,6 +68,11 @@ const { eyebrow, title, gradient = 'accent', titleAs = 'h2', spacing = 'default'
   @media (max-width: 767px) {
     .section-heading--default {
       margin-bottom: var(--space-36);
+    }
+  }
+  @media (min-width: 1920px) {
+    .section-heading--compact {
+      margin-bottom: var(--space-96);
     }
   }
 </style>

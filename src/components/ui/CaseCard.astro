@@ -1,0 +1,123 @@
+---
+/**
+ * Casekaart (Webflow .work-overview-item): foto (3:2, ≤991 16:9, zoals live) met donkere
+ * diagonale gradient, titel in groene gradient en intro (vanaf 1280px).
+ * Hele kaart is een link naar /cases/[slug].
+ */
+import { Picture } from 'astro:assets';
+import Heading from './Heading.astro';
+import { caseUrl, type Case } from '../../data/cases';
+
+interface Props {
+  item: Case;
+  sizes?: string;
+  class?: string;
+}
+
+const { item, sizes = '(max-width: 991px) 100vw, (max-width: 1439px) 67vw, 50vw', class: className } = Astro.props;
+---
+
+<a href={caseUrl(item.slug)} class:list={['case-card', className]}>
+  <span class="case-card__shade" aria-hidden="true"></span>
+  <Picture
+    src={item.image.src}
+    alt={item.image.alt}
+    widths={[480, 720, 960, 1280, 1600]}
+    sizes={sizes}
+    formats={['avif', 'webp']}
+    loading="lazy"
+    decoding="async"
+    class="case-card__image"
+  />
+  <span class="case-card__content">
+    <Heading as="h3" text={item.title} gradient="green" flush class="case-card__title" />
+    <span class="case-card__intro">{item.intro}</span>
+  </span>
+</a>
+
+<style>
+  .case-card {
+    position: relative;
+    display: block;
+    aspect-ratio: 3 / 2;
+    overflow: hidden;
+    text-decoration: none;
+    transition:
+      box-shadow var(--duration-fast) var(--ease-out),
+      transform var(--duration-fast) var(--ease-out);
+  }
+
+  .case-card:hover {
+    transform: scale(1.03);
+    box-shadow: var(--shadow-card-hover);
+  }
+
+  .case-card__shade {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background-image: linear-gradient(-135deg, var(--color-transparent), var(--color-black));
+  }
+
+  .case-card :global(picture) {
+    position: absolute;
+    inset: 0;
+  }
+
+  .case-card :global(.case-card__image) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .case-card__content {
+    position: absolute;
+    bottom: 0;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-24);
+    padding: var(--space-32);
+  }
+
+  .case-card__content :global(.case-card__title) {
+    text-align: left;
+  }
+
+  .case-card__intro {
+    display: none;
+    margin-bottom: 0;
+    color: var(--color-white);
+    line-height: var(--lh-paragraph);
+  }
+
+  @media (min-width: 1280px) {
+    .case-card__intro {
+      display: block;
+    }
+  }
+
+  @media (max-width: 991px) {
+    .case-card {
+      aspect-ratio: 16 / 9;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .case-card__content {
+      gap: var(--space-16);
+      padding: var(--space-36);
+    }
+  }
+
+  @media (max-width: 479px) {
+    .case-card__content {
+      padding: var(--space-24);
+    }
+
+    .case-card__intro {
+      display: none;
+    }
+  }
+</style>
