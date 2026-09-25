@@ -6,6 +6,8 @@
 export interface NavLink {
   label: string;
   href: string;
+  /** Vet tonen (footer) */
+  bold?: boolean;
 }
 
 export interface NavGroup extends NavLink {
@@ -119,7 +121,7 @@ export const footerColumns: NavGroup[] = [
       { label: 'Cases', href: '/cases' },
       { label: 'Over Mike', href: '/over/mike' },
       { label: 'Contact', href: '/contact' },
-      { label: 'Offerte aanvragen', href: '/offerte-aanvragen' },
+      { label: 'Offerte aanvragen', href: '/offerte-aanvragen', bold: true },
     ],
   },
 ];
@@ -149,3 +151,5 @@ export const legalLinks: NavLink[] = [
 ];
 
 export const copyright = '© Bold Productions 2026';
+
+export const footerLogoAlt = 'Bold Productions logo zwart.';

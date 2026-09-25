@@ -54,6 +54,7 @@ npm run deploy:preview  # build + wrangler pages deploy (branch preview)
 - **Accentkleur per doelgroep** via `data-accent="orange|yellow|green"` op een voorouder (body via `BaseLayout accent`). Componenten gebruiken `--accent`, `--accent-light`, `--accent-gradient`. Dit vervangt de Webflow-`w-variant-*`-klassen.
 - **Breakpoints** (Webflow, desktop-first): `max-width: 991px`, `767px`, `479px` en `min-width: 1280px`, `1440px`, `1920px`. Letterlijk in media queries (custom properties werken daar niet).
 - **Scoped styles** per component. Wil je een child-component stylen (bijv. `<Icon>` in `<Button>`)? Gebruik `.parent :global(.child-class)`.
+- **Twee sectie-afstanden**: `--section-padding` (Webflow `.section`: 96, ≤991 48) en `--section-space` (Webflow `var(--section-padding)` elders: altijd 96). Kijk in de Webflow-CSS welke van toepassing is.
 - **Scroll-in-animatie**: zet `data-animate` op een element (Webflow: `.animate-on-scroll`).
 - Regeleinden in titels: `\n` in de data. `Heading` zet dat om naar `<br>`.
 - Opgemaakte tekst in data: het model uit `src/lib/rich.ts` (geen HTML-strings), renderen met `RichText`.
@@ -109,7 +110,7 @@ Houd dit bij bij elk nieuw component.
 | `Header.astro`     | Vaste navigatiebalk: logo, MegaMenu, CTA en menuknop (+ MenuPanel).         |
 | `MegaMenu.astro`   | Desktop-dropdowns (≥1280px), CSS hover/focus-within.                        |
 | `MenuPanel.astro`  | Volledig menupaneel met overlay en accordeongroepen (gedrag: `menu.ts`).     |
-| `Footer.astro`     | _Placeholder_: footer met kolommen, contact, socials, juridisch (stap 7).   |
+| `Footer.astro`     | Footer: linkkolommen (data), contact, logo + socials, juridische links, copyright. |
 | `PageBackground.astro` | Textuur (AVIF, na window.load) + grote B-outlines achter de pagina; `shapes` instelbaar.   |
 | `WhatsAppButton.astro` | Zwevende WhatsApp-knop rechtsonder.                                           |
 | `Analytics.astro`  | GTM + CookieFirst, alleen bij `PUBLIC_ENABLE_TRACKING=true` (TODO).         |

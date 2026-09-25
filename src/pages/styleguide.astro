@@ -15,7 +15,8 @@ import SectionHeading from '../components/ui/SectionHeading.astro';
 import { tokensByPrefix } from '../lib/tokens';
 import Header from '../components/layout/Header.astro';
 import WhatsAppButton from '../components/layout/WhatsAppButton.astro';
-import { contact, cta, header, mainNav } from '../data/navigation';
+import Footer from '../components/layout/Footer.astro';
+import { contact, copyright, cta, footerColumns, footerLogoAlt, header, legalLinks, mainNav, socials } from '../data/navigation';
 import Hero from '../components/sections/Hero.astro';
 import LogoMarquee from '../components/sections/LogoMarquee.astro';
 import IntroHighlight from '../components/sections/IntroHighlight.astro';
@@ -454,6 +455,18 @@ const nav = [
     </div>
 
     <Container>
+      <p class="sg-note sg-note--spaced"><code>Footer</code>: kolommen, contact, logo en socials, juridische links.</p>
+    </Container>
+    <Footer
+      columns={footerColumns}
+      contact={contact}
+      socials={socials}
+      legalLinks={legalLinks}
+      copyright={copyright}
+      logoAlt={footerLogoAlt}
+    />
+
+    <Container>
       <!-- ─── Secties ─────────────────────────────────────────────── -->
       <section class="sg-section" id="secties">
         <h2 class="sg-title">Secties</h2>
@@ -600,6 +613,10 @@ const nav = [
   .sg-note {
     max-width: var(--container-narrow);
     color: var(--color-gray-light);
+  }
+
+  .sg-note--spaced {
+    margin-top: var(--space-48);
   }
 
   .sg-label {

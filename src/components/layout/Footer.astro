@@ -1,6 +1,335 @@
 ---
 /**
- * Footer met dienstkolommen, contactgegevens, socials en juridische links.
- * TODO(stap 7): bouwen volgens docs/homepage-secties.md (sectie "Footer").
+ * Footer: vier linkkolommen, contactgegevens, logo + socials en een onderrij met
+ * juridische links en copyright. Lichte textuur (pas na window.load, zie PageBackground).
  */
+import { getImage } from 'astro:assets';
+import Icon from '../ui/Icon.astro';
+import Container from '../ui/Container.astro';
+import type { NavGroup, NavLink } from '../../data/navigation';
+import type { IconName } from '../ui/icons';
+import logoBlack from '../../assets/brand/bold-logo-black.svg';
+import texture from '../../assets/decor/texture-black.jpg';
+
+interface Props {
+  columns: NavGroup[];
+  contact: {
+    heading: string;
+    addressLabel: string;
+    address: string[];
+    contactLabel: string;
+    email: string;
+    phone: { label: string; href: string };
+  };
+  socials: readonly { label: string; href: string; icon: IconName }[];
+  legalLinks: NavLink[];
+  copyright: string;
+  logoAlt: string;
+}
+
+const { columns, contact, socials, legalLinks, copyright, logoAlt } = Astro.props;
+const isExternal = (href: string) => /^https?:\/\//.test(href);
+
+const [sm, lg] = await Promise.all(
+  [960, 1920].map((width) => getImage({ src: texture, width, format: 'avif', quality: 40 })),
+);
+const bgSm = `url("${sm.src}")`;
+const bgLg = `url("${lg.src}")`;
 ---
+
+<footer class="footer">
+  <Container>
+    <div class="footer__row">
+      {
+        columns.map((column) => (
+          <div class="footer__col">
+            <nav class="footer__stack" aria-label={column.label}>
+              <a href={column.href} class="footer__heading">
+                {column.label}
+              </a>
+              {column.children.map((link) => (
+                <a href={link.href} class:list={['footer__link', { 'footer__link--bold': link.bold }]}>
+                  {link.label}
+                </a>
+              ))}
+            </nav>
+          </div>
+        ))
+      }
+
+      <div class="footer__col">
+        <div class="footer__stack">
+          <p class="footer__heading">{contact.heading}</p>
+          <p class="footer__address">
+            <strong>{contact.addressLabel}</strong>
+            <br />
+            {
+              contact.address.map((line) => (
+                <Fragment>
+                  {line}
+                  <br />
+                </Fragment>
+              ))
+            }
+            <br />
+            <strong>{contact.contactLabel}</strong>
+          </p>
+          <a href={`mailto:${contact.email}`} class="footer__link">{contact.email}</a>
+          <a href={contact.phone.href} class="footer__link">{contact.phone.label}</a>
+        </div>
+      </div>
+
+      <div class="footer__col">
+        <div class="footer__stack footer__stack--logo">
+          <a href="/" class="footer__logo">
+            <img src={logoBlack.src} width={logoBlack.width} height={logoBlack.height} alt={logoAlt} loading="lazy" decoding="async" />
+          </a>
+          <ul class="footer__socials" role="list">
+            {
+              socials.map((social) => (
+                <li>
+                  <a href={social.href} target="_blank" rel="noopener noreferrer" class="footer__social" aria-label={social.label}>
+                    <Icon name={social.icon} />
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer__bottom">
+      <div class="footer__bottom-col">
+        <nav class="footer__legal" aria-label="Juridisch">
+          {
+            legalLinks.map((link) => (
+              <a
+                href={link.href}
+                class="footer__link"
+                target={isExternal(link.href) ? '_blank' : undefined}
+                rel={isExternal(link.href) ? 'noopener noreferrer' : undefined}
+              >
+                {link.label}
+              </a>
+            ))
+          }
+        </nav>
+      </div>
+      <div class="footer__bottom-col footer__bottom-col--shrink">
+        <p class="footer__link footer__copyright">{copyright}</p>
+      </div>
+    </div>
+  </Container>
+</footer>
+
+<style define:vars={{ bgSm, bgLg }}>
+  .footer {
+    --footer-bg-image: var(--bgLg);
+    position: relative;
+    z-index: 0;
+    padding-block: var(--section-space);
+    background-color: var(--color-white);
+  }
+
+  :global(html.is-loaded) .footer,
+  :global(html:not(.js)) .footer {
+    background-image: linear-gradient(var(--color-white-a80), var(--color-white-a80)), var(--footer-bg-image);
+    background-position:
+      0 0,
+      50%;
+    background-repeat: repeat, no-repeat;
+    background-size: auto, cover;
+  }
+
+  .footer__row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    row-gap: var(--space-64);
+    margin-inline: var(--row-margin);
+  }
+
+  .footer__col {
+    flex: none;
+    width: 33.3333%;
+    max-width: 100%;
+    padding-inline: var(--column-gap);
+  }
+
+  .footer__stack {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-8);
+  }
+
+  .footer__stack--logo {
+    gap: var(--space-36);
+  }
+
+  .footer__heading {
+    margin: 0;
+    color: var(--color-orange);
+    font-family: var(--font-display);
+    font-weight: var(--fw-display);
+    line-height: var(--lh-body);
+    text-transform: uppercase;
+    text-decoration: none;
+  }
+
+  .footer__link {
+    margin: 0;
+    color: var(--color-gray-dark);
+    font-size: var(--fs-base);
+    font-weight: var(--fw-light);
+    line-height: var(--lh-body);
+    text-decoration: none;
+    transition: color var(--duration-fast);
+  }
+
+  a.footer__link:hover {
+    color: var(--color-orange);
+  }
+
+  .footer__link--bold {
+    font-weight: var(--fw-bold);
+  }
+
+  .footer__address {
+    margin: 0;
+    color: var(--color-black);
+    line-height: var(--lh-body);
+  }
+
+  .footer__logo {
+    display: inline-block;
+    max-width: 100%;
+  }
+
+  .footer__logo img {
+    width: var(--footer-logo-width);
+    height: auto;
+  }
+
+  .footer__socials {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: var(--space-8);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .footer__social {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: var(--icon-touch);
+    height: var(--icon-touch);
+    color: var(--color-gray-dark);
+    text-decoration: none;
+    transition: color var(--duration-fast);
+  }
+
+  .footer__social:hover {
+    color: var(--color-orange);
+  }
+
+  .footer__bottom {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: var(--section-space);
+    margin-inline: var(--row-margin);
+  }
+
+  .footer__bottom-col {
+    flex: 1 0 0;
+    max-width: 100%;
+    padding-inline: var(--column-gap);
+  }
+
+  .footer__bottom-col--shrink {
+    flex: 0 auto;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .footer__legal {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: var(--space-48);
+  }
+
+  @media (min-width: 1280px) {
+    .footer__col {
+      width: 20%;
+    }
+
+    .footer__stack--logo {
+      justify-content: flex-start;
+      align-items: center;
+    }
+  }
+
+  @media (min-width: 1920px) {
+    .footer__col {
+      flex: 1;
+      width: auto;
+    }
+
+    .footer__stack--logo {
+      align-items: flex-end;
+    }
+  }
+
+  @media (max-width: 991px) {
+    .footer__bottom {
+      flex-direction: column;
+      gap: var(--space-48);
+    }
+  }
+
+  @media (max-width: 767px) {
+    .footer {
+      --footer-bg-image: var(--bgSm);
+      padding-block: var(--space-48);
+    }
+
+    .footer__col {
+      width: 47%;
+    }
+
+    .footer__bottom {
+      margin-top: var(--space-48);
+    }
+
+    .footer__legal {
+      flex-direction: column;
+      gap: var(--space-24);
+    }
+  }
+
+  @media (max-width: 479px) {
+    .footer__row {
+      gap: var(--space-48);
+    }
+
+    .footer__col {
+      width: 100%;
+    }
+
+    .footer__bottom {
+      justify-content: flex-start;
+      align-items: flex-start;
+    }
+
+    .footer__legal {
+      align-items: flex-start;
+    }
+  }
+</style>

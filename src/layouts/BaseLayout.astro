@@ -11,7 +11,7 @@ import Analytics from '../components/layout/Analytics.astro';
 import PageBackground from '../components/layout/PageBackground.astro';
 import WhatsAppButton from '../components/layout/WhatsAppButton.astro';
 import type { Accent } from '../components/ui/Button.astro';
-import { contact, cta, header, mainNav } from '../data/navigation';
+import { contact, copyright, cta, footerColumns, footerLogoAlt, header, legalLinks, mainNav, socials } from '../data/navigation';
 
 interface Props {
   title: string;
@@ -110,7 +110,18 @@ const ogImageUrl = ogImage ? new URL(ogImage, Astro.site).href : undefined;
       <main id="main">
         <slot />
       </main>
-      {chrome && <Footer />}
+      {
+        chrome && (
+          <Footer
+            columns={footerColumns}
+            contact={contact}
+            socials={socials}
+            legalLinks={legalLinks}
+            copyright={copyright}
+            logoAlt={footerLogoAlt}
+          />
+        )
+      }
     </PageBackground>
     {chrome && <WhatsAppButton href={contact.whatsapp.href} label={contact.whatsapp.label} />}
 
