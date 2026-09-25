@@ -1,0 +1,153 @@
+---
+/**
+ * Testimonialkaart: foto als achtergrond met donkere gradient, quote-icoon en quote
+ * in Gate italic, oranje lijntje en naam – organisatie. Naam of organisatie mag
+ * ontbreken (dan geen streepje).
+ */
+import { Picture } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import Icon from './Icon.astro';
+
+export interface Testimonial {
+  quote: string;
+  name?: string;
+  organisation?: string;
+  image: { src: ImageMetadata; alt: string };
+}
+
+type Props = Testimonial;
+
+const { quote, name, organisation, image } = Astro.props;
+---
+
+<figure class="testimonial">
+  <div class="testimonial__quote">
+    <Icon name="quote" class="testimonial__icon" />
+    <blockquote class="testimonial__text">{quote}</blockquote>
+  </div>
+  <div class="testimonial__media">
+    <Picture
+      src={image.src}
+      alt={image.alt}
+      width={640}
+      height={960}
+      fit="cover"
+      position="center"
+      widths={[320, 480, 640, 960]}
+      sizes="(max-width: 479px) 303px, (max-width: 767px) 75vw, (max-width: 1439px) 50vw, 33vw"
+      formats={['avif', 'webp']}
+      loading="lazy"
+      decoding="async"
+      class="testimonial__image"
+    />
+    <span class="testimonial__shade"></span>
+    <span class="testimonial__shade"></span>
+  </div>
+  <span class="testimonial__line" aria-hidden="true"></span>
+  <figcaption class="testimonial__caption">
+    {name && <p class="testimonial__name">{name}</p>}
+    {name && organisation && <span class="testimonial__divider" aria-hidden="true">–</span>}
+    {organisation && <p class="testimonial__organisation">{organisation}</p>}
+  </figcaption>
+</figure>
+
+<style>
+  .testimonial {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: stretch;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+  }
+
+  .testimonial__quote {
+    position: relative;
+    z-index: var(--z-base);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: var(--space-24);
+  }
+
+  .testimonial__quote :global(.testimonial__icon) {
+    width: 3vw;
+    min-width: var(--icon-xl);
+    max-width: var(--quote-icon-max);
+    height: 3vw;
+    min-height: var(--icon-xl);
+    max-height: var(--quote-icon-max);
+    color: var(--color-orange);
+  }
+
+  .testimonial__text {
+    margin: var(--space-16) 0 0;
+    padding: 0;
+    font-family: var(--font-display);
+    font-size: var(--fs-quote);
+    font-style: italic;
+    line-height: var(--lh-relaxed);
+    letter-spacing: var(--ls-heading);
+  }
+
+  .testimonial__media {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+
+  .testimonial__media :global(.testimonial__image) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .testimonial__media :global(picture) {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .testimonial__shade {
+    position: absolute;
+    inset: 0;
+    background-color: var(--color-orange-a8);
+    background-image: var(--gradient-card-shade);
+  }
+
+  .testimonial__line {
+    position: relative;
+    z-index: var(--z-base);
+    width: var(--testimonial-line-width);
+    min-width: var(--testimonial-line-width);
+    margin-left: var(--space-24);
+    border: var(--border-width) solid var(--color-orange);
+  }
+
+  .testimonial__caption {
+    position: relative;
+    z-index: var(--z-base);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: center;
+    column-gap: var(--space-16);
+    padding: var(--space-24);
+  }
+
+  .testimonial__name,
+  .testimonial__organisation {
+    margin-bottom: 0;
+  }
+
+  .testimonial__name {
+    display: inline-flex;
+    font-weight: var(--fw-bold);
+  }
+
+  .testimonial__organisation {
+    color: var(--color-gray-light);
+  }
+</style>

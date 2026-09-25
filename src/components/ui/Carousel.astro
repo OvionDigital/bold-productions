@@ -1,0 +1,171 @@
+---
+/**
+ * Horizontale carousel met CSS scroll-snap en pijlknoppen (vervangt Owl Carousel).
+ * Volgt de Owl-instellingen van de site: 1 item + 24px peek (<480), 1 item + 64px peek
+ * (480–767), 2 items (768–1439), 3 items (≥1440). Items lijnen uit op de container,
+ * maar blijven ook daarbuiten zichtbaar (Owl: overflow visible). Plaats de carousel
+ * daarom over de volle breedte van de sectie, niet in een Container.
+ *
+ * Slot: <li>-elementen. Gedrag (knoppen, disabled-status) in scripts/carousel.ts.
+ */
+import Icon from './Icon.astro';
+
+interface Props {
+  label: string;
+  prevLabel: string;
+  nextLabel: string;
+  class?: string;
+}
+
+const { label, prevLabel, nextLabel, class: className } = Astro.props;
+---
+
+<div class:list={['carousel', className]} data-carousel role="region" aria-roledescription="carousel" aria-label={label}>
+  <ul class="carousel__track" data-carousel-track role="list">
+    <slot />
+  </ul>
+  <div class="carousel__nav">
+    <button type="button" class="carousel__button carousel__button--prev" data-carousel-prev aria-label={prevLabel} disabled>
+      <Icon name="arrow-left" class="carousel__icon" />
+    </button>
+    <button type="button" class="carousel__button carousel__button--next" data-carousel-next aria-label={nextLabel}>
+      <Icon name="arrow-right" class="carousel__icon" />
+    </button>
+  </div>
+</div>
+
+<style>
+  .carousel {
+    /* Owl-instellingen */
+    --carousel-items: 1;
+    --carousel-stage: var(--space-24);
+    --carousel-gap: var(--space-16);
+    /* Container waarop de items uitlijnen */
+    --carousel-cp: 0px;
+    --carousel-max: 100cqi;
+    --carousel-button: var(--carousel-nav-size);
+    --carousel-button-shift: 0%;
+
+    position: relative;
+    container-type: inline-size;
+  }
+
+  .carousel__track {
+    --inner: min(var(--carousel-max), 100cqi - 2 * var(--carousel-cp));
+    --offset: calc((100cqi - var(--inner)) / 2 + var(--carousel-stage));
+
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: calc(
+      (var(--inner) - 2 * var(--carousel-stage) - (var(--carousel-items) - 1) * var(--carousel-gap)) /
+        var(--carousel-items)
+    );
+    gap: var(--carousel-gap);
+    margin: 0;
+    padding: 0 var(--offset);
+    list-style: none;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--offset);
+    scrollbar-width: none;
+  }
+
+  .carousel__track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .carousel__track > :global(*) {
+    scroll-snap-align: start;
+  }
+
+  .carousel__nav {
+    --edge: calc((100cqi - min(var(--carousel-max), 100cqi - 2 * var(--carousel-cp))) / 2);
+
+    position: absolute;
+    top: 50%;
+    left: var(--edge);
+    right: var(--edge);
+    z-index: var(--z-menu-panel);
+    display: flex;
+    justify-content: space-between;
+    transform: translateY(-50%);
+    pointer-events: none;
+  }
+
+  .carousel__button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: var(--carousel-button);
+    height: var(--carousel-button);
+    border: var(--border-width) solid var(--color-white-a40);
+    border-radius: var(--radius-round);
+    background: var(--color-white-a50);
+    color: var(--color-black);
+    -webkit-backdrop-filter: blur(var(--blur-sm));
+    backdrop-filter: blur(var(--blur-sm));
+    pointer-events: auto;
+    transition: background var(--duration-fast) var(--ease-out);
+  }
+
+  .carousel__button--prev {
+    transform: translateX(calc(-1 * var(--carousel-button-shift)));
+  }
+
+  .carousel__button--next {
+    transform: translateX(var(--carousel-button-shift));
+  }
+
+  .carousel__button:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+
+  .carousel__button:not(:disabled):hover {
+    background: var(--color-white);
+  }
+
+  .carousel__button :global(.carousel__icon) {
+    --icon-size: 1rem;
+  }
+
+  @media (min-width: 480px) {
+    .carousel {
+      --carousel-stage: var(--space-64);
+      --carousel-gap: 0px;
+      --carousel-cp: var(--container-padding);
+    }
+  }
+
+  @media (max-width: 767px) {
+    .carousel__nav {
+      padding-inline: var(--space-8);
+    }
+  }
+
+  @media (min-width: 768px) {
+    .carousel {
+      --carousel-items: 2;
+      --carousel-stage: 0px;
+      --carousel-max: calc(var(--container-max) - 2 * var(--container-padding));
+      --carousel-button-shift: 50%;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .carousel {
+      --carousel-button: var(--carousel-nav-size-lg);
+    }
+
+    .carousel__button :global(.carousel__icon) {
+      --icon-size: 1.5rem;
+    }
+  }
+
+  @media (min-width: 1440px) {
+    .carousel {
+      --carousel-items: 3;
+    }
+  }
+</style>

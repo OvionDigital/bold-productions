@@ -1,0 +1,117 @@
+---
+/**
+ * Testimonials: gecentreerde kop en een carousel met testimonialkaarten over de
+ * volle breedte. Achtergrond: rookvideo (50%) over zwart met twee grote B-vormen.
+ */
+import Container from '../ui/Container.astro';
+import SectionHeading from '../ui/SectionHeading.astro';
+import Carousel from '../ui/Carousel.astro';
+import TestimonialCard, { type Testimonial } from '../ui/TestimonialCard.astro';
+import BackgroundVideo from '../ui/BackgroundVideo.astro';
+import type { HeadingGradient } from '../ui/Heading.astro';
+import boldBGreen from '../../assets/decor/bold-b-green.svg';
+import boldBYellow from '../../assets/decor/bold-b-yellow.svg';
+
+export interface TestimonialsProps {
+  eyebrow: string;
+  title: string;
+  gradient?: HeadingGradient;
+  items: Testimonial[];
+  carousel: { label: string; prevLabel: string; nextLabel: string };
+}
+
+type Props = TestimonialsProps;
+
+const { eyebrow, title, gradient = 'orange', items, carousel } = Astro.props;
+const bGreen = `url("${boldBGreen.src}")`;
+const bYellow = `url("${boldBYellow.src}")`;
+---
+
+<section class="testimonials" data-animate>
+  <Container class="testimonials__heading-wrap">
+    <SectionHeading eyebrow={eyebrow} title={title} gradient={gradient} class="testimonials__heading" />
+  </Container>
+
+  <Carousel {...carousel} class="testimonials__carousel">
+    {
+      items.map((item) => (
+        <li class="testimonials__item">
+          <TestimonialCard {...item} />
+        </li>
+      ))
+    }
+  </Carousel>
+
+  <div class="testimonials__bg" aria-hidden="true">
+    <BackgroundVideo layer="overlay" opacity="half" />
+    <div class="testimonials__bg-image"></div>
+  </div>
+</section>
+
+<style define:vars={{ bGreen, bYellow }}>
+  .testimonials {
+    position: relative;
+    z-index: var(--z-base);
+    padding-block: var(--section-padding);
+    overflow: hidden;
+  }
+
+  .testimonials :global(.testimonials__heading-wrap),
+  .testimonials :global(.testimonials__carousel) {
+    z-index: var(--z-base);
+  }
+
+  .testimonials :global(.testimonials__heading) {
+    width: min(var(--testimonials-heading-max), 100% - var(--space-48));
+    max-width: none;
+    margin-bottom: var(--space-48);
+  }
+
+  .testimonials__item {
+    height: var(--testimonial-height);
+    padding-inline: var(--column-gap);
+  }
+
+  .testimonials__bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .testimonials__bg-image {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--color-black-a70), var(--color-black-a70)), var(--bGreen), var(--bYellow),
+      linear-gradient(var(--color-black), var(--color-black));
+    background-position:
+      0 0,
+      40% 40%,
+      50%,
+      0 0;
+    background-repeat: repeat, no-repeat, no-repeat, repeat;
+    background-size:
+      auto,
+      auto 200%,
+      auto 200%,
+      auto;
+  }
+
+  @media (max-width: 479px) {
+    .testimonials :global(.testimonials__heading-wrap) {
+      padding-inline: 0;
+    }
+  }
+
+  @media (min-width: 1920px) {
+    .testimonials {
+      padding-block: var(--space-192);
+    }
+
+    .testimonials :global(.testimonials__heading) {
+      margin-bottom: var(--space-96);
+    }
+  }
+</style>

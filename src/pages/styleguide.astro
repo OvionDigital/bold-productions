@@ -22,7 +22,9 @@ import IntroHighlight from '../components/sections/IntroHighlight.astro';
 import RichText from '../components/ui/RichText.astro';
 import Timeline from '../components/sections/Timeline.astro';
 import BackgroundVideo from '../components/ui/BackgroundVideo.astro';
-import { hero, intro, timeline, trustedBy } from '../data/home';
+import Testimonials from '../components/sections/Testimonials.astro';
+import TestimonialCard from '../components/ui/TestimonialCard.astro';
+import { hero, intro, testimonials, timeline, trustedBy } from '../data/home';
 
 const colors = tokensByPrefix('--color-');
 const gradients = tokensByPrefix('--gradient-');
@@ -497,7 +499,25 @@ const nav = [
         <code>&lt;BackgroundVideo src layer opacity /&gt;</code>. Poster als AVIF/WebP; video laadt en speelt pas in beeld.
       </p>
       <div class="sg-video-demo"><BackgroundVideo layer="overlay" /></div>
+
+      <h3 class="sg-subtitle">TestimonialCard (ui)</h3>
+      <p class="sg-note">
+        <code>&lt;TestimonialCard quote name organisation image /&gt;</code>. Naam of organisatie mag ontbreken; dan
+        vervalt het streepje.
+      </p>
+      <div class="sg-row">
+        <div class="sg-card-demo"><TestimonialCard {...testimonials.items[1]!} /></div>
+        <div class="sg-card-demo"><TestimonialCard {...testimonials.items[0]!} /></div>
+        <div class="sg-card-demo"><TestimonialCard {...testimonials.items[4]!} /></div>
+      </div>
+
+      <h3 class="sg-subtitle">Testimonials + Carousel</h3>
+      <p class="sg-note">
+        <code>&lt;Testimonials eyebrow title gradient items carousel /&gt;</code>. De <code>Carousel</code> (ui) gebruikt
+        scroll-snap: 1/1/2/3 items, peek op mobiel, items blijven buiten de container zichtbaar.
+      </p>
     </Container>
+    <Testimonials {...testimonials} />
   </div>
 </BaseLayout>
 
@@ -751,6 +771,11 @@ const nav = [
     padding: var(--space-16);
     border: var(--border-width) dashed var(--color-orange);
     background: var(--color-orange-a8);
+  }
+
+  .sg-card-demo {
+    width: 320px;
+    height: 520px;
   }
 
   .sg-video-demo {

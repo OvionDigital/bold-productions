@@ -232,6 +232,11 @@
   --logo-tile-width-sm: 160px; /* ≤991 */
   --logo-tile-height-sm: 80px;
   --logo-tile-image: 150px;
+  --testimonial-height: 669px; /* vaste kaarthoogte per breakpoint (Webflow) */
+  --carousel-nav-size-lg: 64px; /* ≥1280 */
+  --quote-icon-max: 42px;
+  --testimonial-line-width: 200px;
+  --testimonials-heading-max: 900px;
   --navbar-side-width: 350px; /* logo- en actieblok ≥1440 */
   --dropdown-min-width: 250px;
   --menu-panel-min-width: 500px;
@@ -301,6 +306,7 @@
 /* ─── Responsive tokens ─────────────────────────────────────────────── */
 @media (min-width: 1280px) {
   :root {
+    --testimonial-height: 819px;
     --container-max: 1140px;
     --container-max-plain: 1140px;
   }
@@ -308,6 +314,7 @@
 
 @media (min-width: 1440px) {
   :root {
+    --testimonial-height: 624px;
     --container-max: 1320px;
     --container-max-plain: 1320px;
   }
@@ -315,6 +322,7 @@
 
 @media (min-width: 1920px) {
   :root {
+    --testimonial-height: 804px;
     --container-max: 1680px;
     --container-max-plain: 1680px;
   }
@@ -322,6 +330,7 @@
 
 @media (max-width: 991px) {
   :root {
+    --testimonial-height: 504px;
     --section-padding: 48px;
     --container-max: 720px;
     --container-max-plain: 720px;
@@ -331,6 +340,7 @@
 
 @media (max-width: 767px) {
   :root {
+    --testimonial-height: 736.5px;
     --container-max: none;
     --container-max-plain: none;
     --container-padding: 24px;
@@ -342,6 +352,7 @@
 
 @media (max-width: 479px) {
   :root {
+    --testimonial-height: 547.5px;
     --container-padding: 16px;
     --container-padding-wide: 16px;
   }

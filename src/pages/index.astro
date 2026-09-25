@@ -4,7 +4,8 @@ import Hero from '../components/sections/Hero.astro';
 import LogoMarquee from '../components/sections/LogoMarquee.astro';
 import IntroHighlight from '../components/sections/IntroHighlight.astro';
 import Timeline from '../components/sections/Timeline.astro';
-import { hero, intro, meta, timeline, trustedBy } from '../data/home';
+import Testimonials from '../components/sections/Testimonials.astro';
+import { hero, intro, meta, testimonials, timeline, trustedBy } from '../data/home';
 ---
 
 <BaseLayout title={meta.title} description={meta.description} ogImage={meta.ogImage}>
@@ -12,4 +13,5 @@ import { hero, intro, meta, timeline, trustedBy } from '../data/home';
   <LogoMarquee {...trustedBy} />
   <IntroHighlight {...intro} />
   <Timeline {...timeline} />
+  <Testimonials {...testimonials} />
 </BaseLayout>

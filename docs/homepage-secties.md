@@ -117,16 +117,14 @@ Geen sectie, maar hoort bij de layout (Webflow `.main` en `.bold-b-background`).
 - **Props**: `eyebrow` ("Dit deden we"), `title` ("En dit vonden ze", oranje gradient), `items: { quote, name, organisation, image {src, alt} }[]` (5 stuks, CMS).
 - **Opbouw**:
   - Kop gecentreerd (max. 900px, 48px marge, 96px op ≥1920).
-  - Carousel: 1 kaart met 24px peek + 16px gap (<480), 1 kaart met 64px peek (480–767), 2 kaarten (768–1439), 3 kaarten (≥1440). Even kaarten 48px lager (`padding-top`).
+  - Carousel: 1 kaart met 24px peek + 16px gap (<480), 1 kaart met 64px peek (480–767), 2 kaarten (768–1439), 3 kaarten (≥1440). Kaarten buiten de container blijven zichtbaar (Owl `overflow: visible`). _Correctie: de custom-CSS-regel "even kaarten 48px lager" wordt live niet toegepast (selector `.testimonial-section` bestaat niet), dus alle kaarten staan op één lijn._
   - Kaarthoogte per breakpoint: 669 / 504 (≤991) / 736.5 (≤767) / 547.5 (≤479) / 819 (≥1280) / 624 (≥1440) / 804 (≥1920).
   - Kaart: foto cover, twee donkere gradient-overlays (`--color-orange-a8` + `--gradient-card-shade`). Bovenaan het quote-icoon (oranje, 24–42px) en de quote in Gate italic `--fs-quote`. Onderaan een oranje lijntje van 200px, naam (Inter 700), "–", organisatie (`--color-gray-light`).
   - Pijlknoppen rond, 48px (64px op ≥1280), wit 50% + blur 4, half buiten de container (op ≤767 binnen, 8px inset). Uitgeschakeld = opacity .5.
   - Sectie-achtergrond: rookvideo (opacity .5) + laag met `--color-black-a70`, twee grote B-SVG's (200% hoog) en zwart.
 - **Media**: 5 foto's (`MIKE_Doorgedraaid_Logo-1 (68).jpg`, `ZDH_Fedbal-193.jpg`, `BOLD_Karakter-36.jpg`, `SPOT SEQ.01_16_26_24.Still001.jpg`, `Bold Productions (104).jpg`), `bold-b-green.svg`, `bold-b-svg.svg`, rookvideo.
 - **Gedrag**: Owl Carousel → `scripts/carousel.ts`: native horizontale scroll met `scroll-snap`, knoppen scrollen één kaart, disabled-status aan het begin en eind, toetsenbord en swipe werken native. Geen dependency nodig.
-- **Tekstopmerkingen** (letterlijk overnemen, maar check):
-  - Kaart 1: naam én organisatie zijn allebei "Reinier Peters".
-  - Kaart 5: naam is "Organisatie" (organisatie "Dorpsfeest Wehl").
+- **Tekstbeslissingen** (akkoord klant): kaart 1 toont "Reinier Peters" één keer; kaart 5 toont alleen "Dorpsfeest Wehl".
 - **Hergebruik**: vrijwel zeker op doelgroep- en dienstpagina's (mogelijk gefilterd op doelgroep).
 
 ## 7. Polaroidgalerij "Bold backstage / We kennen onze plek"
