@@ -1,0 +1,325 @@
+/*
+ * Design tokens — Bold Productions
+ *
+ * Bron: boldproductions.webflow.shared.*.css + reference/webflow-custom-head.html.
+ * Dit is de ENIGE plek voor kleuren, font-sizes, spacing en andere vaste waarden.
+ * Componenten gebruiken alleen var(--…).
+ *
+ * Breakpoints (Webflow, desktop-first). Custom properties werken niet in media
+ * queries, dus gebruik deze waarden letterlijk:
+ *   --bp-tablet:      max-width: 991px
+ *   --bp-mobile-l:    max-width: 767px
+ *   --bp-mobile:      max-width: 479px
+ *   --bp-desktop-md:  min-width: 1280px
+ *   --bp-desktop-lg:  min-width: 1440px
+ *   --bp-desktop-xl:  min-width: 1920px
+ */
+
+/* ─── Fonts ─────────────────────────────────────────────────────────── */
+
+@font-face {
+  font-family: 'Gate';
+  src: url('/fonts/gate-400.woff2') format('woff2');
+  font-weight: 300 400; /* Webflow gebruikt soms 300; in de praktijk 400 */
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Gate';
+  src: url('/fonts/gate-400-italic.woff2') format('woff2');
+  font-weight: 300 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* Inter: één variabel bestand (latin-subset) voor 300–700. 400/600/800 worden niet gebruikt. */
+@font-face {
+  font-family: 'Inter';
+  src: url('/fonts/inter-latin-var.woff2') format('woff2');
+  font-weight: 300 700;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+    U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* Metrisch afgestemde fallbacks: minder layout-shift tijdens font-swap */
+@font-face {
+  font-family: 'Gate Fallback';
+  src: local('Arial');
+  size-adjust: 96.98%;
+  ascent-override: 78.26%;
+  descent-override: 20.62%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: 'Inter Fallback';
+  src: local('Arial');
+  size-adjust: 107.12%;
+  ascent-override: 90.44%;
+  descent-override: 22.52%;
+  line-gap-override: 0%;
+}
+
+:root {
+  /* ─── Kleuren: merk ─────────────────────────────────────────────── */
+  --color-orange: #ff5500;
+  --color-orange-light: #ffc0a1;
+  --color-yellow: #f9ff00;
+  --color-yellow-light: #feffd7;
+  --color-green: #8bff3f;
+  --color-green-light: #efffe4;
+
+  /* ─── Kleuren: neutraal ─────────────────────────────────────────── */
+  --color-black: #000000;
+  --color-white: #ffffff;
+  --color-gray-dark: #2e2a29; /* Webflow: --bold-gray */
+  --color-gray: #767676;
+  --color-gray-light: #c6c6c6;
+  --color-ink: #1a1a1a; /* polaroid-caption */
+  --color-page: #130d0b; /* basis onder de achtergrondtextuur */
+  --color-whatsapp: #25d366;
+  --color-transparent: #00000000;
+
+  /* ─── Kleuren: transparanten ────────────────────────────────────── */
+  --color-black-a48: #0000007a; /* Webflow: --dark-transparent */
+  --color-black-a50: #00000080;
+  --color-black-a70: #000000b3;
+  --color-black-a80: #000000cc;
+  --color-white-a8: #ffffff14;
+  --color-white-a20: #ffffff33;
+  --color-white-a40: #ffffff66;
+  --color-white-a48: #ffffff7a;
+  --color-white-a50: #ffffff80;
+  --color-white-a80: #ffffffcc;
+  --color-page-a70: #130d0bb3;
+  --color-logo-bg: #2e2a2980; /* Webflow: --logo-transparent */
+  --color-logo-border: #76767633;
+  --color-orange-a8: #ff6b2114;
+  --color-whatsapp-a40: #25d36666;
+  --color-whatsapp-a60: #25d36699;
+
+  /* ─── Gradients ─────────────────────────────────────────────────── */
+  --gradient-orange: linear-gradient(135deg, var(--color-orange), var(--color-orange-light) 42%, var(--color-orange));
+  --gradient-yellow: linear-gradient(135deg, var(--color-yellow), var(--color-yellow-light) 42%, var(--color-yellow));
+  --gradient-green: linear-gradient(135deg, var(--color-green), var(--color-green-light) 42%, var(--color-green));
+  --gradient-navbar: linear-gradient(#000000e6, var(--color-transparent));
+  --gradient-hero-overlay: radial-gradient(circle, var(--color-black-a50), var(--color-black-a70));
+  --gradient-card-shade: linear-gradient(0deg, var(--color-black-a70), var(--color-transparent));
+  --gradient-image-overlay: radial-gradient(circle, #0000004d, var(--color-black-a70));
+
+  /* ─── Accent (thema per doelgroep) ──────────────────────────────── */
+  /* Standaard: oranje (events). Overschrijf met data-accent op een voorouder. */
+  --accent: var(--color-orange);
+  --accent-light: var(--color-orange-light);
+  --accent-gradient: var(--gradient-orange);
+
+  /* ─── Typografie: families ──────────────────────────────────────── */
+  --font-display: 'Gate', 'Gate Fallback', Arial, sans-serif;
+  --font-body: 'Inter', 'Inter Fallback', Arial, sans-serif;
+  --font-mono: 'Courier New', monospace;
+
+  /* ─── Typografie: gewichten ─────────────────────────────────────── */
+  --fw-light: 300; /* ook voor Webflow 400 */
+  --fw-medium: 500; /* ook voor Webflow 600 */
+  --fw-bold: 700; /* ook voor Webflow 800 */
+  --fw-display: 400; /* Gate kent alleen 400 */
+
+  /* ─── Typografie: groottes ──────────────────────────────────────── */
+  --fs-hero: clamp(2.625rem, 1.5865rem + 4.6154vw, 7.125rem); /* 42 → 114 */
+  --fs-h1: clamp(2.625rem, 1.2188rem + 3.75vw, 4.5rem); /* 42 → 72 */
+  --fs-h2: clamp(2.25rem, 1.9615rem + 1.2821vw, 3.5rem); /* 36 → 56 */
+  --fs-h3: clamp(28px, 2.4vw, 36px);
+  --fs-h4: clamp(22px, 1.8vw, 28px);
+  --fs-h5: clamp(18px, 1.2vw, 20px);
+  --fs-h6: clamp(14px, 0.9vw, 16px);
+  --fs-number: clamp(28px, 18px + 1.25vw, 64px); /* tijdlijn 01/02/03 */
+  --fs-highlight: clamp(24px, 2.2vw, 36px); /* scroll-highlight */
+  --fs-nav-parent: clamp(22px, 2.2vw, 28px); /* menupaneel */
+  --fs-subtitle: clamp(1.125rem, 1.0385rem + 0.3846vw, 1.5rem); /* 18 → 24 */
+  --fs-quote: clamp(1.125rem, 1.0313rem + 0.25vw, 1.25rem); /* 18 → 20 */
+  --fs-lead: clamp(16px, 14px + 0.42vw, 20px); /* rich text .fs-20 */
+  --fs-xl: 36px;
+  --fs-lg: 24px;
+  --fs-md: 20px;
+  --fs-intro: 18px;
+  --fs-label: 17px;
+  --fs-base: 16px;
+  --fs-sm: 14px;
+  --fs-xs: 13px;
+  --fs-cursor: 28px; /* popcorn-cursor */
+
+  /* ─── Typografie: regelhoogtes ──────────────────────────────────── */
+  --lh-display-tight: 84%; /* h3 */
+  --lh-display: 88%; /* h1, h2, hero */
+  --lh-heading-sm: 24px; /* h4 */
+  --lh-heading-xs: 20px; /* h5 */
+  --lh-heading-xxs: 18px; /* h6 */
+  --lh-snug: 120%;
+  --lh-normal: 140%;
+  --lh-relaxed: 150%;
+  --lh-body: 24px;
+  --lh-paragraph: 175%;
+  --lh-none: 1;
+
+  /* ─── Typografie: letterspatiëring ──────────────────────────────── */
+  --ls-heading: -0.02em;
+  --ls-subtitle: 0.26em;
+  --ls-label: 0.18em;
+  --ls-caption: 0.05em;
+
+  /* ─── Spacing ───────────────────────────────────────────────────── */
+  --space-2: 2px;
+  --space-4: 4px;
+  --space-8: 8px;
+  --space-10: 10px;
+  --space-12: 12px;
+  --space-16: 16px;
+  --space-20: 20px;
+  --space-24: 24px;
+  --space-28: 28px;
+  --space-32: 32px;
+  --space-36: 36px;
+  --space-42: 42px;
+  --space-48: 48px;
+  --space-64: 64px;
+  --space-96: 96px;
+  --space-112: 112px;
+  --space-136: 136px;
+  --space-144: 144px;
+  --space-192: 192px;
+
+  /* Semantisch (responsive, zie media queries onderaan) */
+  --section-padding: 96px;
+  --column-gap: 12px; /* halve goot tussen kolommen */
+  --row-margin: -12px;
+  --container-padding: 12px;
+  --container-padding-wide: 48px; /* hero, navbar, fluid */
+  --navbar-padding-y: 24px;
+
+  /* ─── Containers ────────────────────────────────────────────────── */
+  --container-max: 940px; /* 992–1279 */
+  --container-narrow: 816px; /* section-heading, intro */
+  --container-large: 80rem;
+
+  /* ─── Afmetingen ────────────────────────────────────────────────── */
+  --button-height: 64px;
+  --button-height-large: 64px; /* 56px op mobiel */
+  --button-padding-x-large: 32px; /* 24px op mobiel */
+  --button-height-small: 48px;
+  --button-padding-x: 32px;
+  --button-padding-x-small: 24px;
+  --icon-sm: 16px;
+  --icon-md: 18px;
+  --icon-lg: 20px;
+  --icon-xl: 24px;
+  --icon-touch: 36px;
+  --carousel-nav-size: 48px;
+  --whatsapp-size: 56px;
+  --logo-width: 154px;
+  --logo-width-mobile: 124px;
+  --hero-min-height: 550px;
+
+  /* ─── Randen & radii ────────────────────────────────────────────── */
+  --border-width: 1px;
+  --radius-none: 0;
+  --radius-md: 12px;
+  --radius-round: 50%;
+  --radius-pill: 99999px;
+
+  /* ─── Schaduwen ─────────────────────────────────────────────────── */
+  --shadow-polaroid: 0 8px 32px var(--color-black-a80);
+  --shadow-card-hover: 0 0 32px var(--color-black-a50);
+  --shadow-whatsapp: 0 4px 16px var(--color-whatsapp-a40);
+  --shadow-whatsapp-hover: 0 6px 20px var(--color-whatsapp-a60);
+
+  /* ─── Blur ──────────────────────────────────────────────────────── */
+  --blur-sm: 4px;
+  --blur-md: 8px;
+
+  /* ─── Beweging ──────────────────────────────────────────────────── */
+  --duration-fast: 0.2s;
+  --duration-base: 0.3s;
+  --duration-slow: 0.6s;
+  --ease-nav: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --ease-out: ease;
+  --marquee-duration: 14s;
+
+  /* ─── Lagen ─────────────────────────────────────────────────────── */
+  --z-below: -1;
+  --z-base: 1;
+  --z-overlay: 3;
+  --z-content: 4;
+  --z-menu-overlay: 10;
+  --z-menu-panel: 11;
+  --z-menu-controls: 12;
+  --z-navbar: 999;
+  --z-whatsapp: 9000;
+  --z-cursor: 9999;
+}
+
+/* ─── Accentthema's ─────────────────────────────────────────────────── */
+/* Webflow-varianten "geel" (artiesten) en "groen" (zakelijke events) */
+[data-accent='orange'] {
+  --accent: var(--color-orange);
+  --accent-light: var(--color-orange-light);
+  --accent-gradient: var(--gradient-orange);
+}
+
+[data-accent='yellow'] {
+  --accent: var(--color-yellow);
+  --accent-light: var(--color-yellow-light);
+  --accent-gradient: var(--gradient-yellow);
+}
+
+[data-accent='green'] {
+  --accent: var(--color-green);
+  --accent-light: var(--color-green-light);
+  --accent-gradient: var(--gradient-green);
+}
+
+/* ─── Responsive tokens ─────────────────────────────────────────────── */
+@media (min-width: 1280px) {
+  :root {
+    --container-max: 1140px;
+  }
+}
+
+@media (min-width: 1440px) {
+  :root {
+    --container-max: 1320px;
+  }
+}
+
+@media (min-width: 1920px) {
+  :root {
+    --container-max: 1680px;
+  }
+}
+
+@media (max-width: 991px) {
+  :root {
+    --section-padding: 48px;
+    --container-max: 720px;
+    --container-padding-wide: 36px;
+  }
+}
+
+@media (max-width: 767px) {
+  :root {
+    --container-max: none;
+    --container-padding: 24px;
+    --container-padding-wide: 24px;
+    --button-height-large: 56px;
+    --button-padding-x-large: 24px;
+  }
+}
+
+@media (max-width: 479px) {
+  :root {
+    --container-padding: 16px;
+    --container-padding-wide: 16px;
+  }
+}

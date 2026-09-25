@@ -1,0 +1,50 @@
+---
+/**
+ * Inline SVG-icoon. Kleur via currentColor, grootte via de `size`-prop of CSS.
+ * Registratie van iconen: ./icons.ts
+ */
+import type { HTMLAttributes } from 'astro/types';
+import { icons, type FillIcon, type IconName, type StrokeIcon } from './icons';
+
+export type { IconName };
+
+interface Props extends Omit<HTMLAttributes<'svg'>, 'name' | 'style'> {
+  style?: string;
+  name: IconName;
+  /** CSS-lengte, bijv. 'var(--icon-md)'. Zonder size: 1em. */
+  size?: string;
+  /** Toegankelijke naam. Zonder label is het icoon decoratief (aria-hidden). */
+  label?: string;
+}
+
+const { name, size, label, class: className, style, ...rest } = Astro.props;
+const icon: StrokeIcon | FillIcon = icons[name];
+const strokeAttrs: HTMLAttributes<'svg'> = icon.stroke
+  ? { fill: 'none', stroke: 'currentColor', 'stroke-width': 2, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }
+  : { fill: 'currentColor' };
+const sizeStyle = size ? `--icon-size:${size};` : '';
+---
+
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox={icon.viewBox}
+  class:list={['icon', className]}
+  style={`${sizeStyle}${style ?? ''}`}
+  role={label ? 'img' : undefined}
+  aria-label={label}
+  aria-hidden={label ? undefined : 'true'}
+  focusable="false"
+  {...strokeAttrs}
+  {...rest}
+>
+  {icon.paths.map((d) => <path d={d} />)}
+</svg>
+
+<style>
+  .icon {
+    width: var(--icon-size, 1em);
+    height: var(--icon-size, 1em);
+    flex: none;
+    display: inline-block;
+  }
+</style>

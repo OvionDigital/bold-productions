@@ -1,0 +1,34 @@
+# build
+dist/
+.astro/
+
+# dependencies
+node_modules/
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# env
+.env
+.env.*
+!.env.example
+
+# cloudflare
+.wrangler/
+.dev.vars
+
+# visuele vergelijking (gegenereerd)
+compare/
+
+# playwright
+test-results/
+playwright-report/
+
+# os / editor
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/extensions.json
+.idea/

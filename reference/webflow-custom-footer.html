@@ -1,0 +1,295 @@
+<div class="cursor-cinema">🍿</div>
+<script src="https://player.vimeo.com/api/player.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.14.1/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.14.1/dist/ScrollTrigger.min.js"></script>
+<script src="https://unpkg.com/lenis@1.3.23/dist/lenis.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/split-type@0.3.4/umd/index.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+
+<script>
+  // ─── Lenis + GSAP ────────────────────────────────────────────
+  gsap.registerPlugin(ScrollTrigger);
+
+  var lenis = new Lenis({
+    prevent: function (node) {
+      return node.closest('.menu-panel') !== null;
+    },
+  });
+  lenis.on('scroll', ScrollTrigger.update);
+  gsap.ticker.add(function (time) {
+    lenis.raf(time * 1000);
+  });
+  gsap.ticker.lagSmoothing(0);
+
+  // ─── Globale detectie ────────────────────────────────────────
+  var menuPanel = document.querySelector('.menu-panel');
+  var isInIframe = window.self !== window.top;
+  var isWebflowDesigner = isInIframe && window.location.hostname.includes('webflow.io');
+
+  // ─── Scroll-highlight ────────────────────────────────────────
+  document.querySelectorAll('.scroll-highlight').forEach(function (el) {
+    var text = new SplitType(el, { types: ['chars', 'words'] });
+    if (!text.chars || !text.chars.length) return;
+
+    gsap.set(text.chars, { opacity: 0.15 });
+
+    gsap.to(text.chars, {
+      keyframes: [
+        { opacity: 1, textShadow: '0 0 16px rgba(255, 255, 255, 0.9)', duration: 0.3 },
+        { textShadow: 'none', duration: 0.7 },
+      ],
+      stagger: 0.04,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: el,
+        start: 'top 80%',
+        end: 'bottom 30%',
+        scrub: true,
+      },
+    });
+  });
+
+  // ─── Owl Carousel ────────────────────────────────────────────
+  jQuery(document).ready(function ($) {
+    $('.owl-carousel').owlCarousel({
+      items: 2,
+      nav: true,
+      dots: false,
+      navText: ['<svg xmlns="http://www.w3.org/2000/svg" class="owl-prev-custom" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>', '<svg xmlns="http://www.w3.org/2000/svg" class="owl-next-custom" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>'],
+      responsive: {
+        0: { items: 1, stagePadding: 24, margin: 16 },
+        480: { items: 1, stagePadding: 64 },
+        768: { items: 2 },
+        1440: { items: 3 },
+      },
+    });
+  });
+
+  // ─── Menu state ──────────────────────────────────────────────
+  function isMenuOpen() {
+    if (!menuPanel) return false;
+    var s = window.getComputedStyle(menuPanel);
+    return s.display !== 'none' && s.visibility !== 'hidden' && s.opacity !== '0';
+  }
+
+  if (menuPanel) {
+    new MutationObserver(function () {
+      if (isMenuOpen()) {
+        document.body.classList.add('body-menu-open');
+        lenis.stop();
+        setTimeout(function () {
+          menuPanel.style.overflowY = 'scroll';
+        }, 50);
+      } else {
+        document.body.classList.remove('body-menu-open');
+        menuPanel.style.overflowY = '';
+        lenis.start();
+      }
+    }).observe(menuPanel, { attributes: true, attributeFilter: ['style'] });
+
+    document.addEventListener(
+      'wheel',
+      function (e) {
+        if (!isMenuOpen()) return;
+        if (menuPanel.contains(e.target)) return;
+        e.preventDefault();
+        e.stopPropagation();
+      },
+      { passive: false, capture: true },
+    );
+  }
+
+  // ─── Cinema cursor ───────────────────────────────────────────
+  var cinemaCursor = document.querySelector('.cursor-cinema');
+  var cinemaSection = document.getElementById('cinema');
+
+  if (cinemaCursor && cinemaSection) {
+    cinemaCursor.style.cssText = 'position:fixed;opacity:0;pointer-events:none;z-index:9999;font-size:28px;line-height:1;transform:translate(-50%,-50%);';
+
+    window.addEventListener('mousemove', function (e) {
+      gsap.to(cinemaCursor, { x: e.clientX, y: e.clientY, duration: 0.1, ease: 'power2.out' });
+    });
+
+    cinemaSection.addEventListener('mouseenter', function () {
+      cinemaCursor.style.opacity = '1';
+    });
+    cinemaSection.addEventListener('mouseleave', function () {
+      cinemaCursor.style.opacity = '0';
+      document.querySelectorAll('.popcorn-trail').forEach(function (el) {
+        el.remove();
+      });
+    });
+
+    var lastTrail = 0;
+    cinemaSection.addEventListener('mousemove', function (e) {
+      var now = Date.now();
+      if (now - lastTrail < 80) return;
+      lastTrail = now;
+      var pop = document.createElement('div');
+      pop.className = 'popcorn-trail';
+      pop.textContent = '🍿';
+      pop.style.cssText = 'position:fixed;left:' + e.clientX + 'px;top:' + e.clientY + 'px;font-size:28px;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);line-height:1;';
+      document.body.appendChild(pop);
+      gsap.to(pop, {
+        y: -50,
+        x: (Math.random() - 0.5) * 50,
+        opacity: 0,
+        scale: 0.4,
+        duration: 0.9,
+        ease: 'power2.out',
+        onComplete: function () {
+          pop.remove();
+        },
+      });
+    });
+  }
+
+  // ─── DOMContentLoaded ────────────────────────────────────────
+  document.addEventListener('DOMContentLoaded', function () {
+    // Multiselect dropdown
+    var msWrapper = document.querySelector('.ms-wrapper');
+    var msTrigger = document.querySelector('.ms-trigger');
+    var msDropdown = document.querySelector('.ms-dropdown');
+    var msCheckboxes = document.querySelectorAll('.ms-option input[type="checkbox"]');
+    var msHidden = document.querySelector('.ms-hidden-input');
+
+    if (msWrapper && msTrigger && msDropdown) {
+      msTrigger.addEventListener('click', function (e) {
+        e.stopPropagation();
+        msDropdown.classList.toggle('is-open');
+      });
+      document.addEventListener('click', function (e) {
+        if (!msWrapper.contains(e.target)) msDropdown.classList.remove('is-open');
+      });
+      msCheckboxes.forEach(function (cb) {
+        cb.addEventListener('change', updateMs);
+      });
+
+      function updateMs() {
+        var selected = Array.from(msCheckboxes)
+          .filter(function (cb) {
+            return cb.checked;
+          })
+          .map(function (cb) {
+            return cb.closest('.ms-option').querySelector('label,span,.w-form-label').textContent.trim();
+          });
+        msTrigger.textContent = selected.length === 0 ? 'Selecteer dienst(en)' : selected.length === 1 ? selected[0] : selected.length + ' diensten geselecteerd';
+        if (msHidden) msHidden.value = selected.join(', ');
+      }
+    }
+
+    // Filters (work pagina)
+    var activeDoelgroep = 'alle';
+    var activeDienst = 'alle';
+
+    function applyFilters() {
+      var count = 0;
+      document.querySelectorAll('.work-overview-item').forEach(function (item) {
+        var tags = item.querySelectorAll('.work-overview-tag-text');
+        var dg = tags[0] ? tags[0].textContent.trim().toLowerCase() : '';
+        var d = tags[1] ? tags[1].textContent.trim().toLowerCase() : '';
+        var match = (activeDoelgroep === 'alle' || dg === activeDoelgroep || dg === 'alle') && (activeDienst === 'alle' || d === activeDienst || d === 'alle');
+        item.classList.toggle('is-filtered', !match);
+        if (match) count++;
+      });
+      var noResults = document.querySelector('.work-no-results');
+      if (noResults) noResults.classList.toggle('is-visible', count === 0);
+      if (window.ScrollTrigger)
+        setTimeout(function () {
+          ScrollTrigger.refresh();
+        }, 100);
+    }
+
+    document.querySelectorAll('[data-filter-group] .work-overview-tag').forEach(function (pill) {
+      pill.addEventListener('click', function (e) {
+        e.preventDefault();
+        var group = this.closest('[data-filter-group]').getAttribute('data-filter-group');
+        var value = this.getAttribute('data-value').toLowerCase();
+        this.closest('[data-filter-group]')
+          .querySelectorAll('.work-overview-tag')
+          .forEach(function (p) {
+            p.classList.remove('is-active');
+          });
+        this.classList.add('is-active');
+        if (group === 'doelgroep') activeDoelgroep = value;
+        else activeDienst = value;
+        applyFilters();
+      });
+    });
+
+    // URL filter bij laden
+    (function () {
+      var filter = new URLSearchParams(window.location.search).get('filter');
+      if (filter) {
+        var slugMap = { events: 'events', artiesten: 'artiesten', 'zakelijke-events': 'zakelijke events' };
+        var value = slugMap[filter];
+        if (value) {
+          document.querySelectorAll('[data-filter-group="doelgroep"] .work-overview-tag').forEach(function (p) {
+            p.classList.toggle('is-active', p.getAttribute('data-value').toLowerCase() === value);
+          });
+          activeDoelgroep = value;
+        }
+      }
+      applyFilters();
+    })();
+  });
+
+  // ─── Scroll-in animaties ──────────────────────────────────────
+  document.querySelectorAll('.animate-on-scroll').forEach(function (el) {
+    ScrollTrigger.create({
+      trigger: el,
+      start: 'top 70%',
+      onEnter: function () {
+        el.classList.add('is-visible');
+      },
+      once: true,
+    });
+  });
+
+  // ─── Anchor links ────────────────────────────────────────────
+  document.querySelectorAll('a[href^="#"]').forEach(function (link) {
+    link.addEventListener('click', function (e) {
+      var id = this.getAttribute('href');
+      if (id === '#') return;
+      var target = document.querySelector(id);
+      if (!target) return;
+      e.preventDefault();
+      lenis.scrollTo(target, { offset: -80 });
+    });
+  });
+
+  // ─── Lazy load hero iframe ────────────────────────────────────
+  window.addEventListener('load', function () {
+    document.querySelectorAll('.hero-iframe[data-src]').forEach(function (iframe) {
+      iframe.src = iframe.getAttribute('data-src');
+    });
+  });
+</script>
+
+<script>
+  window.addEventListener('load', function () {
+    if (window.innerWidth <= 767 && !document.body.classList.contains('home')) {
+      var iframe = document.querySelector('.iframe-hero iframe');
+      if (iframe) iframe.src = '';
+
+      var loaders = document.querySelectorAll('.video-hero-loader');
+      loaders.forEach(function (loader) {
+        loader.style.display = 'none';
+      });
+    }
+  });
+</script>
+
+<script>
+  document.querySelectorAll('.team-hover-video').forEach(function (video) {
+    var item = video.closest('.team-item');
+    item.addEventListener('mouseenter', function () {
+      video.currentTime = 0;
+      video.play();
+    });
+    item.addEventListener('mouseleave', function () {
+      video.pause();
+    });
+  });
+</script>

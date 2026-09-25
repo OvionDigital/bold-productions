@@ -1,0 +1,103 @@
+---
+/**
+ * Basislayout voor alle pagina's: <head> (meta, fonts-preload, favicons),
+ * Header, Footer, WhatsApp-knop en de ene interactiebundel.
+ */
+import '../styles/tokens.css';
+import '../styles/global.css';
+import Header from '../components/layout/Header.astro';
+import Footer from '../components/layout/Footer.astro';
+import Analytics from '../components/layout/Analytics.astro';
+import type { Accent } from '../components/ui/Button.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Absolute of site-relatieve URL van de social-share-afbeelding */
+  ogImage?: string;
+  /** Accentkleur van de pagina (events oranje, artiesten geel, zakelijk groen) */
+  accent?: Accent;
+  noindex?: boolean;
+  /** Header, footer en WhatsApp-knop tonen (uit voor bijv. de styleguide) */
+  chrome?: boolean;
+  /** Voor preloads van het LCP-beeld per pagina */
+  preloadImage?: { src: string; srcset?: string; sizes?: string; type?: string };
+}
+
+const {
+  title,
+  description,
+  ogImage,
+  accent = 'orange',
+  noindex = false,
+  chrome = true,
+  preloadImage,
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImageUrl = ogImage ? new URL(ogImage, Astro.site).href : undefined;
+---
+
+<!doctype html>
+<html lang="nl-NL">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    {ogImageUrl && <meta property="og:image" content={ogImageUrl} />}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+
+    <!-- JS-vlag en statische modus (?static=1) vóór de eerste paint -->
+    <script is:inline>
+      document.documentElement.classList.add('js');
+      if (new URLSearchParams(location.search).has('static')) document.documentElement.classList.add('is-static');
+    </script>
+
+    <!-- Gate normal + italic staan allebei boven de vouw (hero-titel) -->
+    <link rel="preload" href="/fonts/gate-400.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/gate-400-italic.woff2" as="font" type="font/woff2" crossorigin />
+    {
+      preloadImage && (
+        <link
+          rel="preload"
+          as="image"
+          href={preloadImage.src}
+          imagesrcset={preloadImage.srcset}
+          imagesizes={preloadImage.sizes}
+          type={preloadImage.type}
+          fetchpriority="high"
+        />
+      )
+    }
+
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-light-32.png" media="(prefers-color-scheme: light)" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-dark-32.png" media="(prefers-color-scheme: dark)" />
+    <link rel="icon" type="image/png" sizes="48x48" href="/favicons/favicon-48.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/favicons/favicon-192.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-touch-icon.png" />
+
+    <Analytics />
+    <slot name="head" />
+  </head>
+  <body data-accent={accent}>
+    {chrome && <Header />}
+    <main id="main">
+      <slot />
+    </main>
+    {chrome && <Footer />}
+
+    <script>
+      import '../scripts/main';
+    </script>
+  </body>
+</html>

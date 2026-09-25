@@ -1,0 +1,38 @@
+---
+/**
+ * Horizontale container.
+ *   default: max-breedte per breakpoint (940/1140/1320/1680, tablet 720), goot 12/24/16px
+ *   wide:    volle breedte met ruime goot (48/36/24/16px) — hero, navbar, fluid
+ */
+import type { HTMLTag } from 'astro/types';
+
+interface Props {
+  width?: 'default' | 'wide';
+  as?: HTMLTag;
+  class?: string;
+}
+
+const { width = 'default', as: Tag = 'div', class: className } = Astro.props;
+---
+
+<Tag class:list={['container', `container--${width}`, className]}>
+  <slot />
+</Tag>
+
+<style>
+  .container {
+    position: relative;
+    width: 100%;
+    margin-inline: auto;
+  }
+
+  .container--default {
+    max-width: var(--container-max);
+    padding-inline: var(--container-padding);
+  }
+
+  .container--wide {
+    max-width: none;
+    padding-inline: var(--container-padding-wide);
+  }
+</style>

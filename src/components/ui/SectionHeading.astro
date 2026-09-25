@@ -1,0 +1,59 @@
+---
+/**
+ * Gecentreerde sectiekop: eyebrow + h2 met gradient (Webflow: .section-heading).
+ * Gebruikt in o.a. testimonials ("Dit deden we / En dit vonden ze") en
+ * polaroidgalerij ("Bold backstage / We kennen onze plek").
+ */
+import Eyebrow from './Eyebrow.astro';
+import Heading, { type HeadingGradient } from './Heading.astro';
+
+interface Props {
+  eyebrow?: string;
+  title: string;
+  gradient?: HeadingGradient;
+  titleAs?: 'h1' | 'h2' | 'h3';
+  /** Ondermarge: default 64/48/36px, none 0 */
+  spacing?: 'default' | 'none';
+  class?: string;
+}
+
+const { eyebrow, title, gradient = 'accent', titleAs = 'h2', spacing = 'default', class: className } = Astro.props;
+---
+
+<header class:list={['section-heading', `section-heading--${spacing}`, className]}>
+  {eyebrow && <Eyebrow text={eyebrow} align="center" />}
+  <Heading as={titleAs} size="h2" text={title} gradient={gradient} align="center" flush />
+</header>
+
+<style>
+  .section-heading {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-24);
+    max-width: var(--container-narrow);
+    margin-inline: auto;
+    text-align: center;
+  }
+
+  .section-heading--default {
+    margin-bottom: var(--space-64);
+  }
+
+  .section-heading--none {
+    margin-bottom: 0;
+  }
+
+  @media (max-width: 991px) {
+    .section-heading--default {
+      margin-bottom: var(--space-48);
+    }
+  }
+
+  @media (max-width: 767px) {
+    .section-heading--default {
+      margin-bottom: var(--space-36);
+    }
+  }
+</style>

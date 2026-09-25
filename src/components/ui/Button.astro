@@ -1,0 +1,178 @@
+---
+/**
+ * Knop of link met knopstijl.
+ *
+ * Varianten (Webflow-klasse → variant):
+ *   .button.orange / .button.yellow → primary  (gradient-vulling, zwarte tekst)
+ *   .button.orange-outline          → outline  (accentrand, gradient-tekst)
+ *   .button.white-outline           → ghost    (donker glas, witte tekst)
+ * Kleur volgt het accent (data-accent op een voorouder) of de `accent`-prop.
+ */
+import type { HTMLAttributes } from 'astro/types';
+import Icon, { type IconName } from './Icon.astro';
+
+export type ButtonVariant = 'primary' | 'outline' | 'ghost';
+export type ButtonSize = 'small' | 'default' | 'large';
+export type Accent = 'orange' | 'yellow' | 'green';
+
+interface Props {
+  label: string;
+  href?: string;
+  variant?: ButtonVariant;
+  size?: ButtonSize;
+  accent?: Accent;
+  /** Icoon rechts van de tekst. `null` voor geen icoon. */
+  icon?: IconName | null;
+  /** Toon op mobiel (≤767px) alleen het icoon, als vierkante knop. */
+  iconOnlyOnMobile?: boolean;
+  type?: 'button' | 'submit';
+  target?: '_blank';
+  class?: string;
+  /** Extra attributen, bijv. aria-expanded of data-*. */
+  attrs?: HTMLAttributes<'a'> & HTMLAttributes<'button'> & Record<`data-${string}`, string>;
+}
+
+const {
+  label,
+  href,
+  variant = 'primary',
+  size = 'default',
+  accent,
+  icon = 'arrow-right',
+  iconOnlyOnMobile = false,
+  type = 'button',
+  target,
+  class: className,
+  attrs = {},
+} = Astro.props;
+
+const Tag = href ? 'a' : 'button';
+const linkAttrs = href
+  ? { href, target, rel: target === '_blank' ? 'noopener noreferrer' : undefined }
+  : { type };
+const iconMotion = icon === 'arrow-down' ? 'down' : icon === 'arrow-right' ? 'right' : undefined;
+---
+
+<Tag
+  class:list={['button', `button--${variant}`, `button--${size}`, { 'button--icon-only-mobile': iconOnlyOnMobile }, className]}
+  data-accent={accent}
+  aria-label={iconOnlyOnMobile ? label : undefined}
+  {...linkAttrs}
+  {...attrs}
+>
+  <span class="button__label">{label}</span>
+  {icon && <Icon name={icon} class:list={['button__icon', iconMotion && `button__icon--${iconMotion}`]} />}
+</Tag>
+
+<style>
+  .button {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--space-8);
+    height: var(--button-height);
+    padding: var(--space-12) var(--button-padding-x);
+    border: var(--border-width) solid transparent;
+    border-radius: var(--radius-none);
+    font-family: var(--font-body);
+    font-size: var(--fs-base);
+    font-weight: var(--fw-medium);
+    line-height: var(--lh-body);
+    text-align: center;
+    text-decoration: none;
+    white-space: nowrap;
+    background-position-x: center;
+    background-size: 100%;
+    transition: all var(--duration-fast) var(--ease-out);
+    cursor: pointer;
+  }
+
+  .button:hover {
+    background-size: 250%;
+    background-position: left;
+  }
+
+  .button :global(.button__icon) {
+    --icon-size: var(--icon-md);
+    transition: all var(--duration-fast) ease-in-out;
+  }
+
+  .button:hover :global(.button__icon--right) {
+    transform: translateX(2px);
+  }
+
+  .button:hover :global(.button__icon--down) {
+    transform: translateY(2px);
+  }
+
+  /* ─── Varianten ─── */
+  .button--primary {
+    background-image: var(--accent-gradient);
+    color: var(--color-black);
+    border-color: var(--color-white-a20);
+  }
+
+  .button--primary:hover {
+    border-color: transparent;
+  }
+
+  .button--outline {
+    background-color: var(--color-black-a48);
+    border-color: var(--accent);
+    color: var(--accent);
+    transition:
+      background-color var(--duration-fast),
+      background-position var(--duration-fast);
+  }
+
+  .button--outline .button__label {
+    background-image: var(--accent-gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .button--ghost {
+    background-color: var(--color-black-a48);
+    border-color: var(--color-gray-dark);
+    color: var(--color-white);
+    -webkit-backdrop-filter: blur(var(--blur-sm));
+    backdrop-filter: blur(var(--blur-sm));
+    transition:
+      background-color var(--duration-fast),
+      background-position var(--duration-fast);
+  }
+
+  .button--outline:hover,
+  .button--ghost:hover {
+    background-color: var(--color-white-a8);
+    -webkit-backdrop-filter: blur(var(--blur-md));
+    backdrop-filter: blur(var(--blur-md));
+  }
+
+  /* ─── Groottes ─── */
+  .button--small {
+    height: var(--button-height-small);
+    padding-inline: var(--button-padding-x-small);
+  }
+
+  .button--large {
+    height: var(--button-height-large);
+    padding: var(--space-16) var(--button-padding-x-large);
+  }
+
+  @media (max-width: 767px) {
+    .button--icon-only-mobile {
+      width: var(--button-height-small);
+      padding: 0;
+    }
+
+    .button--icon-only-mobile .button__label {
+      display: none;
+    }
+
+    .button--icon-only-mobile :global(.button__icon) {
+      --icon-size: var(--icon-lg);
+    }
+  }
+</style>

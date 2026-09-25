@@ -1,0 +1,12 @@
+---
+/**
+ * Tracking: Google Tag Manager (GTM-KCTG3DST) en CookieFirst.
+ * Rendert alleen als PUBLIC_ENABLE_TRACKING === 'true'.
+ *
+ * TODO(tracking): GTM + CookieFirst implementeren. Laad beide niet render-blocking
+ * (async, na consent), en voeg de GTM-noscript-iframe direct na <body> toe.
+ */
+const enabled = import.meta.env.PUBLIC_ENABLE_TRACKING === 'true';
+---
+
+{enabled && <Fragment>{/* TODO(tracking): scripts hier */}</Fragment>}

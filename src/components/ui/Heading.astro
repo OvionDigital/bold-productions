@@ -1,0 +1,108 @@
+---
+/**
+ * Displaykop in Gate. Semantisch niveau (`as`) staat los van de visuele grootte (`size`).
+ * `gradient` kleurt de tekst met een merkgradient; 'accent' volgt data-accent.
+ * Regeleinden: gebruik '\n' in `text`.
+ */
+import { toLines } from '../../lib/text';
+
+export type HeadingSize = 'hero' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
+export type HeadingGradient = 'orange' | 'yellow' | 'green' | 'accent' | 'none';
+
+interface Props {
+  text: string;
+  as?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'p';
+  size?: HeadingSize;
+  gradient?: HeadingGradient;
+  align?: 'start' | 'center';
+  /** Verwijder de standaard marges (Webflow: .mb-0 / .section-h2) */
+  flush?: boolean;
+  class?: string;
+}
+
+const {
+  text,
+  as: Tag = 'h2',
+  size = Tag === 'p' ? 'h2' : Tag,
+  gradient = 'none',
+  align = 'start',
+  flush = false,
+  class: className,
+} = Astro.props;
+const lines = toLines(text);
+---
+
+<Tag
+  class:list={[
+    'heading',
+    `heading--${size}`,
+    `heading--${align}`,
+    { 'heading--flush': flush, 'text-gradient': gradient !== 'none' },
+    gradient !== 'none' && gradient !== 'accent' && `text-gradient--${gradient}`,
+    className,
+  ]}
+>
+  {lines.map((line, i) => (i < lines.length - 1 ? <Fragment>{line}<br /></Fragment> : line))}
+</Tag>
+
+<style>
+  .heading {
+    font-family: var(--font-display);
+    font-weight: var(--fw-display);
+    text-transform: uppercase;
+    letter-spacing: var(--ls-heading);
+    overflow-wrap: break-word;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+  }
+
+  .heading--hero {
+    font-size: var(--fs-hero);
+    line-height: var(--lh-display);
+    text-wrap: pretty;
+    margin: 0;
+  }
+
+  .heading--h1 {
+    font-size: var(--fs-h1);
+    line-height: var(--lh-display);
+  }
+
+  .heading--h2 {
+    font-size: var(--fs-h2);
+    line-height: var(--lh-display);
+    display: inline-block;
+  }
+
+  .heading--h3 {
+    font-size: var(--fs-h3);
+    line-height: var(--lh-display-tight);
+  }
+
+  .heading--h4 {
+    font-size: var(--fs-h4);
+    line-height: var(--lh-heading-sm);
+    letter-spacing: normal;
+  }
+
+  .heading--h5 {
+    font-size: var(--fs-h5);
+    line-height: var(--lh-heading-xs);
+    letter-spacing: normal;
+  }
+
+  .heading--h6 {
+    font-size: var(--fs-h6);
+    line-height: var(--lh-heading-xxs);
+    letter-spacing: normal;
+  }
+
+  .heading--center {
+    text-align: center;
+  }
+
+  .heading--flush {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+</style>

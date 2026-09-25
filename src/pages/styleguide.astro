@@ -1,0 +1,672 @@
+---
+/**
+ * /styleguide — levend overzicht van tokens, UI-componenten en secties.
+ * Regel: elk nieuw component of elke nieuwe variant komt eerst hier.
+ * noindex; hoort niet in de sitemap.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Container from '../components/ui/Container.astro';
+import Button from '../components/ui/Button.astro';
+import Icon from '../components/ui/Icon.astro';
+import { iconNames } from '../components/ui/icons';
+import Eyebrow from '../components/ui/Eyebrow.astro';
+import Heading from '../components/ui/Heading.astro';
+import SectionHeading from '../components/ui/SectionHeading.astro';
+import { tokensByPrefix } from '../lib/tokens';
+
+const colors = tokensByPrefix('--color-');
+const gradients = tokensByPrefix('--gradient-');
+const fontSizes = tokensByPrefix('--fs-');
+const lineHeights = tokensByPrefix('--lh-');
+const letterSpacings = tokensByPrefix('--ls-');
+const families = tokensByPrefix('--font-');
+const weights = tokensByPrefix('--fw-');
+const spacing = tokensByPrefix('--space-');
+const layout = tokensByPrefix('--section-', '--column-', '--row-', '--container-', '--navbar-');
+const sizes = tokensByPrefix('--button-', '--icon-', '--carousel-', '--whatsapp-', '--logo-', '--hero-');
+const radii = tokensByPrefix('--radius-', '--border-');
+const shadows = tokensByPrefix('--shadow-');
+const blurs = tokensByPrefix('--blur-');
+const motion = tokensByPrefix('--duration-', '--ease-', '--marquee-');
+const layers = tokensByPrefix('--z-');
+
+const accents = ['orange', 'yellow', 'green'] as const;
+const variants = ['primary', 'outline', 'ghost'] as const;
+const buttonSizes = ['small', 'default', 'large'] as const;
+
+const nav = [
+  ['kleuren', 'Kleuren'],
+  ['typografie', 'Typografie'],
+  ['spacing', 'Spacing'],
+  ['vormen', 'Radii, schaduwen & blur'],
+  ['overig', 'Overige tokens'],
+  ['button', 'Button'],
+  ['icon', 'Icon'],
+  ['tekst', 'Eyebrow & Heading'],
+  ['section-heading', 'SectionHeading'],
+  ['container', 'Container'],
+  ['secties', 'Secties'],
+];
+---
+
+<BaseLayout
+  title="Styleguide | Bold Productions"
+  description="Interne styleguide met design tokens en componenten."
+  noindex
+  chrome={false}
+>
+  <div class="sg">
+    <Container>
+      <header class="sg-intro">
+        <Eyebrow text="Bold Productions" />
+        <Heading as="h1" size="h1" text="Styleguide" gradient="orange" flush />
+        <p>
+          Tokens komen rechtstreeks uit <code>src/styles/tokens.css</code>. Nieuwe componenten en varianten komen eerst
+          hier, daarna pas op een pagina.
+        </p>
+        <nav class="sg-nav" aria-label="Styleguide-onderdelen">
+          {nav.map(([id, label]) => <a href={`#${id}`}>{label}</a>)}
+        </nav>
+      </header>
+
+      <!-- ─── Kleuren ─────────────────────────────────────────────── -->
+      <section class="sg-section" id="kleuren">
+        <h2 class="sg-title">Kleuren</h2>
+        <div class="sg-swatches">
+          {
+            colors.map((t) => (
+              <figure class="sg-swatch">
+                <span class="sg-swatch__chip" style={`background:var(${t.name})`} />
+                <figcaption>
+                  <code>{t.name}</code>
+                  <span>{t.value}</span>
+                  {t.comment && <small>{t.comment}</small>}
+                </figcaption>
+              </figure>
+            ))
+          }
+        </div>
+
+        <h3 class="sg-subtitle">Gradients</h3>
+        <div class="sg-swatches sg-swatches--wide">
+          {
+            gradients.map((t) => (
+              <figure class="sg-swatch">
+                <span class="sg-swatch__chip" style={`background:var(${t.name})`} />
+                <figcaption>
+                  <code>{t.name}</code>
+                </figcaption>
+              </figure>
+            ))
+          }
+        </div>
+
+        <h3 class="sg-subtitle">Accentthema's (<code>data-accent</code>)</h3>
+        <p class="sg-note">
+          Per doelgroep wisselt de accentkleur: events oranje, artiesten geel, zakelijke events groen. Componenten gebruiken
+          <code>--accent</code>, <code>--accent-light</code> en <code>--accent-gradient</code>.
+        </p>
+        <div class="sg-row">
+          {
+            accents.map((accent) => (
+              <div class="sg-accent" data-accent={accent}>
+                <code>data-accent="{accent}"</code>
+                <Heading as="p" size="h3" text="Bold in." gradient="accent" flush />
+                <Button label="Bold to action" variant="primary" size="small" />
+              </div>
+            ))
+          }
+        </div>
+      </section>
+
+      <!-- ─── Typografie ──────────────────────────────────────────── -->
+      <section class="sg-section" id="typografie">
+        <h2 class="sg-title">Typografie</h2>
+        <table class="sg-table">
+          <tbody>
+            {
+              [...families, ...weights].map((t) => (
+                <tr>
+                  <td>
+                    <code>{t.name}</code>
+                  </td>
+                  <td>{t.value}</td>
+                  <td>{t.comment}</td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+
+        <div class="sg-fonts">
+          <p class="sg-font-sample" style="font-family:var(--font-display)">Gate 400 — Video's die je event</p>
+          <p class="sg-font-sample" style="font-family:var(--font-display);font-style:italic">Gate 400 italic — laten leven</p>
+          <p class="sg-font-sample" style="font-family:var(--font-body);font-weight:var(--fw-light)">Inter 300 — Je event moet slagen.</p>
+          <p class="sg-font-sample" style="font-family:var(--font-body);font-weight:var(--fw-medium)">Inter 500 — Bold to action</p>
+          <p class="sg-font-sample" style="font-family:var(--font-body);font-weight:var(--fw-bold)">Inter 700 — Offerte aanvragen</p>
+        </div>
+
+        <h3 class="sg-subtitle">Schaal</h3>
+        <div class="sg-scale">
+          {
+            fontSizes.map((t) => (
+              <div class="sg-scale__row">
+                <div class="sg-scale__meta">
+                  <code>{t.name}</code>
+                  <span>{t.value}</span>
+                </div>
+                <p class="sg-scale__sample" style={`font-size:var(${t.name})`}>
+                  Bold in. Sold out.
+                </p>
+              </div>
+            ))
+          }
+        </div>
+
+        <h3 class="sg-subtitle">Regelhoogtes en letterspatiëring</h3>
+        <table class="sg-table">
+          <tbody>
+            {
+              [...lineHeights, ...letterSpacings].map((t) => (
+                <tr>
+                  <td>
+                    <code>{t.name}</code>
+                  </td>
+                  <td>{t.value}</td>
+                  <td>{t.comment}</td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+
+        <h3 class="sg-subtitle">Rich text (<code>.rich-text</code>)</h3>
+        <div class="rich-text rich-text--lead sg-richtext">
+          <p>
+            Bold Productions weet <strong>wat</strong> je <strong>wanneer</strong> moet laten zien. En vooral <strong
+              >hóe</strong
+            > je het laat zien.
+          </p>
+          <ul>
+            <li>tickets verkopen;</li>
+            <li>sponsoren en partners overtuigen;</li>
+            <li>en bezoekers laten terugkomen.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ─── Spacing ─────────────────────────────────────────────── -->
+      <section class="sg-section" id="spacing">
+        <h2 class="sg-title">Spacing</h2>
+        <div class="sg-spacing">
+          {
+            spacing.map((t) => (
+              <div class="sg-spacing__row">
+                <code>{t.name}</code>
+                <span class="sg-spacing__bar" style={`width:var(${t.name})`} />
+                <span>{t.value}</span>
+              </div>
+            ))
+          }
+        </div>
+        <h3 class="sg-subtitle">Layout (responsive)</h3>
+        <table class="sg-table">
+          <tbody>
+            {
+              layout.map((t) => (
+                <tr>
+                  <td>
+                    <code>{t.name}</code>
+                  </td>
+                  <td>{t.value}</td>
+                  <td>{t.comment}</td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+        <p class="sg-note">
+          Breakpoints (Webflow, desktop-first): ≤991, ≤767, ≤479 en ≥1280, ≥1440, ≥1920. Containerbreedte: 940 → 1140 →
+          1320 → 1680, tablet 720, mobiel volle breedte.
+        </p>
+      </section>
+
+      <!-- ─── Vormen ──────────────────────────────────────────────── -->
+      <section class="sg-section" id="vormen">
+        <h2 class="sg-title">Radii, schaduwen & blur</h2>
+        <div class="sg-row">
+          {
+            radii.map((t) => (
+              <figure class="sg-shape" style={t.name.startsWith('--radius') ? `border-radius:var(${t.name})` : undefined}>
+                <figcaption>
+                  <code>{t.name}</code>
+                  <span>{t.value}</span>
+                </figcaption>
+              </figure>
+            ))
+          }
+        </div>
+        <div class="sg-row">
+          {
+            shadows.map((t) => (
+              <figure class="sg-shape sg-shape--light" style={`box-shadow:var(${t.name})`}>
+                <figcaption>
+                  <code>{t.name}</code>
+                </figcaption>
+              </figure>
+            ))
+          }
+        </div>
+        <div class="sg-row">
+          {
+            blurs.map((t) => (
+              <figure class="sg-shape sg-shape--glass" style={`backdrop-filter:blur(var(${t.name}))`}>
+                <figcaption>
+                  <code>{t.name}</code>
+                  <span>{t.value}</span>
+                </figcaption>
+              </figure>
+            ))
+          }
+        </div>
+      </section>
+
+      <!-- ─── Overig ──────────────────────────────────────────────── -->
+      <section class="sg-section" id="overig">
+        <h2 class="sg-title">Overige tokens</h2>
+        <table class="sg-table">
+          <tbody>
+            {
+              [...sizes, ...motion, ...layers].map((t) => (
+                <tr>
+                  <td>
+                    <code>{t.name}</code>
+                  </td>
+                  <td>{t.value}</td>
+                  <td>{t.comment}</td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ─── Button ──────────────────────────────────────────────── -->
+      <section class="sg-section" id="button">
+        <h2 class="sg-title">Button</h2>
+        <p class="sg-note">
+          <code>&lt;Button label href variant size accent icon iconOnlyOnMobile /&gt;</code>. Varianten: primary (Webflow
+          .orange/.yellow), outline (.orange-outline), ghost (.white-outline). Groottes: small (48), default (64), large (64
+          → 56 op mobiel).
+        </p>
+        {
+          accents.map((accent) => (
+            <div class="sg-demo" data-accent={accent}>
+              <p class="sg-label">accent: {accent}</p>
+              {variants.map((variant) => (
+                <div class="sg-row sg-row--center">
+                  {buttonSizes.map((size) => (
+                    <Button label={`${variant} / ${size}`} href="#button" variant={variant} size={size} />
+                  ))}
+                </div>
+              ))}
+            </div>
+          ))
+        }
+        <div class="sg-demo">
+          <p class="sg-label">Iconen en gebruik op de homepage</p>
+          <div class="sg-row sg-row--center">
+            <Button label="Bold to action" href="#button" size="large" />
+            <Button label="Waarom zou je?" href="#button" variant="outline" size="large" icon="arrow-down" />
+            <Button label="Bekijk hoe" href="#button" variant="ghost" />
+            <Button label="Make it Bold. Sell Tickets" href="#button" accent="yellow" />
+            <Button label="Mail Mike" href="#button" accent="yellow" />
+            <Button label="Menu" variant="ghost" size="small" icon="menu" iconOnlyOnMobile />
+            <Button label="Zonder icoon" href="#button" variant="ghost" icon={null} />
+          </div>
+        </div>
+      </section>
+
+      <!-- ─── Icon ────────────────────────────────────────────────── -->
+      <section class="sg-section" id="icon">
+        <h2 class="sg-title">Icon</h2>
+        <p class="sg-note">
+          <code>&lt;Icon name size label /&gt;</code>. Kleur via <code>currentColor</code>. Zonder <code>label</code>
+          decoratief (aria-hidden).
+        </p>
+        <div class="sg-icons">
+          {
+            iconNames.map((name) => (
+              <figure class="sg-icon">
+                <Icon name={name} size="var(--icon-xl)" />
+                <figcaption>
+                  <code>{name}</code>
+                </figcaption>
+              </figure>
+            ))
+          }
+        </div>
+      </section>
+
+      <!-- ─── Eyebrow & Heading ───────────────────────────────────── -->
+      <section class="sg-section" id="tekst">
+        <h2 class="sg-title">Eyebrow & Heading</h2>
+        <div class="sg-demo">
+          <p class="sg-label">Eyebrow</p>
+          <Eyebrow text="Ervoor. Tijdens. Erna" />
+        </div>
+        <div class="sg-demo sg-stack">
+          <p class="sg-label">Heading — groottes (as/size los van elkaar)</p>
+          <Heading as="p" size="hero" text="Video's die je event" />
+          <Heading as="p" size="h1" text="Heading h1" flush />
+          <Heading as="p" size="h2" text="Heading h2" flush />
+          <Heading as="p" size="h3" text="Heading h3" flush />
+          <Heading as="p" size="h4" text="Heading h4" flush />
+          <Heading as="p" size="h5" text="Heading h5" flush />
+          <Heading as="p" size="h6" text="Heading h6" flush />
+        </div>
+        <div class="sg-demo sg-stack">
+          <p class="sg-label">Heading — gradients en regeleinden (\n)</p>
+          <Heading as="p" size="h2" text={'BOLD IN.\nSOLD OUT.'} gradient="yellow" flush />
+          <Heading as="p" size="h2" text="En dit vonden ze" gradient="orange" flush />
+          <Heading as="p" size="h2" text="We kennen onze plek" gradient="green" flush />
+          <Heading as="p" size="h3" text="Voor je event" gradient="yellow" flush />
+        </div>
+      </section>
+
+      <!-- ─── SectionHeading ──────────────────────────────────────── -->
+      <section class="sg-section" id="section-heading">
+        <h2 class="sg-title">SectionHeading</h2>
+        <div class="sg-demo">
+          <SectionHeading eyebrow="Dit deden we" title="En dit vonden ze" gradient="orange" />
+          <SectionHeading eyebrow="Bold backstage" title="We kennen onze plek" gradient="green" spacing="none" />
+        </div>
+      </section>
+
+      <!-- ─── Container ───────────────────────────────────────────── -->
+      <section class="sg-section" id="container">
+        <h2 class="sg-title">Container</h2>
+        <p class="sg-note">Rand = binnenkant van de container (inclusief goot).</p>
+      </section>
+    </Container>
+
+    <div class="sg-container-demo">
+      <Container>
+        <div class="sg-container-demo__inner"><code>width="default"</code></div>
+      </Container>
+      <Container width="wide">
+        <div class="sg-container-demo__inner"><code>width="wide"</code></div>
+      </Container>
+    </div>
+
+    <Container>
+      <!-- ─── Secties ─────────────────────────────────────────────── -->
+      <section class="sg-section" id="secties">
+        <h2 class="sg-title">Secties</h2>
+        <p class="sg-note">
+          Nog geen secties. Die komen in stap 7, één voor één, elk met voorbeeldprops. Zie
+          <code>docs/homepage-secties.md</code>.
+        </p>
+      </section>
+    </Container>
+  </div>
+</BaseLayout>
+
+<style>
+  .sg {
+    padding-block: var(--space-64) var(--space-192);
+    background: var(--color-page);
+  }
+
+  .sg code {
+    font-family: var(--font-mono);
+    font-size: var(--fs-xs);
+    color: var(--color-orange-light);
+  }
+
+  .sg-intro {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-16);
+    max-width: var(--container-narrow);
+  }
+
+  .sg-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-8) var(--space-16);
+  }
+
+  .sg-nav a {
+    color: var(--color-gray-light);
+    font-size: var(--fs-sm);
+  }
+
+  .sg-section {
+    padding-top: var(--space-96);
+    scroll-margin-top: var(--space-24);
+  }
+
+  .sg-title {
+    display: block;
+    padding-bottom: var(--space-16);
+    margin-bottom: var(--space-32);
+    border-bottom: var(--border-width) solid var(--color-gray-dark);
+    color: var(--color-orange);
+  }
+
+  .sg-subtitle {
+    margin-top: var(--space-48);
+    margin-bottom: var(--space-24);
+    font-size: var(--fs-h5);
+  }
+
+  .sg-note {
+    max-width: var(--container-narrow);
+    color: var(--color-gray-light);
+  }
+
+  .sg-label {
+    margin-bottom: var(--space-16);
+    color: var(--color-gray);
+    font-size: var(--fs-sm);
+    text-transform: uppercase;
+    letter-spacing: var(--ls-label);
+  }
+
+  .sg-swatches {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: var(--space-24);
+  }
+
+  .sg-swatches--wide {
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  }
+
+  .sg-swatch {
+    margin: 0;
+  }
+
+  .sg-swatch__chip {
+    display: block;
+    height: var(--space-64);
+    margin-bottom: var(--space-8);
+    border: var(--border-width) solid var(--color-white-a20);
+    background-color: var(--color-white);
+  }
+
+  .sg-swatch figcaption,
+  .sg-shape figcaption,
+  .sg-icon figcaption {
+    display: flex;
+    flex-direction: column;
+    font-size: var(--fs-sm);
+    line-height: var(--lh-normal);
+  }
+
+  .sg-swatch small {
+    color: var(--color-gray);
+  }
+
+  .sg-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: var(--space-24);
+    margin-bottom: var(--space-24);
+  }
+
+  .sg-row--center {
+    align-items: center;
+  }
+
+  .sg-accent {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-16);
+    padding: var(--space-24);
+    border: var(--border-width) solid var(--accent);
+  }
+
+  .sg-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--fs-sm);
+  }
+
+  .sg-table td {
+    padding: var(--space-8) var(--space-12) var(--space-8) 0;
+    border-bottom: var(--border-width) solid var(--color-gray-dark);
+    vertical-align: top;
+  }
+
+  .sg-fonts {
+    margin-top: var(--space-32);
+  }
+
+  .sg-font-sample {
+    font-size: var(--fs-lg);
+    line-height: var(--lh-normal);
+  }
+
+  .sg-scale__row {
+    display: grid;
+    grid-template-columns: minmax(200px, 1fr) 3fr;
+    gap: var(--space-24);
+    align-items: baseline;
+    padding-block: var(--space-12);
+    border-bottom: var(--border-width) solid var(--color-gray-dark);
+  }
+
+  .sg-scale__meta {
+    display: flex;
+    flex-direction: column;
+    font-size: var(--fs-xs);
+    line-height: var(--lh-normal);
+    color: var(--color-gray-light);
+  }
+
+  .sg-scale__sample {
+    margin: 0;
+    font-family: var(--font-display);
+    line-height: var(--lh-snug);
+    text-transform: uppercase;
+  }
+
+  .sg-richtext {
+    max-width: var(--container-narrow);
+  }
+
+  .sg-spacing__row {
+    display: grid;
+    grid-template-columns: 140px 1fr 60px;
+    gap: var(--space-16);
+    align-items: center;
+    font-size: var(--fs-sm);
+  }
+
+  .sg-spacing__bar {
+    display: block;
+    height: var(--space-12);
+    background: var(--color-orange);
+  }
+
+  .sg-shape {
+    display: flex;
+    align-items: flex-end;
+    width: 180px;
+    height: 120px;
+    margin: 0;
+    padding: var(--space-12);
+    border: var(--border-width) solid var(--color-gray);
+    background: var(--color-gray-dark);
+  }
+
+  .sg-shape--light {
+    background: var(--color-white);
+    color: var(--color-ink);
+    border: 0;
+  }
+
+  .sg-shape--light code {
+    color: var(--color-ink);
+  }
+
+  .sg-shape--glass {
+    background: var(--color-white-a8);
+    background-image: var(--gradient-orange);
+    background-size: 30% 30%;
+    background-blend-mode: overlay;
+  }
+
+  .sg-demo {
+    padding: var(--space-32);
+    margin-bottom: var(--space-24);
+    border: var(--border-width) dashed var(--color-gray-dark);
+    background: var(--color-black-a48);
+  }
+
+  .sg-stack {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-16);
+  }
+
+  .sg-icons {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: var(--space-24);
+  }
+
+  .sg-icon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-8);
+    margin: 0;
+    padding: var(--space-16);
+    border: var(--border-width) solid var(--color-gray-dark);
+  }
+
+  .sg-container-demo {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-16);
+    margin-top: var(--space-24);
+  }
+
+  .sg-container-demo__inner {
+    padding: var(--space-16);
+    border: var(--border-width) dashed var(--color-orange);
+    background: var(--color-orange-a8);
+  }
+
+  @media (max-width: 767px) {
+    .sg-scale__row {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
