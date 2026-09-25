@@ -1,0 +1,41 @@
+---
+/**
+ * Rendert het rich-text-model uit lib/rich.ts als <p>/<ul>.
+ * Standaard met de globale .rich-text-stijl (lijsticoon, marges); `plain` laat die weg.
+ */
+import type { HTMLTag } from 'astro/types';
+import type { Rich } from '../../lib/rich';
+import RichInline from './RichInline.astro';
+
+interface Props {
+  content: Rich;
+  as?: HTMLTag;
+  /** 'lead' = 16→20px (Webflow .fs-20) */
+  size?: 'default' | 'lead';
+  plain?: boolean;
+  class?: string;
+  'aria-hidden'?: 'true';
+}
+
+const { content, as: Tag = 'div', size = 'default', plain = false, class: className, ...rest } = Astro.props;
+---
+
+<Tag class:list={[{ 'rich-text': !plain, 'rich-text--lead': size === 'lead' }, className]} {...rest}>
+  {
+    content.map((block) =>
+      'p' in block ? (
+        <p>
+          <RichInline segments={block.p} />
+        </p>
+      ) : (
+        <ul role="list">
+          {block.ul.map((item) => (
+            <li>
+              <RichInline segments={item} />
+            </li>
+          ))}
+        </ul>
+      ),
+    )
+  }
+</Tag>

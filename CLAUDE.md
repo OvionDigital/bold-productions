@@ -56,6 +56,7 @@ npm run deploy:preview  # build + wrangler pages deploy (branch preview)
 - **Scoped styles** per component. Wil je een child-component stylen (bijv. `<Icon>` in `<Button>`)? Gebruik `.parent :global(.child-class)`.
 - **Scroll-in-animatie**: zet `data-animate` op een element (Webflow: `.animate-on-scroll`).
 - Regeleinden in titels: `\n` in de data. `Heading` zet dat om naar `<br>`.
+- Opgemaakte tekst in data: het model uit `src/lib/rich.ts` (geen HTML-strings), renderen met `RichText`.
 - Fonts: Gate 400 normal/italic (Webflow-300 → 400), Inter variabel 300–700 (Webflow-400/600/800 → 300/500/700). Gebruik `--fw-light|medium|bold|display`.
 
 ## Structuur
@@ -85,6 +86,8 @@ Houd dit bij bij elk nieuw component.
 | Component              | Uitleg                                                                                                     |
 | ---------------------- | ---------------------------------------------------------------------------------------------------------- |
 | `Button.astro`         | Link of knop. Varianten `primary`/`outline`/`ghost`, groottes `compact`/`small`/`default`/`large`, `accent`, `icon`, `iconExpanded` (bij aria-expanded), `iconOnlyOnMobile`. |
+| `RichText.astro`       | Rendert rich text uit `lib/rich.ts` (p/ul, strong/em/br); `size="lead"`, `plain`.                        |
+| `RichInline.astro`     | Inline-segmenten (strong/em/br) zonder extra witruimte; gebruikt door RichText.                             |
 | `Icon.astro`           | Inline SVG-icoon uit het register in `icons.ts` (pijlen, chevron, menu, close, quote, WhatsApp, socials).  |
 | `icons.ts`             | Iconenregister (paden + viewBox). Nieuwe iconen hier toevoegen.                                            |
 | `Container.astro`      | Horizontale container: `default` (max-breedte per breakpoint), `plain` (idem, maar vol 992–1279) of `wide` (volle breedte, ruime goot). |
@@ -111,6 +114,7 @@ Houd dit bij bij elk nieuw component.
 | ------------ | --------------------------------------------------------------------------------------------------- |
 | `Hero.astro` | Schermvullende hero: titel + italic accentregel, eyebrow, 2 knoppen, poster-afbeelding (LCP) en optionele Vimeo-video. |
 | `LogoMarquee.astro` | Logostrip met kop tussen lijnen en eindeloze CSS-marquee van logo-tegels. |
+| `IntroHighlight.astro` | Gecentreerde Gate-introtekst met groene accenten en scroll-highlight per letter. |
 
 ### Scripts (`src/scripts/`)
 
@@ -121,4 +125,5 @@ Houd dit bij bij elk nieuw component.
 | `lenis.ts`             | Lenis smooth scroll gekoppeld aan GSAP ticker/ScrollTrigger; `scrollToTarget`. |
 | `scroll-animations.ts` | `[data-animate]` fade-in-up (top 70%, eenmalig) en anchor-links met offset. |
 | `hero-video.ts`        | Zet de Vimeo-src na window.load (mobiel alleen met loadOnMobile), fade-in via postMessage 'play'. |
+| `scroll-highlight.ts`  | SplitType + ScrollTrigger scrub: letters van 15% naar 100% met gloed.       |
 | `menu.ts`              | Menupaneel openen/sluiten (GSAP), overlay, Escape, focus-trap, scroll-lock, accordeon. |

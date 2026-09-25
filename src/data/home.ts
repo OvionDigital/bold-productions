@@ -4,6 +4,7 @@
  */
 import type { HeroProps } from '../components/sections/Hero.astro';
 import type { LogoMarqueeProps } from '../components/sections/LogoMarquee.astro';
+import type { IntroHighlightProps } from '../components/sections/IntroHighlight.astro';
 import heroImage from '../assets/images/home/hero-festival-optreden.jpg';
 import logoVunzigeDeuntjes from '../assets/logos/vunzige-deuntjes.png';
 import logoProost from '../assets/logos/proost.png';
@@ -48,5 +49,29 @@ export const trustedBy: LogoMarqueeProps = {
     { src: logoZwarteCross, alt: 'Zwarte Cross' },
     { src: logoDrift, alt: 'Drift' },
     { src: logoDoorgedraaid, alt: 'Doorgedraaid' },
+  ],
+};
+
+export const intro: IntroHighlightProps = {
+  id: 'first-section',
+  content: [
+    {
+      p: [
+        'Je event moet slagen. Je steekt er tijd, geld en energie in. Die investeringen wil je terugverdienen. Maar mensen hebben keus. Veel keus. Agenda’s lopen snel vol.',
+      ],
+    },
+    {
+      p: [
+        'Daarom is ',
+        { text: 'zichtbaarheid', strong: true, em: true },
+        'van je event zo belangrijk. Je wil op de juiste ',
+        { text: 'momenten,', strong: true },
+        'op de juiste ',
+        { text: 'plekken', strong: true },
+        'bij de juiste ',
+        { text: 'mensen', strong: true },
+        'op het netvlies komen. Voor, tijdens en na het event.',
+      ],
+    },
   ],
 };

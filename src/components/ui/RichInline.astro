@@ -1,0 +1,33 @@
+---
+/**
+ * Inline-segmenten (lib/rich.ts) als tekst met <strong>, <em> en <br>.
+ * Voegt zelf geen witruimte toe: spaties komen uit de data.
+ */
+import type { Inline } from '../../lib/rich';
+
+interface Props {
+  segments: Inline;
+}
+
+const { segments } = Astro.props;
+---
+
+{
+  segments.map((s) =>
+    typeof s === 'string' ? (
+      s
+    ) : 'br' in s ? (
+      <br />
+    ) : s.strong && s.em ? (
+      <strong>
+        <em>{s.text}</em>
+      </strong>
+    ) : s.strong ? (
+      <strong>{s.text}</strong>
+    ) : s.em ? (
+      <em>{s.text}</em>
+    ) : (
+      s.text
+    ),
+  )
+}

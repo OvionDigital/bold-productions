@@ -1,0 +1,95 @@
+---
+/**
+ * Gecentreerde introtekst in Gate met groene accentwoorden. Bij scrollen lichten
+ * de letters één voor één op (scripts/scroll-highlight.ts, Webflow .scroll-highlight).
+ * De opgesplitste tekst is aria-hidden; screenreaders lezen de platte versie.
+ */
+import Container from '../ui/Container.astro';
+import RichText from '../ui/RichText.astro';
+import { richToPlainText, type Rich } from '../../lib/rich';
+
+export interface IntroHighlightProps {
+  /** Anchor-doel, bijv. 'first-section' voor de heroknop */
+  id?: string;
+  content: Rich;
+}
+
+type Props = IntroHighlightProps;
+
+const { id, content } = Astro.props;
+---
+
+<section class="intro" id={id} data-animate>
+  <Container>
+    <div class="intro__row">
+      <div class="intro__col">
+        <p class="visually-hidden">{richToPlainText(content)}</p>
+        <div class="intro__text" data-scroll-highlight aria-hidden="true">
+          <RichText content={content} plain />
+        </div>
+      </div>
+    </div>
+  </Container>
+</section>
+
+<style>
+  .intro {
+    position: relative;
+    z-index: var(--z-base);
+    padding-block: var(--section-padding);
+    overflow: hidden;
+  }
+
+  .intro__row {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    margin-inline: var(--row-margin);
+  }
+
+  .intro__col {
+    width: 83.3333%;
+    padding-inline: var(--column-gap);
+  }
+
+  .intro__text {
+    margin-bottom: 0;
+    font-family: var(--font-display);
+    font-size: var(--fs-highlight);
+    font-weight: var(--fw-display);
+    line-height: var(--lh-snug);
+    letter-spacing: var(--ls-heading);
+    text-align: center;
+  }
+
+  .intro__text :global(p) {
+    margin-bottom: 0;
+    font-weight: var(--fw-display);
+    line-height: var(--lh-normal);
+  }
+
+  .intro__text :global(strong) {
+    margin-right: 0.3em;
+    color: var(--color-green);
+    font-weight: var(--fw-display);
+  }
+
+  @media (min-width: 1280px) {
+    .intro__col {
+      width: 66.6667%;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .intro__col {
+      width: 100%;
+      padding-inline: var(--space-24);
+    }
+  }
+
+  @media (max-width: 479px) {
+    .intro__col {
+      padding-inline: var(--space-12);
+    }
+  }
+</style>

@@ -18,7 +18,9 @@ import WhatsAppButton from '../components/layout/WhatsAppButton.astro';
 import { contact, cta, header, mainNav } from '../data/navigation';
 import Hero from '../components/sections/Hero.astro';
 import LogoMarquee from '../components/sections/LogoMarquee.astro';
-import { hero, trustedBy } from '../data/home';
+import IntroHighlight from '../components/sections/IntroHighlight.astro';
+import RichText from '../components/ui/RichText.astro';
+import { hero, intro, trustedBy } from '../data/home';
 
 const colors = tokensByPrefix('--color-');
 const gradients = tokensByPrefix('--gradient-');
@@ -187,7 +189,21 @@ const nav = [
           </tbody>
         </table>
 
-        <h3 class="sg-subtitle">Rich text (<code>.rich-text</code>)</h3>
+        <h3 class="sg-subtitle">RichText (<code>lib/rich.ts</code>)</h3>
+        <p class="sg-note">
+          <code>&lt;RichText content size plain /&gt;</code>. Model: blokken <code>{'{ p: [...] }'}</code> en
+          <code>{'{ ul: [[...]] }'}</code>, inline <code>'tekst'</code>, <code>{'{ text, strong, em }'}</code>,
+          <code>{'{ br: true }'}</code>.
+        </p>
+        <RichText
+          size="lead"
+          class="sg-richtext"
+          content={[
+            { p: ['Een alinea met ', { text: 'strong', strong: true }, ', ', { text: 'em', em: true }, ' en', { br: true }, 'een regeleinde.'] },
+            { ul: [['Lijstitem met oranje driehoek'], ['Tweede item']] },
+          ]}
+        />
+        <p class="sg-note">Handgeschreven HTML met <code>.rich-text</code> werkt ook:</p>
         <div class="rich-text rich-text--lead sg-richtext">
           <p>
             Bold Productions weet <strong>wat</strong> je <strong>wanneer</strong> moet laten zien. En vooral <strong
@@ -454,6 +470,15 @@ const nav = [
       </p>
     </Container>
     <LogoMarquee {...trustedBy} />
+
+    <Container>
+      <h3 class="sg-subtitle">IntroHighlight</h3>
+      <p class="sg-note">
+        <code>&lt;IntroHighlight id content /&gt;</code>. <code>content</code> is rich text (<code>lib/rich.ts</code>);
+        <code>strong</code> wordt groen. Letters lichten op bij scrollen (<code>scroll-highlight.ts</code>).
+      </p>
+    </Container>
+    <IntroHighlight content={intro.content} />
   </div>
 </BaseLayout>
 
