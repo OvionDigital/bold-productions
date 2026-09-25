@@ -7,7 +7,8 @@ export default defineConfig({
   trailingSlash: 'never',
   build: {
     format: 'file',
-    inlineStylesheets: 'auto',
+    // CSS inline: geen render-blokkerende request (≈14 kB gzip per pagina)
+    inlineStylesheets: 'always',
   },
   image: {
     layout: 'constrained',
