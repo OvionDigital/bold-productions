@@ -1,0 +1,65 @@
+---
+/**
+ * Vimeo-video als embed met vaste verhouding, loading="lazy" (geen player.js).
+ * `background` = zonder bediening, automatisch, gedempt en herhalend (Vimeo background=1).
+ */
+interface Props {
+  id: string;
+  hash?: string;
+  title: string;
+  ratio?: 'square' | 'portrait' | 'landscape';
+  background?: boolean;
+  class?: string;
+}
+
+const { id, hash, title, ratio = 'square', background = true, class: className } = Astro.props;
+const params = new URLSearchParams({
+  ...(hash ? { h: hash } : {}),
+  ...(background ? { autoplay: '1', loop: '1', muted: '1', background: '1' } : {}),
+});
+const src = `https://player.vimeo.com/video/${id}?${params.toString()}`;
+---
+
+<div class:list={['vimeo-embed', `vimeo-embed--${ratio}`, className]}>
+  <iframe
+    src={src}
+    title={title}
+    loading="lazy"
+    allow="autoplay; fullscreen; picture-in-picture"
+    referrerpolicy="strict-origin-when-cross-origin"
+    tabindex={background ? '-1' : undefined}
+    class:list={['vimeo-embed__iframe', { 'vimeo-embed__iframe--background': background }]}></iframe>
+</div>
+
+<style>
+  .vimeo-embed {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .vimeo-embed--square {
+    aspect-ratio: 1;
+  }
+
+  .vimeo-embed--portrait {
+    aspect-ratio: 9 / 16;
+  }
+
+  .vimeo-embed--landscape {
+    aspect-ratio: 16 / 9;
+  }
+
+  .vimeo-embed__iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+
+  .vimeo-embed__iframe--background {
+    pointer-events: none;
+  }
+</style>

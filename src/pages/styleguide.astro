@@ -26,7 +26,8 @@ import Testimonials from '../components/sections/Testimonials.astro';
 import TestimonialCard from '../components/ui/TestimonialCard.astro';
 import PolaroidStack from '../components/sections/PolaroidStack.astro';
 import Polaroid from '../components/ui/Polaroid.astro';
-import { backstage, hero, intro, testimonials, timeline, trustedBy } from '../data/home';
+import TextMedia from '../components/sections/TextMedia.astro';
+import { backstage, hero, intro, micDrop, testimonials, timeline, trustedBy } from '../data/home';
 
 const colors = tokensByPrefix('--color-');
 const gradients = tokensByPrefix('--gradient-');
@@ -534,6 +535,16 @@ const nav = [
       </div>
     </Container>
     <PolaroidStack {...backstage} photos={backstage.photos.slice(0, 3)} />
+
+    <Container>
+      <h3 class="sg-subtitle">TextMedia (+ VimeoEmbed, DecoTriangles)</h3>
+      <p class="sg-note">
+        <code>&lt;TextMedia id title gradient body cta media reverse triangles /&gt;</code>. <code>media</code>: Vimeo
+        (lazy iframe) of afbeelding. Voorbeeld: <code>reverse</code> en <code>id="cinema"</code>, dus beweeg de muis
+        over deze sectie voor de popcorn-cursor.
+      </p>
+    </Container>
+    <TextMedia {...micDrop} id="cinema" reverse gradient="orange" cta={{ ...micDrop.cta!, accent: 'orange' }} />
   </div>
 </BaseLayout>
 

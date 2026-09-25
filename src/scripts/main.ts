@@ -10,6 +10,7 @@ import { initHeroVideo } from './hero-video';
 import { initScrollHighlight } from './scroll-highlight';
 import { initBackgroundVideos } from './background-video';
 import { initCarousels } from './carousel';
+import { initCinemaCursor } from './cinema-cursor';
 import { initAnchorLinks, initScrollAnimations } from './scroll-animations';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -27,5 +28,5 @@ initHeroVideo();
 initScrollHighlight();
 initBackgroundVideos();
 initCarousels();
+initCinemaCursor();
 
-// TODO(stap 7): cinema-cursor (alleen bij #cinema)

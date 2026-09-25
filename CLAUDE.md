@@ -98,6 +98,8 @@ Houd dit bij bij elk nieuw component.
 | `Carousel.astro`       | Scroll-snap-carousel met pijlknoppen (Owl-instellingen 1/1/2/3), items lijnen uit op de container.     |
 | `TestimonialCard.astro`| Kaart met foto, quote (Gate italic), oranje lijn en naam – organisatie (beide optioneel).             |
 | `Polaroid.astro`       | Foto met witte polaroidrand, schaduw, kanteling (`--polaroid-rotate`) en optionele caption.            |
+| `VimeoEmbed.astro`     | Vimeo-iframe met vaste verhouding, loading=lazy, optioneel background-modus.                            |
+| `DecoTriangles.astro`  | Zes oranje driehoekjes rond een beeld (structuur exact als Webflow).                                    |
 | `VimeoBackground.astro`| Vimeo-achtergrondvideo (cover). Laadt na window.load, fadet in bij 'play' (gedrag: `hero-video.ts`).    |
 
 ### Layout (`src/components/layout/`)
@@ -122,6 +124,7 @@ Houd dit bij bij elk nieuw component.
 | `Timeline.astro` | Kop (titel + rich text) met genummerde stappen: foto + tekstblok met rookvideo, CTA; `reverse`, `gradient`. |
 | `Testimonials.astro` | Kop + carousel met TestimonialCards over de volle breedte, rook- en B-achtergrond. |
 | `PolaroidStack.astro` | Sticky kop + polaroids die bij scrollen over elkaar schuiven (pure CSS). |
+| `TextMedia.astro` | Tekst (titel, rich text, knop) naast vierkant beeld/Vimeo, `reverse`, `triangles`; `id="cinema"` = popcorn-cursor. |
 
 ### Scripts (`src/scripts/`)
 
@@ -135,4 +138,5 @@ Houd dit bij bij elk nieuw component.
 | `scroll-highlight.ts`  | SplitType + ScrollTrigger scrub: letters van 15% naar 100% met gloed.       |
 | `background-video.ts`  | IntersectionObserver: video-src zetten en afspelen in beeld, pauzeren erbuiten. |
 | `carousel.ts`          | Pijlknoppen scrollen één item, disabled aan begin/eind.                     |
+| `cinema-cursor.ts`     | Popcorn-cursor + spoor, alleen bij een sectie met id="cinema" en een muis.  |
 | `menu.ts`              | Menupaneel openen/sluiten (GSAP), overlay, Escape, focus-trap, scroll-lock, accordeon. |

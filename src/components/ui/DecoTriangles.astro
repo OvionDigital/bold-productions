@@ -1,0 +1,141 @@
+---
+/**
+ * Zes oranje 3D-driehoekjes rond een beeld (Webflow .img-triangles).
+ * Structuur en klassen bewust gelijk aan Webflow: bij 2, 4 en 5 draagt ook de <svg>
+ * de positieklasse (dubbele positie/rotatie), bij 1, 3 en 6 alleen .tri
+ * (en dus de mobiele schaal). Zo is het resultaat pixel-gelijk.
+ * Vult de dichtstbijzijnde gepositioneerde ouder. De px-waarden zijn vaste
+ * decoratiegeometrie uit Webflow (bewuste uitzondering op de token-regel).
+ */
+interface Props {
+  /** Unieke prefix voor de gradient-id's (meerdere instanties per pagina) */
+  id?: string;
+}
+
+const { id = 'tri' } = Astro.props;
+
+const triangles = [
+  { n: 1, svgHasClass: false, viewBox: '0 0 60 52', points: '30,2 58,50 2,50', from: '#ff7733', to: '#cc3300', dir: [0, 0, 100, 100] },
+  { n: 2, svgHasClass: true, viewBox: '0 0 22 58', points: '11,2 21,56 1,56', from: '#ff6600', to: '#992200', dir: [0, 0, 100, 100] },
+  { n: 3, svgHasClass: false, viewBox: '0 0 34 30', points: '17,2 32,28 2,28', from: '#ff8844', to: '#bb2200', dir: [100, 0, 0, 100] },
+  { n: 4, svgHasClass: true, viewBox: '0 0 18 60', points: '9,2 17,58 1,58', from: '#ff5500', to: '#881100', dir: [0, 0, 100, 100] },
+  { n: 5, svgHasClass: true, viewBox: '0 0 22 20', points: '11,2 20,18 2,18', from: '#ff7722', to: '#aa2200', dir: [0, 0, 100, 100] },
+  { n: 6, svgHasClass: false, viewBox: '0 0 30 26', points: '15,2 28,24 2,24', from: '#ff6600', to: '#991100', dir: [100, 0, 0, 100] },
+];
+---
+
+<div class="deco-triangles" aria-hidden="true">
+  {
+    triangles.map((t) => (
+      <div class:list={['tri', `tri--${t.n}`]}>
+        <svg
+          class:list={['tri', { [`tri--${t.n}`]: t.svgHasClass }]}
+          viewBox={t.viewBox}
+          xmlns="http://www.w3.org/2000/svg"
+          focusable="false"
+        >
+          <defs>
+            <linearGradient id={`${id}-g${t.n}`} x1={`${t.dir[0]}%`} y1={`${t.dir[1]}%`} x2={`${t.dir[2]}%`} y2={`${t.dir[3]}%`}>
+              <stop offset="0%" stop-color={t.from} />
+              <stop offset="100%" stop-color={t.to} />
+            </linearGradient>
+          </defs>
+          <polygon points={t.points} fill={`url(#${id}-g${t.n})`} />
+        </svg>
+      </div>
+    ))
+  }
+</div>
+
+<style>
+  .deco-triangles {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+
+  .tri {
+    position: absolute;
+    pointer-events: none;
+    max-width: none;
+  }
+
+  .tri.tri--1 {
+    top: -22px;
+    left: -28px;
+    width: 56px;
+    height: 52px;
+    opacity: 0.95;
+    filter: drop-shadow(0 6px 10px var(--color-orange-a60));
+    transform: rotate(15deg);
+  }
+
+  .tri.tri--2 {
+    top: 40px;
+    right: -16px;
+    width: 22px;
+    height: 52px;
+    transform: rotate(110deg);
+  }
+
+  .tri.tri--3 {
+    bottom: 80px;
+    left: -18px;
+    width: 32px;
+    height: 30px;
+    opacity: 0.7;
+    filter: drop-shadow(0 4px 6px var(--color-orange-a40));
+    transform: rotate(195deg);
+  }
+
+  .tri.tri--4 {
+    right: 0;
+    bottom: 0;
+    width: 18px;
+    height: 58px;
+    opacity: 0.85;
+    filter: drop-shadow(0 4px 8px var(--color-orange-a50));
+    transform: rotate(60deg);
+  }
+
+  .tri.tri--5 {
+    bottom: -12px;
+    left: 60px;
+    width: 20px;
+    height: 18px;
+    opacity: 0.6;
+    transform: rotate(160deg);
+  }
+
+  .tri.tri--6 {
+    top: 120px;
+    right: -20px;
+    width: 28px;
+    height: 26px;
+    opacity: 0.5;
+    filter: drop-shadow(0 3px 6px var(--color-orange-a30));
+    transform: rotate(30deg);
+  }
+
+  @media (max-width: 991px) {
+    .tri {
+      transform: scale(0.75);
+    }
+
+    .tri.tri--2 {
+      transform: scale(0.75) rotate(110deg);
+    }
+
+    .tri.tri--4 {
+      transform: scale(0.75) rotate(60deg);
+    }
+  }
+
+  @media (max-width: 479px) {
+    .tri {
+      transform: scale(0.5);
+    }
+  }
+</style>

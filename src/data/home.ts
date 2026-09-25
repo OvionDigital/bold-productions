@@ -8,6 +8,7 @@ import type { IntroHighlightProps } from '../components/sections/IntroHighlight.
 import type { TimelineProps } from '../components/sections/Timeline.astro';
 import type { TestimonialsProps } from '../components/sections/Testimonials.astro';
 import type { PolaroidStackProps } from '../components/sections/PolaroidStack.astro';
+import type { TextMediaProps } from '../components/sections/TextMedia.astro';
 import polaroid1 from '../assets/images/polaroids/polaroid-1.jpg';
 import polaroid2 from '../assets/images/polaroids/polaroid-2.jpg';
 import polaroid3 from '../assets/images/polaroids/polaroid-3.jpg';
@@ -214,4 +215,33 @@ export const backstage: PolaroidStackProps = {
     { src: polaroid6, alt: 'Selfie van drie crewleden van Bold Productions in blauw licht.' },
     { src: polaroid7, alt: 'Cameraman van Bold Productions voor het podium tijdens een concert in groen licht.' },
   ],
+};
+
+export const micDrop: TextMediaProps = {
+  title: "Mike's mic drop",
+  gradient: 'yellow',
+  body: [
+    {
+      p: [
+        { text: '"De meeste content rondom events laat zien hoe druk het was. Maar niet hoe het voelde toen alles samenkwam. Terwijl dát juist het moment is waar mensen over napraten. Waar kaartverkoop op volgt. Waar sponsors trots van worden. Waar je publiek op terugkomt.', em: true },
+        { br: true },
+        { br: true },
+        { text: 'Het gaat niet om zoveel mogelijk willen vastleggen. Het gaat om het vangen van de juiste momenten. Als dat lukt, hoef je niet uit te leggen hoe vet het was. Dan zien mensen het vanzelf. Of beter nog, dan ', em: true },
+        { text: 'voelen', strong: true, em: true },
+        { text: ' ze het.', em: true },
+        { br: true },
+        { br: true },
+        { text: 'Bij Bold Productions hebben we oog voor die momenten. En de uitrusting om ze te vereeuwigen. Zodat jouw event voortleeft.”', em: true },
+        { br: true },
+        { br: true },
+        { text: '- Mike Ampting', strong: true },
+        { br: true },
+        '(',
+        { text: 'Creative Director - Bold Productions)', em: true },
+      ],
+    },
+  ],
+  cta: { label: 'Mail Mike', href: 'mailto:mike@mikeampting.nl', accent: 'yellow' },
+  media: { type: 'vimeo', id: '1180112439', hash: '5399f03c15', title: 'Video Mike Ampting, Bold Productions' },
+  triangles: true,
 };

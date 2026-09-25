@@ -288,3 +288,30 @@ figure {
   opacity: 1 !important;
   transform: none !important;
 }
+
+/* ─── Popcorn-cursor (scripts/cinema-cursor.ts, alleen bij #cinema) ─── */
+.cinema-cursor,
+.popcorn-trail {
+  position: fixed;
+  top: 0;
+  left: 0;
+  font-size: var(--fs-cursor);
+  line-height: 1;
+  pointer-events: none;
+}
+
+.cinema-cursor {
+  z-index: var(--z-cursor);
+  opacity: 0;
+  translate: -50% -50%;
+  transition: opacity var(--duration-fast);
+}
+
+.cinema-cursor.is-active {
+  opacity: 1;
+}
+
+.popcorn-trail {
+  z-index: calc(var(--z-cursor) - 1);
+  translate: -50% -50%;
+}
