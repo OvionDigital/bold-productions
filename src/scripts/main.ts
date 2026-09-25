@@ -6,6 +6,7 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { initLenis } from './lenis';
 import { initMenu } from './menu';
+import { initHeroVideo } from './hero-video';
 import { initAnchorLinks, initScrollAnimations } from './scroll-animations';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -14,5 +15,6 @@ initLenis();
 initScrollAnimations();
 initAnchorLinks();
 initMenu();
+initHeroVideo();
 
-// TODO(stap 7): hero-video, scroll-highlight, carousel, background-video, cinema-cursor
+// TODO(stap 7): scroll-highlight, carousel, background-video, cinema-cursor

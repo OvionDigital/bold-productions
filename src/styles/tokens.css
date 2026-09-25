@@ -257,6 +257,7 @@
   /* ─── Lagen ─────────────────────────────────────────────────────── */
   --z-below: -1;
   --z-base: 1;
+  --z-media: 2; /* achtergrondvideo boven poster */
   --z-overlay: 3;
   --z-content: 4;
   --z-menu-overlay: 10;

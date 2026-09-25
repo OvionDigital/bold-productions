@@ -15,6 +15,8 @@ import SectionHeading from '../components/ui/SectionHeading.astro';
 import { tokensByPrefix } from '../lib/tokens';
 import Header from '../components/layout/Header.astro';
 import { cta, header, mainNav } from '../data/navigation';
+import Hero from '../components/sections/Hero.astro';
+import { hero } from '../data/home';
 
 const colors = tokensByPrefix('--color-');
 const gradients = tokensByPrefix('--gradient-');
@@ -427,12 +429,17 @@ const nav = [
       <!-- ─── Secties ─────────────────────────────────────────────── -->
       <section class="sg-section" id="secties">
         <h2 class="sg-title">Secties</h2>
+        <h3 class="sg-subtitle">Hero</h3>
         <p class="sg-note">
-          Nog geen secties. Die komen in stap 7, één voor één, elk met voorbeeldprops. Zie
-          <code>docs/homepage-secties.md</code>.
+          <code>&lt;Hero title titleAccent eyebrow primaryCta secondaryCta image video accent /&gt;</code>. Hieronder de
+          homepage-props zonder video, met <code>accent="yellow"</code>. De video (Vimeo) laadt na window.load en fadet in
+          zodra hij speelt.
         </p>
       </section>
     </Container>
+    <div class="sg-frame sg-frame--section">
+      <Hero {...hero} video={undefined} accent="yellow" />
+    </div>
   </div>
 </BaseLayout>
 
@@ -686,6 +693,10 @@ const nav = [
     padding: var(--space-16);
     border: var(--border-width) dashed var(--color-orange);
     background: var(--color-orange-a8);
+  }
+
+  .sg-frame.sg-frame--section {
+    height: auto;
   }
 
   .sg-frame {

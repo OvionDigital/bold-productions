@@ -1,0 +1,214 @@
+---
+/**
+ * Hero: volle schermhoogte, titel met italic accentregel, eyebrow, twee knoppen.
+ * Achtergrond: afbeelding (LCP/poster) met optioneel een Vimeo-video die infadet.
+ */
+import { Picture } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import Container from '../ui/Container.astro';
+import Eyebrow from '../ui/Eyebrow.astro';
+import Button, { type Accent } from '../ui/Button.astro';
+import VimeoBackground from '../ui/VimeoBackground.astro';
+import type { IconName } from '../ui/icons';
+import { toLines } from '../../lib/text';
+
+export interface HeroProps {
+  title: string;
+  titleAccent: string;
+  eyebrow: string;
+  primaryCta: { label: string; href: string };
+  secondaryCta?: { label: string; href: string; icon?: IconName };
+  image: { src: ImageMetadata; alt: string };
+  video?: { id: string; hash?: string; title: string; loadOnMobile?: boolean };
+  accent?: Accent;
+}
+
+type Props = HeroProps;
+
+const { title, titleAccent, eyebrow, primaryCta, secondaryCta, image, video, accent } = Astro.props;
+const titleLines = toLines(title);
+---
+
+<section class="hero" data-accent={accent}>
+  <div class="hero__title-wrap">
+    <Container width="wide">
+      <h1 class="hero__title">
+        <span class="hero__title-main">
+          {titleLines.map((line) => <Fragment>{line}<br /></Fragment>)}
+        </span>
+        <span class="hero__title-accent">{titleAccent}</span>
+      </h1>
+    </Container>
+  </div>
+
+  <div class="hero__bottom">
+    <Container width="wide">
+      <div class="hero__bottom-inner">
+        <Eyebrow text={eyebrow} class="hero__eyebrow" />
+        <div class="hero__buttons">
+          <Button label={primaryCta.label} href={primaryCta.href} size="large" />
+          {
+            secondaryCta && (
+              <Button
+                label={secondaryCta.label}
+                href={secondaryCta.href}
+                variant="outline"
+                size="large"
+                icon={secondaryCta.icon ?? 'arrow-right'}
+              />
+            )
+          }
+        </div>
+      </div>
+    </Container>
+  </div>
+
+  <div class="hero__overlay"></div>
+  {video && <VimeoBackground id={video.id} hash={video.hash} title={video.title} loadOnMobile={video.loadOnMobile} class="hero__video" />}
+  <Picture
+    src={image.src}
+    alt={image.alt}
+    widths={[640, 960, 1280, 1600, 2048]}
+    sizes="(max-aspect-ratio: 3/2) 150vh, 100vw"
+    formats={['avif', 'webp']}
+    loading="eager"
+    fetchpriority="high"
+    class="hero__image"
+    pictureAttributes={{ class: "hero__picture" }}
+  />
+</section>
+
+<style>
+  .hero {
+    --vimeo-bleed: 120px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: stretch;
+    gap: var(--space-32);
+    width: 100%;
+    height: 100vh;
+    height: 100svh;
+    min-height: var(--hero-min-height);
+    overflow: hidden;
+  }
+
+  .hero__title-wrap {
+    position: relative;
+    z-index: var(--z-content);
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+  }
+
+  .hero__title {
+    margin: 0;
+    font-size: var(--fs-hero);
+    line-height: var(--lh-display);
+    letter-spacing: var(--ls-heading);
+    text-wrap: pretty;
+  }
+
+  .hero__title-main,
+  .hero__title-accent,
+  .hero__bottom-inner :global(.hero__eyebrow),
+  .hero__buttons {
+    animation: fade-in-up var(--duration-slow) var(--ease-out) both;
+  }
+
+  .hero__title-main {
+    animation-delay: 0.2s;
+  }
+
+  .hero__title-accent {
+    display: inline;
+    color: var(--accent);
+    font-style: italic;
+    animation-delay: 0.35s;
+  }
+
+  .hero__bottom-inner :global(.hero__eyebrow) {
+    animation-delay: 0.5s;
+  }
+
+  .hero__buttons {
+    animation-delay: 0.65s;
+  }
+
+  .hero__bottom {
+    position: relative;
+    z-index: var(--z-content);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .hero__bottom-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-42);
+    padding-bottom: var(--space-48);
+  }
+
+  .hero__buttons {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: var(--space-24);
+  }
+
+  .hero__overlay {
+    position: absolute;
+    inset: 0;
+    z-index: var(--z-overlay);
+    background-image: var(--gradient-hero-overlay);
+    pointer-events: none;
+  }
+
+  /* <picture> absoluut, anders telt het als flex-item mee in de gap */
+  .hero :global(.hero__picture) {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+
+  .hero :global(.hero__video) {
+    z-index: var(--z-media);
+  }
+
+  .hero :global(.hero__image) {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  @media (max-width: 767px) {
+    .hero__bottom-inner {
+      padding-bottom: var(--space-24);
+    }
+
+    .hero__buttons {
+      gap: var(--space-16);
+    }
+  }
+
+  @media (max-width: 479px) {
+    .hero {
+      gap: var(--space-24);
+    }
+
+    .hero__bottom-inner {
+      gap: var(--space-24);
+    }
+
+    .hero__buttons {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+</style>

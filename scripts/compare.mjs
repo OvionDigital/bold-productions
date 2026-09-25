@@ -15,7 +15,8 @@
  * Vereist eenmalig: npx playwright install chromium
  */
 import { spawn } from 'node:child_process';
-import { mkdir, writeFile, readdir } from 'node:fs/promises';
+import { mkdir, writeFile, readdir, readFile, stat } from 'node:fs/promises';
+import http from 'node:http';
 import { existsSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -79,22 +80,43 @@ async function waitForServer(url, timeoutMs = 30_000) {
   throw new Error(`Server ${url} kwam niet op binnen ${timeoutMs}ms`);
 }
 
-function startPreview() {
-  const child = spawn('npx', ['astro', 'preview', '--port', String(LOCAL_PORT)], {
-    cwd: ROOT,
-    shell: true,
-    stdio: 'ignore',
-  });
-  return child;
-}
+const MIME = {
+  '.html': 'text/html; charset=utf-8',
+  '.css': 'text/css',
+  '.js': 'text/javascript',
+  '.json': 'application/json',
+  '.svg': 'image/svg+xml',
+  '.png': 'image/png',
+  '.jpg': 'image/jpeg',
+  '.webp': 'image/webp',
+  '.avif': 'image/avif',
+  '.woff2': 'font/woff2',
+  '.mp4': 'video/mp4',
+};
 
-function stopProcess(child) {
-  if (!child || child.killed) return;
-  if (process.platform === 'win32') {
-    spawn('taskkill', ['/pid', String(child.pid), '/T', '/F'], { stdio: 'ignore', shell: true });
-  } else {
-    child.kill('SIGTERM');
-  }
+/** Minimale statische server voor dist/ met nette URL's zoals Cloudflare Pages (/pad → pad.html). */
+function startStaticServer() {
+  const dist = path.join(ROOT, 'dist');
+  const server = http.createServer(async (req, res) => {
+    const urlPath = decodeURIComponent(new URL(req.url, LOCAL_ORIGIN).pathname);
+    const candidates = urlPath.endsWith('/')
+      ? [path.join(dist, urlPath, 'index.html')]
+      : [path.join(dist, urlPath), path.join(dist, `${urlPath}.html`),path.join(dist, urlPath, 'index.html')];
+    for (const file of candidates) {
+      if (!file.startsWith(dist)) break;
+      try {
+        if ((await stat(file)).isFile()) {
+          res.writeHead(200, { 'Content-Type': MIME[path.extname(file)] ?? 'application/octet-stream' });
+          res.end(await readFile(file));
+          return;
+        }
+      } catch {
+        /* volgende kandidaat */
+      }
+    }
+    res.writeHead(404).end('Not found');
+  });
+  return new Promise((resolve) => server.listen(LOCAL_PORT, () => resolve(server)));
 }
 
 /** Scrollt langzaam door de pagina zodat lazy afbeeldingen laden, en terug naar boven. */
@@ -165,12 +187,15 @@ async function composite(browser, { liveFile, localFile, outFile }) {
       const db = read(b);
       const diff = new ImageData(w, h);
       let changed = 0;
+      let changedOverlap = 0;
+      const overlapEnd = Math.min(a.height, b.height) * w * 4;
       for (let i = 0; i < da.data.length; i += 4) {
         const d =
           Math.abs(da.data[i] - db.data[i]) + Math.abs(da.data[i + 1] - db.data[i + 1]) + Math.abs(da.data[i + 2] - db.data[i + 2]);
         const gray = (da.data[i] + da.data[i + 1] + da.data[i + 2]) / 12;
         if (d > 48) {
           changed++;
+          if (i < overlapEnd) changedOverlap++;
           diff.data.set([255, 40, 40, 255], i);
         } else {
           diff.data.set([gray, gray, gray, 255], i);
@@ -195,6 +220,7 @@ async function composite(browser, { liveFile, localFile, outFile }) {
       return {
         dataUrl: out.toDataURL('image/png'),
         percent: (changed / (w * h)) * 100,
+        percentOverlap: (changedOverlap / (w * Math.min(a.height, b.height))) * 100,
         heights: [a.height, b.height],
       };
     },
@@ -234,8 +260,8 @@ async function main() {
     await run('npx', ['astro', 'build']);
   }
 
-  log(`preview starten op ${LOCAL_ORIGIN}`);
-  const preview = startPreview();
+  log(`dist/ serveren op ${LOCAL_ORIGIN}`);
+  const server = await startStaticServer();
   const browser = await chromium.launch({ args: ['--allow-file-access-from-files'] });
   const summary = [];
 
@@ -252,11 +278,11 @@ async function main() {
       await screenshot(browser, { url: `${LOCAL_ORIGIN}${pagePath}${sep}static=1`, width, file: localFile });
 
       const result = await composite(browser, { liveFile, localFile, outFile: path.join(pageDir, `compare-${width}.png`) });
-      summary.push({ width, diff: `${result.percent.toFixed(2)}%`, hoogteLive: result.heights[0], hoogteLokaal: result.heights[1] });
+      summary.push({ width, diff: `${result.percent.toFixed(2)}%`, diffGedeeld: `${result.percentOverlap.toFixed(2)}%`, hoogteLive: result.heights[0], hoogteLokaal: result.heights[1] });
     }
   } finally {
     await browser.close();
-    stopProcess(preview);
+    server.close();
   }
 
   await writeIndex();

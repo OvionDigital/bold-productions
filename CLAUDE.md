@@ -18,6 +18,7 @@ npm run dev             # dev-server, http://localhost:4321
 npm run build           # astro check + astro build → dist/
 npm run preview         # dist/ serveren
 npm run compare         # screenshots live vs. lokaal (375/768/1440) → compare/index.html
+                        #   diffGedeeld = verschil binnen de hoogte van de kortste pagina
                         #   opties: -- --path=/events --widths=375,1440 --no-build
 npm run deploy:preview  # build + wrangler pages deploy (branch preview)
 ```
@@ -90,6 +91,7 @@ Houd dit bij bij elk nieuw component.
 | `Eyebrow.astro`        | Kleine kop in Gate met ruime letterspatiëring (Webflow `.subtitle`).                                       |
 | `Heading.astro`        | Displaykop in Gate. `as` (semantiek) los van `size`, optioneel `gradient`, `align`, `flush`.               |
 | `SectionHeading.astro` | Gecentreerde eyebrow + h2 met gradient (Webflow `.section-heading`).                                       |
+| `VimeoBackground.astro`| Vimeo-achtergrondvideo (cover). Laadt na window.load, fadet in bij 'play' (gedrag: `hero-video.ts`).    |
 
 ### Layout (`src/components/layout/`)
 
@@ -103,7 +105,9 @@ Houd dit bij bij elk nieuw component.
 
 ### Secties (`src/components/sections/`)
 
-_Nog geen. Zie `docs/homepage-secties.md` voor de geplande secties._
+| Component    | Uitleg                                                                                              |
+| ------------ | --------------------------------------------------------------------------------------------------- |
+| `Hero.astro` | Schermvullende hero: titel + italic accentregel, eyebrow, 2 knoppen, poster-afbeelding (LCP) en optionele Vimeo-video. |
 
 ### Scripts (`src/scripts/`)
 
@@ -113,4 +117,5 @@ _Nog geen. Zie `docs/homepage-secties.md` voor de geplande secties._
 | `env.ts`               | `isStatic`, `prefersReducedMotion`, `motionEnabled`.                       |
 | `lenis.ts`             | Lenis smooth scroll gekoppeld aan GSAP ticker/ScrollTrigger; `scrollToTarget`. |
 | `scroll-animations.ts` | `[data-animate]` fade-in-up (top 70%, eenmalig) en anchor-links met offset. |
+| `hero-video.ts`        | Zet de Vimeo-src na window.load (mobiel alleen met loadOnMobile), fade-in via postMessage 'play'. |
 | `menu.ts`              | Menupaneel openen/sluiten (GSAP), overlay, Escape, focus-trap, scroll-lock, accordeon. |

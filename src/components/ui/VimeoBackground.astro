@@ -1,0 +1,69 @@
+---
+/**
+ * Vimeo-achtergrondvideo (background=1) die de container vult (cover).
+ * Het iframe krijgt pas een src na window.load (scripts/hero-video.ts) en fadet in
+ * zodra Vimeo 'play' meldt. Tot die tijd blijft de poster (bijv. hero-afbeelding) zichtbaar.
+ */
+interface Props {
+  id: string;
+  hash?: string;
+  /** Ook laden op schermen ≤767px */
+  loadOnMobile?: boolean;
+  title: string;
+  class?: string;
+}
+
+const { id, hash, loadOnMobile = false, title, class: className } = Astro.props;
+const params = new URLSearchParams({
+  ...(hash ? { h: hash } : {}),
+  autoplay: '1',
+  loop: '1',
+  muted: '1',
+  background: '1',
+  playsinline: '1',
+});
+const src = `https://player.vimeo.com/video/${id}?${params.toString()}`;
+---
+
+<div class:list={['vimeo-bg', className]} data-vimeo-bg data-load-on-mobile={loadOnMobile ? 'true' : 'false'} aria-hidden="true">
+  <iframe
+    class="vimeo-bg__iframe"
+    data-src={src}
+    title={title}
+    tabindex="-1"
+    allow="autoplay; fullscreen; picture-in-picture"
+    referrerpolicy="strict-origin-when-cross-origin"></iframe>
+</div>
+
+<style>
+  .vimeo-bg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 177.78vh;
+    min-width: 100%;
+    height: calc(56.25vw + var(--vimeo-bleed));
+    min-height: calc(100% + var(--vimeo-bleed));
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity var(--duration-slow) var(--ease-out);
+  }
+
+  .vimeo-bg.is-playing {
+    opacity: 1;
+  }
+
+  .vimeo-bg__iframe {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 177.78vh;
+    min-width: 100%;
+    height: 56.25vw;
+    min-height: 100%;
+    border: 0;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+</style>
