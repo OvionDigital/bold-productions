@@ -3,11 +3,12 @@
  * Horizontale container.
  *   default: max-breedte per breakpoint (940/1140/1320/1680, tablet 720), goot 12/24/16px
  *   wide:    volle breedte met ruime goot (48/36/24/16px) — hero, navbar, fluid
+ *   plain:   als default, maar volle breedte tussen 992 en 1279px (Webflow .container zonder .w-container)
  */
 import type { HTMLTag } from 'astro/types';
 
 interface Props {
-  width?: 'default' | 'wide';
+  width?: 'default' | 'wide' | 'plain';
   as?: HTMLTag;
   class?: string;
 }
@@ -28,6 +29,11 @@ const { width = 'default', as: Tag = 'div', class: className } = Astro.props;
 
   .container--default {
     max-width: var(--container-max);
+    padding-inline: var(--container-padding);
+  }
+
+  .container--plain {
+    max-width: var(--container-max-plain);
     padding-inline: var(--container-padding);
   }
 

@@ -205,6 +205,7 @@
 
   /* ─── Containers ────────────────────────────────────────────────── */
   --container-max: 940px; /* 992–1279 */
+  --container-max-plain: none; /* Webflow .container zonder .w-container */
   --container-narrow: 816px; /* section-heading, intro */
   --container-large: 80rem;
 
@@ -226,6 +227,11 @@
   --logo-width: 154px;
   --logo-width-mobile: 124px;
   --hero-min-height: 550px;
+  --logo-tile-width: 220px;
+  --logo-tile-height: 110px;
+  --logo-tile-width-sm: 160px; /* ≤991 */
+  --logo-tile-height-sm: 80px;
+  --logo-tile-image: 150px;
   --navbar-side-width: 350px; /* logo- en actieblok ≥1440 */
   --dropdown-min-width: 250px;
   --menu-panel-min-width: 500px;
@@ -296,18 +302,21 @@
 @media (min-width: 1280px) {
   :root {
     --container-max: 1140px;
+    --container-max-plain: 1140px;
   }
 }
 
 @media (min-width: 1440px) {
   :root {
     --container-max: 1320px;
+    --container-max-plain: 1320px;
   }
 }
 
 @media (min-width: 1920px) {
   :root {
     --container-max: 1680px;
+    --container-max-plain: 1680px;
   }
 }
 
@@ -315,6 +324,7 @@
   :root {
     --section-padding: 48px;
     --container-max: 720px;
+    --container-max-plain: 720px;
     --container-padding-wide: 36px;
   }
 }
@@ -322,6 +332,7 @@
 @media (max-width: 767px) {
   :root {
     --container-max: none;
+    --container-max-plain: none;
     --container-padding: 24px;
     --container-padding-wide: 24px;
     --button-height-large: 56px;

@@ -87,7 +87,7 @@ Houd dit bij bij elk nieuw component.
 | `Button.astro`         | Link of knop. Varianten `primary`/`outline`/`ghost`, groottes `compact`/`small`/`default`/`large`, `accent`, `icon`, `iconExpanded` (bij aria-expanded), `iconOnlyOnMobile`. |
 | `Icon.astro`           | Inline SVG-icoon uit het register in `icons.ts` (pijlen, chevron, menu, close, quote, WhatsApp, socials).  |
 | `icons.ts`             | Iconenregister (paden + viewBox). Nieuwe iconen hier toevoegen.                                            |
-| `Container.astro`      | Horizontale container: `default` (max-breedte per breakpoint) of `wide` (volle breedte, ruime goot).       |
+| `Container.astro`      | Horizontale container: `default` (max-breedte per breakpoint), `plain` (idem, maar vol 992–1279) of `wide` (volle breedte, ruime goot). |
 | `Eyebrow.astro`        | Kleine kop in Gate met ruime letterspatiëring (Webflow `.subtitle`).                                       |
 | `Heading.astro`        | Displaykop in Gate. `as` (semantiek) los van `size`, optioneel `gradient`, `align`, `flush`.               |
 | `SectionHeading.astro` | Gecentreerde eyebrow + h2 met gradient (Webflow `.section-heading`).                                       |
@@ -110,6 +110,7 @@ Houd dit bij bij elk nieuw component.
 | Component    | Uitleg                                                                                              |
 | ------------ | --------------------------------------------------------------------------------------------------- |
 | `Hero.astro` | Schermvullende hero: titel + italic accentregel, eyebrow, 2 knoppen, poster-afbeelding (LCP) en optionele Vimeo-video. |
+| `LogoMarquee.astro` | Logostrip met kop tussen lijnen en eindeloze CSS-marquee van logo-tegels. |
 
 ### Scripts (`src/scripts/`)
 

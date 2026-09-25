@@ -1,0 +1,159 @@
+---
+/**
+ * Logostrip "Vertrouwd door": kop tussen twee lijnen en een eindeloos
+ * doorlopende rij logo-tegels (pure CSS-marquee, Webflow-IX: 14 s lineair).
+ * De lijst staat er twee keer in; de kopie is aria-hidden.
+ */
+import { Picture } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import Container from '../ui/Container.astro';
+import Eyebrow from '../ui/Eyebrow.astro';
+
+export interface Logo {
+  src: ImageMetadata;
+  /** Organisatienaam */
+  alt: string;
+}
+
+export interface LogoMarqueeProps {
+  title: string;
+  logos: Logo[];
+}
+
+type Props = LogoMarqueeProps;
+
+const { title, logos } = Astro.props;
+const copies = [false, true];
+---
+
+<section class="logo-marquee" data-animate>
+  <Container>
+    <div class="logo-marquee__header">
+      <span class="logo-marquee__line"></span>
+      <Eyebrow as="h2" text={title} class="logo-marquee__title" />
+      <span class="logo-marquee__line"></span>
+    </div>
+  </Container>
+
+  <Container width="plain">
+    <div class="logo-marquee__viewport">
+      {
+        copies.map((isCopy) => (
+          <ul class="logo-marquee__list" role="list" aria-hidden={isCopy ? 'true' : undefined}>
+            {logos.map((logo) => (
+              <li class="logo-marquee__item">
+                {logo.src.format === 'svg' ? (
+                  <img
+                    src={logo.src.src}
+                    width={logo.src.width}
+                    height={logo.src.height}
+                    alt={isCopy ? '' : logo.alt}
+                    loading="lazy"
+                    decoding="async"
+                    class="logo-marquee__img"
+                  />
+                ) : (
+                  <Picture
+                    src={logo.src}
+                    alt={isCopy ? '' : logo.alt}
+                    widths={[150, 300]}
+                    sizes="150px"
+                    formats={['avif', 'webp']}
+                    loading="lazy"
+                    decoding="async"
+                    class="logo-marquee__img"
+                  />
+                )}
+              </li>
+            ))}
+          </ul>
+        ))
+      }
+    </div>
+  </Container>
+</section>
+
+<style>
+  .logo-marquee {
+    position: relative;
+    z-index: var(--z-base);
+    padding-block: var(--section-padding);
+    overflow: hidden;
+  }
+
+  .logo-marquee__header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--space-48);
+    margin-bottom: var(--space-48);
+  }
+
+  .logo-marquee__line {
+    width: 100%;
+    height: var(--border-width);
+    background-color: var(--color-gray-dark);
+  }
+
+  .logo-marquee__viewport {
+    display: flex;
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, var(--color-black) 6%, var(--color-black) 94%, transparent 100%);
+    mask-image: linear-gradient(to right, transparent 0%, var(--color-black) 6%, var(--color-black) 94%, transparent 100%);
+  }
+
+  .logo-marquee__list {
+    position: relative;
+    display: flex;
+    flex: none;
+    justify-content: space-around;
+    align-items: center;
+    gap: var(--space-24);
+    min-width: 100%;
+    margin: 0;
+    padding: 0 var(--space-12);
+    list-style: none;
+    animation: logo-marquee var(--marquee-duration) linear infinite;
+  }
+
+  .logo-marquee__item {
+    display: flex;
+    flex: none;
+    justify-content: center;
+    align-items: center;
+    width: var(--logo-tile-width);
+    height: var(--logo-tile-height);
+    padding: var(--space-24) var(--space-32);
+    border: var(--border-width) solid var(--color-logo-border);
+    background-color: var(--color-logo-bg);
+  }
+
+  .logo-marquee__item :global(.logo-marquee__img) {
+    width: var(--logo-tile-image);
+    height: auto;
+    max-width: 100%;
+  }
+
+  .logo-marquee__item :global(picture) {
+    display: flex;
+    justify-content: center;
+    max-width: 100%;
+  }
+
+  @media (max-width: 991px) {
+    .logo-marquee__item {
+      width: var(--logo-tile-width-sm);
+      height: var(--logo-tile-height-sm);
+    }
+  }
+
+  @keyframes logo-marquee {
+    from {
+      transform: translateX(0);
+    }
+
+    to {
+      transform: translateX(-100%);
+    }
+  }
+</style>

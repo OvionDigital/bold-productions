@@ -1,9 +1,11 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/sections/Hero.astro';
-import { hero, meta } from '../data/home';
+import LogoMarquee from '../components/sections/LogoMarquee.astro';
+import { hero, meta, trustedBy } from '../data/home';
 ---
 
 <BaseLayout title={meta.title} description={meta.description} ogImage={meta.ogImage}>
   <Hero {...hero} />
+  <LogoMarquee {...trustedBy} />
 </BaseLayout>

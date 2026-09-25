@@ -17,7 +17,8 @@ import Header from '../components/layout/Header.astro';
 import WhatsAppButton from '../components/layout/WhatsAppButton.astro';
 import { contact, cta, header, mainNav } from '../data/navigation';
 import Hero from '../components/sections/Hero.astro';
-import { hero } from '../data/home';
+import LogoMarquee from '../components/sections/LogoMarquee.astro';
+import { hero, trustedBy } from '../data/home';
 
 const colors = tokensByPrefix('--color-');
 const gradients = tokensByPrefix('--gradient-');
@@ -444,6 +445,15 @@ const nav = [
     <div class="sg-frame sg-frame--section">
       <Hero {...hero} video={undefined} accent="yellow" />
     </div>
+
+    <Container>
+      <h3 class="sg-subtitle">LogoMarquee</h3>
+      <p class="sg-note">
+        <code>&lt;LogoMarquee title logos /&gt;</code>. Logo's: <code>{'{ src, alt }'}</code> met de organisatienaam als
+        alt. Raster via Picture (AVIF/WebP), SVG direct. Pure CSS-marquee, stil bij reduced motion.
+      </p>
+    </Container>
+    <LogoMarquee {...trustedBy} />
   </div>
 </BaseLayout>
 
