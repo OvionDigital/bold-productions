@@ -30,6 +30,7 @@ import PolaroidStack from '../components/sections/PolaroidStack.astro';
 import Polaroid from '../components/ui/Polaroid.astro';
 import TextMedia from '../components/sections/TextMedia.astro';
 import { backstage, hero, intro, micDrop, testimonials, timeline, trustedBy } from '../data/home';
+import { biggerThanTheDay } from '../data/events';
 
 const colors = tokensByPrefix('--color-');
 const gradients = tokensByPrefix('--gradient-');
@@ -570,6 +571,13 @@ const nav = [
       </p>
     </Container>
     <TextMedia {...micDrop} id="cinema" reverse gradient="orange" cta={{ ...micDrop.cta!, accent: 'orange' }} />
+
+    <Container>
+      <p class="sg-note">
+        Variant met afbeelding (staand 2:3), <code>reverse</code> en <code>spacing="section"</code> (events):
+      </p>
+    </Container>
+    <TextMedia {...biggerThanTheDay} id="sg-image-variant" />
   </div>
 </BaseLayout>
 
