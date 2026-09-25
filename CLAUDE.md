@@ -124,7 +124,7 @@ Houd dit bij bij elk nieuw component.
 | `IntroHighlight.astro` | Gecentreerde Gate-introtekst met groene accenten en scroll-highlight per letter. |
 | `Timeline.astro` | Kop (titel + rich text) met genummerde stappen: foto + tekstblok met rookvideo, CTA; `reverse`, `gradient`. |
 | `Testimonials.astro` | Kop + carousel met TestimonialCards over de volle breedte, rook- en B-achtergrond. |
-| `PolaroidStack.astro` | Sticky kop + polaroids die bij scrollen over elkaar schuiven (pure CSS). |
+| `PolaroidStack.astro` | Kop + polaroids die bij scrollen over elkaar schuiven (pure CSS). |
 | `TextMedia.astro` | Tekst (titel, rich text, knop) naast vierkant beeld/Vimeo, `reverse`, `triangles`; `id="cinema"` = popcorn-cursor. |
 
 ### Scripts (`src/scripts/`)

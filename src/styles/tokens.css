@@ -244,7 +244,7 @@
   --quote-icon-max: 42px;
   --testimonial-line-width: 200px;
   --testimonials-heading-max: 900px;
-  --polaroids-header-top: 144px; /* sticky kop polaroidgalerij */
+  --polaroids-header-top: 144px; /* min-hoogte kop polaroidgalerij op mobiel (≤479: 120) */
   --polaroids-item-top: 290px; /* sticky polaroids, per breakpoint */
   --navbar-side-width: 350px; /* logo- en actieblok ≥1440 */
   --dropdown-min-width: 250px;
