@@ -8,6 +8,7 @@ import { initLenis } from './lenis';
 import { initMenu } from './menu';
 import { initHeroVideo } from './hero-video';
 import { initScrollHighlight } from './scroll-highlight';
+import { initBackgroundVideos } from './background-video';
 import { initAnchorLinks, initScrollAnimations } from './scroll-animations';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -23,5 +24,6 @@ initAnchorLinks();
 initMenu();
 initHeroVideo();
 initScrollHighlight();
+initBackgroundVideos();
 
-// TODO(stap 7): carousel, background-video, cinema-cursor
+// TODO(stap 7): carousel, cinema-cursor

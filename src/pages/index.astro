@@ -3,11 +3,13 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/sections/Hero.astro';
 import LogoMarquee from '../components/sections/LogoMarquee.astro';
 import IntroHighlight from '../components/sections/IntroHighlight.astro';
-import { hero, intro, meta, trustedBy } from '../data/home';
+import Timeline from '../components/sections/Timeline.astro';
+import { hero, intro, meta, timeline, trustedBy } from '../data/home';
 ---
 
 <BaseLayout title={meta.title} description={meta.description} ogImage={meta.ogImage}>
   <Hero {...hero} />
   <LogoMarquee {...trustedBy} />
   <IntroHighlight {...intro} />
+  <Timeline {...timeline} />
 </BaseLayout>

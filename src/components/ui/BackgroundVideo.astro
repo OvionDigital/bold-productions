@@ -1,0 +1,81 @@
+---
+/**
+ * Decoratieve achtergrondvideo (rook). Vult de dichtstbijzijnde gepositioneerde ouder.
+ * - Poster als <picture> (AVIF/WebP), lazy.
+ * - <video muted loop playsinline preload="none">: src en afspelen pas zodra hij
+ *   in beeld komt (scripts/background-video.ts); pauzeert buiten beeld.
+ * - Niet bij ?static=1 of prefers-reduced-motion: dan blijft de poster staan.
+ */
+import { Picture } from 'astro:assets';
+import rookPoster from '../../assets/video/rook-poster.png';
+
+interface Props {
+  /** Pad in public/, bijv. '/video/rook.mp4' */
+  src?: string;
+  /** Laag: 'behind' (z -1, achter de inhoud van de ouder) of 'overlay' (z 1) */
+  layer?: 'behind' | 'overlay';
+  opacity?: 'full' | 'half';
+  class?: string;
+}
+
+const { src = '/video/rook.mp4', layer = 'behind', opacity = 'full', class: className } = Astro.props;
+---
+
+<div
+  class:list={['bg-video', `bg-video--${layer}`, `bg-video--${opacity}`, className]}
+  data-bg-video
+  aria-hidden="true"
+>
+  <Picture
+    src={rookPoster}
+    alt=""
+    widths={[480, 960]}
+    sizes="(max-width: 767px) 480px, 960px"
+    formats={['avif', 'webp']}
+    loading="lazy"
+    decoding="async"
+    class="bg-video__poster"
+  />
+  <video class="bg-video__video" muted loop playsinline preload="none" disablepictureinpicture data-src={src}></video>
+</div>
+
+<style>
+  .bg-video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .bg-video--behind {
+    z-index: var(--z-below);
+  }
+
+  .bg-video--overlay {
+    z-index: var(--z-base);
+  }
+
+  .bg-video--half {
+    opacity: 0.5;
+  }
+
+  .bg-video :global(.bg-video__poster),
+  .bg-video__video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .bg-video__video {
+    opacity: 0;
+    transition: opacity var(--duration-slow) var(--ease-out);
+  }
+
+  .bg-video__video.is-playing {
+    opacity: 1;
+  }
+</style>

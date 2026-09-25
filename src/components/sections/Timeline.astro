@@ -1,0 +1,209 @@
+---
+/**
+ * Tijdlijn (Webflow-component "timeline-events"): kop met titel + rich text,
+ * daarna genummerde stappen (foto | tekstblok met rookvideo) en een CTA.
+ * `reverse` zet de foto rechts (Webflow-variant met row-reverse).
+ */
+import { Picture } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import Container from '../ui/Container.astro';
+import Heading, { type HeadingGradient } from '../ui/Heading.astro';
+import RichText from '../ui/RichText.astro';
+import Button, { type Accent } from '../ui/Button.astro';
+import BackgroundVideo from '../ui/BackgroundVideo.astro';
+import type { Rich } from '../../lib/rich';
+
+export interface TimelineStep {
+  number: string;
+  title: string;
+  text: Rich;
+  image: { src: ImageMetadata; alt: string };
+  cta: { label: string; href: string };
+}
+
+export interface TimelineProps {
+  title: string;
+  intro: Rich;
+  steps: TimelineStep[];
+  cta?: { label: string; href: string; accent?: Accent };
+  gradient?: HeadingGradient;
+  reverse?: boolean;
+}
+
+type Props = TimelineProps;
+
+const { title, intro, steps, cta, gradient = 'yellow', reverse = false } = Astro.props;
+---
+
+<section class:list={['timeline', { 'timeline--reverse': reverse }]}>
+  <Container>
+    <div class="timeline__heading" data-animate>
+      <div class="timeline__col">
+        <Heading as="h2" text={title} gradient={gradient} />
+      </div>
+      <div class="timeline__col">
+        <RichText content={intro} size="lead" class="timeline__intro" />
+      </div>
+    </div>
+
+    {
+      steps.map((step) => (
+        <div class="timeline__step" data-animate>
+          <div class="timeline__media">
+            <Picture
+              src={step.image.src}
+              alt={step.image.alt}
+              widths={[480, 720, 960, 1296, 1656]}
+              sizes="(max-width: 767px) 100vw, (max-width: 991px) 696px, 50vw"
+              formats={['avif', 'webp']}
+              loading="lazy"
+              decoding="async"
+              class="timeline__image"
+            />
+          </div>
+          <div class="timeline__body">
+            <div class="timeline__block">
+              <BackgroundVideo />
+              <span class="timeline__number" aria-hidden="true">
+                {step.number}
+              </span>
+              <Heading as="h3" text={step.title} gradient={gradient} />
+              <div class="timeline__content">
+                <RichText content={step.text} plain />
+                <Button label={step.cta.label} href={step.cta.href} variant="ghost" />
+              </div>
+            </div>
+          </div>
+        </div>
+      ))
+    }
+
+    {
+      cta && (
+        <div class="timeline__cta" data-animate>
+          <Button label={cta.label} href={cta.href} accent={cta.accent} />
+        </div>
+      )
+    }
+  </Container>
+</section>
+
+<style>
+  .timeline {
+    position: relative;
+    z-index: var(--z-base);
+    padding-block: var(--section-padding);
+    overflow: hidden;
+  }
+
+  .timeline__heading {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    margin-inline: var(--row-margin);
+  }
+
+  .timeline__col {
+    width: 50%;
+    padding-inline: var(--column-gap);
+  }
+
+  .timeline__heading :global(.timeline__intro strong) {
+    font-weight: var(--fw-bold);
+  }
+
+  .timeline__step {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    margin-top: var(--section-padding);
+  }
+
+  .timeline--reverse .timeline__step {
+    flex-direction: row-reverse;
+  }
+
+  .timeline__media,
+  .timeline__body {
+    width: 50%;
+  }
+
+  .timeline__media :global(.timeline__image) {
+    display: block;
+    width: 100%;
+    min-height: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+  }
+
+  .timeline__block {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    height: 100%;
+    padding: var(--space-64);
+    background-color: var(--color-black-a48);
+  }
+
+  .timeline__number {
+    position: absolute;
+    top: var(--space-24);
+    right: var(--space-24);
+    font-family: var(--font-display);
+    font-size: var(--fs-number);
+    line-height: 1em;
+    opacity: 0.24;
+  }
+
+  .timeline__content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-24);
+  }
+
+  .timeline__cta {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: var(--section-padding);
+  }
+
+  @media (max-width: 991px) {
+    .timeline__heading,
+    .timeline__step,
+    .timeline--reverse .timeline__step {
+      flex-direction: column;
+    }
+
+    .timeline__col,
+    .timeline__media,
+    .timeline__body {
+      width: 100%;
+    }
+
+    .timeline__step,
+    .timeline__cta {
+      margin-top: var(--space-48);
+    }
+  }
+
+  @media (max-width: 767px) {
+    .timeline__block {
+      padding: var(--space-48);
+    }
+  }
+
+  @media (max-width: 479px) {
+    .timeline__block {
+      padding: var(--space-32) var(--space-24) var(--space-24);
+    }
+
+    .timeline__number {
+      top: var(--space-12);
+      right: var(--space-12);
+    }
+  }
+</style>

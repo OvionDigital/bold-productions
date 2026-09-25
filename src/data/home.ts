@@ -5,6 +5,10 @@
 import type { HeroProps } from '../components/sections/Hero.astro';
 import type { LogoMarqueeProps } from '../components/sections/LogoMarquee.astro';
 import type { IntroHighlightProps } from '../components/sections/IntroHighlight.astro';
+import type { TimelineProps } from '../components/sections/Timeline.astro';
+import timelineVoor from '../assets/images/home/tijdlijn-voor-legends-of-rock.jpg';
+import timelineTijdens from '../assets/images/home/tijdlijn-tijdens-gitarist.jpg';
+import timelineNa from '../assets/images/home/tijdlijn-na-festivalgangers.jpg';
 import heroImage from '../assets/images/home/hero-festival-optreden.jpg';
 import logoVunzigeDeuntjes from '../assets/logos/vunzige-deuntjes.png';
 import logoProost from '../assets/logos/proost.png';
@@ -74,4 +78,68 @@ export const intro: IntroHighlightProps = {
       ],
     },
   ],
+};
+
+export const timeline: TimelineProps = {
+  title: 'BOLD IN.\nSOLD OUT.',
+  gradient: 'yellow',
+  intro: [
+    {
+      p: [
+        'Bold Productions weet ',
+        { text: 'wat', strong: true },
+        ' je ',
+        { text: 'wanneer', strong: true },
+        ' moet laten zien. En vooral ',
+        { text: 'hóe', strong: true },
+        ' je het laat zien. Want met clichébeelden krijg je mensen niet meer in beweging. Pas als je met je videocontent ',
+        { text: 'Bold', strong: true },
+        ' durft te zijn, kom je niet alleen op het netvlies, maar ook in harten en hoofden. En pas dan ga je..',
+      ],
+    },
+    { ul: [['tickets verkopen;'], ['sponsoren en partners overtuigen; '], ['en bezoekers laten terugkomen. ']] },
+  ],
+  steps: [
+    {
+      number: '01',
+      title: 'Voor je event',
+      text: [
+        { p: ['Stap-voor-stap verhogen we de spanning. Met subtiele FOMO-triggers drukken we op de juiste buttons bij je doelgroep.'] },
+      ],
+      image: {
+        src: timelineVoor,
+        alt: 'Actiefoto van een zanger die het publiek bespringt tijdens Legends of Rock. Vastgelegd door Bold Productions contentspecialist voor Events & Artiesten.',
+      },
+      cta: { label: 'Bekijk hoe', href: '/events/promovideos' },
+    },
+    {
+      number: '02',
+      title: 'Tijdens je event',
+      text: [
+        {
+          p: [
+            'De climax van al je werk wil je vastleggen. En meteen delen. ‘',
+            { text: 'Waarom ben ik hier niet bij?', em: true },
+            '’, denkt je toekomstige bezoeker.',
+          ],
+        },
+      ],
+      image: {
+        src: timelineTijdens,
+        alt: 'Gitarist tijdens een live-optreden. Foto door Bold Productions contentspecialist voor Events & Artiesten.',
+      },
+      cta: { label: 'Bekijk hoe', href: '/events/eventvideos' },
+    },
+    {
+      number: '03',
+      title: 'Na je event',
+      text: [{ p: ['We laten de energie voortleven. Zo bind je bestaande bezoekers. En trigger je alvast nieuwe.'] }],
+      image: {
+        src: timelineNa,
+        alt: 'Sfeerbeeld van festivalgangers. Vastgelegd door Bold Productions contentspecialist voor Events & Artiesten.',
+      },
+      cta: { label: 'Bekijk hoe', href: '/events/aftermovie' },
+    },
+  ],
+  cta: { label: 'Make it Bold. Sell Tickets', href: '/offerte-aanvragen', accent: 'yellow' },
 };

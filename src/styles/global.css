@@ -170,10 +170,6 @@ figure {
 }
 
 /* ─── Rich text (Webflow .w-richtext) ───────────────────────────────── */
-.rich-text > :last-child {
-  margin-bottom: 0;
-}
-
 .rich-text ul {
   padding-left: var(--space-20);
   overflow: hidden;

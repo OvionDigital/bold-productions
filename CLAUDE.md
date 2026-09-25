@@ -94,6 +94,7 @@ Houd dit bij bij elk nieuw component.
 | `Eyebrow.astro`        | Kleine kop in Gate met ruime letterspatiëring (Webflow `.subtitle`).                                       |
 | `Heading.astro`        | Displaykop in Gate. `as` (semantiek) los van `size`, optioneel `gradient`, `align`, `flush`.               |
 | `SectionHeading.astro` | Gecentreerde eyebrow + h2 met gradient (Webflow `.section-heading`).                                       |
+| `BackgroundVideo.astro`| Rookvideo als decoratieve laag: poster (AVIF/WebP) + lazy `<video>` (gedrag: `background-video.ts`).    |
 | `VimeoBackground.astro`| Vimeo-achtergrondvideo (cover). Laadt na window.load, fadet in bij 'play' (gedrag: `hero-video.ts`).    |
 
 ### Layout (`src/components/layout/`)
@@ -115,6 +116,7 @@ Houd dit bij bij elk nieuw component.
 | `Hero.astro` | Schermvullende hero: titel + italic accentregel, eyebrow, 2 knoppen, poster-afbeelding (LCP) en optionele Vimeo-video. |
 | `LogoMarquee.astro` | Logostrip met kop tussen lijnen en eindeloze CSS-marquee van logo-tegels. |
 | `IntroHighlight.astro` | Gecentreerde Gate-introtekst met groene accenten en scroll-highlight per letter. |
+| `Timeline.astro` | Kop (titel + rich text) met genummerde stappen: foto + tekstblok met rookvideo, CTA; `reverse`, `gradient`. |
 
 ### Scripts (`src/scripts/`)
 
@@ -126,4 +128,5 @@ Houd dit bij bij elk nieuw component.
 | `scroll-animations.ts` | `[data-animate]` fade-in-up (top 70%, eenmalig) en anchor-links met offset. |
 | `hero-video.ts`        | Zet de Vimeo-src na window.load (mobiel alleen met loadOnMobile), fade-in via postMessage 'play'. |
 | `scroll-highlight.ts`  | SplitType + ScrollTrigger scrub: letters van 15% naar 100% met gloed.       |
+| `background-video.ts`  | IntersectionObserver: video-src zetten en afspelen in beeld, pauzeren erbuiten. |
 | `menu.ts`              | Menupaneel openen/sluiten (GSAP), overlay, Escape, focus-trap, scroll-lock, accordeon. |

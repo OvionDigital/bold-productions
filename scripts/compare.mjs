@@ -52,7 +52,7 @@ const LIVE_STATIC_CSS = `
 /** Gedeelde CSS voor beide kanten: video/iframes verbergen voor stabiele beelden. */
 const SHARED_CSS = `
   iframe { visibility: hidden !important; }
-  video { visibility: hidden !important; }
+  video, .bg-video__poster { visibility: hidden !important; }
 `;
 
 function log(...parts) {

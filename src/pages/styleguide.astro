@@ -20,7 +20,9 @@ import Hero from '../components/sections/Hero.astro';
 import LogoMarquee from '../components/sections/LogoMarquee.astro';
 import IntroHighlight from '../components/sections/IntroHighlight.astro';
 import RichText from '../components/ui/RichText.astro';
-import { hero, intro, trustedBy } from '../data/home';
+import Timeline from '../components/sections/Timeline.astro';
+import BackgroundVideo from '../components/ui/BackgroundVideo.astro';
+import { hero, intro, timeline, trustedBy } from '../data/home';
 
 const colors = tokensByPrefix('--color-');
 const gradients = tokensByPrefix('--gradient-');
@@ -479,6 +481,23 @@ const nav = [
       </p>
     </Container>
     <IntroHighlight content={intro.content} />
+
+    <Container>
+      <h3 class="sg-subtitle">Timeline</h3>
+      <p class="sg-note">
+        <code>&lt;Timeline title intro steps cta gradient reverse /&gt;</code>. Stappen: foto (16:9) + tekstblok met
+        rookvideo. Voorbeeld met één stap, <code>reverse</code> en groene gradient:
+      </p>
+    </Container>
+    <Timeline {...timeline} steps={timeline.steps.slice(0, 1)} reverse gradient="green" cta={{ ...timeline.cta!, accent: 'green' }} />
+
+    <Container>
+      <h3 class="sg-subtitle">BackgroundVideo (ui)</h3>
+      <p class="sg-note">
+        <code>&lt;BackgroundVideo src layer opacity /&gt;</code>. Poster als AVIF/WebP; video laadt en speelt pas in beeld.
+      </p>
+      <div class="sg-video-demo"><BackgroundVideo layer="overlay" /></div>
+    </Container>
   </div>
 </BaseLayout>
 
@@ -732,6 +751,12 @@ const nav = [
     padding: var(--space-16);
     border: var(--border-width) dashed var(--color-orange);
     background: var(--color-orange-a8);
+  }
+
+  .sg-video-demo {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    max-width: 480px;
   }
 
   .sg-frame.sg-frame--section {
