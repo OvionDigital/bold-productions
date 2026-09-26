@@ -72,14 +72,24 @@ src/
   components/layout/            Header, Footer, Analytics (en later MegaMenu, MenuPanel)
   components/sections/          één component per sectie, alle inhoud via props
   data/                         home.ts, navigation.ts (inhoud)
-  lib/                          helpers (text.ts, tokens.ts)
+  lib/                          helpers (text.ts, tokens.ts), lib/sanity/ (CMS-koppeling, zie hieronder)
   scripts/                      main.ts (entry) + modules
   styles/tokens.css, global.css
   pages/index.astro, styleguide.astro
 public/fonts, public/video, public/favicons, public/_headers
 scripts/compare.mjs             visuele vergelijking
+scripts/sanity-seed.mjs         eenmalig src/data/home.ts naar Sanity overzetten
+studio/                         Sanity Studio (losse app, eigen package.json)
 docs/homepage-secties.md        inventaris homepage
+docs/sanity.md                  Sanity-opzet (proef, alleen homepage) — branch feature/sanity-cms
 ```
+
+**CMS (proef, branch `feature/sanity-cms`):** `index.astro` haalt de homepage-inhoud
+op uit Sanity via `src/lib/sanity/homepage.ts` en valt terug op `src/data/home.ts`
+als `PUBLIC_SANITY_PROJECT_ID` niet gezet is — lokaal werken zonder Sanity blijft dus
+gewoon werken. Rich text uit Sanity (Portable Text) wordt omgezet naar het bestaande
+Rich-model (`src/lib/rich.ts`), dus componenten hoeven niet te weten waar tekst
+vandaan komt. Zie `docs/sanity.md` voor opzetstappen.
 
 ## Componentenoverzicht
 

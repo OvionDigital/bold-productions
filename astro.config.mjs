@@ -13,5 +13,8 @@ export default defineConfig({
   image: {
     layout: 'constrained',
     responsiveStyles: true,
+    // Sanity-afbeeldingen (proef, alleen homepage): originele URL toestaan zodat
+    // astro:assets ze net als lokale bestanden naar AVIF/WebP omzet. Zie src/lib/sanity/image.ts.
+    domains: ['cdn.sanity.io'],
   },
 });
