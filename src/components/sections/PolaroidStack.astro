@@ -2,6 +2,12 @@
 /**
  * Polaroidgalerij "Bold backstage": kop (scrolt mee) en polaroids die bij het scrollen
  * als een stapel over elkaar schuiven (pure CSS, position: sticky).
+ *
+ * Achter de foto's zit een eigen "bevroren" achtergrond (.polaroids__backdrop): een
+ * sticky laag die precies zo lang blijft staan als de foto's zelf, zodat de normale
+ * paginatextuur niet zichtbaar meescrolt terwijl de foto's stilstaan. Hij hergebruikt
+ * --page-bg-image (CSS custom property, overerft van PageBackground) — dus dezelfde
+ * afbeelding, geen extra download, en dezelfde is-loaded-vertraging voor de LCP.
  */
 import Container from '../ui/Container.astro';
 import SectionHeading from '../ui/SectionHeading.astro';
@@ -33,21 +39,24 @@ const rotations = ['-1.5deg', '1.2deg', '-0.8deg', '2deg', '-1.8deg', '0.6deg', 
     </Container>
   </div>
 
-  <ul class="polaroids__list" role="list" data-animate>
-    {
-      photos.map((photo, index) => (
-        <li class="polaroids__item" style={`--polaroid-rotate:${rotations[index % rotations.length]}`}>
-          <Container>
-            <div class="polaroids__row">
-              <div class="polaroids__col">
-                <Polaroid {...photo} sizes="(max-width: 991px) 100vw, (max-width: 1439px) 900px, 860px" />
+  <div class="polaroids__stack">
+    <div class="polaroids__backdrop" aria-hidden="true"></div>
+    <ul class="polaroids__list" role="list" data-animate>
+      {
+        photos.map((photo, index) => (
+          <li class="polaroids__item" style={`--polaroid-rotate:${rotations[index % rotations.length]}`}>
+            <Container>
+              <div class="polaroids__row">
+                <div class="polaroids__col">
+                  <Polaroid {...photo} sizes="(max-width: 991px) 100vw, (max-width: 1439px) 900px, 860px" />
+                </div>
               </div>
-            </div>
-          </Container>
-        </li>
-      ))
-    }
-  </ul>
+            </Container>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
 </section>
 
 <style>
@@ -74,11 +83,42 @@ const rotations = ['-1.5deg', '1.2deg', '-0.8deg', '2deg', '-1.8deg', '0.6deg', 
     padding-inline: var(--column-gap);
   }
 
+  .polaroids__stack {
+    position: relative;
+  }
+
+  /*
+   * Sticky achtergrond, exact zo lang "actief" als de foto's zelf (zelfde
+   * scroll-budget: begint bovenaan de stack, laat los aan het einde ervan).
+   * Neemt geen ruimte in het document in (negatieve ondermarge compenseert de
+   * eigen hoogte), dus de lijst erna schuift niet mee.
+   */
+  .polaroids__backdrop {
+    position: sticky;
+    top: 0;
+    z-index: var(--z-below);
+    width: 100%;
+    height: 100svh;
+    margin-bottom: calc(-1 * 100svh);
+    background-color: var(--color-page);
+  }
+
+  :global(html.is-loaded) .polaroids__backdrop,
+  :global(html:not(.js)) .polaroids__backdrop {
+    background-image: linear-gradient(var(--color-page-a70), var(--color-page-a70)), var(--page-bg-image);
+    background-position:
+      0 0,
+      50% 0;
+    background-repeat: repeat, no-repeat;
+    background-size: auto, 100%;
+  }
+
   .polaroids__list {
     /* Kolombreedte als deel van de rij; per breakpoint aangepast */
     --pl-fraction: 0.833333;
     --pl-max: var(--container-max);
 
+    position: relative;
     margin: 0;
     padding: 0;
     list-style: none;
@@ -105,7 +145,7 @@ const rotations = ['-1.5deg', '1.2deg', '-0.8deg', '2deg', '-1.8deg', '0.6deg', 
     );
 
     position: sticky;
-    top: max(var(--navbar-height), calc(var(--navbar-height) + (100svh - var(--navbar-height) - var(--pl-height)) / 2));
+    top: max(var(--navbar-height), calc(var(--navbar-height) + (100svh - var(--navbar-height) - var(--pl-height)) / 3));
     z-index: var(--z-base);
   }
 
