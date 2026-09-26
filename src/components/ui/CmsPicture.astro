@@ -1,0 +1,85 @@
+---
+/**
+ * Drop-in vervanger van astro:assets <Picture>: bij een lokale import (ImageMetadata)
+ * precies hetzelfde gedrag; bij een Sanity-afbeelding (RemoteImage, geen build-time
+ * bewerking mogelijk op Windows — zie lib/sanity/image.ts) een handmatige srcset via
+ * Sanity's CDN met ?auto=format (serveert AVIF/WebP op basis van de Accept-header).
+ *
+ * Geen width/height-attributen op de <img>: die triggeren een Chromium-flexbugbug
+ * (aspect-ratio wordt genegeerd, de losse img valt terug op zijn attribuutgrootte in
+ * een auto-height flex-kolom — https://issues.chromium.org/issues/40519962). In plaats
+ * daarvan reserveert een inline `aspect-ratio` de ruimte (geen CLS), en bepaalt de
+ * sectie-CSS (object-fit, eigen aspect-ratio) verder de weergave, zoals al het geval was.
+ *
+ * `aspectRatio` (breedte/hoogte) croppt zowel bij Sanity (via h= in de URL) als bij een
+ * lokale bron (via Picture's fit="cover").
+ */
+import { Picture } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import { isRemoteImage, sanityImageUrl, type RemoteImage } from '../../lib/sanity/image';
+
+interface Props {
+  src: ImageMetadata | RemoteImage;
+  alt: string;
+  widths: number[];
+  sizes: string;
+  formats?: ('avif' | 'webp')[];
+  loading?: 'lazy' | 'eager';
+  fetchpriority?: 'high' | 'low' | 'auto';
+  decoding?: 'async' | 'sync' | 'auto';
+  class?: string;
+  /** Aspectratio (breedte/hoogte) om te croppen; zonder deze prop bepaalt de sectie-CSS de vorm. */
+  aspectRatio?: number;
+}
+
+const {
+  src,
+  alt,
+  widths,
+  sizes,
+  formats = ['avif', 'webp'],
+  loading = 'lazy',
+  fetchpriority,
+  decoding = 'async',
+  class: className,
+  aspectRatio,
+} = Astro.props;
+
+const remote = isRemoteImage(src) ? src : null;
+const srcset = remote
+  ? widths.map((w) => `${sanityImageUrl(remote.src, { width: w, height: aspectRatio ? Math.round(w / aspectRatio) : undefined })} ${w}w`).join(', ')
+  : '';
+const fallbackWidth = widths[widths.length - 1] ?? remote?.width ?? 0;
+const remoteAspect = remote ? remote.width / remote.height : 1;
+const cssAspectRatio = aspectRatio ?? remoteAspect;
+const fallbackHeight = Math.round(fallbackWidth / cssAspectRatio);
+---
+
+{
+  remote ? (
+    <img
+      src={sanityImageUrl(remote.src, { width: fallbackWidth, height: aspectRatio ? fallbackHeight : undefined })}
+      srcset={srcset}
+      sizes={sizes}
+      alt={alt}
+      loading={loading}
+      decoding={decoding}
+      fetchpriority={fetchpriority}
+      class={className}
+      style={`aspect-ratio: ${cssAspectRatio}; width: 100%;`}
+    />
+  ) : (
+    <Picture
+      src={src as ImageMetadata}
+      alt={alt}
+      widths={widths}
+      {...(aspectRatio ? { width: fallbackWidth, height: fallbackHeight, fit: 'cover' as const, position: 'center' as const } : {})}
+      sizes={sizes}
+      formats={formats}
+      loading={loading}
+      fetchpriority={fetchpriority}
+      decoding={decoding}
+      class={className}
+    />
+  )
+}

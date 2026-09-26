@@ -113,6 +113,7 @@ Houd dit bij bij elk nieuw component.
 | `TestimonialCard.astro`| Kaart met foto, quote (Gate italic), oranje lijn en naam – organisatie (beide optioneel).             |
 | `Polaroid.astro`       | Foto met witte polaroidrand, schaduw, kanteling (`--polaroid-rotate`) en optionele caption.            |
 | `VimeoEmbed.astro`     | Vimeo-iframe met vaste verhouding, loading=lazy, optioneel background-modus.                            |
+| `CmsPicture.astro`     | Drop-in i.p.v. astro:assets `<Picture>`: lokaal (`ImageMetadata`) ongewijzigd gedrag; Sanity (`RemoteImage`) srcset via Sanity's CDN (`?auto=format`), zonder `width`/`height`-attributen (Chromium-flexbug, zie image.ts) — `aspect-ratio` reserveert de ruimte. `aspectRatio`-prop om te croppen. |
 | `DecoTriangles.astro`  | Zes oranje driehoekjes rond een beeld (structuur exact als Webflow).                                    |
 | `CaseCard.astro`       | Casekaart: foto, diagonale gradient, titel + intro, link naar /cases/[slug].                              |
 | `ContactForm.astro`    | Contactformulier (velden uit data), honeypot, succes/fout; verzenden via `contact-form.ts` naar `PUBLIC_CONTACT_ENDPOINT`. |

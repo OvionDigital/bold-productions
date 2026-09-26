@@ -18,11 +18,26 @@ Zolang `PUBLIC_SANITY_PROJECT_ID` niet gezet is, gebruikt de site gewoon
   - `portableText.ts` — zet Portable Text om naar het bestaande Rich-model
     (`src/lib/rich.ts`), zodat `RichText.astro` niet hoeft te weten waar de
     tekst vandaan komt.
-  - `image.ts` — geeft Sanity-afbeeldingen door aan `astro:assets`
-    (`<Picture>`/`<Image>`), net als een lokale import: AVIF/WebP, `widths`,
-    `sizes`. Geen aparte Sanity-beeldpipeline.
+  - `image.ts` — bouwt Sanity CDN-URL's (`?w=&auto=format&q=`) i.p.v.
+    `astro:assets`. **Bewuste afwijking van regel 7** (die vraagt om
+    astro:assets AVIF/WebP): Astro's build-pipeline schrijft verwerkte
+    varianten van een externe URL naar een pad dat die URL naspiegelt
+    (`dist/https:/cdn.sanity.io/…`), en dat breekt `astro build` op Windows
+    (`:` is geen geldig teken in een pad). Sanity's eigen CDN serveert zelf al
+    AVIF/WebP op basis van de `Accept`-header, dus het resultaat is
+    gelijkwaardig. Lokale afbeeldingen (`src/data/*.ts`, alle andere
+    pagina's) blijven gewoon via `astro:assets` lopen.
   - `homepage.ts` — haalt het `homepage`-document op en zet het om naar
     precies de vorm van `src/data/home.ts`.
+- `src/components/ui/CmsPicture.astro` — drop-in i.p.v. `<Picture>` in de
+  secties/UI-componenten die Sanity-content kunnen krijgen (Hero heeft zijn
+  eigen variant met art-direction). Kiest zelf lokaal (astro:assets) of
+  Sanity (handmatige srcset). Zet bewust **geen** `width`/`height`-attributen
+  op de `<img>` voor Sanity-bronnen: die triggeren een Chromium-flexbugbug
+  waarbij `aspect-ratio` genegeerd wordt in een auto-height flex-kolom
+  (zoals bij Timeline) en de afbeelding op zijn volledige, vaak zeer grote
+  brongrootte rendert. Een inline `aspect-ratio` reserveert de ruimte
+  zonder die bug te triggeren.
 - `src/pages/index.astro` — gebruikt Sanity-inhoud als die er is, anders
   `src/data/home.ts`.
 - `scripts/sanity-seed.mjs` — zet de huidige homepage-inhoud en -foto's in één

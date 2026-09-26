@@ -11,6 +11,7 @@ import Button, { type Accent } from '../ui/Button.astro';
 import VimeoBackground from '../ui/VimeoBackground.astro';
 import type { IconName } from '../ui/icons';
 import { toLines } from '../../lib/text';
+import { isRemoteImage, sanityImageUrl, type RemoteImage } from '../../lib/sanity/image';
 
 export interface HeroProps {
   title: string;
@@ -18,7 +19,7 @@ export interface HeroProps {
   eyebrow: string;
   primaryCta?: { label: string; href: string };
   secondaryCta?: { label: string; href: string; icon?: IconName };
-  image: { src: ImageMetadata; alt: string };
+  image: { src: ImageMetadata | RemoteImage; alt: string };
   video?: { id: string; hash?: string; title: string; loadOnMobile?: boolean };
   accent?: Accent;
 }
@@ -32,31 +33,41 @@ const titleLines = toLines(title);
  * Eigen <picture> met art direction. Op staande schermen ≤767px is door object-fit: cover
  * alleen het midden van de liggende foto zichtbaar; een centrale 2:3-uitsnede toont exact
  * dezelfde pixels voor een fractie van de bytes. Daarboven de volledige foto.
+ *
+ * Bij een Sanity-afbeelding kan dit niet via astro:assets/getImage (die bewerkt externe
+ * bronnen build-time naar een pad dat de URL naspiegelt, wat breekt op Windows) — dan
+ * bouwen we de srcset zelf via Sanity's CDN, één <source> zonder vast `type`: de CDN
+ * kiest zelf AVIF/WebP op basis van de Accept-header (zie lib/sanity/image.ts).
  */
+const remoteImage = isRemoteImage(image.src) ? image.src : null;
 const formats = ['avif', 'webp'] as const;
 const fullWidths = [640, 960, 1280, 1600, 2048];
 const mobileWidths = [480, 720, 960, 1200];
 
-const toSrcset = async (widths: number[], format: (typeof formats)[number], crop: boolean) => {
+const toLocalSrcset = async (widths: number[], format: (typeof formats)[number], crop: boolean) => {
   const images = await Promise.all(
     widths.map((width) =>
       getImage(
         crop
-          ? { src: image.src, width, height: Math.round(width * 1.5), fit: 'cover', position: 'center', format }
-          : { src: image.src, width, format },
+          ? { src: image.src as ImageMetadata, width, height: Math.round(width * 1.5), fit: 'cover', position: 'center', format }
+          : { src: image.src as ImageMetadata, width, format },
       ),
     ),
   );
   return images.map((img, i) => `${img.src} ${widths[i]}w`).join(', ');
 };
+const toRemoteSrcset = (widths: number[], crop: boolean) =>
+  widths.map((width) => `${sanityImageUrl(remoteImage!.src, { width, height: crop ? Math.round(width * 1.5) : undefined })} ${width}w`).join(', ');
 
-const mobileSources = await Promise.all(
-  formats.map(async (format) => ({ type: `image/${format}`, srcset: await toSrcset(mobileWidths, format, true) })),
-);
-const fullSources = await Promise.all(
-  formats.map(async (format) => ({ type: `image/${format}`, srcset: await toSrcset(fullWidths, format, false) })),
-);
-const fallback = await getImage({ src: image.src, width: 1280, format: 'jpg' });
+const mobileSources = remoteImage
+  ? [{ type: undefined, srcset: toRemoteSrcset(mobileWidths, true) }]
+  : await Promise.all(formats.map(async (format) => ({ type: `image/${format}`, srcset: await toLocalSrcset(mobileWidths, format, true) })));
+const fullSources = remoteImage
+  ? [{ type: undefined, srcset: toRemoteSrcset(fullWidths, false) }]
+  : await Promise.all(formats.map(async (format) => ({ type: `image/${format}`, srcset: await toLocalSrcset(fullWidths, format, false) })));
+const fallbackSrc = remoteImage
+  ? sanityImageUrl(remoteImage.src, { width: 1280 })
+  : (await getImage({ src: image.src as ImageMetadata, width: 1280, format: 'jpg' })).src;
 ---
 
 <section class="hero" data-accent={accent}>
@@ -112,7 +123,7 @@ const fallback = await getImage({ src: image.src, width: 1280, format: 'jpg' });
       ))
     }
     <img
-      src={fallback.src}
+      src={fallbackSrc}
       alt={image.alt}
       width={image.src.width}
       height={image.src.height}

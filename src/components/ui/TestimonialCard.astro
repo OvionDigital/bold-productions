@@ -4,15 +4,16 @@
  * in Gate italic, oranje lijntje en naam – organisatie. Naam of organisatie mag
  * ontbreken (dan geen streepje).
  */
-import { Picture } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 import Icon from './Icon.astro';
+import CmsPicture from './CmsPicture.astro';
+import type { RemoteImage } from '../../lib/sanity/image';
 
 export interface Testimonial {
   quote: string;
   name?: string;
   organisation?: string;
-  image: { src: ImageMetadata; alt: string };
+  image: { src: ImageMetadata | RemoteImage; alt: string };
 }
 
 type Props = Testimonial;
@@ -26,16 +27,12 @@ const { quote, name, organisation, image } = Astro.props;
     <blockquote class="testimonial__text">{quote}</blockquote>
   </div>
   <div class="testimonial__media">
-    <Picture
+    <CmsPicture
       src={image.src}
       alt={image.alt}
-      width={640}
-      height={960}
-      fit="cover"
-      position="center"
+      aspectRatio={640 / 960}
       widths={[320, 480, 640, 960]}
       sizes="(max-width: 479px) 303px, (max-width: 767px) 75vw, (max-width: 1439px) 50vw, 33vw"
-      formats={['avif', 'webp']}
       loading="lazy"
       decoding="async"
       class="testimonial__image"

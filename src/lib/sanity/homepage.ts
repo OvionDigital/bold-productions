@@ -5,7 +5,7 @@
  * anders terug op src/data/home.ts — zie getHomepageContent().
  */
 import { sanityClient, isSanityConfigured } from './client';
-import { imageProjection, toImageMetadata, type SanityImageRef } from './image';
+import { imageProjection, toRemoteImage, type SanityImageRef } from './image';
 import { portableTextToRich } from './portableText';
 import type { HeroProps } from '../../components/sections/Hero.astro';
 import type { LogoMarqueeProps } from '../../components/sections/LogoMarquee.astro';
@@ -28,7 +28,6 @@ const QUERY = `*[_type == "homepage"][0]{
     "src": image.asset->url,
     "width": image.asset->metadata.dimensions.width,
     "height": image.asset->metadata.dimensions.height,
-    "format": image.asset->extension,
     "alt": name
   },
 
@@ -115,12 +114,12 @@ export async function getHomepageContent(): Promise<HomepageContent | null> {
       eyebrow: doc.heroEyebrow,
       primaryCta: doc.heroPrimaryCta,
       secondaryCta: doc.heroSecondaryCta,
-      image: { src: toImageMetadata(doc.heroImage), alt: doc.heroImage.alt },
+      image: { src: toRemoteImage(doc.heroImage), alt: doc.heroImage.alt },
       video: doc.heroVideo?.id ? { id: doc.heroVideo.id, hash: doc.heroVideo.hash, title: doc.heroVideo.title ?? '', loadOnMobile: doc.heroVideo.loadOnMobile } : undefined,
     },
     trustedBy: {
       title: doc.trustedByTitle,
-      logos: (doc.trustedByLogos ?? []).map((l) => ({ src: toImageMetadata(l), alt: l.alt })),
+      logos: (doc.trustedByLogos ?? []).map((l) => ({ src: toRemoteImage(l), alt: l.alt })),
     },
     intro: { id: 'first-section', content: portableTextToRich(doc.introContent) },
     timeline: {
@@ -131,7 +130,7 @@ export async function getHomepageContent(): Promise<HomepageContent | null> {
         number: s.number,
         title: s.title,
         text: portableTextToRich(s.text),
-        image: { src: toImageMetadata(s.image), alt: s.image.alt },
+        image: { src: toRemoteImage(s.image), alt: s.image.alt },
         cta: s.cta,
       })),
       cta: doc.timelineCta,
@@ -145,14 +144,14 @@ export async function getHomepageContent(): Promise<HomepageContent | null> {
         quote: t.quote,
         name: t.name,
         organisation: t.organisation,
-        image: { src: toImageMetadata(t.image), alt: t.image.alt },
+        image: { src: toRemoteImage(t.image), alt: t.image.alt },
       })),
     },
     backstage: {
       eyebrow: doc.backstageEyebrow,
       title: doc.backstageTitle,
       gradient: doc.backstageGradient,
-      photos: (doc.backstagePhotos ?? []).map((p) => ({ src: toImageMetadata(p), alt: p.alt })),
+      photos: (doc.backstagePhotos ?? []).map((p) => ({ src: toRemoteImage(p), alt: p.alt })),
     },
     micDrop: {
       title: doc.micDropTitle,
@@ -161,7 +160,7 @@ export async function getHomepageContent(): Promise<HomepageContent | null> {
       cta: doc.micDropCta,
       media:
         doc.micDropMediaType === 'image' && doc.micDropImage
-          ? { type: 'image', src: toImageMetadata(doc.micDropImage), alt: doc.micDropImage.alt }
+          ? { type: 'image', src: toRemoteImage(doc.micDropImage), alt: doc.micDropImage.alt }
           : { type: 'vimeo', id: doc.micDropVideo?.id ?? '', hash: doc.micDropVideo?.hash, title: doc.micDropVideo?.title ?? '' },
       triangles: doc.micDropTriangles,
     },

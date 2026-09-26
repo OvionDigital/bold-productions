@@ -4,13 +4,14 @@
  * doorlopende rij logo-tegels (pure CSS-marquee, Webflow-IX: 14 s lineair).
  * De lijst staat er twee keer in; de kopie is aria-hidden.
  */
-import { Picture } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 import Container from '../ui/Container.astro';
 import Eyebrow from '../ui/Eyebrow.astro';
+import CmsPicture from '../ui/CmsPicture.astro';
+import type { RemoteImage } from '../../lib/sanity/image';
 
 export interface Logo {
-  src: ImageMetadata;
+  src: ImageMetadata | RemoteImage;
   /** Organisatienaam */
   alt: string;
 }
@@ -42,7 +43,7 @@ const copies = [false, true];
           <ul class="logo-marquee__list" role="list" aria-hidden={isCopy ? 'true' : undefined}>
             {logos.map((logo) => (
               <li class="logo-marquee__item">
-                {logo.src.format === 'svg' ? (
+                {'format' in logo.src && logo.src.format === 'svg' ? (
                   <img
                     src={logo.src.src}
                     width={logo.src.width}
@@ -53,12 +54,11 @@ const copies = [false, true];
                     class="logo-marquee__img"
                   />
                 ) : (
-                  <Picture
+                  <CmsPicture
                     src={logo.src}
                     alt={isCopy ? '' : logo.alt}
                     widths={[150, 300]}
                     sizes="150px"
-                    formats={['avif', 'webp']}
                     loading="lazy"
                     decoding="async"
                     class="logo-marquee__img"
