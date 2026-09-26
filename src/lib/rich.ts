@@ -1,10 +1,13 @@
 /**
  * Klein rich-text-model voor inhoud in src/data (CMS-onafhankelijk).
- *   Inline:  'tekst' of { text, strong?, em? } of { br: true }
+ *   Inline:  'tekst' of { text, strong?, em?, href? } of { br: true }
  *   Blokken: { p: Inline[] } of { ul: Inline[][] }
  * Tekst letterlijk van de live site overnemen, inclusief spaties.
  */
-export type InlineSegment = string | { text: string; strong?: boolean; em?: boolean } | { br: true };
+export type InlineSegment =
+  | string
+  | { text: string; strong?: boolean; em?: boolean; href?: string }
+  | { br: true };
 export type Inline = InlineSegment[];
 export type RichBlock = { p: Inline } | { ul: Inline[] };
 export type Rich = RichBlock[];

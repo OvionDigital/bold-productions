@@ -81,6 +81,8 @@
   --color-ink: #1a1a1a; /* polaroid-caption */
   --color-page: #130d0b; /* basis onder de achtergrondtextuur */
   --color-whatsapp: #25d366;
+  --color-placeholder: #999999;
+  --color-error-bg: #ffdede;
   --color-transparent: #00000000;
 
   /* ─── Kleuren: transparanten ────────────────────────────────────── */
@@ -181,9 +183,11 @@
   --space-1: 1px;
   --space-2: 2px;
   --space-4: 4px;
+  --space-5: 5px;
   --space-8: 8px;
   --space-10: 10px;
   --space-12: 12px;
+  --space-15: 15px;
   --space-16: 16px;
   --space-20: 20px;
   --space-24: 24px;

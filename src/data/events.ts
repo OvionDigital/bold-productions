@@ -22,6 +22,7 @@ import dienstEventvideos from '../assets/images/events/dienst-eventvideos.avif';
 import dienstSocialContent from '../assets/images/events/dienst-social-content.avif';
 import dienstAftermovies from '../assets/images/events/dienst-aftermovies.jpg';
 import dienstFotografie from '../assets/images/events/dienst-fotografie.jpg';
+import mikeAftermovie from '../assets/images/events/mike-aftermovie.jpg';
 import { clientLogos, trustedByTitle } from './logos';
 import { pickTestimonials } from './testimonials';
 
@@ -296,4 +297,28 @@ export const faq: FaqProps = {
       ],
     },
   ],
+};
+
+export const contact: TextMediaProps = {
+  intro: {
+    title: 'Gauw even praten?',
+    gradient: 'orange',
+    text: [
+      {
+        p: [
+          'Lijkt ons een goed idee. Want het liefst begin je 3 maanden voor je event met de eerste ',
+          { text: 'teasers', em: true },
+          '. Dus we zijn nooit te vroeg voor een eerste overleg en kennismaking.',
+        ],
+      },
+    ],
+  },
+  media: {
+    type: 'image',
+    src: mikeAftermovie,
+    alt: 'Mike Ampting, eigenaar van Bold Productions, tijdens het opnemen van een aftermovie.',
+  },
+  triangles: true,
+  spacing: 'section',
+  animate: false,
 };

@@ -12,6 +12,7 @@ import { initBackgroundVideos } from './background-video';
 import { initCarousels } from './carousel';
 import { initCinemaCursor } from './cinema-cursor';
 import { initAccordions } from './accordion';
+import { initContactForms } from './contact-form';
 import { initAnchorLinks, initScrollAnimations } from './scroll-animations';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -31,4 +32,5 @@ initBackgroundVideos();
 initCarousels();
 initCinemaCursor();
 initAccordions();
+initContactForms();
 

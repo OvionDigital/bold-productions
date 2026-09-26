@@ -34,7 +34,9 @@ import CaseSpotlight from '../components/sections/CaseSpotlight.astro';
 import ImageFeature from '../components/sections/ImageFeature.astro';
 import ServiceTiles from '../components/sections/ServiceTiles.astro';
 import Faq from '../components/sections/Faq.astro';
-import { biggerThanTheDay, caseSpotlight, cinema, faq, services } from '../data/events';
+import ContactForm from '../components/ui/ContactForm.astro';
+import { contactForm } from '../data/forms';
+import { biggerThanTheDay, caseSpotlight, cinema, contact, faq, services } from '../data/events';
 
 const colors = tokensByPrefix('--color-');
 const gradients = tokensByPrefix('--gradient-');
@@ -618,6 +620,17 @@ const nav = [
       </p>
     </Container>
     <Faq {...faq} id="sg-faq" items={faq.items.slice(0, 2)} />
+
+    <Container>
+      <h3 class="sg-subtitle">ContactForm (ui) in TextMedia</h3>
+      <p class="sg-note">
+        <code>&lt;TextMedia intro media …&gt;&lt;ContactForm slot="content" … /&gt;&lt;/TextMedia&gt;</code>. Velden en
+        teksten uit <code>src/data/forms.ts</code>; endpoint via <code>PUBLIC_CONTACT_ENDPOINT</code> (TODO).
+      </p>
+    </Container>
+    <TextMedia {...contact}>
+      <ContactForm slot="content" {...contactForm} name="Contact styleguide" />
+    </TextMedia>
   </div>
 </BaseLayout>
 

@@ -10,8 +10,23 @@ import Testimonials from '../components/sections/Testimonials.astro';
 import ImageFeature from '../components/sections/ImageFeature.astro';
 import ServiceTiles from '../components/sections/ServiceTiles.astro';
 import Faq from '../components/sections/Faq.astro';
+import ContactForm from '../components/ui/ContactForm.astro';
+import { contactForm } from '../data/forms';
 import { breadcrumbLabels } from '../data/navigation';
-import { biggerThanTheDay, breadcrumbs, caseSpotlight, cinema, faq, hero, meta, services, testimonials, timeline, trustedBy } from '../data/events';
+import {
+  biggerThanTheDay,
+  breadcrumbs,
+  caseSpotlight,
+  cinema,
+  contact,
+  faq,
+  hero,
+  meta,
+  services,
+  testimonials,
+  timeline,
+  trustedBy,
+} from '../data/events';
 ---
 
 <BaseLayout title={meta.title} description={meta.description}>
@@ -25,4 +40,7 @@ import { biggerThanTheDay, breadcrumbs, caseSpotlight, cinema, faq, hero, meta, 
   <ImageFeature {...cinema} />
   <ServiceTiles {...services} />
   <Faq {...faq} />
+  <TextMedia {...contact}>
+    <ContactForm slot="content" {...contactForm} />
+  </TextMedia>
 </BaseLayout>

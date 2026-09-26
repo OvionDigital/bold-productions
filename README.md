@@ -62,5 +62,8 @@ Zolang dit een preview is, stuurt `public/_headers` op alle paden `X-Robots-Tag:
 | Variabele                | Standaard | Betekenis                                                      |
 | ------------------------ | --------- | -------------------------------------------------------------- |
 | `PUBLIC_ENABLE_TRACKING` | `false`   | Laadt GTM en CookieFirst (nog niet geïmplementeerd, zie TODO) |
+| `PUBLIC_CONTACT_ENDPOINT` | leeg     | POST-endpoint voor het contactformulier (FormData). Leeg = formulier toont een foutmelding. |
+
+**TODO contactformulier:** er is nog geen backend. Opties: een Cloudflare Pages Function (`functions/api/contact.ts`) die mailt via bijv. Resend, of een formulierdienst (Formspree e.d.). Veldnamen zijn gelijk aan het Webflow-formulier.
 
 Zie `.env.example`.

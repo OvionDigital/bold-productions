@@ -1,0 +1,179 @@
+---
+/**
+ * Contactformulier (Webflow wf-form-Contact): velden uit de data, verzendknop,
+ * succes- en foutmelding. Verzenden via fetch (scripts/contact-form.ts) naar `action`.
+ * Honeypot-veld tegen spam (geen reCAPTCHA). Veldnamen gelijk aan het Webflow-formulier.
+ *
+ * TODO(formulier): backend kiezen en `action` vullen (zie README / data).
+ */
+import Button from './Button.astro';
+import RichText from './RichText.astro';
+import type { Rich } from '../../lib/rich';
+
+export interface ContactFormField {
+  name: string;
+  label: string;
+  type: 'text' | 'email' | 'tel' | 'textarea';
+  placeholder: string;
+  required?: boolean;
+  maxlength?: number;
+  autocomplete?: string;
+}
+
+export interface ContactFormProps {
+  name: string;
+  /** Endpoint voor POST (FormData). Leeg = nog niet gekoppeld. */
+  action?: string;
+  fields: ContactFormField[];
+  optionalLabel: string;
+  submitLabel: string;
+  submittingLabel: string;
+  success: { title: string; text: Rich };
+  error: string;
+}
+
+type Props = ContactFormProps;
+
+const { name, action, fields, optionalLabel, submitLabel, submittingLabel, success, error } = Astro.props;
+const formId = `form-${name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
+---
+
+<div class="contact-form" data-contact-form>
+  <form
+    id={formId}
+    name={name}
+    method="post"
+    action={action || undefined}
+    class="contact-form__form"
+    data-contact-form-form
+    data-submitting-label={submittingLabel}
+  >
+    {
+      fields.map((field) => {
+        const fieldId = `${formId}-${field.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
+        return (
+          <div class="contact-form__field">
+            <label for={fieldId} class="contact-form__label">
+              {field.label}
+              {!field.required && <span class="contact-form__optional"> {optionalLabel}</span>}
+            </label>
+            {field.type === 'textarea' ? (
+              <textarea
+                id={fieldId}
+                name={field.name}
+                placeholder={field.placeholder}
+                required={field.required}
+                maxlength={field.maxlength}
+                rows="2"
+                class="contact-form__input contact-form__input--textarea"
+              />
+            ) : (
+              <input
+                id={fieldId}
+                name={field.name}
+                type={field.type}
+                placeholder={field.placeholder}
+                required={field.required}
+                maxlength={field.maxlength}
+                autocomplete={field.autocomplete}
+                class="contact-form__input"
+              />
+            )}
+          </div>
+        );
+      })
+    }
+    <div class="contact-form__honeypot" aria-hidden="true">
+      <label for={`${formId}-website`}>Website</label>
+      <input id={`${formId}-website`} type="text" name="website" tabindex="-1" autocomplete="off" />
+    </div>
+    <Button label={submitLabel} type="submit" icon={null} attrs={{ 'data-contact-form-submit': '' }} />
+  </form>
+
+  <div class="contact-form__success" role="status" hidden data-contact-form-success>
+    <h2 class="contact-form__success-title">{success.title}</h2>
+    <RichText content={success.text} plain class="contact-form__success-text" />
+  </div>
+
+  <div class="contact-form__error" role="alert" hidden data-contact-form-error>
+    {error}
+  </div>
+</div>
+
+<style>
+  /* Webflow .w-form: 15px ondermarge (telt mee bij het centreren in de rij) */
+  .contact-form {
+    margin-bottom: var(--space-15);
+  }
+
+  .contact-form__label {
+    display: block;
+    margin-bottom: var(--space-5);
+    font-size: var(--fs-label);
+    font-weight: var(--fw-medium);
+    line-height: var(--lh-body);
+  }
+
+  /* Zoals live: alleen het eerste label heeft 12px ruimte (Webflow .form-label) */
+  .contact-form__field:first-child .contact-form__label {
+    margin-bottom: var(--space-12);
+  }
+
+  .contact-form__optional {
+    color: var(--color-gray-light);
+    font-style: italic;
+  }
+
+  .contact-form__input {
+    display: block;
+    width: 100%;
+    height: var(--button-height);
+    margin-bottom: var(--space-32);
+    padding: var(--space-16) calc(var(--space-48) + var(--space-4)) var(--space-16) var(--space-24);
+    border: 0;
+    border-radius: 0;
+    background-color: var(--color-gray-dark);
+    color: var(--color-white);
+    font-size: var(--fs-base);
+    line-height: var(--lh-relaxed);
+  }
+
+  .contact-form__input::placeholder {
+    color: var(--color-placeholder);
+  }
+
+  .contact-form__input--textarea {
+    height: auto;
+    resize: vertical;
+  }
+
+  .contact-form__honeypot {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  .contact-form__success {
+    padding: var(--space-20);
+    background-color: var(--color-green);
+    color: var(--color-black);
+  }
+
+  .contact-form__success-title {
+    display: block;
+    color: var(--color-black);
+  }
+
+  .contact-form__success :global(a) {
+    color: var(--color-black);
+  }
+
+  .contact-form__error {
+    margin-top: var(--space-10);
+    padding: var(--space-10);
+    background-color: var(--color-error-bg);
+    color: var(--color-black);
+  }
+</style>

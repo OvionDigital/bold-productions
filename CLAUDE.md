@@ -46,7 +46,7 @@ npm run deploy:preview  # build + wrangler pages deploy (branch preview)
    - Bestanden in `public/fonts/` en `public/video/` worden een jaar immutable gecachet. Vervang je zo'n bestand, **geef het dan een nieuwe naam**.
 8. **Na elke sectie:** `npm run build` moet slagen en `npm run compare` draaien. Benoem wat nog afwijkt.
 9. **Geen nieuwe dependencies** zonder toestemming.
-10. Tracking (GTM-KCTG3DST, CookieFirst) komt later via `components/layout/Analytics.astro`, alleen als `PUBLIC_ENABLE_TRACKING === 'true'`.
+10. Contactformulier: backend nog niet gekozen (TODO), zie README. Tracking (GTM-KCTG3DST, CookieFirst) komt later via `components/layout/Analytics.astro`, alleen als `PUBLIC_ENABLE_TRACKING === 'true'`.
 11. `/styleguide` is `noindex` en hoort niet in een sitemap (als die er komt: uitsluiten).
 
 ## Conventies
@@ -103,6 +103,7 @@ Houd dit bij bij elk nieuw component.
 | `VimeoEmbed.astro`     | Vimeo-iframe met vaste verhouding, loading=lazy, optioneel background-modus.                            |
 | `DecoTriangles.astro`  | Zes oranje driehoekjes rond een beeld (structuur exact als Webflow).                                    |
 | `CaseCard.astro`       | Casekaart: foto, diagonale gradient, titel + intro, link naar /cases/[slug].                              |
+| `ContactForm.astro`    | Contactformulier (velden uit data), honeypot, succes/fout; verzenden via `contact-form.ts` naar `PUBLIC_CONTACT_ENDPOINT`. |
 | `VimeoBackground.astro`| Vimeo-achtergrondvideo (cover). Laadt na window.load, fadet in bij 'play' (gedrag: `hero-video.ts`).    |
 
 ### Layout (`src/components/layout/`)
@@ -148,4 +149,5 @@ Houd dit bij bij elk nieuw component.
 | `carousel.ts`          | Pijlknoppen scrollen één item, disabled aan begin/eind.                     |
 | `cinema-cursor.ts`     | Popcorn-cursor + spoor, alleen bij een sectie met id="cinema" en een muis.  |
 | `accordion.ts`         | Generiek accordeon: `[data-accordion-trigger]` + aria-controls, hoogte 0 ↔ auto (0,3 s). |
+| `contact-form.ts`      | Formulier via fetch versturen, knop "Verzenden...", succes- of foutmelding.  |
 | `menu.ts`              | Menupaneel openen/sluiten (GSAP), overlay, Escape, focus-trap, scroll-lock, accordeon. |
