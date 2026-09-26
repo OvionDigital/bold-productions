@@ -39,3 +39,17 @@ https://pagespeed.web.dev/analysis?url=https://preview.bold-productions.pages.de
 # Lokaal (vereist Chrome)
 npx lighthouse https://preview.bold-productions.pages.dev/ --only-categories=performance --view
 ```
+
+## /events
+
+Gemeten op 26-09-2026, zelfde methode (5 runs preview, 3 runs live, mediaan).
+
+| Metric      | Nieuw (preview) | Huidig (Webflow) |
+| ----------- | --------------- | ---------------- |
+| Score       | **97** (90–99)  | 61               |
+| FCP         | 1,53 s          | 4,46 s           |
+| LCP         | **2,50 s**      | 20,45 s          |
+| TBT         | **0 ms**        | 141 ms           |
+| CLS         | **0**           | 0                |
+
+Op mobiel laadt de hero-video hier niet (alleen op de homepage), zoals afgesproken.
