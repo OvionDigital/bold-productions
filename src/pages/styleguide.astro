@@ -36,7 +36,7 @@ import ServiceTiles from '../components/sections/ServiceTiles.astro';
 import Faq from '../components/sections/Faq.astro';
 import ContactForm from '../components/ui/ContactForm.astro';
 import { contactForm } from '../data/forms';
-import { biggerThanTheDay, caseSpotlight, cinema, contact, faq, services } from '../data/events';
+import { biggerThanTheDay, caseSpotlight, cinema, contactSection, faq, services } from '../data/events';
 
 const colors = tokensByPrefix('--color-');
 const gradients = tokensByPrefix('--gradient-');
@@ -628,7 +628,7 @@ const nav = [
         teksten uit <code>src/data/forms.ts</code>; endpoint via <code>PUBLIC_CONTACT_ENDPOINT</code> (TODO).
       </p>
     </Container>
-    <TextMedia {...contact}>
+    <TextMedia {...contactSection}>
       <ContactForm slot="content" {...contactForm} name="Contact styleguide" />
     </TextMedia>
   </div>

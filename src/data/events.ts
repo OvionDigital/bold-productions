@@ -299,7 +299,7 @@ export const faq: FaqProps = {
   ],
 };
 
-export const contact: TextMediaProps = {
+export const contactSection: TextMediaProps = {
   intro: {
     title: 'Gauw even praten?',
     gradient: 'orange',
