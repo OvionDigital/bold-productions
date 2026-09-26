@@ -34,7 +34,17 @@ const args = Object.fromEntries(
     return [key, value ?? true];
   }),
 );
-const pagePath = typeof args.path === 'string' ? args.path : '/';
+/**
+ * Pad normaliseren: 'events' en '/events' werken allebei. Git Bash (MSYS) zet '/events'
+ * om naar 'C:/Program Files/Git/events'; dat draaien we hier terug.
+ */
+function normalizePath(raw) {
+  let p = String(raw).replace(/\\/g, '/');
+  const msys = p.match(/^[A-Za-z]:\/.*?\/Git(\/.*)$/);
+  if (msys) p = msys[1];
+  return p.startsWith('/') ? p : `/${p}`;
+}
+const pagePath = typeof args.path === 'string' ? normalizePath(args.path) : '/';
 const widths = typeof args.widths === 'string' ? args.widths.split(',').map(Number) : [375, 768, 1440];
 const slug = pagePath === '/' ? 'home' : pagePath.replace(/^\/|\/$/g, '').replace(/\//g, '__');
 

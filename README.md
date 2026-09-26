@@ -20,7 +20,7 @@ Werkafspraken, regels en het componentenoverzicht staan in [CLAUDE.md](CLAUDE.md
 | `npm run compare`        | Screenshots live vs. lokaal (375/768/1440) → open `compare/index.html` |
 | `npm run deploy:preview` | Bouwen en deployen naar Cloudflare Pages (branch `preview`)           |
 
-Opties voor compare: `npm run compare -- --path=/events --widths=375,1440 --no-build`.
+Opties voor compare: `npm run compare -- --path=events --widths=375,1440 --no-build`.
 
 Voeg `?static=1` toe aan een URL om Lenis en alle animaties uit te zetten (zo maakt compare de screenshots).
 
