@@ -33,7 +33,8 @@ import { backstage, hero, intro, micDrop, testimonials, timeline, trustedBy } fr
 import CaseSpotlight from '../components/sections/CaseSpotlight.astro';
 import ImageFeature from '../components/sections/ImageFeature.astro';
 import ServiceTiles from '../components/sections/ServiceTiles.astro';
-import { biggerThanTheDay, caseSpotlight, cinema, services } from '../data/events';
+import Faq from '../components/sections/Faq.astro';
+import { biggerThanTheDay, caseSpotlight, cinema, faq, services } from '../data/events';
 
 const colors = tokensByPrefix('--color-');
 const gradients = tokensByPrefix('--gradient-');
@@ -608,6 +609,15 @@ const nav = [
       </p>
     </Container>
     <ServiceTiles {...services} />
+
+    <Container>
+      <h3 class="sg-subtitle">Faq</h3>
+      <p class="sg-note">
+        <code>&lt;Faq id title gradient items /&gt;</code>: accordeon (scripts/accordion.ts) met FAQPage-JSON-LD. Zonder
+        JS staan de antwoorden open.
+      </p>
+    </Container>
+    <Faq {...faq} id="sg-faq" items={faq.items.slice(0, 2)} />
   </div>
 </BaseLayout>
 

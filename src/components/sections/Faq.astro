@@ -1,0 +1,215 @@
+---
+/**
+ * Veelgestelde vragen (Webflow faq_item): titel en accordeon met vragen.
+ * Gedrag in scripts/accordion.ts. Inclusief FAQPage-structured data (JSON-LD).
+ */
+import Container from '../ui/Container.astro';
+import Heading, { type HeadingGradient } from '../ui/Heading.astro';
+import Icon from '../ui/Icon.astro';
+import RichText from '../ui/RichText.astro';
+import { richToPlainText, type Rich } from '../../lib/rich';
+
+export interface FaqItem {
+  question: string;
+  answer: Rich;
+}
+
+export interface FaqProps {
+  id?: string;
+  title: string;
+  gradient?: HeadingGradient;
+  items: FaqItem[];
+}
+
+type Props = FaqProps;
+
+const { id = 'faq', title, gradient = 'green', items } = Astro.props;
+
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: items.map((item) => ({
+    '@type': 'Question',
+    name: item.question,
+    acceptedAnswer: { '@type': 'Answer', text: richToPlainText(item.answer) },
+  })),
+};
+---
+
+<section class="faq" id={id}>
+  <Container>
+    <Heading as="h2" text={title} gradient={gradient} align="center" flush class="faq__title" />
+    <div class="faq__row">
+      <div class="faq__col">
+        <div class="faq__list">
+          {
+            items.map((item, index) => {
+              const panelId = `${id}-antwoord-${index + 1}`;
+              return (
+                <div class="faq__item">
+                  <h3 class="faq__heading">
+                    <button
+                      type="button"
+                      class="faq__question"
+                      aria-expanded="false"
+                      aria-controls={panelId}
+                      data-accordion-trigger
+                    >
+                      <span class="faq__icon" aria-hidden="true">
+                        <Icon name="plus" />
+                      </span>
+                      <span class="faq__question-text">{item.question}</span>
+                    </button>
+                  </h3>
+                  <div class="faq__answer" id={panelId}>
+                    <RichText content={item.answer} plain class="faq__answer-text" />
+                  </div>
+                </div>
+              );
+            })
+          }
+        </div>
+      </div>
+    </div>
+  </Container>
+  <script type="application/ld+json" set:html={JSON.stringify(structuredData)} is:inline />
+</section>
+
+<style>
+  .faq {
+    position: relative;
+    z-index: var(--z-base);
+    padding-block: var(--section-padding);
+    overflow: hidden;
+  }
+
+  .faq :global(.faq__title) {
+    display: block;
+    max-width: var(--container-narrow);
+    margin: 0 auto var(--space-48);
+  }
+
+  .faq__row {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    margin-inline: var(--row-margin);
+  }
+
+  .faq__col {
+    width: 66.6667%;
+    padding-inline: var(--column-gap);
+  }
+
+  .faq__list {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-24);
+  }
+
+  .faq__item {
+    background-color: var(--color-gray-dark);
+  }
+
+  .faq__heading {
+    margin: 0;
+    font: inherit;
+    letter-spacing: normal;
+    text-transform: none;
+  }
+
+  .faq__question {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: var(--space-16);
+    width: 100%;
+    padding: var(--space-16);
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .faq__icon {
+    display: flex;
+    flex: none;
+    width: var(--icon-touch);
+    height: var(--icon-touch);
+    padding: var(--space-4);
+    background-color: var(--color-green);
+    color: var(--color-black);
+    transition:
+      background-color var(--duration-base) var(--ease-out),
+      color var(--duration-base) var(--ease-out);
+  }
+
+  .faq__icon :global(.icon) {
+    --icon-size: 100%;
+  }
+
+  .faq__icon :global(path:last-child) {
+    transition: opacity var(--duration-base) var(--ease-out);
+  }
+
+  .faq__question[aria-expanded='true'] .faq__icon {
+    background-color: var(--color-black);
+    color: var(--color-white);
+  }
+
+  .faq__question[aria-expanded='true'] .faq__icon :global(path:last-child) {
+    opacity: 0;
+  }
+
+  .faq__question-text {
+    font-family: var(--font-display);
+    font-size: var(--fs-intro);
+    line-height: var(--lh-normal);
+  }
+
+  .faq__answer {
+    /* uitgelijnd met de vraagtekst: padding + icoon + gap */
+    padding: 0 var(--space-16) 0 calc(2 * var(--space-16) + var(--icon-touch));
+    overflow: clip;
+  }
+
+  :global(html.js) .faq__answer {
+    height: 0;
+  }
+
+  .faq__answer :global(.faq__answer-text p) {
+    margin-bottom: 0;
+    padding-bottom: var(--space-16);
+  }
+
+  @media (min-width: 1440px) {
+    .faq__col {
+      width: 58.3333%;
+    }
+  }
+
+  @media (max-width: 991px) {
+    .faq__col {
+      width: auto;
+    }
+  }
+
+  @media (max-width: 479px) {
+    .faq__question {
+      gap: var(--space-12);
+      padding: var(--space-8);
+    }
+
+    .faq__icon {
+      width: var(--icon-xl);
+      height: var(--icon-xl);
+    }
+
+    .faq__question-text {
+      font-size: var(--fs-base);
+    }
+
+    .faq__answer {
+      padding-left: calc(var(--space-8) + var(--icon-xl) + var(--space-12));
+    }
+  }
+</style>

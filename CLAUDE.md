@@ -132,6 +132,7 @@ Houd dit bij bij elk nieuw component.
 | `CaseSpotlight.astro` | Kop + één grote CaseCard; case op slug uit `src/data/cases.ts`. |
 | `ImageFeature.astro` | Brede foto met gecentreerde titel + intro erover (mobiel eronder); `id="cinema"` = popcorn-cursor. |
 | `ServiceTiles.astro` | Kop + tekst en staande beeldtegels (2:3) naar dienstpagina's; hover groeit, titel oranje. |
+| `Faq.astro` | Veelgestelde vragen: accordeon (h3 + button) met FAQPage-structured data. |
 
 ### Scripts (`src/scripts/`)
 
@@ -146,4 +147,5 @@ Houd dit bij bij elk nieuw component.
 | `background-video.ts`  | IntersectionObserver: video-src zetten en afspelen in beeld, pauzeren erbuiten. |
 | `carousel.ts`          | Pijlknoppen scrollen één item, disabled aan begin/eind.                     |
 | `cinema-cursor.ts`     | Popcorn-cursor + spoor, alleen bij een sectie met id="cinema" en een muis.  |
+| `accordion.ts`         | Generiek accordeon: `[data-accordion-trigger]` + aria-controls, hoogte 0 ↔ auto (0,3 s). |
 | `menu.ts`              | Menupaneel openen/sluiten (GSAP), overlay, Escape, focus-trap, scroll-lock, accordeon. |

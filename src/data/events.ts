@@ -10,6 +10,7 @@ import type { CaseSpotlightProps } from '../components/sections/CaseSpotlight.as
 import type { TestimonialsProps } from '../components/sections/Testimonials.astro';
 import type { ImageFeatureProps } from '../components/sections/ImageFeature.astro';
 import type { ServiceTilesProps } from '../components/sections/ServiceTiles.astro';
+import type { FaqProps } from '../components/sections/Faq.astro';
 import heroImage from '../assets/images/events/hero-hrieps-festival.jpg';
 import optredenInTent from '../assets/images/events/optreden-in-tent.jpg';
 import preProductie from '../assets/images/events/tijdlijn-pre-productie.jpg';
@@ -236,6 +237,63 @@ export const services: ServiceTilesProps = {
         src: dienstFotografie,
         alt: 'Sfeerbeeld van een live-optreden. Foto door Bold Productions contentspecialist voor Events & Artiesten.',
       },
+    },
+  ],
+};
+
+export const faq: FaqProps = {
+  title: 'Veelgestelde vragen',
+  gradient: 'green',
+  items: [
+    {
+      question: 'Hoe vroeg voor mijn event moet ik beginnen met het laten maken van video content?',
+      answer: [
+        {
+          p: [
+            'Hoe eerder, hoe beter. Voor een promovideo adviseren we minimaal 6 weken voor je event te starten. Voor een volledige contentstrategie — inclusief promovideo, eventvideo en aftermovie — begin je het liefst 3 maanden van tevoren. Zo heb je genoeg tijd om de content strategisch in te zetten en maximaal effect te bereiken.',
+          ],
+        },
+      ],
+    },
+    {
+      question: 'Wat kost het laten maken van een eventvideo?',
+      answer: [
+        {
+          p: [
+            'Dat hangt af van de omvang van je event, het type content en de diensten die je nodig hebt. Elke opdracht is anders, dus elke offerte is anders. Vraag een offerte aan en we maken een voorstel dat past bij jouw event en budget.',
+          ],
+        },
+      ],
+    },
+    {
+      question: 'Wat is het verschil tussen een promovideo, een eventvideo en een aftermovie?',
+      answer: [
+        {
+          p: [
+            'Een promovideo maak je vóór je event om FOMO te creëren en tickets te verkopen. Een eventvideo leg je vast tijdens het event zelf — soms same-day, om live FOMO te creëren. Een aftermovie is een bewerkter stuk content dat het gevoel van je event samenvat en naspeelt, en de basis vormt voor promotie van je volgende editie.',
+          ],
+        },
+      ],
+    },
+    {
+      question: 'Kunnen jullie zowel video als fotografie verzorgen op ons event?',
+      answer: [
+        {
+          p: [
+            'Ja. We werken regelmatig met een gecombineerde aanpak waarbij we tegelijkertijd video en foto produceren. Zo hoef je niet met meerdere partijen te schakelen en klopt de stijl van alle content.',
+          ],
+        },
+      ],
+    },
+    {
+      question: 'Maken jullie ook content voor kleinere events of alleen grote festivals?',
+      answer: [
+        {
+          p: [
+            'We werken voor events van verschillende schaalgroottes. Van intiem clubevent tot meerdaags festival. Wat telt is niet de grootte van je event, maar de ambitie om te groeien.',
+          ],
+        },
+      ],
     },
   ],
 };
