@@ -32,7 +32,8 @@ import TextMedia from '../components/sections/TextMedia.astro';
 import { backstage, hero, intro, micDrop, testimonials, timeline, trustedBy } from '../data/home';
 import CaseSpotlight from '../components/sections/CaseSpotlight.astro';
 import ImageFeature from '../components/sections/ImageFeature.astro';
-import { biggerThanTheDay, caseSpotlight, cinema } from '../data/events';
+import ServiceTiles from '../components/sections/ServiceTiles.astro';
+import { biggerThanTheDay, caseSpotlight, cinema, services } from '../data/events';
 
 const colors = tokensByPrefix('--color-');
 const gradients = tokensByPrefix('--gradient-');
@@ -598,6 +599,15 @@ const nav = [
       </p>
     </Container>
     <ImageFeature {...cinema} id={undefined} />
+
+    <Container>
+      <h3 class="sg-subtitle">ServiceTiles</h3>
+      <p class="sg-note">
+        <code>&lt;ServiceTiles title gradient text items /&gt;</code>: staande beeldtegels (2:3) die naar dienstpagina's
+        linken. ≥1440 één rij met verspringing, daaronder 3 / 2 / 1 per rij.
+      </p>
+    </Container>
+    <ServiceTiles {...services} />
   </div>
 </BaseLayout>
 

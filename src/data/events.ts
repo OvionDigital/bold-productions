@@ -9,12 +9,18 @@ import type { TimelineProps } from '../components/sections/Timeline.astro';
 import type { CaseSpotlightProps } from '../components/sections/CaseSpotlight.astro';
 import type { TestimonialsProps } from '../components/sections/Testimonials.astro';
 import type { ImageFeatureProps } from '../components/sections/ImageFeature.astro';
+import type { ServiceTilesProps } from '../components/sections/ServiceTiles.astro';
 import heroImage from '../assets/images/events/hero-hrieps-festival.jpg';
 import optredenInTent from '../assets/images/events/optreden-in-tent.jpg';
 import preProductie from '../assets/images/events/tijdlijn-pre-productie.jpg';
 import productie from '../assets/images/events/tijdlijn-productie.jpg';
 import postProductie from '../assets/images/events/tijdlijn-post-productie.jpg';
 import bioscoop from '../assets/images/events/bioscoop.jpg';
+import dienstPromovideos from '../assets/images/events/dienst-promovideos.jpg';
+import dienstEventvideos from '../assets/images/events/dienst-eventvideos.avif';
+import dienstSocialContent from '../assets/images/events/dienst-social-content.avif';
+import dienstAftermovies from '../assets/images/events/dienst-aftermovies.jpg';
+import dienstFotografie from '../assets/images/events/dienst-fotografie.jpg';
 import { clientLogos, trustedByTitle } from './logos';
 import { pickTestimonials } from './testimonials';
 
@@ -177,4 +183,59 @@ export const cinema: ImageFeatureProps = {
     src: bioscoop,
     alt: 'Klanten tijdens een videopresentatie in de mini-bioscoop van Bold Productions.',
   },
+};
+
+export const services: ServiceTilesProps = {
+  title: 'Wat ga je daar zien?',
+  gradient: 'yellow',
+  text: [
+    {
+      p: [
+        'Ligt eraan. Het doel is leidend. Niet de middelen. Maar er zijn natuurlijk een aantal ',
+        { text: 'usual suspects', em: true },
+        '. Hieronder zie je wat we ',
+        { text: 'zouden', em: true },
+        ' kunnen doen rondom je event.',
+      ],
+    },
+  ],
+  items: [
+    {
+      label: "Promovideo's",
+      href: '/events/promovideos',
+      image: {
+        src: dienstPromovideos,
+        alt: 'Sfeerbeeld van PROOST! BAND tijdens een live-optreden. Foto door Bold Productions contentspecialist voor Events & Artiesten.',
+      },
+    },
+    {
+      label: "Eventvideo's",
+      href: '/events/eventvideos',
+      image: { src: dienstEventvideos, alt: 'Sfeerbeeld van een tentfeest.' },
+    },
+    {
+      label: 'Social content',
+      href: '/events/social-content',
+      image: {
+        src: dienstSocialContent,
+        alt: 'Foto van een event bij De Vaste Clique. Vastgelegd door Bold Productions contentspecialist voor Events & Artiesten.',
+      },
+    },
+    {
+      label: 'Aftermovies',
+      href: '/events/aftermovie',
+      image: {
+        src: dienstAftermovies,
+        alt: 'Sfeerbeeld van het Solexrace festival. Fotografie door Bold Productions contentspecialist voor Events & Artiesten.',
+      },
+    },
+    {
+      label: 'Fotografie',
+      href: '/events/fotografie',
+      image: {
+        src: dienstFotografie,
+        alt: 'Sfeerbeeld van een live-optreden. Foto door Bold Productions contentspecialist voor Events & Artiesten.',
+      },
+    },
+  ],
 };

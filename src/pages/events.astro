@@ -8,8 +8,9 @@ import Timeline from '../components/sections/Timeline.astro';
 import CaseSpotlight from '../components/sections/CaseSpotlight.astro';
 import Testimonials from '../components/sections/Testimonials.astro';
 import ImageFeature from '../components/sections/ImageFeature.astro';
+import ServiceTiles from '../components/sections/ServiceTiles.astro';
 import { breadcrumbLabels } from '../data/navigation';
-import { biggerThanTheDay, breadcrumbs, caseSpotlight, cinema, hero, meta, testimonials, timeline, trustedBy } from '../data/events';
+import { biggerThanTheDay, breadcrumbs, caseSpotlight, cinema, hero, meta, services, testimonials, timeline, trustedBy } from '../data/events';
 ---
 
 <BaseLayout title={meta.title} description={meta.description}>
@@ -21,4 +22,5 @@ import { biggerThanTheDay, breadcrumbs, caseSpotlight, cinema, hero, meta, testi
   <CaseSpotlight {...caseSpotlight} />
   <Testimonials {...testimonials} />
   <ImageFeature {...cinema} />
+  <ServiceTiles {...services} />
 </BaseLayout>
