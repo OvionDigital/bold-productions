@@ -376,6 +376,8 @@
 
 @media (max-width: 767px) {
   :root {
+    --section-padding: 64px;
+    --section-space: 64px;
     --polaroids-header-top: 120px;
     --polaroids-item-top: 306px;
     --testimonial-height: 736.5px;
