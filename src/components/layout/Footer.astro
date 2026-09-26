@@ -39,7 +39,7 @@ const bgLg = `url("${lg.src}")`;
 
 <footer class="footer">
   <Container>
-    <div class="footer__row">
+    <div class="footer__row" data-animate-stagger>
       {
         columns.map((column) => (
           <div class="footer__col">
@@ -128,7 +128,7 @@ const bgLg = `url("${lg.src}")`;
     --footer-bg-image: var(--bgLg);
     position: relative;
     z-index: 0;
-    padding-block: var(--section-space);
+    padding-block: var(--space-96);
     background-color: var(--color-white);
   }
 
@@ -242,7 +242,7 @@ const bgLg = `url("${lg.src}")`;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: var(--section-space);
+    margin-top: var(--space-96);
     margin-inline: var(--row-margin);
   }
 

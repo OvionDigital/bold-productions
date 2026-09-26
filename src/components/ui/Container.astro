@@ -11,12 +11,13 @@ interface Props {
   width?: 'default' | 'wide' | 'plain';
   as?: HTMLTag;
   class?: string;
+  [key: `data-${string}`]: string | undefined;
 }
 
-const { width = 'default', as: Tag = 'div', class: className } = Astro.props;
+const { width = 'default', as: Tag = 'div', class: className, ...rest } = Astro.props;
 ---
 
-<Tag class:list={['container', `container--${width}`, className]}>
+<Tag class:list={['container', `container--${width}`, className]} {...rest}>
   <slot />
 </Tag>
 

@@ -205,14 +205,14 @@
   --space-192: 192px;
 
   /* Semantisch (responsive, zie media queries onderaan) */
-  --section-padding: 96px; /* .section: 96, ≤991 48 */
-  --section-space: 96px; /* Webflow var(--section-padding) buiten .section: altijd 96 */
+  --section-padding: 192px; /* vaste ruimte boven/onder secties (ook met eigen achtergrond) */
+  --section-space: 192px; /* vaste marge tussen secties zonder eigen achtergrond */
+  --timeline-step-gap: 96px; /* interne ruimte tussen kop/rijen/cta binnen Timeline, los van section-padding */
   --column-gap: 12px; /* halve goot tussen kolommen */
   --row-margin: -12px;
   --container-padding: 12px;
   --container-padding-wide: 48px; /* hero, navbar, fluid */
   --navbar-padding-y: 24px;
-  --navbar-height: 112px; /* vaste navbar, ≤767: 100 */
   --page-shapes-offset: 120vh; /* B-vormen beginnen onder de hero */
   --page-shapes-gap: 50vh;
 
@@ -251,9 +251,8 @@
   --quote-icon-max: 42px;
   --testimonial-line-width: 200px;
   --testimonials-heading-max: 900px;
-  --polaroids-header-top: 144px; /* min-hoogte kop polaroidgalerij op mobiel (≤479: 120) */
-  --polaroid-ratio: 1.5; /* beeldverhouding polaroidfoto's (3:2) */
-  --polaroid-max-fill: 0.75; /* max. deel van de vrije schermhoogte onder de navbar */
+  --polaroids-header-top: 144px; /* sticky kop polaroidgalerij */
+  --polaroids-item-top: 290px; /* sticky polaroids, per breakpoint */
   --navbar-side-width: 350px; /* logo- en actieblok ≥1440 */
   --dropdown-min-width: 250px;
   --menu-panel-min-width: 500px;
@@ -282,8 +281,14 @@
   --duration-dropdown: 0.4s;
   --duration-menu: 0.5s;
   --duration-slow: 0.6s;
+  --duration-reveal: 0.8s; /* inkomen van onderdelen (data-animate-stagger) */
+  --stagger-step: 0.12s; /* vertraging tussen opeenvolgende onderdelen */
+  --reveal-distance: 24px;
   --ease-nav: cubic-bezier(0.25, 0.46, 0.45, 0.94);
   --ease-out: ease;
+  --ease-reveal: cubic-bezier(0.22, 1, 0.36, 1); /* zachte uitloop voor inkomende onderdelen */
+  --duration-curtain: 0.5s; /* paginaovergang: per fase (dichtschuiven, wegtrekken) */
+  --ease-curtain: cubic-bezier(0.76, 0, 0.24, 1);
   --marquee-duration: 14s;
 
   /* ─── Lagen ─────────────────────────────────────────────────────── */
@@ -298,6 +303,19 @@
   --z-navbar: 999;
   --z-whatsapp: 9000;
   --z-cursor: 9999;
+
+  /* ─── Cursor ────────────────────────────────────────────────────── */
+  /* Standaard gewoon de systeemcursor; met muis (zie media query hieronder) het driehoekje. */
+  --cursor-default: auto;
+  --cursor-pointer: pointer;
+}
+
+/* Custom cursor alleen met een echte muis: niet op touch (telefoon/tablet). */
+@media (hover: hover) and (pointer: fine) {
+  :root {
+    --cursor-default: url('../assets/cursor/triangle.svg') 2 2, auto;
+    --cursor-pointer: url('../assets/cursor/triangle-hover.svg') 2 2, pointer;
+  }
 }
 
 /* ─── Accentthema's ─────────────────────────────────────────────────── */
@@ -331,6 +349,7 @@
 
 @media (min-width: 1440px) {
   :root {
+    --polaroids-item-top: 293px;
     --testimonial-height: 624px;
     --container-max: 1320px;
     --container-max-plain: 1320px;
@@ -339,6 +358,7 @@
 
 @media (min-width: 1920px) {
   :root {
+    --polaroids-item-top: 301px;
     --testimonial-height: 804px;
     --container-max: 1680px;
     --container-max-plain: 1680px;
@@ -348,7 +368,6 @@
 @media (max-width: 991px) {
   :root {
     --testimonial-height: 504px;
-    --section-padding: 48px;
     --container-max: 720px;
     --container-max-plain: 720px;
     --container-padding-wide: 36px;
@@ -357,8 +376,8 @@
 
 @media (max-width: 767px) {
   :root {
-    --navbar-height: 100px;
     --polaroids-header-top: 120px;
+    --polaroids-item-top: 306px;
     --testimonial-height: 736.5px;
     --container-max: none;
     --container-max-plain: none;
@@ -374,5 +393,6 @@
     --testimonial-height: 547.5px;
     --container-padding: 16px;
     --container-padding-wide: 16px;
+    --polaroids-item-top: 264px;
   }
 }

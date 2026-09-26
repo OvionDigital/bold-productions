@@ -6,6 +6,12 @@
 
 @import 'lenis/dist/lenis.css';
 
+/* Lenis zet bij stop() overflow: clip op <html>; dan verdwijnt de scrollbalk en verspringt
+   de pagina bij het openen van het menu. menu.ts blokkeert het scrollen zelf. */
+html.lenis:not(.lenis-autoToggle).lenis-stopped {
+  overflow: visible;
+}
+
 /* ─── Reset ─────────────────────────────────────────────────────────── */
 *,
 *::before,
@@ -59,7 +65,6 @@ textarea {
 }
 
 button {
-  cursor: pointer;
   border: 0;
   background: none;
   padding: 0;
@@ -183,8 +188,8 @@ figure {
   list-style: none;
   padding-left: var(--space-32);
   background-image: url('../assets/icons/bold-list-item.png');
-  background-position: 0 var(--space-4);
-  background-size: 14px;
+  background-position: 0 6px;
+  background-size: 10px;
   background-repeat: no-repeat;
 }
 
@@ -241,6 +246,84 @@ figure {
   transform: none;
 }
 
+/*
+ * Stagger: de directe kinderen van [data-animate-stagger] komen één voor één binnen
+ * (volgorde via --animate-index, gezet door scroll-animations.ts). Animatie met
+ * `translate` i.p.v. `transform` en fill-mode backwards, zodat hover-transforms en
+ * transitions van de kinderen zelf niet overschreven worden.
+ * [data-animate-skip] = kind doet niet mee (bijv. een achtergrondlaag).
+ */
+.js [data-animate-stagger]:not(.is-visible) > :not([data-animate-skip]) {
+  opacity: 0;
+}
+
+.js [data-animate-stagger].is-visible > :not([data-animate-skip]) {
+  animation: reveal-up var(--duration-reveal) var(--ease-reveal) backwards;
+  animation-delay: calc(var(--animate-index, 0) * var(--stagger-step));
+}
+
+@keyframes reveal-up {
+  from {
+    opacity: 0;
+    translate: 0 var(--reveal-distance);
+  }
+}
+
+/*
+ * Paginaovergang: zwart gordijn (native cross-document View Transitions, geen JS).
+ * Fase 1: de bovenrand van het gordijn schuift van onder naar boven over de oude pagina.
+ * Fase 2: de onderrand volgt en onthult de nieuwe pagina. Browsers zonder support
+ * (Firefox) laden gewoon de pagina. Uit bij prefers-reduced-motion.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
+  }
+
+  ::view-transition-group(root) {
+    background-color: var(--color-black);
+    animation: none;
+  }
+
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    mix-blend-mode: normal;
+    animation-duration: var(--duration-curtain);
+    animation-timing-function: var(--ease-curtain);
+  }
+
+  ::view-transition-old(root) {
+    animation-name: curtain-cover;
+    animation-fill-mode: forwards;
+  }
+
+  ::view-transition-new(root) {
+    animation-name: curtain-reveal;
+    animation-delay: var(--duration-curtain);
+    animation-fill-mode: backwards;
+  }
+}
+
+@keyframes curtain-cover {
+  from {
+    clip-path: inset(0 0 0 0);
+  }
+
+  to {
+    clip-path: inset(0 0 100% 0);
+  }
+}
+
+@keyframes curtain-reveal {
+  from {
+    clip-path: inset(100% 0 0 0);
+  }
+
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
 /* Laadanimatie (hero) */
 @keyframes fade-in-up {
   from {
@@ -287,6 +370,32 @@ figure {
 .is-static [data-animate] {
   opacity: 1 !important;
   transform: none !important;
+}
+
+/* ─── Cursor (driehoekje, tokens --cursor-default/--cursor-pointer) ─── */
+/* Native CSS-cursor: geen JS, geen vertraging. Op touch zijn de tokens gewoon auto/pointer. */
+html {
+  cursor: var(--cursor-default);
+}
+
+:where(a[href], button, [role='button'], label[for], summary, select, input[type='submit'], input[type='checkbox'], input[type='radio']) {
+  cursor: var(--cursor-pointer);
+}
+
+:where(input:not([type='submit'], [type='checkbox'], [type='radio'], [type='button']), textarea, [contenteditable]) {
+  cursor: text;
+}
+
+/*
+ * Externe panelen (CookieFirst e.d.) en [data-native-cursor]: gewone systeemcursor,
+ * zodat daar niets vreemds gebeurt. :where() = specificiteit 0, dus hun eigen CSS wint.
+ */
+:where([class*='cookiefirst'], [id*='cookiefirst'], [data-native-cursor]) {
+  cursor: auto;
+}
+
+:where([class*='cookiefirst'], [id*='cookiefirst'], [data-native-cursor]) :where(a[href], button, [role='button'], label) {
+  cursor: pointer;
 }
 
 /* ─── Popcorn-cursor (scripts/cinema-cursor.ts, alleen bij #cinema) ─── */

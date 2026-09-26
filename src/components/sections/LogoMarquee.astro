@@ -26,7 +26,7 @@ const { title, logos } = Astro.props;
 const copies = [false, true];
 ---
 
-<section class="logo-marquee" data-animate>
+<section class="logo-marquee" data-animate-stagger>
   <Container>
     <div class="logo-marquee__header">
       <span class="logo-marquee__line"></span>
@@ -77,7 +77,7 @@ const copies = [false, true];
   .logo-marquee {
     position: relative;
     z-index: var(--z-base);
-    padding-block: var(--section-padding);
+    margin-block: var(--space-96) var(--section-space);
     overflow: hidden;
   }
 

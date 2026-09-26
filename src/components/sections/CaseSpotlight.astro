@@ -22,7 +22,7 @@ const item = getCase(caseSlug);
 ---
 
 <section class="case-spotlight">
-  <div class="case-spotlight__inner">
+  <div class="case-spotlight__inner" data-animate-stagger>
     <SectionHeading title={title} gradient={gradient} spacing="compact" />
     <CaseCard item={item} class="case-spotlight__card" />
   </div>
@@ -40,7 +40,7 @@ const item = getCase(caseSlug);
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
-    padding-block: var(--space-96);
+    margin-block: var(--section-space);
   }
 
   .case-spotlight__inner :global(.case-spotlight__card) {

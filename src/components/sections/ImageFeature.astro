@@ -22,7 +22,7 @@ type Props = ImageFeatureProps;
 const { id, title, gradient = 'green', text, image } = Astro.props;
 ---
 
-<section class="image-feature" id={id}>
+<section class="image-feature" id={id} data-animate>
   <div class="image-feature__container">
     <span class="image-feature__overlay" aria-hidden="true"></span>
     <Picture
@@ -46,7 +46,8 @@ const { id, title, gradient = 'green', text, image } = Astro.props;
   .image-feature {
     position: relative;
     z-index: var(--z-base);
-    padding: var(--space-48);
+    margin-block: var(--section-space);
+    padding-inline: var(--space-48);
     overflow: hidden;
   }
 
@@ -108,7 +109,7 @@ const { id, title, gradient = 'green', text, image } = Astro.props;
 
   @media (max-width: 991px) {
     .image-feature {
-      padding: var(--space-36) 0;
+      padding-inline: 0;
     }
 
     .image-feature__overlay {

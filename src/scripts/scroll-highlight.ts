@@ -20,7 +20,7 @@ export function initScrollHighlight(): void {
         { opacity: 1, textShadow: '0 0 16px rgba(255, 255, 255, 0.9)', duration: 0.3 },
         { textShadow: '0 0 0 rgba(255, 255, 255, 0)', duration: 0.7 },
       ],
-      stagger: 0.04,
+      stagger: 0.08, // hoger = smallere gloed (minder letters tegelijk actief)
       ease: 'none',
       scrollTrigger: {
         trigger: el,

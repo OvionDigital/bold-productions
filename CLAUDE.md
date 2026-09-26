@@ -54,8 +54,10 @@ npm run deploy:preview  # build + wrangler pages deploy (branch preview)
 - **Accentkleur per doelgroep** via `data-accent="orange|yellow|green"` op een voorouder (body via `BaseLayout accent`). Componenten gebruiken `--accent`, `--accent-light`, `--accent-gradient`. Dit vervangt de Webflow-`w-variant-*`-klassen.
 - **Breakpoints** (Webflow, desktop-first): `max-width: 991px`, `767px`, `479px` en `min-width: 1280px`, `1440px`, `1920px`. Letterlijk in media queries (custom properties werken daar niet).
 - **Scoped styles** per component. Wil je een child-component stylen (bijv. `<Icon>` in `<Button>`)? Gebruik `.parent :global(.child-class)`.
-- **Twee sectie-afstanden**: `--section-padding` (Webflow `.section`: 96, ≤991 48) en `--section-space` (Webflow `var(--section-padding)` elders: altijd 96). Kijk in de Webflow-CSS welke van toepassing is.
-- **Scroll-in-animatie**: zet `data-animate` op een element (Webflow: `.animate-on-scroll`).
+- **Sectie-afstand: 192px tussen secties.** Secties zonder eigen achtergrond krijgen `margin-block: var(--section-space)` (marges vallen samen, dus precies 192 ertussen, niet 2×192); secties mét eigen achtergrond (Testimonials) krijgen `padding-block: var(--section-padding)` zodat de achtergrond 192 boven/onder de inhoud doorloopt. Uitzonderingen: LogoMarquee 96 boven (direct onder de hero), Footer 96 padding (≤767 48).
+- **Scroll-in-animatie**: zet `data-animate` op een element (Webflow: `.animate-on-scroll`). `data-animate-stagger` op een groep laat de directe kinderen één voor één binnenkomen (`--stagger-step`); `data-animate-skip` sluit een kind uit (bijv. achtergrondlaag). `Container` geeft `data-*`-attributen door.
+- **Paginaovergang**: zwart gordijn via native cross-document View Transitions (`@view-transition` in global.css, tokens `--duration-curtain`/`--ease-curtain`). Geen JS, geen dependency; uit bij prefers-reduced-motion.
+- **Cursor**: driehoekje via tokens `--cursor-default`/`--cursor-pointer` (alleen `hover: hover` + `pointer: fine`). Zelf `cursor:` zetten? Gebruik die tokens. Cookiepanelen en `[data-native-cursor]` krijgen de systeemcursor.
 - Regeleinden in titels: `\n` in de data. `Heading` zet dat om naar `<br>`.
 - **Gedeelde inhoud** staat in eigen databestanden en wordt op id gekozen: `src/data/testimonials.ts` (`pickTestimonials`), `src/data/logos.ts`, `src/data/cases.ts`. Nooit kopiëren per pagina.
 - Opgemaakte tekst in data: het model uit `src/lib/rich.ts` (geen HTML-strings), renderen met `RichText`.
@@ -128,7 +130,7 @@ Houd dit bij bij elk nieuw component.
 | `IntroHighlight.astro` | Gecentreerde Gate-introtekst met groene accenten en scroll-highlight per letter. |
 | `Timeline.astro` | Kop (titel + rich text) met genummerde stappen: foto + tekstblok met rookvideo (knop per stap optioneel), CTA; `reverse`, `gradient`. |
 | `Testimonials.astro` | Kop + carousel met TestimonialCards over de volle breedte, rook- en B-achtergrond. |
-| `PolaroidStack.astro` | Kop + polaroids die bij scrollen over elkaar schuiven (pure CSS), met een sticky "bevroren" achtergrond erachter zodat de paginatextuur niet zichtbaar meescrolt. |
+| `PolaroidStack.astro` | Sticky kop + polaroids die bij scrollen over elkaar schuiven (pure CSS), gelijk aan live. |
 | `TextMedia.astro` | Tekst naast beeld (2:3) of Vimeo (1:1); `reverse`, `triangles`, `spacing` (margin/section), `intro` erboven, slot `content` voor bv. een formulier; `id="cinema"` = popcorn-cursor. |
 | `CaseSpotlight.astro` | Kop + één grote CaseCard; case op slug uit `src/data/cases.ts`. |
 | `ImageFeature.astro` | Brede foto met gecentreerde titel + intro erover (mobiel eronder); `id="cinema"` = popcorn-cursor. |
@@ -142,13 +144,13 @@ Houd dit bij bij elk nieuw component.
 | `main.ts`              | Enige entry. Registreert GSAP-plugins en start alle modules.              |
 | `env.ts`               | `isStatic`, `prefersReducedMotion`, `motionEnabled`.                       |
 | `lenis.ts`             | Lenis smooth scroll gekoppeld aan GSAP ticker/ScrollTrigger; `scrollToTarget`. |
-| `scroll-animations.ts` | `[data-animate]` fade-in-up (top 70%, eenmalig) en anchor-links met offset. |
+| `scroll-animations.ts` | `[data-animate]` fade-in-up (top 70%, eenmalig), `[data-animate-stagger]` kinderen na elkaar (top 80%) en anchor-links met offset. |
 | `hero-video.ts`        | Zet de Vimeo-src na window.load (mobiel alleen met loadOnMobile), fade-in via postMessage 'play'. |
-| `scroll-highlight.ts`  | SplitType + ScrollTrigger scrub: letters van 15% naar 100% met gloed.       |
+| `scroll-highlight.ts`  | SplitType + ScrollTrigger scrub: letters van 15% naar 100% met gloed; `stagger` bepaalt de breedte van de gloed.      |
 | `background-video.ts`  | IntersectionObserver: video-src zetten en afspelen in beeld, pauzeren erbuiten. |
-| `carousel.ts`          | Pijlknoppen scrollen één item, disabled aan begin/eind.                     |
+| `carousel.ts`          | Pijlknoppen scrollen één item, disabled aan begin/eind; slepen met de muis (snap bij loslaten). |
 | `cinema-cursor.ts`     | Popcorn-cursor + spoor, alleen bij een sectie met id="cinema" en een muis.  |
 | `accordion.ts`         | Generiek accordeon: `[data-accordion-trigger]` + aria-controls, hoogte 0 ↔ auto (0,3 s). |
 | `contact-form.ts`      | Formulier via fetch versturen, knop "Verzenden...", succes- of foutmelding.  |
-| `menu.ts`              | Menupaneel openen/sluiten (GSAP), overlay, Escape, focus-trap, scroll-lock, accordeon. |
+| `menu.ts`              | Menupaneel openen/sluiten (GSAP), overlay, Escape, focus-trap, scroll-lock zonder de scrollbalk te verbergen (wiel/touch/toetsen blokkeren), accordeon. |
 | `navbar-autohide.ts`   | Navbar verbergen/tonen op scrollrichting; blijft staan bovenaan, met open menu of bij focus erin. |

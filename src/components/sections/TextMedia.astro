@@ -4,7 +4,7 @@
  * en knop naast een beeld of Vimeo-video, optioneel met driehoekjes.
  * - `reverse` zet het beeld links. Op ≤991 staat het beeld boven de tekst.
  * - media: Vimeo (vierkant) of afbeelding (staand 2:3, Webflow .image-5).
- * - `spacing`: 'margin' (Webflow .text-image: 96 marge) of 'section' (.section: 96/48 padding).
+ * - `spacing`: 'margin' of 'section'; beide 192 marge (--section-space), 'section' knipt overflow af.
  * - `intro`: gecentreerde titel + tekst boven de rij (Webflow .form-compact-intro).
  * - Slot "content" vervangt de tekstkolom (bijv. een formulier).
  * - `id` = 'cinema' activeert de popcorn-cursor (scripts/cinema-cursor.ts).
@@ -58,18 +58,17 @@ const hasCustomContent = Astro.slots.has('content');
 <section
   class:list={['text-media', `text-media--${spacing}`, { 'text-media--reverse': reverse }]}
   id={id}
-  data-animate={animate ? '' : undefined}
 >
   <Container>
     {
       intro && (
-        <div class="text-media__intro">
+        <div class="text-media__intro" data-animate={animate ? '' : undefined}>
           <Heading as="h2" text={intro.title} gradient={intro.gradient ?? 'orange'} align="center" flush />
           <RichText content={intro.text} class="text-media__intro-text" />
         </div>
       )
     }
-    <div class="text-media__row">
+    <div class="text-media__row" data-animate-stagger={animate ? '' : undefined}>
       <div class="text-media__col">
         {
           hasCustomContent ? (
@@ -114,14 +113,10 @@ const hasCustomContent = Astro.slots.has('content');
   .text-media {
     position: relative;
     z-index: var(--z-base);
-  }
-
-  .text-media--margin {
     margin-block: var(--section-space);
   }
 
   .text-media--section {
-    padding-block: var(--section-padding);
     overflow: hidden;
   }
 

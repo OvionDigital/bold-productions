@@ -30,11 +30,11 @@ const { title, gradient = 'yellow', text, items } = Astro.props;
 ---
 
 <section class="service-tiles">
-  <Container>
+  <Container data-animate>
     <SectionHeading title={title} gradient={gradient} text={text} />
   </Container>
   <Container width="wide">
-    <ul class="service-tiles__row" role="list">
+    <ul class="service-tiles__row" role="list" data-animate-stagger>
       {
         items.map((item) => (
           <li class="service-tiles__item">

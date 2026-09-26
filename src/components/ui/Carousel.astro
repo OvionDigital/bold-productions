@@ -6,7 +6,7 @@
  * maar blijven ook daarbuiten zichtbaar (Owl: overflow visible). Plaats de carousel
  * daarom over de volle breedte van de sectie, niet in een Container.
  *
- * Slot: <li>-elementen. Gedrag (knoppen, disabled-status) in scripts/carousel.ts.
+ * Slot: <li>-elementen. Gedrag (knoppen, disabled-status, slepen met de muis) in scripts/carousel.ts.
  */
 import Icon from './Icon.astro';
 
@@ -75,6 +75,23 @@ const { label, prevLabel, nextLabel, class: className } = Astro.props;
     display: none;
   }
 
+  /* Slepen met de muis (scripts/carousel.ts) */
+  @media (hover: hover) and (pointer: fine) {
+    .carousel__track {
+      cursor: grab;
+    }
+  }
+
+  .carousel__track.is-dragging {
+    cursor: grabbing;
+    scroll-snap-type: none;
+    user-select: none;
+  }
+
+  .carousel__track :global(img) {
+    -webkit-user-drag: none;
+  }
+
   .carousel__track > :global(*) {
     scroll-snap-align: start;
   }
@@ -119,7 +136,7 @@ const { label, prevLabel, nextLabel, class: className } = Astro.props;
 
   .carousel__button:disabled {
     opacity: 0.5;
-    cursor: default;
+    cursor: var(--cursor-default);
   }
 
   .carousel__button:not(:disabled):hover {

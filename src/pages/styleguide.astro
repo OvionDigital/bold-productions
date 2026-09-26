@@ -330,6 +330,36 @@ const nav = [
         </table>
       </section>
 
+      <!-- ─── Cursor & animaties ──────────────────────────────────── -->
+      <section class="sg-section" id="beweging">
+        <h2 class="sg-title">Cursor & animaties</h2>
+        <p class="sg-note">
+          Cursor: oranje driehoekje (<code>--cursor-default</code>), op links en knoppen wit
+          (<code>--cursor-pointer</code>). Alleen met een muis; op touch de gewone systeemcursor. Cookiepanelen en
+          <code>[data-native-cursor]</code> krijgen de systeemcursor.
+        </p>
+        <div class="sg-row sg-row--center">
+          <Button label="Hover mij" href="#beweging" />
+          <span class="sg-label" data-native-cursor>Hier de systeemcursor (data-native-cursor)</span>
+        </div>
+        <p class="sg-note sg-note--spaced">
+          <code>data-animate</code>: element schuift in als geheel. <code>data-animate-stagger</code>: de directe
+          kinderen komen één voor één binnen (<code>--stagger-step</code>); <code>data-animate-skip</code> op een kind
+          laat het buiten de reeks.
+        </p>
+        <p class="sg-note sg-note--spaced">
+          Paginaovergang: zwart gordijn dat van onder naar boven over de pagina schuift en op de nieuwe pagina
+          wegtrekt (<code>--duration-curtain</code> per fase, <code>--ease-curtain</code>). Native View Transitions,
+          alleen CSS; Firefox en reduced motion laden gewoon de pagina. Probeer: <a href="/">naar de homepage</a>.
+        </p>
+        <div class="sg-row" data-animate-stagger>
+          <span class="sg-label">Eén</span>
+          <span class="sg-label">Twee</span>
+          <span class="sg-label">Drie</span>
+          <span class="sg-label">Vier</span>
+        </div>
+      </section>
+
       <!-- ─── Button ──────────────────────────────────────────────── -->
       <section class="sg-section" id="button">
         <h2 class="sg-title">Button</h2>

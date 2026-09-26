@@ -27,7 +27,7 @@ const bGreen = `url("${boldBGreen.src}")`;
 const bYellow = `url("${boldBYellow.src}")`;
 ---
 
-<section class="testimonials" data-animate>
+<section class="testimonials" data-animate-stagger>
   <Container class="testimonials__heading-wrap">
     <SectionHeading eyebrow={eyebrow} title={title} gradient={gradient} class="testimonials__heading" />
   </Container>
@@ -42,7 +42,7 @@ const bYellow = `url("${boldBYellow.src}")`;
     }
   </Carousel>
 
-  <div class="testimonials__bg" aria-hidden="true">
+  <div class="testimonials__bg" aria-hidden="true" data-animate-skip>
     <BackgroundVideo layer="overlay" opacity="half" />
     <div class="testimonials__bg-image"></div>
   </div>
@@ -106,10 +106,6 @@ const bYellow = `url("${boldBYellow.src}")`;
   }
 
   @media (min-width: 1920px) {
-    .testimonials {
-      padding-block: var(--space-192);
-    }
-
     .testimonials :global(.testimonials__heading) {
       margin-bottom: var(--space-96);
     }

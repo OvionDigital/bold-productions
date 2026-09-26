@@ -80,8 +80,10 @@ const isHome = currentPath === '/';
     transform: translateY(-100%);
   }
 
-  /* Toetsenbordfocus in de navbar (bijv. na Tab) maakt 'm altijd zichtbaar */
-  .navbar:focus-within {
+  /* Toetsenbordfocus in de navbar (bijv. na Tab) maakt 'm altijd zichtbaar.
+     Bewust :focus-visible i.p.v. :focus-within: na een muisklik houdt een knop
+     de focus, en dan zou de navbar nooit meer verbergen. */
+  .navbar:has(:focus-visible) {
     transform: none;
   }
 

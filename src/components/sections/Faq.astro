@@ -41,7 +41,7 @@ const structuredData = {
     <Heading as="h2" text={title} gradient={gradient} align="center" flush class="faq__title" />
     <div class="faq__row">
       <div class="faq__col">
-        <div class="faq__list">
+        <div class="faq__list" data-animate-stagger>
           {
             items.map((item, index) => {
               const panelId = `${id}-antwoord-${index + 1}`;
@@ -79,7 +79,7 @@ const structuredData = {
   .faq {
     position: relative;
     z-index: var(--z-base);
-    padding-block: var(--section-padding);
+    margin-block: var(--section-space);
     overflow: hidden;
   }
 
@@ -129,7 +129,7 @@ const structuredData = {
     width: 100%;
     padding: var(--space-16);
     text-align: left;
-    cursor: pointer;
+    cursor: var(--cursor-pointer);
   }
 
   .faq__icon {

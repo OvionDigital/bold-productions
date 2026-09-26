@@ -2,7 +2,7 @@
 /**
  * Zwevende WhatsApp-knop rechtsonder (alle pagina's).
  */
-import Icon from '../ui/Icon.astro';
+import Icon from "../ui/Icon.astro";
 
 interface Props {
   href: string;
@@ -12,7 +12,13 @@ interface Props {
 const { href, label } = Astro.props;
 ---
 
-<a class="whatsapp" href={href} target="_blank" rel="noopener noreferrer" aria-label={label}>
+<a
+  class="whatsapp"
+  href={href}
+  target="_blank"
+  rel="noopener noreferrer"
+  aria-label={label}
+>
   <Icon name="whatsapp" size="var(--icon-whatsapp)" />
 </a>
 
@@ -27,7 +33,7 @@ const { href, label } = Astro.props;
     align-items: center;
     width: var(--whatsapp-size);
     height: var(--whatsapp-size);
-    padding: var(--space-4) 0 0 var(--space-1);
+    padding: 0 0 var(--space-1);
     border-radius: var(--radius-round);
     background-color: var(--color-whatsapp);
     color: var(--color-white);

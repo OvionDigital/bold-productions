@@ -9,8 +9,9 @@ import { scrollToTarget } from './lenis';
 
 export function initScrollAnimations(): void {
   const elements = document.querySelectorAll<HTMLElement>('[data-animate]');
+  const groups = document.querySelectorAll<HTMLElement>('[data-animate-stagger]');
   if (!motionEnabled) {
-    elements.forEach((el) => el.classList.add('is-visible'));
+    [...elements, ...groups].forEach((el) => el.classList.add('is-visible'));
     return;
   }
   elements.forEach((el) => {
@@ -19,6 +20,20 @@ export function initScrollAnimations(): void {
       start: 'top 70%',
       once: true,
       onEnter: () => el.classList.add('is-visible'),
+    });
+  });
+
+  // Groepen: kinderen na elkaar (volgorde als --animate-index, zie global.css).
+  // Iets eerder starten (80%) zodat ook korte groepen onderaan de pagina afgaan.
+  groups.forEach((group) => {
+    [...group.children]
+      .filter((child) => !child.hasAttribute('data-animate-skip'))
+      .forEach((child, index) => (child as HTMLElement).style.setProperty('--animate-index', String(index)));
+    ScrollTrigger.create({
+      trigger: group,
+      start: 'top 80%',
+      once: true,
+      onEnter: () => group.classList.add('is-visible'),
     });
   });
 }

@@ -10,7 +10,16 @@ export function initNavbarAutoHide(): void {
   const navbar = document.querySelector<HTMLElement>('[data-navbar]');
   if (!navbar || !motionEnabled) return;
 
+  // Beveiliging tegen dubbele init (dev-server hot-reload), zie menu.ts.
+  if (navbar.dataset.autohideInitialized) return;
+  navbar.dataset.autohideInitialized = 'true';
+
   const threshold = navbar.offsetHeight;
+  // Kleine scrollverschillen (bijv. een resync-schokje van Lenis vlak na het
+  // sluiten van het menu) negeren we volledig, ook voor lastY: anders kan de
+  // navbar per ongeluk verbergen op het moment dat iemand 'm net weer wil
+  // gebruiken (bijv. de menuknop nogmaals aanklikken).
+  const DEAD_ZONE = 8;
   let lastY = window.scrollY;
   let ticking = false;
 
@@ -21,12 +30,19 @@ export function initNavbarAutoHide(): void {
 
     if (menuOpen || y <= threshold) {
       navbar.classList.remove('is-hidden');
-    } else if (y > lastY) {
-      navbar.classList.add('is-hidden'); // naar beneden: verbergen
-    } else if (y < lastY) {
-      navbar.classList.remove('is-hidden'); // naar boven: tonen
+      lastY = y; // altijd resyncen zodat we na sluiten vanaf de juiste positie meten
+      return;
     }
-    lastY = y;
+
+    const delta = y - lastY;
+    if (delta > DEAD_ZONE) {
+      navbar.classList.add('is-hidden'); // naar beneden: verbergen
+      lastY = y;
+    } else if (delta < -DEAD_ZONE) {
+      navbar.classList.remove('is-hidden'); // naar boven: tonen
+      lastY = y;
+    }
+    // Binnen de dead zone: niets doen, ook lastY niet bijwerken.
   };
 
   window.addEventListener(

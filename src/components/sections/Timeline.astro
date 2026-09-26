@@ -37,7 +37,7 @@ const { title, intro, steps, cta, gradient = 'yellow', reverse = false } = Astro
 
 <section class:list={['timeline', { 'timeline--reverse': reverse }]}>
   <Container>
-    <div class="timeline__heading" data-animate>
+    <div class="timeline__heading" data-animate-stagger>
       <div class="timeline__col">
         <Heading as="h2" text={title} gradient={gradient} />
       </div>
@@ -48,7 +48,7 @@ const { title, intro, steps, cta, gradient = 'yellow', reverse = false } = Astro
 
     {
       steps.map((step) => (
-        <div class="timeline__step" data-animate>
+        <div class="timeline__step" data-animate-stagger>
           <div class="timeline__media">
             <Picture
               src={step.image.src}
@@ -92,7 +92,7 @@ const { title, intro, steps, cta, gradient = 'yellow', reverse = false } = Astro
   .timeline {
     position: relative;
     z-index: var(--z-base);
-    padding-block: var(--section-padding);
+    margin-block: var(--section-space);
     overflow: hidden;
   }
 
@@ -116,7 +116,7 @@ const { title, intro, steps, cta, gradient = 'yellow', reverse = false } = Astro
     display: flex;
     justify-content: center;
     align-items: stretch;
-    margin-top: var(--section-padding);
+    margin-top: var(--timeline-step-gap);
   }
 
   .timeline--reverse .timeline__step {
@@ -168,7 +168,7 @@ const { title, intro, steps, cta, gradient = 'yellow', reverse = false } = Astro
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: var(--section-padding);
+    margin-top: var(--timeline-step-gap);
   }
 
   @media (max-width: 991px) {
