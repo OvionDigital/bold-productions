@@ -8,11 +8,13 @@ import type { TextMediaProps } from '../components/sections/TextMedia.astro';
 import type { TimelineProps } from '../components/sections/Timeline.astro';
 import type { CaseSpotlightProps } from '../components/sections/CaseSpotlight.astro';
 import type { TestimonialsProps } from '../components/sections/Testimonials.astro';
+import type { ImageFeatureProps } from '../components/sections/ImageFeature.astro';
 import heroImage from '../assets/images/events/hero-hrieps-festival.jpg';
 import optredenInTent from '../assets/images/events/optreden-in-tent.jpg';
 import preProductie from '../assets/images/events/tijdlijn-pre-productie.jpg';
 import productie from '../assets/images/events/tijdlijn-productie.jpg';
 import postProductie from '../assets/images/events/tijdlijn-post-productie.jpg';
+import bioscoop from '../assets/images/events/bioscoop.jpg';
 import { clientLogos, trustedByTitle } from './logos';
 import { pickTestimonials } from './testimonials';
 
@@ -164,4 +166,15 @@ export const testimonials: TestimonialsProps = {
   gradient: 'orange',
   carousel: { label: 'Testimonials', prevLabel: 'Vorige', nextLabel: 'Volgende' },
   items: pickTestimonials(['ralph-buisman', 'dorpsfeest-wehl', 'siemen-peters']),
+};
+
+export const cinema: ImageFeatureProps = {
+  id: 'cinema',
+  title: 'Een keer wat anders dan\nEen losse download-link',
+  gradient: 'green',
+  text: 'We nodigen je liever uit in onze eigen bioscoop. Hier bekijken we samen de première. Dus we nemen plaats voor een groot scherm, met goed geluid en natuurlijk popcorn: het enige (film)cliché dat je van ons krijgt.',
+  image: {
+    src: bioscoop,
+    alt: 'Klanten tijdens een videopresentatie in de mini-bioscoop van Bold Productions.',
+  },
 };

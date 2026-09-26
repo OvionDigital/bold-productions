@@ -84,10 +84,12 @@
   --color-transparent: #00000000;
 
   /* ─── Kleuren: transparanten ────────────────────────────────────── */
+  --color-black-a40: #00000066;
   --color-black-a48: #0000007a; /* Webflow: --dark-transparent */
   --color-black-a50: #00000080;
   --color-black-a70: #000000b3;
   --color-black-a80: #000000cc;
+  --color-black-a95: #000000f2;
   --color-white-a8: #ffffff14;
   --color-white-a20: #ffffff33;
   --color-white-a40: #ffffff66;

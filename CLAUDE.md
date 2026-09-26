@@ -130,6 +130,7 @@ Houd dit bij bij elk nieuw component.
 | `PolaroidStack.astro` | Kop + polaroids die bij scrollen over elkaar schuiven (pure CSS). |
 | `TextMedia.astro` | Tekst naast beeld (2:3) of Vimeo (1:1); `reverse`, `triangles`, `spacing` (margin/section), `intro` erboven, slot `content` voor bv. een formulier; `id="cinema"` = popcorn-cursor. |
 | `CaseSpotlight.astro` | Kop + één grote CaseCard; case op slug uit `src/data/cases.ts`. |
+| `ImageFeature.astro` | Brede foto met gecentreerde titel + intro erover (mobiel eronder); `id="cinema"` = popcorn-cursor. |
 
 ### Scripts (`src/scripts/`)
 

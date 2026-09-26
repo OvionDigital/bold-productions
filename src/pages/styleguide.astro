@@ -31,7 +31,8 @@ import Polaroid from '../components/ui/Polaroid.astro';
 import TextMedia from '../components/sections/TextMedia.astro';
 import { backstage, hero, intro, micDrop, testimonials, timeline, trustedBy } from '../data/home';
 import CaseSpotlight from '../components/sections/CaseSpotlight.astro';
-import { biggerThanTheDay, caseSpotlight } from '../data/events';
+import ImageFeature from '../components/sections/ImageFeature.astro';
+import { biggerThanTheDay, caseSpotlight, cinema } from '../data/events';
 
 const colors = tokensByPrefix('--color-');
 const gradients = tokensByPrefix('--gradient-');
@@ -588,6 +589,15 @@ const nav = [
       </p>
     </Container>
     <CaseSpotlight {...caseSpotlight} />
+
+    <Container>
+      <h3 class="sg-subtitle">ImageFeature</h3>
+      <p class="sg-note">
+        <code>&lt;ImageFeature id title gradient text image /&gt;</code>: brede foto met gecentreerde tekst; op mobiel
+        eronder. Hier zonder <code>id="cinema"</code> (die staat al op de TextMedia-demo).
+      </p>
+    </Container>
+    <ImageFeature {...cinema} id={undefined} />
   </div>
 </BaseLayout>
 
