@@ -2,6 +2,9 @@
 /**
  * Vaste navigatiebalk: logo, desktop-dropdowns (≥1280px), CTA en menuknop.
  * De menuknop opent MenuPanel (gedrag in scripts/menu.ts).
+ * Verbergt bij scrollen naar beneden, verschijnt weer bij scrollen naar boven
+ * (scripts/navbar-autohide.ts). Blijft staan bovenaan de pagina, met open menu,
+ * of bij focus erin (toetsenbord); uit bij ?static=1 en reduced motion.
  */
 import { Picture } from 'astro:assets';
 import Button from '../ui/Button.astro';
@@ -70,6 +73,16 @@ const isHome = currentPath === '/';
     align-items: center;
     padding-block: var(--navbar-padding-y);
     background-image: var(--gradient-navbar);
+    transition: transform var(--duration-base) var(--ease-out);
+  }
+
+  .navbar.is-hidden {
+    transform: translateY(-100%);
+  }
+
+  /* Toetsenbordfocus in de navbar (bijv. na Tab) maakt 'm altijd zichtbaar */
+  .navbar:focus-within {
+    transform: none;
   }
 
   .navbar__inner {

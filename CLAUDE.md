@@ -110,7 +110,7 @@ Houd dit bij bij elk nieuw component.
 
 | Component          | Uitleg                                                                      |
 | ------------------ | --------------------------------------------------------------------------- |
-| `Header.astro`     | Vaste navigatiebalk: logo, MegaMenu, CTA en menuknop (+ MenuPanel).         |
+| `Header.astro`     | Vaste navigatiebalk: logo, MegaMenu, CTA en menuknop (+ MenuPanel). Verbergt bij scrollen omlaag, verschijnt bij scrollen omhoog (gedrag: `navbar-autohide.ts`). |
 | `Breadcrumbs.astro` | Kruimelpad onder de hero (home-icoon, stappen, huidige pagina).          |
 | `MegaMenu.astro`   | Desktop-dropdowns (≥1280px), CSS hover/focus-within.                        |
 | `MenuPanel.astro`  | Volledig menupaneel met overlay en accordeongroepen (gedrag: `menu.ts`).     |
@@ -128,7 +128,7 @@ Houd dit bij bij elk nieuw component.
 | `IntroHighlight.astro` | Gecentreerde Gate-introtekst met groene accenten en scroll-highlight per letter. |
 | `Timeline.astro` | Kop (titel + rich text) met genummerde stappen: foto + tekstblok met rookvideo (knop per stap optioneel), CTA; `reverse`, `gradient`. |
 | `Testimonials.astro` | Kop + carousel met TestimonialCards over de volle breedte, rook- en B-achtergrond. |
-| `PolaroidStack.astro` | Kop + polaroids die bij scrollen over elkaar schuiven (pure CSS). |
+| `PolaroidStack.astro` | Kop + polaroids die bij scrollen over elkaar schuiven (pure CSS), met een sticky "bevroren" achtergrond erachter zodat de paginatextuur niet zichtbaar meescrolt. |
 | `TextMedia.astro` | Tekst naast beeld (2:3) of Vimeo (1:1); `reverse`, `triangles`, `spacing` (margin/section), `intro` erboven, slot `content` voor bv. een formulier; `id="cinema"` = popcorn-cursor. |
 | `CaseSpotlight.astro` | Kop + één grote CaseCard; case op slug uit `src/data/cases.ts`. |
 | `ImageFeature.astro` | Brede foto met gecentreerde titel + intro erover (mobiel eronder); `id="cinema"` = popcorn-cursor. |
@@ -151,3 +151,4 @@ Houd dit bij bij elk nieuw component.
 | `accordion.ts`         | Generiek accordeon: `[data-accordion-trigger]` + aria-controls, hoogte 0 ↔ auto (0,3 s). |
 | `contact-form.ts`      | Formulier via fetch versturen, knop "Verzenden...", succes- of foutmelding.  |
 | `menu.ts`              | Menupaneel openen/sluiten (GSAP), overlay, Escape, focus-trap, scroll-lock, accordeon. |
+| `navbar-autohide.ts`   | Navbar verbergen/tonen op scrollrichting; blijft staan bovenaan, met open menu of bij focus erin. |
