@@ -4,6 +4,7 @@
  * content collection of CMS met dezelfde velden.
  */
 import type { ImageMetadata } from 'astro';
+import type { RemoteImage } from '../lib/sanity/image';
 import pluggerz from '../assets/images/cases/pluggerz-zwarte-cross-2026.jpg';
 
 export type Audience = 'events' | 'artiesten' | 'zakelijke-events';
@@ -13,7 +14,7 @@ export interface Case {
   title: string;
   /** Korte vraag/intro onder de titel */
   intro: string;
-  image: { src: ImageMetadata; alt: string };
+  image: { src: ImageMetadata | RemoteImage; alt: string };
   audiences: Audience[];
 }
 

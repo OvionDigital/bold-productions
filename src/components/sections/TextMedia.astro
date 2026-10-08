@@ -94,6 +94,7 @@ const hasCustomContent = Astro.slots.has('content');
               <CmsPicture
                 src={media.src}
                 alt={media.alt}
+                aspectRatio={2 / 3}
                 widths={[400, 600, 800, 1200]}
                 sizes="(max-width: 479px) 75vw, (max-width: 991px) 50vw, 604px"
                 loading="lazy"
@@ -169,7 +170,15 @@ const hasCustomContent = Astro.slots.has('content');
     aspect-ratio: 1;
   }
 
-  /* Afbeelding: staand 2:3 (Webflow .image-5); de wrapper groeit mee */
+  /*
+   * Afbeelding: staand 2:3 (Webflow .image-5); de wrapper groeit mee. Het vierkant
+   * van de wrapper geldt alleen voor video: zonder width/height-attributen (Sanity-
+   * beeld, zie CmsPicture) zou height: 100% anders dat vierkant overnemen.
+   */
+  .text-media__media--image {
+    aspect-ratio: auto;
+  }
+
   .text-media__media--image :global(picture) {
     display: block;
   }

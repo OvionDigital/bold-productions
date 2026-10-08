@@ -20,6 +20,7 @@ npm run preview         # dist/ serveren
 npm run compare         # screenshots live vs. lokaal (375/768/1440) → compare/index.html
                         #   diffGedeeld = verschil binnen de hoogte van de kortste pagina
                         #   opties: -- --path=/events --widths=375,1440 --no-build
+                        #   --against=/events: lokaal tegen lokaal (bijv. Sanity-pagina vs. handgebouwd)
 npm run deploy:preview  # build + wrangler pages deploy (branch preview)
 ```
 
@@ -75,21 +76,29 @@ src/
   lib/                          helpers (text.ts, tokens.ts), lib/sanity/ (CMS-koppeling, zie hieronder)
   scripts/                      main.ts (entry) + modules
   styles/tokens.css, global.css
-  pages/index.astro, styleguide.astro
+  pages/index.astro, events.astro, styleguide.astro
+  pages/[...slug].astro         alle pagina's die de klant in Sanity opbouwt
 public/fonts, public/video, public/favicons, public/_headers
 scripts/compare.mjs             visuele vergelijking
-scripts/sanity-seed.mjs         eenmalig src/data/home.ts naar Sanity overzetten
+scripts/sanity-seed.mjs         src/data naar Sanity (alleen ontbrekende documenten; --force overschrijft)
 studio/                         Sanity Studio (losse app, eigen package.json)
+.github/workflows/deploy.yml    build + Cloudflare Pages-deploy (na Sanity-publicatie, push of handmatig)
 docs/homepage-secties.md        inventaris homepage
-docs/sanity.md                  Sanity-opzet (proef, alleen homepage) — branch feature/sanity-cms
+docs/sanity.md                  Sanity-opzet, pagina's bouwen, online zetten — branch feature/sanity-cms
 ```
 
-**CMS (proef, branch `feature/sanity-cms`):** `index.astro` haalt de homepage-inhoud
+**CMS (branch `feature/sanity-cms`):** `index.astro` haalt de homepage-inhoud
 op uit Sanity via `src/lib/sanity/homepage.ts` en valt terug op `src/data/home.ts`
 als `PUBLIC_SANITY_PROJECT_ID` niet gezet is — lokaal werken zonder Sanity blijft dus
-gewoon werken. Rich text uit Sanity (Portable Text) wordt omgezet naar het bestaande
-Rich-model (`src/lib/rich.ts`), dus componenten hoeven niet te weten waar tekst
-vandaan komt. Zie `docs/sanity.md` voor opzetstappen.
+gewoon werken. Daarnaast bouwt de klant eigen **pagina's** (`page`) uit de bestaande
+secties: elk sectiecomponent heeft een bloktype in `studio/schemaTypes/sections/` en
+een mapper in `src/lib/sanity/sections.ts`; `[...slug].astro` rendert ze via
+`PageSections`. Nieuwe sectie of nieuwe prop die de klant moet kunnen zetten? Ook
+schema + mapper bijwerken. Rich text uit Sanity (Portable Text) wordt omgezet naar het
+bestaande Rich-model (`src/lib/rich.ts`), dus componenten hoeven niet te weten waar
+tekst vandaan komt. Beelden uit Sanity: gebruik `CmsPicture` (niet `<Picture>`), zet de
+breedte in de CSS van de sectie en geef bij een vaste uitsnede `aspectRatio` mee.
+Zie `docs/sanity.md` voor opzetstappen.
 
 ## Componentenoverzicht
 
@@ -147,6 +156,7 @@ Houd dit bij bij elk nieuw component.
 | `ImageFeature.astro` | Brede foto met gecentreerde titel + intro erover (mobiel eronder); `id="cinema"` = popcorn-cursor. |
 | `ServiceTiles.astro` | Kop + tekst en staande beeldtegels (2:3) naar dienstpagina's; hover groeit, titel oranje. |
 | `Faq.astro` | Veelgestelde vragen: accordeon (h3 + button) met FAQPage-structured data. |
+| `PageSections.astro` | Geen eigen opmaak: rendert een lijst Sanity-blokken (`lib/sanity/sections.ts`) met de componenten hierboven; TextMedia + `contactForm` = met ContactForm. |
 
 ### Scripts (`src/scripts/`)
 

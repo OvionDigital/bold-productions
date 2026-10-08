@@ -4,8 +4,8 @@
  * diagonale gradient, titel in groene gradient en intro (vanaf 1280px).
  * Hele kaart is een link naar /cases/[slug].
  */
-import { Picture } from 'astro:assets';
 import Heading from './Heading.astro';
+import CmsPicture from './CmsPicture.astro';
 import { caseUrl, type Case } from '../../data/cases';
 
 interface Props {
@@ -19,7 +19,7 @@ const { item, sizes = '(max-width: 991px) 100vw, (max-width: 1439px) 67vw, 50vw'
 
 <a href={caseUrl(item.slug)} class:list={['case-card', className]}>
   <span class="case-card__shade" aria-hidden="true"></span>
-  <Picture
+  <CmsPicture
     src={item.image.src}
     alt={item.image.alt}
     widths={[480, 720, 960, 1280, 1600]}

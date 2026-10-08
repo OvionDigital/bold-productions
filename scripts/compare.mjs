@@ -11,6 +11,9 @@
  *   npm run compare -- --path=/events        # andere pagina
  *   npm run compare -- --widths=375,1440     # subset van breedtes
  *   npm run compare -- --no-build            # dist/ niet opnieuw bouwen
+ *   npm run compare -- --path=/x --against=/events
+ *                                            # lokaal tegen lokaal i.p.v. live (bijv.
+ *                                            # een Sanity-pagina tegen de handgebouwde)
  *
  * Vereist eenmalig: npx playwright install chromium
  */
@@ -45,6 +48,8 @@ function normalizePath(raw) {
   return p.startsWith('/') ? p : `/${p}`;
 }
 const pagePath = typeof args.path === 'string' ? normalizePath(args.path) : '/';
+/** Met --against: links een andere lokale pagina i.p.v. de live site. */
+const againstPath = typeof args.against === 'string' ? normalizePath(args.against) : null;
 const widths = typeof args.widths === 'string' ? args.widths.split(',').map(Number) : [375, 768, 1440];
 const slug = pagePath === '/' ? 'home' : pagePath.replace(/^\/|\/$/g, '').replace(/\//g, '__');
 
@@ -282,8 +287,13 @@ async function main() {
       const localFile = path.join(pageDir, `local-${width}.png`);
       const sep = pagePath.includes('?') ? '&' : '?';
 
-      log(`${width}px — live`);
-      await screenshot(browser, { url: `${LIVE_ORIGIN}${pagePath}${sep}static=1`, width, file: liveFile, extraCss: LIVE_STATIC_CSS });
+      if (againstPath) {
+        log(`${width}px — lokaal ${againstPath}`);
+        await screenshot(browser, { url: `${LOCAL_ORIGIN}${againstPath}${againstPath.includes('?') ? '&' : '?'}static=1`, width, file: liveFile });
+      } else {
+        log(`${width}px — live`);
+        await screenshot(browser, { url: `${LIVE_ORIGIN}${pagePath}${sep}static=1`, width, file: liveFile, extraCss: LIVE_STATIC_CSS });
+      }
       log(`${width}px — lokaal`);
       await screenshot(browser, { url: `${LOCAL_ORIGIN}${pagePath}${sep}static=1`, width, file: localFile });
 

@@ -1,0 +1,67 @@
+---
+/**
+ * Rendert een lijst sectieblokken (uit Sanity, zie lib/sanity/sections.ts) met de
+ * bestaande sectiecomponenten. Zelf geen opmaak: elke sectie regelt zijn eigen stijl
+ * en afstand, precies zoals op de handgebouwde pagina's.
+ */
+import Hero from './Hero.astro';
+import LogoMarquee from './LogoMarquee.astro';
+import IntroHighlight from './IntroHighlight.astro';
+import Timeline from './Timeline.astro';
+import Testimonials from './Testimonials.astro';
+import PolaroidStack from './PolaroidStack.astro';
+import TextMedia from './TextMedia.astro';
+import CaseSpotlight from './CaseSpotlight.astro';
+import ImageFeature from './ImageFeature.astro';
+import ServiceTiles from './ServiceTiles.astro';
+import Faq from './Faq.astro';
+import Breadcrumbs, { type Crumb } from '../layout/Breadcrumbs.astro';
+import ContactForm from '../ui/ContactForm.astro';
+import { contactForm } from '../../data/forms';
+import { breadcrumbLabels } from '../../data/navigation';
+import type { PageSection } from '../../lib/sanity/sections';
+
+interface Props {
+  sections: PageSection[];
+  breadcrumbs: Crumb[];
+}
+
+const { sections, breadcrumbs } = Astro.props;
+---
+
+{
+  sections.map((section) => {
+    switch (section.type) {
+      case 'hero':
+        return <Hero {...section.props} />;
+      case 'breadcrumbs':
+        return <Breadcrumbs items={breadcrumbs} homeLabel={breadcrumbLabels.home} label={breadcrumbLabels.nav} />;
+      case 'logoMarquee':
+        return <LogoMarquee {...section.props} />;
+      case 'introHighlight':
+        return <IntroHighlight {...section.props} />;
+      case 'timeline':
+        return <Timeline {...section.props} />;
+      case 'testimonials':
+        return <Testimonials {...section.props} />;
+      case 'polaroidStack':
+        return <PolaroidStack {...section.props} />;
+      case 'textMedia':
+        return section.contactForm ? (
+          <TextMedia {...section.props}>
+            <ContactForm slot="content" {...contactForm} />
+          </TextMedia>
+        ) : (
+          <TextMedia {...section.props} />
+        );
+      case 'caseSpotlight':
+        return <CaseSpotlight {...section.props} />;
+      case 'imageFeature':
+        return <ImageFeature {...section.props} />;
+      case 'serviceTiles':
+        return <ServiceTiles {...section.props} />;
+      case 'faq':
+        return <Faq {...section.props} />;
+    }
+  })
+}

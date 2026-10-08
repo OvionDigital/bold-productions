@@ -1,0 +1,33 @@
+---
+/**
+ * Alle pagina's die de klant zelf in Sanity opbouwt (documenttype `page`). Header,
+ * menu, footer en WhatsApp-knop komen uit BaseLayout; de inhoud is een vrije lijst
+ * van de bestaande secties (PageSections). Vaste pagina's in src/pages/ gaan voor.
+ * Zonder Sanity-configuratie worden er geen pagina's gebouwd.
+ */
+import type { GetStaticPaths } from 'astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageSections from '../components/sections/PageSections.astro';
+import { getCmsPages, type CmsPage } from '../lib/sanity/pages';
+
+export const getStaticPaths = (async () => {
+  const pages = await getCmsPages();
+  return pages.map((page) => ({ params: { slug: page.slug }, props: { page } }));
+}) satisfies GetStaticPaths;
+
+interface Props {
+  page: CmsPage;
+}
+
+const { page } = Astro.props;
+---
+
+<BaseLayout
+  title={page.meta.title}
+  description={page.meta.description}
+  ogImage={page.meta.ogImage}
+  accent={page.accent}
+  noindex={page.meta.noindex}
+>
+  <PageSections sections={page.sections} breadcrumbs={page.breadcrumbs} />
+</BaseLayout>

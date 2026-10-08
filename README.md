@@ -45,7 +45,11 @@ Voeg `?static=1` toe aan een URL om Lenis en alle animaties uit te zetten (zo ma
 
 Zolang dit een preview is, stuurt `public/_headers` op alle paden `X-Robots-Tag: noindex` mee. Haal die regel weg bij livegang (er staat een TODO bij).
 
-### Later: GitHub koppelen voor automatische previews
+### Automatisch deployen (GitHub Action)
+
+Op de branch `feature/sanity-cms` bouwt en deployt `.github/workflows/deploy.yml` de site met wrangler: na elke publicatie in Sanity, bij een push of handmatig. Dat werkt met het bestaande Direct Upload-project, zonder Git-koppeling in Cloudflare. Opzet (secrets, variabelen, Sanity-webhook): zie [docs/sanity.md](docs/sanity.md#online-zetten-eenmalig).
+
+### Alternatief: GitHub koppelen in Cloudflare
 
 1. Zet de repository op GitHub (`git remote add origin …` en `git push -u origin main`).
 2. Ga in het Cloudflare-dashboard naar **Workers & Pages → bold-productions → Settings → Builds**. Kies **Connect to Git** en selecteer de repository.

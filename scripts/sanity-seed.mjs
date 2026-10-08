@@ -2,11 +2,14 @@
 /**
  * Zet de bestaande homepage-inhoud (src/data/home.ts, testimonials.ts, logos.ts)
  * eenmalig over naar Sanity, zodat de klant in Studio meteen de echte homepage ziet
- * in plaats van een lege pagina. Overschrijft (createOrReplace) bestaande documenten
- * met dezelfde id, dus opnieuw draaien is veilig.
+ * in plaats van een lege pagina. Ook alle testimonials en de cases (src/data/cases.ts).
+ *
+ * Standaard alleen documenten aanmaken die nog niet bestaan (createIfNotExists): wat de
+ * klant in Studio heeft aangepast blijft staan, opnieuw draaien vult alleen aan.
+ * Met --force worden bestaande documenten met dezelfde id overschreven (createOrReplace).
  *
  * Gebruik (vanuit de root van de repo):
- *   node --env-file=.env scripts/sanity-seed.mjs
+ *   node --env-file=.env scripts/sanity-seed.mjs [--force]
  * of: cd studio && npm run seed
  *
  * Vereist in .env: PUBLIC_SANITY_PROJECT_ID, PUBLIC_SANITY_DATASET, SANITY_API_WRITE_TOKEN
@@ -35,6 +38,9 @@ const client = createClient({
   token: SANITY_API_WRITE_TOKEN,
   useCdn: false,
 });
+
+const force = process.argv.includes('--force');
+const write = (doc) => (force ? client.createOrReplace(doc) : client.createIfNotExists(doc));
 
 /** Uploadcache: elk bestand maar één keer uploaden, ook als het meerdere keren gebruikt wordt. */
 const uploaded = new Map();
@@ -140,6 +146,22 @@ const testimonialData = {
     organisation: 'Dorpsfeest Wehl',
     file: 'images/testimonials/dorpsfeest-wehl.jpg',
   },
+  'siemen-peters': {
+    quote:
+      'Met onze evenementen Doorgedraaid Feestival & Piraten Café hebben we een fantastische samenwerking met Mike en zijn team! We vinden het ontzettend fijn hoe ze met ons meedenken en samen sparren om tot een passend en uniek concept te komen. ',
+    name: 'Siemen Peters',
+    organisation: 'Organisatie Doorgedraaid Feestival',
+    file: 'images/testimonials/siemen-peters.jpg',
+  },
+};
+
+// ─── Cases (src/data/cases.ts) ────────────────────────────────────────────
+const caseData = {
+  'pluggerz-x-zwarte-cross-2026': {
+    title: 'Pluggerz x Zwarte Cross 2026',
+    intro: 'Hoe verkoop je oordoppen aan mensen die niets willen missen?',
+    file: 'images/cases/pluggerz-zwarte-cross-2026.jpg',
+  },
 };
 const homepageTestimonialOrder = ['reinier-peters', 'ralph-buisman', 'merijn-peters', 'manon-diks', 'dorpsfeest-wehl'];
 
@@ -150,20 +172,33 @@ async function main() {
   const logoRefs = {};
   for (const [id, file] of Object.entries(logoFiles)) {
     const img = await image(file, logoNames[id]);
-    await client.createOrReplace({ _id: `clientLogo-${id}`, _type: 'clientLogo', name: logoNames[id], image: img });
+    await write({ _id: `clientLogo-${id}`, _type: 'clientLogo', name: logoNames[id], image: img });
     logoRefs[id] = `clientLogo-${id}`;
   }
 
   console.log('\nTestimonials uploaden...');
   for (const [id, t] of Object.entries(testimonialData)) {
     const img = await image(t.file, t.name ?? t.organisation);
-    await client.createOrReplace({
+    await write({
       _id: `testimonial-${id}`,
       _type: 'testimonial',
       quote: t.quote,
       name: t.name,
       organisation: t.organisation,
       image: img,
+    });
+  }
+
+  console.log('\nCases uploaden...');
+  for (const [slug, c] of Object.entries(caseData)) {
+    const doc = await uploadImage(c.file);
+    await write({
+      _id: `caseStudy-${slug}`,
+      _type: 'caseStudy',
+      title: c.title,
+      slug: { _type: 'slug', current: slug },
+      intro: c.intro,
+      image: { _type: 'image', asset: { _type: 'reference', _ref: doc._id } },
     });
   }
 
@@ -197,7 +232,7 @@ async function main() {
   for (let i = 1; i <= 7; i++) polaroids.push(await image(`images/polaroids/polaroid-${i}.jpg`, polaroidAlts[i - 1]));
 
   console.log('\nHomepage-document schrijven...');
-  await client.createOrReplace({
+  await write({
     _id: 'homepage',
     _type: 'homepage',
     metaTitle: 'Bold Productions | Event & Artiesten Content',
@@ -319,7 +354,9 @@ async function main() {
     micDropTriangles: true,
   });
 
-  console.log('\n✓ Klaar. Open Studio (npm run dev in studio/) en kijk bij "Homepage".');
+  console.log(
+    `\n✓ Klaar${force ? '' : ' (bestaande documenten ongewijzigd; --force om te overschrijven)'}. Open Studio en kijk bij "Homepage".`,
+  );
 }
 
 main().catch((err) => {

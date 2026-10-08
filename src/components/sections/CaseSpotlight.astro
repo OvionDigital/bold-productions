@@ -1,24 +1,26 @@
 ---
 /**
  * Uitgelichte case (Webflow .case-spotlight): kop en één grote casekaart.
- * De case komt uit src/data/cases.ts, op slug.
+ * De case komt uit src/data/cases.ts (op slug) of wordt zelf meegegeven (Sanity).
  */
 import SectionHeading from '../ui/SectionHeading.astro';
 import CaseCard from '../ui/CaseCard.astro';
 import type { HeadingGradient } from '../ui/Heading.astro';
-import { getCase } from '../../data/cases';
+import { getCase, type Case } from '../../data/cases';
 
 export interface CaseSpotlightProps {
   title: string;
   gradient?: HeadingGradient;
   /** Slug uit src/data/cases.ts */
-  caseSlug: string;
+  caseSlug?: string;
+  /** De case zelf (bijv. uit Sanity); gaat voor `caseSlug` */
+  item?: Case;
 }
 
 type Props = CaseSpotlightProps;
 
-const { title, gradient = 'green', caseSlug } = Astro.props;
-const item = getCase(caseSlug);
+const { title, gradient = 'green', caseSlug, item: caseItem } = Astro.props;
+const item = caseItem ?? getCase(caseSlug ?? '');
 ---
 
 <section class="case-spotlight">

@@ -15,7 +15,9 @@ export const sanityClient: SanityClient | null = isSanityConfigured
       projectId,
       dataset,
       apiVersion: '2025-01-01',
-      useCdn: true,
+      // Geen API-CDN: een build die direct na "Publiceren" start (webhook) moet de
+      // nieuwste inhoud zien; de CDN kan dan nog even de vorige versie geven.
+      useCdn: false,
       // Alleen gezet als er een token in de omgeving staat (bv. tijdens deploy
       // met concepten inbegrepen); zonder token worden alleen published documents opgehaald.
       token: import.meta.env.SANITY_API_WRITE_TOKEN || undefined,
