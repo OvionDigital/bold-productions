@@ -1,12 +1,10 @@
 /**
  * Generiek accordeon: <button data-accordion-trigger aria-controls="…" aria-expanded>.
- * Klapt het bijbehorende paneel open/dicht (hoogte 0 ↔ auto, 0,3 s) en zet aria-expanded.
- * Zonder JS staan panelen open (CSS verbergt ze alleen onder html.js).
- * Webflow-IX: faq_item_question (odd/even click).
+ * Zet aria-expanded op de knop en data-open op het paneel; de animatie (hoogte via
+ * grid-template-rows 0fr ↔ 1fr) en het verbergen staan in de CSS van het component.
+ * Geen hoogtemeting of inline hoogte in JS, dus de pagina eromheen blijft rustig.
+ * Zonder JS staan panelen open. Bij reduced motion staat de transitie uit (global.css).
  */
-import { gsap } from 'gsap';
-import { motionEnabled } from './env';
-
 export function initAccordions(): void {
   document.querySelectorAll<HTMLButtonElement>('[data-accordion-trigger]').forEach((trigger) => {
     const panelId = trigger.getAttribute('aria-controls');
@@ -16,12 +14,7 @@ export function initAccordions(): void {
     trigger.addEventListener('click', () => {
       const expand = trigger.getAttribute('aria-expanded') !== 'true';
       trigger.setAttribute('aria-expanded', String(expand));
-      gsap.killTweensOf(panel);
-      gsap.fromTo(
-        panel,
-        { height: panel.offsetHeight },
-        { height: expand ? 'auto' : 0, duration: motionEnabled ? 0.3 : 0, ease: 'power2.inOut' },
-      );
+      panel.toggleAttribute('data-open', expand);
     });
   });
 }

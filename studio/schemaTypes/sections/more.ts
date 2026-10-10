@@ -199,3 +199,74 @@ export const teamSection = defineType({
     prepare: ({ title, count }) => ({ title: `Team — ${title ?? ''}`, subtitle: `${count ?? 0} teamleden` }),
   },
 });
+
+/** LinkGroups.astro — linkoverzicht in kaarten per groep (sitemap). */
+export const linkGroupsSection = defineType({
+  name: 'linkGroupsSection',
+  title: 'Linkoverzicht (sitemap)',
+  type: 'object',
+  fields: [
+    defineField({ name: 'eyebrow', title: 'Eyebrow (optioneel)', type: 'string' }),
+    titleField('Titel (optioneel)', false),
+    defineField({
+      name: 'isPageTitle',
+      title: 'Titel is de hoofdkop van de pagina (h1)',
+      type: 'boolean',
+      description: 'Aan als de pagina geen hero heeft, zoals de sitemap.',
+      initialValue: false,
+    }),
+    gradientField('orange'),
+    defineField({
+      name: 'groups',
+      title: 'Groepen',
+      type: 'array',
+      of: [
+        defineArrayMember({
+          type: 'object',
+          name: 'linkGroup',
+          fields: [
+            defineField({ name: 'title', title: 'Kop van de groep', type: 'string', validation: (r) => r.required() }),
+            defineField({
+              name: 'links',
+              title: 'Links',
+              type: 'array',
+              of: [
+                defineArrayMember({
+                  type: 'object',
+                  name: 'linkItem',
+                  fields: [
+                    defineField({ name: 'label', title: 'Tekst', type: 'string', validation: (r) => r.required() }),
+                    defineField({ name: 'href', title: 'Link', type: 'string', description: 'Bijv. "/events/aftermovie".', validation: (r) => r.required() }),
+                  ],
+                  preview: { select: { title: 'label', subtitle: 'href' } },
+                }),
+              ],
+              validation: (r) => r.required().min(1),
+            }),
+          ],
+          preview: {
+            select: { title: 'title', count: 'links.length' },
+            prepare: ({ title, count }) => ({ title, subtitle: `${count ?? 0} links` }),
+          },
+        }),
+      ],
+    }),
+    defineField({
+      name: 'casesGroupTitle',
+      title: 'Groep met alle cases (optioneel)',
+      type: 'string',
+      description: 'Vul een kop in (bijv. "Cases") voor een extra groep die automatisch alle cases toont. Leeg = geen casegroep.',
+    }),
+    defineField({
+      name: 'casesGroupIndex',
+      title: 'Positie van de casegroep',
+      type: 'number',
+      description: 'Na hoeveel groepen de casegroep komt (0 = als eerste). Leeg = als laatste.',
+    }),
+    anchorIdField(),
+  ],
+  preview: {
+    select: { title: 'title', count: 'groups.length' },
+    prepare: ({ title, count }) => ({ title: `Linkoverzicht — ${title ?? ''}`, subtitle: `${count ?? 0} groepen` }),
+  },
+});

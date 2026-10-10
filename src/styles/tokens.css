@@ -67,7 +67,8 @@
   /* ─── Kleuren: merk ─────────────────────────────────────────────── */
   --color-orange: #ff5500;
   --color-orange-light: #ffc0a1;
-  --color-shape-orange: #ff6b21; /* oranje B-outline op de achtergrond (Webflow-SVG) */
+  --color-shape-orange: #ff6b21;
+  --color-rec: #ff2a2a; /* REC-lampje (knopvoorstel zoeker) */ /* oranje B-outline op de achtergrond (Webflow-SVG) */
   --color-yellow: #f9ff00;
   --color-yellow-light: #feffd7;
   --color-green: #8bff3f;
@@ -240,12 +241,15 @@
   --button-padding-x: 32px;
   --button-padding-x-small: 24px;
   /* Knopvoorstellen op /styleguide (#knop-voorstellen); vervallen zodra er een gekozen is */
-  --button-alt-notch: 14px; /* driehoekhoek */
-  --button-alt-skew: -12deg; /* schuine knop */
+  --button-alt-bar: 4px; /* vullen van onder: onderrand */
+  --button-alt-corner: 12px; /* zoeker: lengte hoeklijntjes */
   --button-alt-offset: 6px; /* harde schaduw */
   --button-alt-glow: 18px; /* neon */
   --button-alt-glow-hover: 36px;
   --border-width-thick: 2px;
+  /* Kopvoorstellen op /styleguide (#kop-voorstellen); vervallen zodra er een gekozen is */
+  --heading-alt-marker: 0.8em; /* driehoekmarker: ruimte + grootte */
+  --heading-alt-bar: 6px; /* redactioneel: verticale balk */
   --icon-sm: 16px;
   --icon-md: 18px;
   --icon-lg: 20px;
@@ -261,6 +265,8 @@
   --map-height: 600px;
   --case-facts-max: 1140px;
   --breadcrumbs-offset: 136px; /* kruimelpad bovenaan zonder hero (onder de vaste navbar) */
+  --link-groups-min: 280px; /* minimale kaartbreedte in LinkGroups (sitemap) */
+  --sticky-offset: 144px; /* sticky kolommen onder de navbar (Webflow .contact-col.sticky) */
   --page-top-offset: 192px; /* tekstsectie als eerste op de pagina, zonder hero (404, Webflow ._404) */
   --logo-tile-width: 220px;
   --logo-tile-height: 110px;

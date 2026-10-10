@@ -1,0 +1,147 @@
+---
+/**
+ * Linkoverzicht in groepen (sitemap): gecentreerde kop (eyebrow + titel) en een raster
+ * van glazen kaarten, elk met een Gate-kop in de accentkleur en een lijst links met
+ * scheidingslijnen. Hover: link in accentkleur met een pijltje. Raster vult zich
+ * automatisch in kolommen (min. kaartbreedte --link-groups-min, max. 4) die als
+ * metselwerk aansluiten: 3–4 naast elkaar op desktop, 2 op tablet, 1 op mobiel.
+ *
+ * `auto: 'cases'` op een groep = gevuld met alle cases (src/data/cases.ts of Sanity),
+ * zodat de sitemap nooit een case mist; voor het component zelf maakt het niet uit.
+ */
+import Container from '../ui/Container.astro';
+import SectionHeading from '../ui/SectionHeading.astro';
+import Icon from '../ui/Icon.astro';
+import type { HeadingGradient } from '../ui/Heading.astro';
+
+export interface LinkGroup {
+  title: string;
+  links: { label: string; href: string }[];
+  /** Herkomst van de links: 'cases' = automatisch alle cases */
+  auto?: 'cases';
+}
+
+export interface LinkGroupsProps {
+  id?: string;
+  eyebrow?: string;
+  title?: string;
+  /** h1 als dit de kop van de pagina is (sitemap zonder hero) */
+  titleAs?: 'h1' | 'h2';
+  gradient?: HeadingGradient;
+  groups: LinkGroup[];
+}
+
+type Props = LinkGroupsProps;
+
+const { id, eyebrow, title, titleAs = 'h2', gradient = 'accent', groups } = Astro.props;
+/** Kaartkoppen één niveau onder de sectiekop */
+const GroupHeading = titleAs === 'h1' ? 'h2' : 'h3';
+---
+
+<section class="link-groups" id={id}>
+  <Container>
+    {title && <SectionHeading eyebrow={eyebrow} title={title} titleAs={titleAs} gradient={gradient} />}
+    <div class="link-groups__grid" data-animate-stagger>
+      {
+        groups.map((group) => (
+          <nav class="link-groups__card" aria-label={group.title}>
+            <GroupHeading class="link-groups__title">{group.title}</GroupHeading>
+            <ul class="link-groups__list" role="list">
+              {group.links.map((link) => (
+                <li>
+                  <a href={link.href} class="link-groups__link">
+                    <span>{link.label}</span>
+                    <Icon name="arrow-right" class="link-groups__icon" />
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        ))
+      }
+    </div>
+  </Container>
+</section>
+
+<style>
+  .link-groups {
+    position: relative;
+    z-index: var(--z-base);
+    margin-block: var(--section-space);
+  }
+
+  /* Kolommen i.p.v. raster: kaarten van verschillende lengte sluiten op elkaar aan */
+  .link-groups__grid {
+    columns: var(--link-groups-min) 4;
+    column-gap: var(--space-24);
+  }
+
+  .link-groups__card {
+    break-inside: avoid;
+    margin-bottom: var(--space-24);
+    padding: var(--space-32);
+    border: var(--border-width) solid var(--color-gray-dark);
+    background-image: var(--gradient-glass);
+    -webkit-backdrop-filter: blur(var(--blur-sm));
+    backdrop-filter: blur(var(--blur-sm));
+  }
+
+  .link-groups__title {
+    margin: 0 0 var(--space-16);
+    color: var(--accent);
+    font-family: var(--font-display);
+    font-size: var(--fs-lg);
+    font-weight: var(--fw-display);
+    line-height: var(--lh-body);
+    letter-spacing: var(--ls-caption);
+    text-transform: uppercase;
+  }
+
+  .link-groups__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .link-groups__list li + li {
+    border-top: var(--border-width) solid var(--color-white-a8);
+  }
+
+  .link-groups__link {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-16);
+    padding-block: var(--space-12);
+    color: var(--color-white);
+    text-decoration: none;
+    transition: color var(--duration-fast) var(--ease-out);
+  }
+
+  .link-groups__link :global(.link-groups__icon) {
+    --icon-size: var(--icon-sm);
+    flex: none;
+    opacity: 0;
+    transform: translateX(calc(-1 * var(--space-8)));
+    transition:
+      opacity var(--duration-fast) var(--ease-out),
+      transform var(--duration-fast) var(--ease-out);
+  }
+
+  .link-groups__link:hover,
+  .link-groups__link:focus-visible {
+    color: var(--accent);
+  }
+
+  .link-groups__link:hover :global(.link-groups__icon),
+  .link-groups__link:focus-visible :global(.link-groups__icon) {
+    opacity: 1;
+    transform: none;
+  }
+
+  @media (max-width: 479px) {
+    .link-groups__card {
+      padding: var(--space-24);
+    }
+  }
+</style>

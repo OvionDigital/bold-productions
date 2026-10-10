@@ -62,7 +62,9 @@ const structuredData = {
                     </button>
                   </h3>
                   <div class="faq__answer" id={panelId}>
-                    <RichText content={item.answer} plain class="faq__answer-text" />
+                    <div class="faq__answer-inner">
+                      <RichText content={item.answer} plain class="faq__answer-text" />
+                    </div>
                   </div>
                 </div>
               );
@@ -168,14 +170,26 @@ const structuredData = {
     line-height: var(--lh-normal);
   }
 
+  /*
+   * Open/dicht met CSS (scripts/accordion.ts zet alleen aria-expanded en data-open):
+   * grid-rij 0fr ↔ 1fr animeert naar de echte hoogte, zonder meten in JS.
+   * Zonder JS staan de antwoorden open.
+   */
   .faq__answer {
-    /* uitgelijnd met de vraagtekst: padding + icoon + gap */
-    padding: 0 var(--space-16) 0 calc(2 * var(--space-16) + var(--icon-touch));
-    overflow: clip;
+    display: grid;
+    grid-template-rows: 1fr;
+    transition: grid-template-rows var(--duration-base) var(--ease-nav);
   }
 
-  :global(html.js) .faq__answer {
-    height: 0;
+  :global(html.js) .faq__answer:not([data-open]) {
+    grid-template-rows: 0fr;
+  }
+
+  .faq__answer-inner {
+    min-height: 0;
+    overflow: hidden;
+    /* uitgelijnd met de vraagtekst: padding + icoon + gap */
+    padding: 0 var(--space-16) 0 calc(2 * var(--space-16) + var(--icon-touch));
   }
 
   .faq__answer :global(.faq__answer-text p) {
@@ -210,7 +224,7 @@ const structuredData = {
       font-size: var(--fs-base);
     }
 
-    .faq__answer {
+    .faq__answer-inner {
       padding-left: calc(var(--space-8) + var(--icon-xl) + var(--space-12));
     }
   }

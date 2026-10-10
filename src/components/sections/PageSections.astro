@@ -23,6 +23,7 @@ import ContactSection from './ContactSection.astro';
 import MapSection from './MapSection.astro';
 import CaseGrid from './CaseGrid.astro';
 import CaseFacts from './CaseFacts.astro';
+import LinkGroups from './LinkGroups.astro';
 import Breadcrumbs, { type Crumb } from '../layout/Breadcrumbs.astro';
 import ContactForm from '../ui/ContactForm.astro';
 import { getForm } from '../../data/forms';
@@ -90,6 +91,8 @@ const { sections, breadcrumbs } = Astro.props;
         return <CaseGrid {...section.props} />;
       case 'caseFacts':
         return <CaseFacts {...section.props} />;
+      case 'linkGroups':
+        return <LinkGroups {...section.props} />;
     }
   })
 }

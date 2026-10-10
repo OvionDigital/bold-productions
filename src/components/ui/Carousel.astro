@@ -6,6 +6,9 @@
  * maar blijven ook daarbuiten zichtbaar (Owl: overflow visible). Plaats de carousel
  * daarom over de volle breedte van de sectie, niet in een Container.
  *
+ * Minder items dan er passen: gecentreerd (safe center), zonder pijlknoppen. De knoppen
+ * staan er alleen als er echt te schuiven valt (.is-scrollable, gezet door het script).
+ *
  * Slot: <li>-elementen. Gedrag (knoppen, disabled-status, slepen met de muis) in scripts/carousel.ts.
  */
 import Icon from './Icon.astro';
@@ -60,6 +63,7 @@ const { label, prevLabel, nextLabel, class: className } = Astro.props;
       (var(--inner) - 2 * var(--carousel-stage) - (var(--carousel-items) - 1) * var(--carousel-gap)) /
         var(--carousel-items)
     );
+    justify-content: safe center;
     gap: var(--carousel-gap);
     margin: 0;
     padding: 0 var(--offset);
@@ -75,9 +79,9 @@ const { label, prevLabel, nextLabel, class: className } = Astro.props;
     display: none;
   }
 
-  /* Slepen met de muis (scripts/carousel.ts) */
+  /* Slepen met de muis (scripts/carousel.ts), alleen als er iets te schuiven valt */
   @media (hover: hover) and (pointer: fine) {
-    .carousel__track {
+    .carousel.is-scrollable .carousel__track {
       cursor: grab;
     }
   }
@@ -108,6 +112,10 @@ const { label, prevLabel, nextLabel, class: className } = Astro.props;
     justify-content: space-between;
     transform: translateY(-50%);
     pointer-events: none;
+  }
+
+  .carousel:not(.is-scrollable) .carousel__nav {
+    display: none;
   }
 
   .carousel__button {

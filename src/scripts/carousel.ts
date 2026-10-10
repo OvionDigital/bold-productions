@@ -1,5 +1,7 @@
 /**
  * Carousel ([data-carousel]):
+ * - .is-scrollable als de items niet allemaal in beeld passen: alleen dan staan de
+ *   pijlknoppen er en kan er gesleept worden (bijgewerkt bij resize).
  * - Pijlknoppen: één item per klik scrollen (scroll-snap lijnt uit) en uitschakelen
  *   aan het begin en eind (Owl: .disabled).
  * - Slepen met de muis (Owl: mouseDrag). Touch en trackpad scrollen al native.
@@ -25,6 +27,7 @@ export function initCarousels(): void {
     const maxScroll = () => track.scrollWidth - track.clientWidth;
 
     const update = () => {
+      carousel.classList.toggle('is-scrollable', maxScroll() > 1);
       prev.disabled = track.scrollLeft <= 1;
       next.disabled = track.scrollLeft >= maxScroll() - 1;
     };
@@ -41,7 +44,8 @@ export function initCarousels(): void {
     prev.addEventListener('click', () => go(-1));
     next.addEventListener('click', () => go(1));
     track.addEventListener('scroll', update, { passive: true });
-    window.addEventListener('resize', update, { passive: true });
+    // Breedte van track of items verandert (resize, fonts, beelden): opnieuw bepalen
+    new ResizeObserver(update).observe(track);
     update();
 
     // ─── Slepen met de muis ─────────────────────────────────────
@@ -59,7 +63,7 @@ export function initCarousels(): void {
     };
 
     track.addEventListener('pointerdown', (event) => {
-      if (event.pointerType !== 'mouse' || event.button !== 0) return;
+      if (event.pointerType !== 'mouse' || event.button !== 0 || !carousel.classList.contains('is-scrollable')) return;
       pointerId = event.pointerId;
       startX = event.clientX;
       startScroll = track.scrollLeft;

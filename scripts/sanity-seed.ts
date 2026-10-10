@@ -15,6 +15,7 @@
  * Gebruik (vanuit de root van de repo):
  *   npm run sanity:seed            (of: npm run sanity:seed -- --force)
  *   npm run sanity:seed -- --dry-run   alles opbouwen en controleren, niets uploaden of schrijven
+ *   npm run sanity:seed -- --force --only=page-sitemap   alleen deze document-id('s) (komma's) schrijven
  *
  * Vereist in .env: PUBLIC_SANITY_PROJECT_ID, PUBLIC_SANITY_DATASET, SANITY_API_WRITE_TOKEN
  * (token met Editor-rechten, aan te maken via sanity.io/manage → API → Tokens).
@@ -48,6 +49,7 @@ const client = createClient({
 
 const force = process.argv.includes('--force');
 const dryRun = process.argv.includes('--dry-run');
+const only = process.argv.find((a) => a.startsWith('--only='))?.slice('--only='.length).split(',').filter(Boolean);
 const ROOT = path.resolve(import.meta.dirname, '..');
 
 // ─── Hulpjes ───────────────────────────────────────────────────────────────
@@ -340,6 +342,23 @@ async function toBlock(section: PageSection): Promise<Record<string, unknown> | 
       return { _type: 'caseGridSection', anchorId: section.props.id };
     case 'caseFacts':
       return null; // vast onderdeel van een casepagina
+    case 'linkGroups': {
+      const p = section.props;
+      const casesIndex = p.groups.findIndex((g) => g.auto === 'cases');
+      return {
+        _type: 'linkGroupsSection',
+        eyebrow: p.eyebrow,
+        title: p.title,
+        isPageTitle: p.titleAs === 'h1' || undefined,
+        gradient: p.gradient,
+        anchorId: p.id,
+        groups: p.groups
+          .filter((g) => g.auto !== 'cases')
+          .map((g) => ({ _type: 'linkGroup', title: g.title, links: g.links.map((l) => ({ _type: 'linkItem', ...l })) })),
+        casesGroupTitle: casesIndex >= 0 ? p.groups[casesIndex]!.title : undefined,
+        casesGroupIndex: casesIndex >= 0 ? casesIndex : undefined,
+      };
+    }
   }
 }
 
@@ -443,7 +462,9 @@ async function homepageDoc(): Promise<Doc> {
 }
 
 // ─── Schrijven ────────────────────────────────────────────────────────────────
-async function write(docs: Doc[], label: string) {
+async function write(allDocs: Doc[], label: string) {
+  const docs = only ? allDocs.filter((d) => only.includes(d._id)) : allDocs;
+  if (!docs.length) return;
   if (dryRun) {
     const kB = Math.round(JSON.stringify(docs.map((d) => withKeys(d))).length / 1024);
     console.log(`✓ ${label}: ${docs.length} (${kB} kB, dry-run: niet geschreven)`);

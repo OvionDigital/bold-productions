@@ -13,7 +13,8 @@ vanuit `src/data/`). Wat de klant in Studio kan:
   bewerken, en nieuwe pagina's toevoegen uit de bestaande secties: Hero,
   kruimelpad, logostrip, introtekst, tekst, tekst + beeld/video of formulier,
   tijdlijn, testimonials, polaroids, uitgelichte case, brede foto/video,
-  beeldtegels, team, FAQ, contactblok, kaart en casesoverzicht. Volgorde slepen,
+  beeldtegels, team, FAQ, contactblok, kaart, casesoverzicht en linkoverzicht
+  (sitemap, met optioneel een automatische groep met alle cases). Volgorde slepen,
   secties toevoegen/verwijderen, alle inhoud bewerken. Header, menu, footer en
   WhatsApp-knop staan er automatisch omheen. De pagina met URL-pad `404` is de
   foutpagina (wordt `404.html`, die Cloudflare Pages bij onbekende paden toont).
@@ -64,7 +65,8 @@ vanuit `src/data/`). Wat de klant in Studio kan:
   TypeScript-data rechtstreeks (Node-loader in `scripts/sanity/`, Node ≥ 22.18).
   Maakt alleen aan wat nog niet bestaat en vult lege velden aan (aanpassingen
   van de klant blijven staan); `--force` overschrijft, `--dry-run` controleert
-  alles zonder te schrijven.
+  alles zonder te schrijven, `--only=<id>[,<id>]` beperkt het tot die documenten
+  (bijv. `--force --only=page-sitemap` om één pagina opnieuw te zetten).
 
 ### Nieuw bloktype toevoegen
 

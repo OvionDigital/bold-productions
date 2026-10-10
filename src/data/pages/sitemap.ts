@@ -1,9 +1,18 @@
 /**
- * /sitemap — teksten letterlijk van www.weareboldproductions.com/sitemap.
- * Gegenereerd uit de live pagina; daarna vrij te bewerken (of in Sanity).
+ * /sitemap — overzicht van alle pagina's, zonder hero: kruimelpad, kop en linkgroepen
+ * (LinkGroups). Labels van de live sitemap; de casegroep wordt automatisch gevuld met
+ * alle cases (ook in Sanity), juridische pagina's zijn toegevoegd.
  */
 import type { PageData } from '../../lib/sections';
-import boldProductions98 from '../../assets/images/contact/bold-productions-98.jpg';
+import type { LinkGroup } from '../../components/sections/LinkGroups.astro';
+import { cases, caseUrl } from '../cases';
+
+/** Alle cases, in de volgorde van het casesoverzicht */
+export const casesLinkGroup = (title: string): LinkGroup => ({
+  title,
+  auto: 'cases',
+  links: cases.map((item) => ({ label: item.title, href: caseUrl(item.slug) })),
+});
 
 export const page: PageData = {
   slug: 'sitemap',
@@ -13,299 +22,83 @@ export const page: PageData = {
     description: "Een overzicht van alle pagina's op weareboldproductions.com.",
   },
   sections: [
+    { type: 'breadcrumbs' },
     {
-      type: 'hero',
+      type: 'linkGroups',
       props: {
+        eyebrow: 'Zoek & vind een pagina.',
         title: 'Sitemap',
-        titleAccent: '',
-        eyebrow: 'Zoek & vind een pagina.',
-        secondaryCta: {
-          label: 'Neem contact op',
-          href: '#contact-section',
-          icon: 'arrow-down',
-        },
-        image: {
-          src: boldProductions98,
-          alt: 'Actiefoto van PROOST! BAND tijdens een festival. Foto gemaakt door Bold Productions, contentspecialist voor Events & Artiesten.',
-        },
-        accent: 'green',
-      },
-    },
-    {
-      type: 'breadcrumbs',
-    },
-    {
-      type: 'richText',
-      props: {
-        content: [
+        titleAs: 'h1',
+        gradient: 'orange',
+        groups: [
           {
-            h: ['Algemeen'],
-            level: 3,
-          },
-          {
-            ul: [
-              [
-                {
-                  text: 'Home',
-                  href: '/',
-                },
-              ],
-              [
-                {
-                  text: 'Over ons',
-                  href: '/over',
-                },
-              ],
-              [
-                {
-                  text: 'Over Mike',
-                  href: '/over/mike',
-                },
-              ],
-              [
-                {
-                  text: 'Cases (Ons werk)',
-                  href: '/cases',
-                },
-              ],
-              [
-                {
-                  text: 'Contact',
-                  href: '/contact',
-                },
-              ],
-              [
-                {
-                  text: 'Offerte aanvragen',
-                  href: '/offerte-aanvragen',
-                },
-              ],
+            title: 'Algemeen',
+            links: [
+              { label: 'Home', href: '/' },
+              { label: 'Over ons', href: '/over' },
+              { label: 'Over Mike', href: '/over/mike' },
+              { label: 'Cases (Ons werk)', href: '/cases' },
+              { label: 'Contact', href: '/contact' },
+              { label: 'Offerte aanvragen', href: '/offerte-aanvragen' },
             ],
           },
           {
-            h: ['Events'],
-            level: 3,
-          },
-          {
-            ul: [
-              [
-                {
-                  text: 'Events Overzicht',
-                  href: '/events',
-                },
-              ],
-              [
-                {
-                  text: 'Eventvideos',
-                  href: '/events/eventvideos',
-                },
-              ],
-              [
-                {
-                  text: 'Aftermovies',
-                  href: '/events/aftermovie',
-                },
-              ],
-              [
-                {
-                  text: 'Promovideos',
-                  href: '/events/promovideos',
-                },
-              ],
-              [
-                {
-                  text: 'Social Content',
-                  href: '/events/social-content',
-                },
-              ],
-              [
-                {
-                  text: 'Fotografie',
-                  href: '/events/fotografie',
-                },
-              ],
+            title: 'Events',
+            links: [
+              { label: 'Events Overzicht', href: '/events' },
+              { label: 'Eventvideos', href: '/events/eventvideos' },
+              { label: 'Aftermovies', href: '/events/aftermovie' },
+              { label: 'Promovideos', href: '/events/promovideos' },
+              { label: 'Social Content', href: '/events/social-content' },
+              { label: 'Fotografie', href: '/events/fotografie' },
             ],
           },
           {
-            h: ['Zakelijke Events'],
-            level: 3,
-          },
-          {
-            ul: [
-              [
-                {
-                  text: 'Zakelijke Events Overzicht',
-                  href: '/zakelijke-events',
-                },
-              ],
-              [
-                {
-                  text: 'Promovideo',
-                  href: '/zakelijke-events/promovideo',
-                },
-              ],
-              [
-                {
-                  text: 'Casevideo',
-                  href: '/zakelijke-events/casevideo',
-                },
-              ],
-              [
-                {
-                  text: 'Aftermovie',
-                  href: '/zakelijke-events/aftermovie',
-                },
-              ],
-              [
-                {
-                  text: 'Fotografie',
-                  href: '/zakelijke-events/fotografie',
-                },
-              ],
+            title: 'Zakelijke Events',
+            links: [
+              {
+                label: 'Zakelijke Events Overzicht',
+                href: '/zakelijke-events',
+              },
+              { label: 'Promovideo', href: '/zakelijke-events/promovideo' },
+              { label: 'Casevideo', href: '/zakelijke-events/casevideo' },
+              { label: 'Aftermovie', href: '/zakelijke-events/aftermovie' },
+              { label: 'Fotografie', href: '/zakelijke-events/fotografie' },
             ],
           },
           {
-            h: ['Artiesten'],
-            level: 3,
-          },
-          {
-            ul: [
-              [
-                {
-                  text: 'Artiesten Overzicht',
-                  href: '/artiesten',
-                },
-              ],
-              [
-                {
-                  text: 'Artiestenpromo',
-                  href: '/artiesten/artiestenpromo',
-                },
-              ],
-              [
-                {
-                  text: 'Bandpromo',
-                  href: '/artiesten/bandpromo',
-                },
-              ],
-              [
-                {
-                  text: 'Recap',
-                  href: '/artiesten/recap',
-                },
-              ],
-              [
-                {
-                  text: 'Social Content',
-                  href: '/artiesten/social-content',
-                },
-              ],
-              [
-                {
-                  text: 'Fotografie',
-                  href: '/artiesten/fotografie',
-                },
-              ],
+            title: 'Artiesten',
+            links: [
+              { label: 'Artiesten Overzicht', href: '/artiesten' },
+              { label: 'Artiestenpromo', href: '/artiesten/artiestenpromo' },
+              { label: 'Bandpromo', href: '/artiesten/bandpromo' },
+              { label: 'Recap', href: '/artiesten/recap' },
+              { label: 'Social Content', href: '/artiesten/social-content' },
+              { label: 'Fotografie', href: '/artiesten/fotografie' },
             ],
           },
           {
-            h: ["Diensten & Landingspagina's"],
-            level: 3,
-          },
-          {
-            ul: [
-              [
-                {
-                  text: 'Promotievideo maken',
-                  href: '/promotievideo-laten-maken',
-                },
-              ],
-              [
-                {
-                  text: 'Aftermovie maken',
-                  href: '/aftermovie-laten-maken',
-                },
-              ],
-              [
-                {
-                  text: 'Trouwfilm',
-                  href: '/trouwfilm',
-                },
-              ],
-              [
-                {
-                  text: 'Videograaf Doetinchem',
-                  href: '/videograaf-doetinchem',
-                },
-              ],
+            title: "Diensten & Landingspagina's",
+            links: [
+              {
+                label: 'Promotievideo maken',
+                href: '/promotievideo-laten-maken',
+              },
+              { label: 'Aftermovie maken', href: '/aftermovie-laten-maken' },
+              { label: 'Trouwfilm', href: '/trouwfilm' },
+              {
+                label: 'Videograaf Doetinchem',
+                href: '/videograaf-doetinchem',
+              },
             ],
           },
+          casesLinkGroup('Cases'),
           {
-            h: ['Portfolio (Work)'],
-            level: 3,
-          },
-          {
-            ul: [
-              [
-                {
-                  text: 'Doetinchemse Kade Feesten',
-                  href: '/cases/doetinchemse-kade-feesten',
-                },
-              ],
-              [
-                {
-                  text: 'Doorgedraaid Feestival',
-                  href: '/cases/doorgedraaid-feestival',
-                },
-              ],
-              [
-                {
-                  text: 'Dorpsfeest Wehl',
-                  href: '/cases/dorpsfeest-wehl',
-                },
-              ],
-              [
-                {
-                  text: 'Drift',
-                  href: '/cases/drift',
-                },
-              ],
-              [
-                {
-                  text: 'Proost Band',
-                  href: '/cases/proost-band',
-                },
-              ],
-              [
-                {
-                  text: 'RHB Foto',
-                  href: '/cases/rhbfoto',
-                },
-              ],
-              [
-                {
-                  text: 'Saxy Pianoshow',
-                  href: '/cases/saxypianoshow',
-                },
-              ],
-              [
-                {
-                  text: 'Superminds',
-                  href: '/cases/superminds',
-                },
-              ],
-              [
-                {
-                  text: 'Waterschap Rijn-IJssel',
-                  href: '/cases/waterschap-rijn-ijssel',
-                },
-              ],
-              [
-                {
-                  text: 'Why Go Home',
-                  href: '/cases/why-go-home',
-                },
-              ],
+            title: 'Juridisch',
+            links: [
+              { label: 'Privacyverklaring', href: '/privacyverklaring' },
+              { label: 'Cookiebeleid', href: '/cookiebeleid' },
+              { label: 'Algemene voorwaarden', href: '/algemene-voorwaarden' },
             ],
           },
         ],

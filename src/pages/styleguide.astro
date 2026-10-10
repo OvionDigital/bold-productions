@@ -44,6 +44,7 @@ import ContactSection from '../components/sections/ContactSection.astro';
 import MapSection from '../components/sections/MapSection.astro';
 import CaseGrid from '../components/sections/CaseGrid.astro';
 import CaseFacts from '../components/sections/CaseFacts.astro';
+import LinkGroups from '../components/sections/LinkGroups.astro';
 import { getForm } from '../data/forms';
 import { pages } from '../data/pages';
 import { cases, caseGridProps } from '../data/cases';
@@ -78,6 +79,7 @@ const fullWidthImageExample = example('fullWidthImage');
 const videoFeatureExample = example('videoFeature');
 const contactSectionExample = example('contactSection');
 const mapExample = example('map');
+const linkGroupsExample = example('linkGroups');
 const teamExample = allSections.find((s) => s.type === 'serviceTiles' && s.props.variant === 'team') as Extract<PageSection, { type: 'serviceTiles' }>;
 
 const accents = ['orange', 'yellow', 'green'] as const;
@@ -97,15 +99,50 @@ const nav = [
   ['container', 'Container'],
   ['layout', 'Layout'],
   ['knop-voorstellen', 'Knop: 6 voorstellen'],
+  ['kop-voorstellen', 'Koppen: 6 voorstellen'],
   ['secties', 'Secties'],
 ];
+
+/** Kopvoorstellen (#kop-voorstellen) voor h2–h6 (hero-h1 blijft): alleen hier gestyled, via .sg-hlook--{id}. */
+const headingLooks = [
+  {
+    id: 1,
+    name: 'Rustig & effen',
+    text: 'Zelfde kapitalen, maar met lucht: regelafstand 100% in plaats van 88%, effen accentkleur in plaats van de gradient. h4–h6 worden kleine, gespatieerde labels (zoals de eyebrow), zodat de hiërarchie duidelijker is.',
+  },
+  {
+    id: 2,
+    name: 'Gewone hoofdletters',
+    text: 'Geen kapitalen meer onder de hero: koppen in gewone zinsopbouw, wit, met een kort accentlijntje onder de h2. Leest rustiger en moderner; de hero blijft het schreeuwende moment.',
+  },
+  {
+    id: 3,
+    name: 'Neon-outline',
+    text: 'h2 als lijnletter in de accentkleur met een zachte gloed, net als de neon B-vormen op de achtergrond. h3 gevuld wit, h4–h6 in accentkleur. Het meest uitgesproken.',
+  },
+  {
+    id: 4,
+    name: 'Cursief accent',
+    text: 'h2 in Gate italic (de letter van de accentregel in de hero) in effen accentkleur; h3 recht en wit. Zo voelt elke sectie als een vervolg op de hero.',
+  },
+  {
+    id: 5,
+    name: 'Driehoekmarker',
+    text: 'Witte kapitalen met een oranje driehoekje ervoor: hetzelfde motief als de driehoekjes rond de foto’s. h3–h6 in accentkleur, zonder gradient.',
+  },
+  {
+    id: 6,
+    name: 'Redactioneel',
+    text: 'Grote witte h2 met een verticale accentbalk ervoor, zoals in een magazine. Meer contrast tussen de niveaus: h3 compact in accentkleur, h4–h6 wit in gewone zinsopbouw.',
+  },
+] as const;
 
 /** Knopvoorstellen (#knop-voorstellen): alleen hier gestyled, via .sg-look--{id}. */
 const looks = [
   {
     id: 1,
-    name: 'Driehoekhoek',
-    text: "De hoek rechtsonder is weggeknipt, als de oranje driehoekjes bij de foto's. Bij outline en ghost wordt die hoek een gevuld accentdriehoekje dat bij hover groeit. Rustig, maar herkenbaar Bold.",
+    name: 'Vullen van onder',
+    text: 'Effen knop met een dikke accentrand aan de onderkant, als een podiumrand. Bij hover loopt de vulling van onder naar boven vol (wit bij solid, accentkleur bij outline). Strak en rustig, met een duidelijke reactie.',
   },
   {
     id: 2,
@@ -119,13 +156,13 @@ const looks = [
   },
   {
     id: 4,
-    name: 'Schuin (ticket)',
-    text: 'Parallellogram: de knop staat schuin, tekst blijft recht. Energiek en sportief, als een festivalticket of een lichtbundel. Werkt in alle varianten met behoud van de rand.',
+    name: 'Zoeker',
+    text: 'Vier hoekjes rond de knop, zoals de zoeker van een camera: past bij een videoproductiebedrijf. Bij hover schuiven de hoekjes naar de knop toe en knippert er een rood REC-bolletje. Speels, maar alleen met effen vlakken.',
   },
   {
     id: 5,
     name: 'Pil + icoonbol',
-    text: 'Afgeronde pil met de pijl in een eigen rondje dat bij hover een kwartslag draait. Moderner en vriendelijker; het grootste contrast met de huidige hoekige stijl.',
+    text: 'Afgeronde pil in effen accentkleur, met de pijl in een eigen rondje dat bij hover een kwartslag draait. Moderner en vriendelijker; het grootste contrast met de huidige hoekige stijl.',
   },
   {
     id: 6,
@@ -613,6 +650,47 @@ const looks = [
         }
       </section>
 
+      <section class="sg-section" id="kop-voorstellen">
+        <h2 class="sg-title">Koppen: 6 voorstellen</h2>
+        <p class="sg-note">
+          Alternatieven voor h2 t/m h6 (de hero-h1 blijft zoals hij is), allemaal in Gate. Elk voorbeeld toont een
+          sectiekop met eyebrow en tekst, en daaronder h3 t/m h6. Alleen op deze pagina gestyled
+          (<code>.sg-hlook--n</code>); na een keuze komt die stijl in <code>Heading.astro</code> en{' '}
+          <code>global.css</code>.
+        </p>
+        <div class="sg-demo" data-accent="orange">
+          <p class="sg-label">Huidig (gelijk aan live)</p>
+          <div class="sg-hdemo">
+                <Eyebrow text="Bold backstage" />
+                <Heading as="h2" text="Je event is groter dan de dag zelf" gradient="accent" />
+                <p>Ervoor wil je FOMO creëren en tickets verkopen. Tijdens wil je de climax vastleggen en delen.</p>
+                <Heading as="h3" text="Pre-productie" gradient="yellow" />
+                <Heading as="h4" text="Wat kost een aftermovie?" />
+                <Heading as="h5" text="Eendaagse event" />
+                <Heading as="h6" text="Levertijd" />
+              </div>
+        </div>
+        {
+          headingLooks.map((look) => (
+            <div class:list={['sg-demo', 'sg-hlook', `sg-hlook--${look.id}`]} data-accent="orange">
+              <p class="sg-label">
+                {look.id}. {look.name}
+              </p>
+              <p class="sg-note">{look.text}</p>
+              <div class="sg-hdemo">
+                <Eyebrow text="Bold backstage" />
+                <Heading as="h2" text="Je event is groter dan de dag zelf" gradient="accent" />
+                <p>Ervoor wil je FOMO creëren en tickets verkopen. Tijdens wil je de climax vastleggen en delen.</p>
+                <Heading as="h3" text="Pre-productie" gradient="yellow" />
+                <Heading as="h4" text="Wat kost een aftermovie?" />
+                <Heading as="h5" text="Eendaagse event" />
+                <Heading as="h6" text="Levertijd" />
+              </div>
+            </div>
+          ))
+        }
+      </section>
+
       <section class="sg-section" id="secties">
         <h2 class="sg-title">Secties</h2>
         <h3 class="sg-subtitle">Hero</h3>
@@ -828,6 +906,15 @@ const looks = [
       </p>
     </Container>
     <MapSection {...mapExample.props} />
+
+    <Container>
+      <h3 class="sg-subtitle">LinkGroups</h3>
+      <p class="sg-note">
+        <code>&lt;LinkGroups eyebrow title titleAs gradient groups /&gt;</code>: kaarten met links per groep (sitemap).
+        Een groep met <code>auto: 'cases'</code> wordt gevuld met alle cases. Hier drie groepen, kop als h2.
+      </p>
+    </Container>
+    <LinkGroups {...linkGroupsExample.props} titleAs="h2" groups={linkGroupsExample.props.groups.slice(0, 3)} />
   </div>
 </BaseLayout>
 
@@ -1138,35 +1225,45 @@ const looks = [
     -webkit-text-fill-color: currentColor;
   }
 
-  /* 1. Driehoekhoek */
+  /* 1. Vullen van onder: dikke accentrand onder, vulling loopt bij hover omhoog */
+  .sg-look--1 :global(.button) {
+    border-width: 0 0 var(--button-alt-bar) 0;
+    background-image: linear-gradient(var(--sg-look-fill), var(--sg-look-fill));
+    background-repeat: no-repeat;
+    background-position: bottom;
+    background-size: 100% 0%;
+    transition:
+      background-size var(--duration-base) var(--ease-reveal),
+      color var(--duration-base) var(--ease-reveal);
+  }
+
+  .sg-look--1 :global(.button:hover) {
+    background-position: bottom;
+    background-size: 100% 100%;
+  }
+
   .sg-look--1 :global(.button--primary) {
-    clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--button-alt-notch)), calc(100% - var(--button-alt-notch)) 100%, 0 100%);
+    --sg-look-fill: var(--color-white);
+    background-color: var(--accent);
+    border-color: var(--color-black-a48);
   }
 
   .sg-look--1 :global(.button--outline),
   .sg-look--1 :global(.button--ghost) {
+    --sg-look-fill: var(--accent);
+    background-color: var(--color-black-a48);
+    border-color: var(--accent);
     color: var(--color-white);
   }
 
-  .sg-look--1 :global(.button--outline::after),
-  .sg-look--1 :global(.button--ghost::after) {
-    content: '';
-    position: absolute;
-    right: calc(var(--border-width) * -1);
-    bottom: calc(var(--border-width) * -1);
-    width: var(--button-alt-notch);
-    height: var(--button-alt-notch);
-    background-color: var(--accent);
-    clip-path: polygon(100% 0, 100% 100%, 0 100%);
-    transition:
-      width var(--duration-fast) var(--ease-out),
-      height var(--duration-fast) var(--ease-out);
+  .sg-look--1 :global(.button--ghost) {
+    --sg-look-fill: var(--color-white);
+    border-color: var(--color-white);
   }
 
-  .sg-look--1 :global(.button--outline:hover::after),
-  .sg-look--1 :global(.button--ghost:hover::after) {
-    width: calc(var(--button-alt-notch) * 2);
-    height: calc(var(--button-alt-notch) * 2);
+  .sg-look--1 :global(.button--outline:hover),
+  .sg-look--1 :global(.button--ghost:hover) {
+    color: var(--color-black);
   }
 
   /* 2. Neon */
@@ -1243,34 +1340,89 @@ const looks = [
     color: var(--color-black);
   }
 
-  /* 4. Schuin (ticket): schuine knop, rechte inhoud */
+  /* 4. Zoeker: hoekjes als in een camerazoeker; hover: hoekjes sluiten aan + REC-bolletje */
   .sg-look--4 :global(.button) {
-    transform: skewX(var(--button-alt-skew));
+    --sg-corner-color: var(--accent);
+    --sg-corner-gap: var(--space-8);
+    overflow: visible;
   }
 
-  .sg-look--4 :global(.button > *) {
-    transform: skewX(calc(var(--button-alt-skew) * -1));
-  }
-
-  .sg-look--4 :global(.button:hover .button__icon--right) {
-    transform: skewX(calc(var(--button-alt-skew) * -1)) translateX(var(--space-4));
-  }
-
-  .sg-look--4 :global(.button:hover .button__icon--down) {
-    transform: skewX(calc(var(--button-alt-skew) * -1)) translateY(var(--space-4));
+  .sg-look--4 :global(.button--primary) {
+    background-image: none;
+    background-color: var(--accent);
+    border-color: transparent;
   }
 
   .sg-look--4 :global(.button--outline) {
+    border-color: transparent;
     color: var(--color-white);
-    border-width: var(--border-width-thick);
   }
 
-  .sg-look--4 :global(.button--outline:hover) {
-    background-color: var(--accent);
-    color: var(--color-black);
+  .sg-look--4 :global(.button--ghost) {
+    --sg-corner-color: var(--color-white);
+    border-color: transparent;
+  }
+
+  /* Vier hoeken: per hoek een horizontaal en een verticaal lijntje */
+  .sg-look--4 :global(.button::before) {
+    content: '';
+    position: absolute;
+    inset: calc(-1 * var(--sg-corner-gap));
+    --l: linear-gradient(var(--sg-corner-color), var(--sg-corner-color));
+    background:
+      var(--l) top left / var(--button-alt-corner) var(--border-width-thick),
+      var(--l) top left / var(--border-width-thick) var(--button-alt-corner),
+      var(--l) top right / var(--button-alt-corner) var(--border-width-thick),
+      var(--l) top right / var(--border-width-thick) var(--button-alt-corner),
+      var(--l) bottom left / var(--button-alt-corner) var(--border-width-thick),
+      var(--l) bottom left / var(--border-width-thick) var(--button-alt-corner),
+      var(--l) bottom right / var(--button-alt-corner) var(--border-width-thick),
+      var(--l) bottom right / var(--border-width-thick) var(--button-alt-corner);
+    background-repeat: no-repeat;
+    pointer-events: none;
+    transition: inset var(--duration-base) var(--ease-reveal);
+  }
+
+  .sg-look--4 :global(.button:hover::before) {
+    inset: 0;
+  }
+
+  /* Hoekjes steken buiten de knop: meer ruimte tussen de knoppen */
+  .sg-look--4 .sg-row {
+    gap: var(--space-32);
+  }
+
+  /* REC-bolletje linksboven */
+  .sg-look--4 :global(.button::after) {
+    content: '';
+    position: absolute;
+    top: var(--space-8);
+    left: var(--space-8);
+    width: var(--space-8);
+    height: var(--space-8);
+    border-radius: var(--radius-round);
+    background-color: var(--color-rec);
+    opacity: 0;
+    transition: opacity var(--duration-fast) var(--ease-out);
+  }
+
+  .sg-look--4 :global(.button:hover::after) {
+    opacity: 1;
+    animation: sg-rec 1s steps(2, jump-none) infinite;
+  }
+
+  @keyframes sg-rec {
+    50% {
+      opacity: 0;
+    }
   }
 
   /* 5. Pil + icoonbol */
+  .sg-look--5 :global(.button--primary) {
+    background-image: none;
+    background-color: var(--accent);
+  }
+
   .sg-look--5 :global(.button) {
     gap: var(--space-16);
     padding-right: var(--space-8);
@@ -1338,5 +1490,150 @@ const looks = [
   .sg-look--6 :global(.button:hover) {
     transform: translate(var(--button-alt-offset), var(--button-alt-offset));
     box-shadow: 0 0 0 transparent;
+  }
+
+  /* ─── Kopvoorstellen (#kop-voorstellen) ───────────────────────────── */
+  .sg-hdemo {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-16);
+    max-width: var(--container-narrow);
+  }
+
+  .sg-hdemo :global(.heading) {
+    margin: 0;
+  }
+
+  /* Gradient-tekst uit waar een voorstel effen kleur wil */
+  .sg-hlook.sg-hlook :global(.heading.text-gradient) {
+    background-image: none;
+    -webkit-text-fill-color: currentColor;
+  }
+
+  /* 1. Rustig & effen */
+  .sg-hlook--1 :global(.heading--h2),
+  .sg-hlook--1 :global(.heading--h3) {
+    line-height: var(--lh-none);
+    color: var(--accent);
+  }
+
+  .sg-hlook--1 :global(.heading--h3) {
+    color: var(--color-white);
+  }
+
+  .sg-hlook--1 :global(:is(.heading--h4, .heading--h5, .heading--h6)) {
+    font-size: var(--fs-sm);
+    letter-spacing: var(--ls-label);
+    color: var(--accent);
+  }
+
+  .sg-hlook--1 :global(:is(.heading--h5, .heading--h6)) {
+    color: var(--color-gray-light);
+  }
+
+  /* 2. Gewone hoofdletters */
+  .sg-hlook--2 :global(.heading) {
+    text-transform: none;
+    line-height: var(--lh-snug);
+    color: var(--color-white);
+  }
+
+  .sg-hlook--2 :global(.heading--h2) {
+    line-height: var(--lh-none);
+  }
+
+  .sg-hlook--2 :global(.heading--h2::after) {
+    content: '';
+    display: block;
+    width: var(--space-48);
+    height: var(--border-width-thick);
+    margin-top: var(--space-16);
+    background-color: var(--accent);
+  }
+
+  .sg-hlook--2 :global(.heading--h3) {
+    color: var(--accent);
+  }
+
+  /* 3. Neon-outline */
+  .sg-hlook--3.sg-hlook--3 :global(.heading--h2) {
+    line-height: var(--lh-none);
+    -webkit-text-fill-color: transparent;
+    -webkit-text-stroke: var(--border-width) var(--accent);
+    text-shadow: 0 0 var(--space-16) color-mix(in srgb, var(--accent) 45%, transparent);
+  }
+
+  .sg-hlook--3 :global(.heading--h3) {
+    color: var(--color-white);
+  }
+
+  .sg-hlook--3 :global(:is(.heading--h4, .heading--h5, .heading--h6)) {
+    color: var(--accent);
+  }
+
+  /* 4. Cursief accent */
+  .sg-hlook--4 :global(.heading--h2) {
+    font-style: italic;
+    line-height: var(--lh-none);
+    color: var(--accent);
+  }
+
+  .sg-hlook--4 :global(.heading--h3) {
+    color: var(--color-white);
+  }
+
+  .sg-hlook--4 :global(.heading--h4) {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  /* 5. Driehoekmarker */
+  .sg-hlook--5 :global(.heading) {
+    color: var(--color-white);
+  }
+
+  .sg-hlook--5 :global(.heading--h2) {
+    position: relative;
+    padding-left: var(--heading-alt-marker);
+    line-height: var(--lh-none);
+  }
+
+  .sg-hlook--5 :global(.heading--h2::before) {
+    content: '';
+    position: absolute;
+    top: 0.12em;
+    left: 0;
+    width: calc(var(--heading-alt-marker) * 0.6);
+    height: calc(var(--heading-alt-marker) * 0.6);
+    background-color: var(--color-orange);
+    clip-path: polygon(0 0, 100% 50%, 0 100%);
+  }
+
+  .sg-hlook--5 :global(:is(.heading--h3, .heading--h4, .heading--h5, .heading--h6)) {
+    color: var(--accent);
+  }
+
+  /* 6. Redactioneel */
+  .sg-hlook--6 :global(.heading--h2) {
+    padding-left: var(--space-24);
+    border-left: var(--heading-alt-bar) solid var(--accent);
+    line-height: var(--lh-none);
+    color: var(--color-white);
+  }
+
+  .sg-hlook--6 :global(.heading--h3) {
+    font-size: var(--fs-h4);
+    line-height: var(--lh-none);
+    color: var(--accent);
+  }
+
+  .sg-hlook--6 :global(:is(.heading--h4, .heading--h5, .heading--h6)) {
+    text-transform: none;
+    color: var(--color-white);
+  }
+
+  .sg-hlook--6 :global(.heading--h6) {
+    color: var(--color-gray-light);
   }
 </style>

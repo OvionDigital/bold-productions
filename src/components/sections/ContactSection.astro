@@ -2,7 +2,8 @@
 /**
  * Contactblok (Webflow .contact-section / .offerte-section): tekst met contactlinks
  * (bellen, mailen, WhatsApp) en daarnaast het formulier (slot "form").
- * Onder 1440px onder elkaar, gecentreerd. `formWidth: 'narrow'` = smallere formulierkolom
+ * Onder 1440px onder elkaar, gecentreerd. Vanaf 1440 naast elkaar en scrolt de tekst-
+ * kolom mee (sticky, Webflow .contact-col.sticky) zolang het formulier langer is. `formWidth: 'narrow'` = smallere formulierkolom
  * vanaf 1920px (offerteformulier, Webflow .form-col).
  */
 import Container from '../ui/Container.astro';
@@ -118,6 +119,11 @@ const iconFor = (href: string): IconName =>
       justify-content: center;
       align-items: flex-start;
       gap: var(--space-48);
+    }
+
+    .contact-section__col:first-child {
+      position: sticky;
+      top: var(--sticky-offset);
     }
   }
 

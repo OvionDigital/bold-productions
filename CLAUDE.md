@@ -127,7 +127,7 @@ Houd dit bij bij elk nieuw component.
 | `Heading.astro`        | Displaykop in Gate. `as` (semantiek) los van `size`, optioneel `gradient`, `align`, `flush`.               |
 | `SectionHeading.astro` | Gecentreerde eyebrow + h2 met gradient (Webflow `.section-heading`), optioneel `text` eronder; `spacing` default/compact/none. |
 | `BackgroundVideo.astro`| Rookvideo als decoratieve laag: poster (AVIF/WebP) + lazy `<video>` (gedrag: `background-video.ts`).    |
-| `Carousel.astro`       | Scroll-snap-carousel met pijlknoppen (Owl-instellingen 1/1/2/3), items lijnen uit op de container.     |
+| `Carousel.astro`       | Scroll-snap-carousel met pijlknoppen (Owl-instellingen 1/1/2/3), items lijnen uit op de container. Minder items dan er passen: gecentreerd, zonder knoppen. |
 | `TestimonialCard.astro`| Kaart met foto, quote (Gate italic), oranje lijn en naam – organisatie (beide optioneel).             |
 | `Polaroid.astro`       | Foto met witte polaroidrand, schaduw, kanteling (`--polaroid-rotate`) en optionele caption.            |
 | `VimeoEmbed.astro`     | Vimeo-iframe met vaste verhouding, loading=lazy, optioneel background-modus.                            |
@@ -168,9 +168,10 @@ Houd dit bij bij elk nieuw component.
 | `RichTextSection.astro` | Smalle gecentreerde tekstkolom (rich text met koppen, lijsten, citaat, Vimeo); `align`; `standalone` (eerste sectie zonder hero, zoals de 404). Dienst-, case-, sitemap- en juridische pagina's. |
 | `FullWidthImage.astro` | 16:9-foto over de containerbreedte (casepagina's). |
 | `VideoFeature.astro` | Vimeo-video (lazy, met bediening) over de containerbreedte; `ratio`. |
-| `ContactSection.astro` | Tekst met bel/mail/WhatsApp-links naast een formulier (slot `form`); `formWidth`. Contact, offerte, trouwfilm. |
+| `ContactSection.astro` | Tekst met bel/mail/WhatsApp-links naast een formulier (slot `form`); `formWidth`. ≥1440 scrolt de tekstkolom mee (sticky). Contact, offerte. |
 | `MapSection.astro` | Kop + tekst en Google Maps-iframe (lazy). |
 | `CaseGrid.astro` | Casesoverzicht: filterknoppen (doelgroep, dienst) + raster CaseCards; props via `caseGridProps()` (gedrag: `case-filter.ts`). |
+| `LinkGroups.astro` | Kop + raster glazen kaarten met links per groep (sitemap); groep met `auto: 'cases'` = alle cases automatisch. |
 | `CaseFacts.astro` | Feitenbalk op een casepagina (klant, datum, doelgroep, diensten); props via `caseFacts()` in `lib/cases.ts`. |
 | `PageSections.astro` | Geen eigen opmaak: rendert een lijst `PageSection`s (`lib/sections.ts`, uit src/data of Sanity) met de componenten hierboven; TextMedia/ContactSection + `form` = met ContactForm. |
 
@@ -185,9 +186,9 @@ Houd dit bij bij elk nieuw component.
 | `hero-video.ts`        | Zet de Vimeo-src na window.load (mobiel alleen met loadOnMobile), fade-in via postMessage 'play'. |
 | `scroll-highlight.ts`  | SplitType + ScrollTrigger scrub: letters van 15% naar 100% met gloed; `stagger` bepaalt de breedte van de gloed.      |
 | `background-video.ts`  | IntersectionObserver: video-src zetten en afspelen in beeld, pauzeren erbuiten. |
-| `carousel.ts`          | Pijlknoppen scrollen één item, disabled aan begin/eind; slepen met de muis (snap bij loslaten). |
+| `carousel.ts`          | `.is-scrollable` als niet alles past (alleen dan knoppen en slepen); pijlknoppen scrollen één item, disabled aan begin/eind; slepen met de muis (snap bij loslaten). |
 | `cinema-cursor.ts`     | Popcorn-cursor + spoor, alleen bij een sectie met id="cinema" en een muis.  |
-| `accordion.ts`         | Generiek accordeon: `[data-accordion-trigger]` + aria-controls, hoogte 0 ↔ auto (0,3 s). |
+| `accordion.ts`         | Generiek accordeon: `[data-accordion-trigger]` + aria-controls; zet aria-expanded en `data-open`, de animatie is CSS (grid-rows 0fr ↔ 1fr). |
 | `contact-form.ts`      | Formulier via fetch versturen, knop "Verzenden...", succes- of foutmelding.  |
 | `multiselect.ts`       | Meerkeuze-dropdown in formulieren (`[data-multiselect]`, `<details>` met checkboxes): samenvatting, sluiten bij klik buiten/Escape. |
 | `case-filter.ts`       | Casesoverzicht filteren (`[data-case-grid]`) per doelgroep en dienst; `?filter=` kiest vooraf; melding bij geen resultaat. |

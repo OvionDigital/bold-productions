@@ -14,6 +14,7 @@ import {
   caseGridSection,
   contactSection,
   fullWidthImageSection,
+  linkGroupsSection,
   mapSection,
   richTextSection,
   teamSection,
@@ -45,7 +46,8 @@ export const sectionTypes = [
   contactSection,
   mapSection,
   caseGridSection,
+  linkGroupsSection,
 ];
 
 /** Blokken voor de inhoud van een case (onder de vaste kop met hero, intro en feiten). */
-export const caseSectionTypes = sectionTypes.filter((t) => !['heroSection', 'breadcrumbsSection', 'caseGridSection'].includes(t.name));
+export const caseSectionTypes = sectionTypes.filter((t) => !['heroSection', 'breadcrumbsSection', 'caseGridSection', 'linkGroupsSection'].includes(t.name));

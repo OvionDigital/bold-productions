@@ -25,6 +25,7 @@ import type { ContactSectionProps } from '../components/sections/ContactSection.
 import type { MapSectionProps } from '../components/sections/MapSection.astro';
 import type { CaseGridProps } from '../components/sections/CaseGrid.astro';
 import type { CaseFactsProps } from '../components/sections/CaseFacts.astro';
+import type { LinkGroupsProps } from '../components/sections/LinkGroups.astro';
 import type { Crumb } from '../components/layout/Breadcrumbs.astro';
 import type { Accent } from '../components/ui/Button.astro';
 
@@ -56,6 +57,7 @@ export type PageSection = (
   | { type: 'map'; props: MapSectionProps }
   | { type: 'caseGrid'; props: CaseGridProps }
   | { type: 'caseFacts'; props: CaseFactsProps }
+  | { type: 'linkGroups'; props: LinkGroupsProps }
 ) & { key?: string };
 
 export type PageSectionType = PageSection['type'];

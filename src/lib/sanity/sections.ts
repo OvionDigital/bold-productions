@@ -12,9 +12,10 @@
  */
 import { imageProjection, toRemoteImage, type SanityImageRef } from './image';
 import { portableTextToRich } from './portableText';
-import { caseGridProps, type Audience, type Case } from '../../data/cases';
+import { caseGridProps, caseUrl, type Audience, type Case } from '../../data/cases';
 import type { FormChoice, PageSection } from '../sections';
 import type { TextMediaProps } from '../../components/sections/TextMedia.astro';
+import type { LinkGroup } from '../../components/sections/LinkGroups.astro';
 import type { HeadingGradient } from '../../components/ui/Heading.astro';
 import type { Accent } from '../../components/ui/Button.astro';
 import type { IconName } from '../../components/ui/icons';
@@ -94,7 +95,12 @@ export const sectionsProjection = `{
   _type == "videoFeatureSection" => { video, ratio },
   _type == "contactSection" => { content, links[]{ label, href }, form, messagePlaceholder, anchorId },
   _type == "mapSection" => { title, gradient, text, src, label },
-  _type == "caseGridSection" => { anchorId, "cases": ${allCasesQuery} }
+  _type == "caseGridSection" => { anchorId, "cases": ${allCasesQuery} },
+  _type == "linkGroupsSection" => {
+    eyebrow, title, isPageTitle, gradient, anchorId, casesGroupTitle, casesGroupIndex,
+    groups[]{ title, links[]{ label, href } },
+    "cases": select(defined(casesGroupTitle) => ${allCasesQuery})
+  }
 }`;
 
 type Cta = { label?: string; href?: string; accent?: Accent };
@@ -392,6 +398,35 @@ const mappers: Record<string, (s: RawSection) => PageSection> = {
       label: s.label ?? '',
     },
   }),
+
+  linkGroupsSection: (s) => {
+    const groups: LinkGroup[] = ((s.groups ?? []) as { title?: string; links?: { label?: string; href?: string }[] }[])
+      .map((g) => ({
+        title: g.title ?? '',
+        links: (g.links ?? []).filter((l) => l.label && l.href).map((l) => ({ label: l.label!, href: l.href! })),
+      }))
+      .filter((g) => g.title && g.links.length);
+    if (s.casesGroupTitle) {
+      const links = ((s.cases ?? []) as RawCase[])
+        .map(toCase)
+        .filter((c): c is Case => c !== null)
+        .map((c) => ({ label: c.title, href: caseUrl(c.slug) }));
+      const index = typeof s.casesGroupIndex === 'number' ? s.casesGroupIndex : groups.length;
+      if (links.length) groups.splice(Math.max(0, Math.min(index, groups.length)), 0, { title: s.casesGroupTitle, links, auto: 'cases' });
+    }
+    return {
+      type: 'linkGroups',
+      key: s._key,
+      props: {
+        id: opt(s.anchorId),
+        eyebrow: opt(s.eyebrow),
+        title: opt(s.title),
+        titleAs: s.isPageTitle ? ('h1' as const) : ('h2' as const),
+        gradient: gradient(s.gradient),
+        groups: need(groups, 'geen groepen'),
+      },
+    };
+  },
 
   caseGridSection: (s) => ({
     type: 'caseGrid',
