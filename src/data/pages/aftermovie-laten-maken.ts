@@ -236,7 +236,9 @@ export const page: PageData = {
                 ],
               },
               {
-                p: ['Zo begint je event al te leven weken voordat de eerste bezoeker binnenloopt. En dat merk je in je kaartverkoop.'],
+                p: [
+                  'Zo begint je event al te leven weken voordat de eerste bezoeker binnenloopt. En dat merk je in je kaartverkoop.',
+                ],
               },
               {
                 p: [],

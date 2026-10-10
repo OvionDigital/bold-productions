@@ -1,12 +1,47 @@
 ---
 /**
- * Tracking: Google Tag Manager (GTM-KCTG3DST) en CookieFirst.
- * Rendert alleen als PUBLIC_ENABLE_TRACKING === 'true'.
+ * Tracking: CookieFirst (cookiebanner) en Google Tag Manager (GTM-KCTG3DST), zelfde
+ * accounts als de Webflow-site. Rendert alleen als PUBLIC_ENABLE_TRACKING === 'true'.
  *
- * TODO(tracking): GTM + CookieFirst implementeren. Laad beide niet render-blocking
- * (async, na consent), en voeg de GTM-noscript-iframe direct na <body> toe.
+ * Beide async: geen render-blokkerende third-party in <head> (live laadde CookieFirst
+ * synchroon). Of tags pas na toestemming vuren regelt CookieFirst (Consent Mode) in
+ * combinatie met de triggers in GTM — dat is configuratie in die accounts, niet hier.
+ *
+ * `part="head"` in <head>, `part="body"` direct na <body> (GTM-noscript).
  */
+interface Props {
+  part?: 'head' | 'body';
+}
+
+const { part = 'head' } = Astro.props;
 const enabled = import.meta.env.PUBLIC_ENABLE_TRACKING === 'true';
+const GTM_ID = 'GTM-KCTG3DST';
+const COOKIEFIRST = 'https://consent.cookiefirst.com/sites/weareboldproductions.com-6a345551-94a5-4b73-adfb-46470a3f6a2c/consent.js';
 ---
 
-{enabled && <Fragment>{/* TODO(tracking): scripts hier */}</Fragment>}
+{
+  enabled && part === 'head' && (
+    <Fragment>
+      <link rel="preconnect" href="https://www.googletagmanager.com" />
+      <script is:inline async src={COOKIEFIRST} />
+      <script is:inline define:vars={{ GTM_ID }}>
+        (function (w, d, s, l, i) {
+          w[l] = w[l] || [];
+          w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+          var f = d.getElementsByTagName(s)[0],
+            j = d.createElement(s);
+          j.async = true;
+          j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i;
+          f.parentNode.insertBefore(j, f);
+        })(window, document, 'script', 'dataLayer', GTM_ID);
+      </script>
+    </Fragment>
+  )
+}
+{
+  enabled && part === 'body' && (
+    <noscript>
+      <iframe src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`} height="0" width="0" style="display:none;visibility:hidden" />
+    </noscript>
+  )
+}

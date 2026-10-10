@@ -21,6 +21,8 @@ const params = new URLSearchParams({
   muted: '1',
   background: '1',
   playsinline: '1',
+  // Geen tracking-cookies van Vimeo
+  dnt: '1',
 });
 const src = `https://player.vimeo.com/video/${id}?${params.toString()}`;
 ---

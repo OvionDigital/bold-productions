@@ -1,7 +1,8 @@
 ---
 /**
  * Displaykop in Gate. Semantisch niveau (`as`) staat los van de visuele grootte (`size`).
- * `gradient` kleurt de tekst met een merkgradient; 'accent' volgt data-accent.
+ * hero en h1: kapitalen met merkgradient (`gradient`). h2–h6: kapitalen in effen kleur
+ * (rustig & effen): h2 in de kleur van `gradient`, h3 wit, h4–h6 kleine labels.
  * Regeleinden: gebruik '\n' in `text`.
  */
 import { toLines } from '../../lib/text';
@@ -30,6 +31,8 @@ const {
   class: className,
 } = Astro.props;
 const lines = toLines(text);
+/** hero en h1 houden de kapitalen met gradient */
+const isDisplay = size === 'hero' || size === 'h1';
 ---
 
 <Tag
@@ -39,6 +42,7 @@ const lines = toLines(text);
     `heading--${align}`,
     { 'heading--flush': flush, 'text-gradient': gradient !== 'none' },
     gradient !== 'none' && gradient !== 'accent' && `text-gradient--${gradient}`,
+    !isDisplay && `heading--tone-${gradient}`,
     className,
   ]}
 >
@@ -68,33 +72,60 @@ const lines = toLines(text);
     line-height: var(--lh-display);
   }
 
+  /*
+   * h2–h6 "rustig & effen": kapitalen met lucht (regelafstand 100%), effen kleur i.p.v.
+   * gradient. h2 in de kleur van `gradient` (none/accent = accentkleur), h3 wit,
+   * h4–h6 kleine gespatieerde labels: h4 in de kleur, h5–h6 lichtgrijs.
+   */
+  .heading--h2,
+  .heading--h3,
+  .heading--h4,
+  .heading--h5,
+  .heading--h6 {
+    --heading-tone: var(--accent);
+    line-height: var(--lh-none);
+    background-image: none;
+    -webkit-text-fill-color: currentColor;
+  }
+
+  .heading--tone-orange {
+    --heading-tone: var(--color-orange);
+  }
+
+  .heading--tone-yellow {
+    --heading-tone: var(--color-yellow);
+  }
+
+  .heading--tone-green {
+    --heading-tone: var(--color-green);
+  }
+
   .heading--h2 {
     font-size: var(--fs-h2);
-    line-height: var(--lh-display);
     display: inline-block;
+    color: var(--heading-tone);
   }
 
   .heading--h3 {
     font-size: var(--fs-h3);
-    line-height: var(--lh-display-tight);
+    color: var(--color-white);
+  }
+
+  .heading--h4,
+  .heading--h5,
+  .heading--h6 {
+    font-size: var(--fs-sm);
+    line-height: var(--lh-body);
+    letter-spacing: var(--ls-label);
   }
 
   .heading--h4 {
-    font-size: var(--fs-h4);
-    line-height: var(--lh-heading-sm);
-    letter-spacing: normal;
+    color: var(--heading-tone);
   }
 
-  .heading--h5 {
-    font-size: var(--fs-h5);
-    line-height: var(--lh-heading-xs);
-    letter-spacing: normal;
-  }
-
+  .heading--h5,
   .heading--h6 {
-    font-size: var(--fs-h6);
-    line-height: var(--lh-heading-xxs);
-    letter-spacing: normal;
+    color: var(--color-gray-light);
   }
 
   .heading--center {

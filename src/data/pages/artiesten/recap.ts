@@ -16,8 +16,10 @@ export const page: PageData = {
   slug: 'artiesten/recap',
   title: 'Recap',
   meta: {
+    schema: { type: 'service', serviceType: 'Artist Recap Productie' },
     title: 'Recap laten maken? | Bold Productions',
-    description: 'Vang de energie van je show. Deel scherpe recaps terwijl het publiek nog bruist en overtuig boekers. Ontdek Bold.',
+    description:
+      'Vang de energie van je show. Deel scherpe recaps terwijl het publiek nog bruist en overtuig boekers. Ontdek Bold.',
   },
   sections: [
     {
@@ -335,7 +337,8 @@ export const page: PageData = {
             ],
           },
           {
-            question: 'Wij spelen op een event waar Bold Productions al aanwezig is. Kunnen jullie dan ook onze recap maken?',
+            question:
+              'Wij spelen op een event waar Bold Productions al aanwezig is. Kunnen jullie dan ook onze recap maken?',
             answer: [
               {
                 p: [

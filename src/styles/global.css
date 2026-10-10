@@ -72,6 +72,12 @@ button {
   appearance: none;
 }
 
+/* Scroll anchoring (Chrome) uit: het verspringen bij uitklappen (accordeon) regelen we zelf,
+   zie scripts/accordion.ts; anders corrigeren browser en script allebei. */
+html {
+  overflow-anchor: none;
+}
+
 /* ─── Basistypografie ───────────────────────────────────────────────── */
 h1,
 h2,
@@ -98,7 +104,7 @@ h1 {
 
 h2 {
   font-size: var(--fs-h2);
-  line-height: var(--lh-display);
+  line-height: var(--lh-none);
   letter-spacing: var(--ls-heading);
   margin-bottom: 0.67em;
   display: inline-block;
@@ -106,29 +112,32 @@ h2 {
 
 h3 {
   font-size: var(--fs-h3);
-  line-height: var(--lh-display-tight);
+  line-height: var(--lh-none);
   letter-spacing: var(--ls-heading);
   margin-top: var(--space-20);
   margin-bottom: 1em;
 }
 
 h4 {
-  font-size: var(--fs-h4);
-  line-height: var(--lh-heading-sm);
+  font-size: var(--fs-sm);
+  line-height: var(--lh-body);
+  letter-spacing: var(--ls-label);
   margin-top: var(--space-10);
   margin-bottom: 1.5em;
 }
 
 h5 {
-  font-size: var(--fs-h5);
-  line-height: var(--lh-heading-xs);
+  font-size: var(--fs-sm);
+  line-height: var(--lh-body);
+  letter-spacing: var(--ls-label);
   margin-top: var(--space-10);
   margin-bottom: 1.5em;
 }
 
 h6 {
-  font-size: var(--fs-h6);
-  line-height: var(--lh-heading-xxs);
+  font-size: var(--fs-sm);
+  line-height: var(--lh-body);
+  letter-spacing: var(--ls-label);
   margin-top: var(--space-10);
   margin-bottom: 1em;
 }
@@ -205,8 +214,9 @@ figure {
   font-size: var(--fs-lead);
 }
 
-/* Koppen in rich text: oranje gradient (Webflow .content-container h1–h4) */
-.rich-text :is(h1, h2, h3, h4) {
+/* Koppen in rich text: h1 met oranje gradient; h2–h6 rustig & effen (gelijk aan Heading.astro):
+   h2 effen accentkleur, h3 wit, h4 accentkleur, h5–h6 lichtgrijs */
+.rich-text h1 {
   background-image: var(--gradient-orange);
   -webkit-background-clip: text;
   background-clip: text;
@@ -214,8 +224,16 @@ figure {
   color: transparent;
 }
 
-.rich-text :is(h1, h3) {
+.rich-text :is(h1, h2, h3) {
   display: inline-block;
+}
+
+.rich-text :is(h2, h4) {
+  color: var(--accent);
+}
+
+.rich-text :is(h5, h6) {
+  color: var(--color-gray-light);
 }
 
 /* Vimeo-video in de tekst (Webflow .w-richtext-figure-type-video, gecentreerd) */
@@ -227,6 +245,24 @@ figure {
 }
 
 /* ─── Utilities ─────────────────────────────────────────────────────── */
+/* "Naar de inhoud": pas zichtbaar bij toetsenbordfocus */
+.skip-link {
+  position: fixed;
+  top: var(--space-16);
+  left: var(--space-16);
+  z-index: var(--z-skip-link);
+  padding: var(--space-12) var(--space-24);
+  background-color: var(--color-orange);
+  color: var(--color-black);
+  font-weight: var(--fw-medium);
+  text-decoration: none;
+  transform: translateY(-200%);
+}
+
+.skip-link:focus-visible {
+  transform: none;
+}
+
 .visually-hidden {
   position: absolute !important;
   width: 1px;
@@ -299,10 +335,15 @@ figure {
 }
 
 /*
- * Paginaovergang: zwart gordijn (native cross-document View Transitions, geen JS).
- * Fase 1: de bovenrand van het gordijn schuift van onder naar boven over de oude pagina.
- * Fase 2: de onderrand volgt en onthult de nieuwe pagina. Browsers zonder support
- * (Firefox) laden gewoon de pagina. Uit bij prefers-reduced-motion.
+ * Paginaovergang: diagonale veeg (native cross-document View Transitions, geen JS).
+ * De oude pagina veegt weg van linksonder naar rechtsboven (de hoek van de driehoekjes),
+ * gevolgd door een band in Bold-oranje (de achtergrond van de overgang), waarna de nieuwe
+ * pagina in dezelfde beweging verschijnt. De breedte van de band = de vertraging van de
+ * nieuwe pagina (--page-sweep-lag). Browsers zonder support (Firefox) laden gewoon de
+ * pagina. Uit bij prefers-reduced-motion.
+ *
+ * clip-path: halfvlak achter/voor de lijn x + (100% − y) = d, met d van 0% (linksonder)
+ * tot 200% (rechtsboven); de punten liggen ruim buiten beeld zodat de lijn altijd doorloopt.
  */
 @media (prefers-reduced-motion: no-preference) {
   @view-transition {
@@ -310,46 +351,48 @@ figure {
   }
 
   ::view-transition-group(root) {
-    background-color: var(--color-black);
+    background-color: var(--color-orange);
     animation: none;
   }
 
   ::view-transition-old(root),
   ::view-transition-new(root) {
     mix-blend-mode: normal;
-    animation-duration: var(--duration-curtain);
+    animation-duration: var(--duration-page-sweep);
     animation-timing-function: var(--ease-curtain);
   }
 
   ::view-transition-old(root) {
-    animation-name: curtain-cover;
+    animation-name: page-sweep-out;
     animation-fill-mode: forwards;
   }
 
   ::view-transition-new(root) {
-    animation-name: curtain-reveal;
-    animation-delay: var(--duration-curtain);
+    animation-name: page-sweep-in;
+    animation-delay: var(--page-sweep-lag);
     animation-fill-mode: backwards;
   }
 }
 
-@keyframes curtain-cover {
+/* Oude pagina: alleen het deel vóór de lijn blijft staan */
+@keyframes page-sweep-out {
   from {
-    clip-path: inset(0 0 0 0);
+    clip-path: polygon(-300% -200%, 300% 400%, 900% -200%, 300% -800%);
   }
 
   to {
-    clip-path: inset(0 0 100% 0);
+    clip-path: polygon(-100% -200%, 500% 400%, 1100% -200%, 500% -800%);
   }
 }
 
-@keyframes curtain-reveal {
+/* Nieuwe pagina: het deel achter de lijn wordt zichtbaar */
+@keyframes page-sweep-in {
   from {
-    clip-path: inset(100% 0 0 0);
+    clip-path: polygon(300% 400%, -300% -200%, -900% 400%, -300% 1000%);
   }
 
   to {
-    clip-path: inset(0 0 0 0);
+    clip-path: polygon(500% 400%, -100% -200%, -700% 400%, -100% 1000%);
   }
 }
 

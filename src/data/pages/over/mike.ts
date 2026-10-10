@@ -12,8 +12,10 @@ export const page: PageData = {
   slug: 'over/mike',
   title: 'Mike',
   meta: {
+    schema: { type: 'profile' },
     title: 'Mike Ampting | Bold Productions',
-    description: 'Maak kennis met Mike Ampting, eigenaar van Bold Productions en specialist in eventcontent voor meer ticketverkoop.',
+    description:
+      'Maak kennis met Mike Ampting, eigenaar van Bold Productions en specialist in eventcontent voor meer ticketverkoop.',
   },
   sections: [
     {

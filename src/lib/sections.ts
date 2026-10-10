@@ -28,6 +28,8 @@ import type { CaseFactsProps } from '../components/sections/CaseFacts.astro';
 import type { LinkGroupsProps } from '../components/sections/LinkGroups.astro';
 import type { Crumb } from '../components/layout/Breadcrumbs.astro';
 import type { Accent } from '../components/ui/Button.astro';
+import type { ImageMetadata } from 'astro';
+import type { PageSchema } from './structured-data';
 
 /** Welk formulier (src/data/forms.ts) en eventueel een andere placeholder voor het berichtveld */
 export interface FormChoice {
@@ -71,7 +73,17 @@ export interface PageData {
   /** Afwijkende naam in het kruimelpad */
   breadcrumbTitle?: string;
   accent?: Accent;
-  meta: { title: string; description: string; ogImage?: string; noindex?: boolean };
+  /** Laatste wijziging (ISO), voor sitemap.xml; uit Sanity */
+  updatedAt?: string;
+  meta: {
+    title: string;
+    description: string;
+    /** Deelafbeelding; leeg = vaste Bold-afbeelding (cases: de casefoto) */
+    ogImage?: string | ImageMetadata;
+    noindex?: boolean;
+    /** Structured data van deze pagina (src/lib/structured-data.ts) */
+    schema?: PageSchema;
+  };
   sections: PageSection[];
 }
 

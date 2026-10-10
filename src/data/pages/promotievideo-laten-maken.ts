@@ -139,7 +139,9 @@ export const page: PageData = {
             title: 'Praten',
             text: [
               {
-                p: ['We leren je event kennen. Wat wil je bereiken? Wie is je doelgroep? Wat moet iemand voelen als hij de video ziet?'],
+                p: [
+                  'We leren je event kennen. Wat wil je bereiken? Wie is je doelgroep? Wat moet iemand voelen als hij de video ziet?',
+                ],
               },
             ],
             image: {
@@ -152,7 +154,9 @@ export const page: PageData = {
             title: 'Plannen',
             text: [
               {
-                p: ['We maken een concreet plan. Concept, draaiplanning en tijdlijn. Alles vastgelegd voordat we een camera oppakken.'],
+                p: [
+                  'We maken een concreet plan. Concept, draaiplanning en tijdlijn. Alles vastgelegd voordat we een camera oppakken.',
+                ],
               },
             ],
             image: {

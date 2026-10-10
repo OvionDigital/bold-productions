@@ -11,6 +11,10 @@ import Analytics from '../components/layout/Analytics.astro';
 import PageBackground from '../components/layout/PageBackground.astro';
 import WhatsAppButton from '../components/layout/WhatsAppButton.astro';
 import type { Accent } from '../components/ui/Button.astro';
+import { buildStructuredData, type PageSchema, type Review } from '../lib/structured-data';
+import { breadcrumbLabels, skipLinkLabel } from '../data/navigation';
+import ogDefault from '../assets/seo/og-default.jpg';
+import logo from '../assets/brand/bold-productions-logo.png';
 import { contact, copyright, cta, footerColumns, footerLogoAlt, header, legalLinks, mainNav, socials } from '../data/navigation';
 
 interface Props {
@@ -25,6 +29,13 @@ interface Props {
   chrome?: boolean;
   /** Voor preloads van het LCP-beeld per pagina */
   preloadImage?: { src: string; srcset?: string; sizes?: string; type?: string };
+  /** Structured data (src/lib/structured-data.ts); niet op noindex-pagina's */
+  structuredData?: {
+    schema?: PageSchema;
+    breadcrumbs?: { label: string; href?: string }[];
+    website?: boolean;
+    reviews?: Review[];
+  };
 }
 
 const {
@@ -35,11 +46,27 @@ const {
   noindex = false,
   chrome = true,
   preloadImage,
+  structuredData,
 } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const currentPath = Astro.url.pathname.replace(/\.html$/, '').replace(/\/$/, '') || '/';
-const ogImageUrl = ogImage ? new URL(ogImage, Astro.site).href : undefined;
+// Zonder eigen keuze: de vaste Bold-deelafbeelding (zoals live)
+const ogImageUrl = new URL(ogImage ?? ogDefault.src, Astro.site).href;
+const jsonLd =
+  structuredData && !noindex
+    ? buildStructuredData({
+        site: Astro.site!,
+        path: currentPath,
+        title,
+        description,
+        logoUrl: new URL(logo.src, Astro.site).href,
+        homeLabel: breadcrumbLabels.home,
+        ...structuredData,
+      })
+    : undefined;
+// '<' escapen zodat tekst in de JSON nooit een </script> kan vormen
+const jsonLdHtml = jsonLd ? JSON.stringify(jsonLd).replaceAll('<', String.fromCharCode(92) + 'u003c') : undefined;
 ---
 
 <!doctype html>
@@ -50,16 +77,20 @@ const ogImageUrl = ogImage ? new URL(ogImage, Astro.site).href : undefined;
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
-    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    {noindex && <meta name="robots" content="noindex" />}
 
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Bold Productions" />
+    <meta property="og:locale" content="nl_NL" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
-    {ogImageUrl && <meta property="og:image" content={ogImageUrl} />}
+    <meta property="og:image" content={ogImageUrl} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+    {jsonLdHtml && <script type="application/ld+json" is:inline set:html={jsonLdHtml} />}
 
     <!-- JS-vlag en statische modus (?static=1) vóór de eerste paint -->
     <script is:inline>
@@ -94,6 +125,8 @@ const ogImageUrl = ogImage ? new URL(ogImage, Astro.site).href : undefined;
     <slot name="head" />
   </head>
   <body data-accent={accent}>
+    <Analytics part="body" />
+    <a href="#main" class="skip-link">{skipLinkLabel}</a>
     {
       chrome && (
         <Header

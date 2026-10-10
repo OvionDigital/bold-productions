@@ -16,6 +16,7 @@ export const page: PageData = {
   slug: 'zakelijke-events/promovideo',
   title: 'Promovideo',
   meta: {
+    schema: { type: 'service', serviceType: 'Zakelijke Promovideo Productie' },
     title: 'Zakelijke promovideo laten maken? | Bold Productions',
     description:
       "Zorg voor een volle zaal. Bold creëert high-end event-video's die jouw doelgroep activeren en de kaartverkoop versnellen.",
@@ -305,7 +306,8 @@ export const page: PageData = {
             ],
           },
           {
-            question: 'Wij organiseren meerdere events per jaar voor verschillende klanten. Kunnen jullie een vaste partner zijn?',
+            question:
+              'Wij organiseren meerdere events per jaar voor verschillende klanten. Kunnen jullie een vaste partner zijn?',
             answer: [
               {
                 p: [

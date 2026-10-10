@@ -28,6 +28,7 @@ const { page } = Astro.props;
   ogImage={page.meta.ogImage}
   accent={page.accent}
   noindex={page.meta.noindex}
+  structuredData={{ schema: page.meta.schema, breadcrumbs: page.breadcrumbs }}
 >
   <PageSections sections={page.sections} breadcrumbs={page.breadcrumbs} />
 </BaseLayout>

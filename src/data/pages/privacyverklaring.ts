@@ -81,7 +81,9 @@ export const page: PageData = {
               ['De datum en tijd waarop u onze website heeft bezocht'],
               ['De webpagina url waar u uw toestemmingsvoorkeuren hebt opgeslagen of bijgewerkt'],
               ['De locatie bij benadering van de gebruiker die zijn toestemmingsvoorkeur heeft opgeslagen'],
-              ['Een universeel uniek identificatienummer (UUID) van de websitebezoeker die op de cookiebanner heeft geklikt'],
+              [
+                'Een universeel uniek identificatienummer (UUID) van de websitebezoeker die op de cookiebanner heeft geklikt',
+              ],
             ],
           },
         ],

@@ -16,6 +16,7 @@ export const page: PageData = {
   slug: 'artiesten/artiestenpromo',
   title: 'Artiestenpromo',
   meta: {
+    schema: { type: 'service', serviceType: 'Artiesten Promovideo Productie' },
     title: 'Artiestenpromo laten maken? | Bold Productions',
     description:
       "Krijg meer boekingen als artiest. Wij maken high-end promo's voor je EPK, socials en website. Eén productie, meerdere toepassingen.",

@@ -39,7 +39,7 @@ export function initScrollAnimations(): void {
 }
 
 export function initAnchorLinks(): void {
-  document.querySelectorAll<HTMLAnchorElement>('a[href^="#"]').forEach((link) => {
+  document.querySelectorAll<HTMLAnchorElement>('a[href^="#"]:not(.skip-link)').forEach((link) => {
     link.addEventListener('click', (event) => {
       const id = link.getAttribute('href');
       if (!id || id === '#') return;

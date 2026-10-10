@@ -16,8 +16,14 @@ export const page: PageData = {
   slug: 'artiesten/social-content',
   title: 'Social content',
   meta: {
+    schema: {
+      type: 'service',
+      serviceType: 'Artist Social Media Content',
+      name: 'Social Content laten maken? | Bold Productions',
+    },
     title: 'Social Content  laten maken? | Bold Productions',
-    description: 'Blijf zichtbaar tussen de shows door. Overtuig boekers en vergroot de fanbase met snappy clips en teasers. Ontdek Bold.',
+    description:
+      'Blijf zichtbaar tussen de shows door. Overtuig boekers en vergroot de fanbase met snappy clips en teasers. Ontdek Bold.',
   },
   sections: [
     {

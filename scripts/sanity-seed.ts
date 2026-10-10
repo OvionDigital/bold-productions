@@ -371,6 +371,26 @@ async function toBlocks(sections: PageSection[]) {
   return blocks;
 }
 
+/** PageSchema → velden van het page-document (omgekeerde van toSchema in lib/sanity/pages.ts) */
+function schemaFields(schema: PageData['meta']['schema']): Record<string, unknown> {
+  if (!schema) return { schemaType: 'none' };
+  switch (schema.type) {
+    case 'service':
+      return {
+        schemaType: 'service',
+        serviceType: schema.serviceType,
+        serviceName: schema.name,
+        serviceDescription: schema.description,
+        catalogName: schema.catalog?.name,
+        catalogItems: schema.catalog?.items,
+      };
+    case 'webpage':
+      return { schemaType: schema.relation === 'publisher' ? 'webpage-publisher' : 'webpage-main' };
+    default:
+      return { schemaType: schema.type };
+  }
+}
+
 const pageId = (slug: string) => `page-${slug.replace(/\//g, '--')}`;
 
 async function pageDoc(page: PageData): Promise<Doc> {
@@ -384,6 +404,8 @@ async function pageDoc(page: PageData): Promise<Doc> {
     metaTitle: page.meta.title,
     metaDescription: page.meta.description,
     noindex: page.meta.noindex || undefined,
+    ogImage: page.meta.ogImage && typeof page.meta.ogImage !== 'string' ? await image({ src: page.meta.ogImage }, false) : undefined,
+    ...schemaFields(page.meta.schema),
     sections: await toBlocks(page.sections),
   };
 }

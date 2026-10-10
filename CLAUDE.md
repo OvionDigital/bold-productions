@@ -50,6 +50,18 @@ npm run deploy:preview  # build + wrangler pages deploy (branch preview)
 10. Contactformulier: backend nog niet gekozen (TODO), zie README. Tracking (GTM-KCTG3DST, CookieFirst) komt later via `components/layout/Analytics.astro`, alleen als `PUBLIC_ENABLE_TRACKING === 'true'`.
 11. `/styleguide` is `noindex` en hoort niet in een sitemap (als die er komt: uitsluiten).
 
+## SEO
+
+Overgenomen van de Webflow-site (SEO-specialist) en gecontroleerd tegen live: titels, metabeschrijvingen,
+h1's, alt-teksten en alle structured data zijn gelijk. Opbouw:
+- `BaseLayout`: canonical (www), OG/Twitter (vaste Bold-afbeelding `assets/seo/og-default.jpg`, cases hun
+  casefoto, eigen keuze via `meta.ogImage`), `noindex` zonder nofollow, JSON-LD via `structuredData`.
+- `lib/structured-data.ts`: Person (Mike) + ProfessionalService op elke pagina; per pagina `meta.schema`
+  (`service` met serviceType/OfferCatalog, `webpage`, `contact`, `profile`); homepage WebSite + Reviews;
+  BreadcrumbList. FAQPage zit in `Faq.astro` (uit de zichtbare vragen), VideoObject in `VimeoEmbed`.
+- In Sanity: pagina → Instellingen & SEO → "Soort pagina (voor Google)".
+- `public/_headers`: noindex alleen op `*.pages.dev`; HSTS en andere beveiligingsheaders.
+
 ## Conventies
 
 - **Accentkleur per doelgroep** via `data-accent="orange|yellow|green"` op een voorouder (body via `BaseLayout accent`). Componenten gebruiken `--accent`, `--accent-light`, `--accent-gradient`. Dit vervangt de Webflow-`w-variant-*`-klassen.
@@ -57,7 +69,7 @@ npm run deploy:preview  # build + wrangler pages deploy (branch preview)
 - **Scoped styles** per component. Wil je een child-component stylen (bijv. `<Icon>` in `<Button>`)? Gebruik `.parent :global(.child-class)`.
 - **Sectie-afstand: 192px tussen secties, ≤767px 64px.** Secties zonder eigen achtergrond krijgen `margin-block: var(--section-space)` (marges vallen samen, dus precies 192/64 ertussen, niet 2×); secties mét eigen achtergrond (Testimonials) krijgen `padding-block: var(--section-padding)` zodat de achtergrond 192/64 boven/onder de inhoud doorloopt. Uitzonderingen: LogoMarquee 96 boven (direct onder de hero, ook op mobiel), Footer 96 padding (≤767 48).
 - **Scroll-in-animatie**: zet `data-animate` op een element (Webflow: `.animate-on-scroll`). `data-animate-stagger` op een groep laat de directe kinderen één voor één binnenkomen (`--stagger-step`); `data-animate-skip` sluit een kind uit (bijv. achtergrondlaag). `Container` geeft `data-*`-attributen door.
-- **Paginaovergang**: zwart gordijn via native cross-document View Transitions (`@view-transition` in global.css, tokens `--duration-curtain`/`--ease-curtain`). Geen JS, geen dependency; uit bij prefers-reduced-motion.
+- **Paginaovergang**: diagonale veeg (linksonder → rechtsboven) met een oranje band tussen oude en nieuwe pagina, via native cross-document View Transitions (`@view-transition` in global.css, tokens `--duration-page-sweep`/`--page-sweep-lag`/`--ease-curtain`). Geen JS, geen dependency; uit bij prefers-reduced-motion.
 - **Cursor**: driehoekje via tokens `--cursor-default`/`--cursor-pointer` (alleen `hover: hover` + `pointer: fine`). Zelf `cursor:` zetten? Gebruik die tokens. Cookiepanelen en `[data-native-cursor]` krijgen de systeemcursor.
 - Regeleinden in titels: `\n` in de data. `Heading` zet dat om naar `<br>`.
 - **Gedeelde inhoud** staat in eigen databestanden en wordt op id gekozen: `src/data/testimonials.ts` (`pickTestimonials`), `src/data/logos.ts`, `src/data/cases.ts`. Nooit kopiëren per pagina.
@@ -72,16 +84,17 @@ src/
   components/ui/                basiscomponenten
   components/layout/            Header, Footer, Analytics (en later MegaMenu, MenuPanel)
   components/sections/          één component per sectie, alle inhoud via props
-  data/                         home.ts, navigation.ts, cases.ts, team.ts, forms.ts, … (inhoud)
+  data/                         home.ts, navigation.ts, cases.ts, team.ts, forms.ts, seo.ts (organisatie/Mike/reviews), …
   data/pages/                   één bestand per pagina (PageData), opgesomd in data/pages/index.ts
   data/case-pages/              inhoud (introtekst + secties) per case, gekoppeld in data/cases.ts
-  lib/                          helpers (text.ts, tokens.ts, rich.ts), sections.ts (PageData/PageSection),
+  lib/                          helpers (text.ts, tokens.ts, rich.ts, vimeo.ts), structured-data.ts (JSON-LD), sections.ts (PageData/PageSection),
                                 pages.ts (alle pagina's: Sanity of src/data), cases.ts (casepagina-opbouw),
                                 lib/sanity/ (CMS-koppeling, zie hieronder)
   scripts/                      main.ts (entry) + modules
   styles/tokens.css, global.css
   pages/index.astro, styleguide.astro
   pages/[...slug].astro         alle overige pagina's en cases (Sanity, anders src/data)
+  pages/sitemap.xml.ts, robots.txt.ts   sitemap (indexeerbare pagina's, lastmod uit Sanity) en robots
 public/fonts, public/video, public/favicons, public/_headers
 scripts/compare.mjs             visuele vergelijking
 scripts/sanity-seed.ts          npm run sanity:seed: src/data naar Sanity (vult alleen aan; --force overschrijft,
@@ -117,20 +130,20 @@ Houd dit bij bij elk nieuw component.
 
 | Component              | Uitleg                                                                                                     |
 | ---------------------- | ---------------------------------------------------------------------------------------------------------- |
-| `Button.astro`         | Link of knop. Varianten `primary`/`outline`/`ghost`, groottes `compact`/`small`/`default`/`large`, `accent`, `icon`, `iconExpanded` (bij aria-expanded), `iconOnlyOnMobile`. |
+| `Button.astro`         | Link of knop. Kapitalen in de body-font (Inter), 2px rand, geen gradients; bij hover veegt een effen vulling in van links naar rechts, of van boven naar onder bij `icon="arrow-down"`. Varianten `primary` (accentvlak → zwart) / `outline` (→ accentvlak) / `ghost` (→ wit), groottes `compact`/`small`/`default`/`large`, `accent`, `icon`, `iconExpanded` (bij aria-expanded), `iconOnlyOnMobile`. |
 | `RichText.astro`       | Rendert rich text uit `lib/rich.ts` (p/ul, strong/em/br); `size="lead"`, `plain`.                        |
 | `RichInline.astro`     | Inline-segmenten (strong/em/br) zonder extra witruimte; gebruikt door RichText.                             |
 | `Icon.astro`           | Inline SVG-icoon uit het register in `icons.ts` (pijlen, chevron, menu, close, quote, WhatsApp, socials).  |
 | `icons.ts`             | Iconenregister (paden + viewBox). Nieuwe iconen hier toevoegen.                                            |
 | `Container.astro`      | Horizontale container: `default` (max-breedte per breakpoint), `plain` (idem, maar vol 992–1279) of `wide` (volle breedte, ruime goot). |
 | `Eyebrow.astro`        | Kleine kop in Gate met ruime letterspatiëring (Webflow `.subtitle`).                                       |
-| `Heading.astro`        | Displaykop in Gate. `as` (semantiek) los van `size`, optioneel `gradient`, `align`, `flush`.               |
+| `Heading.astro`        | Kop in Gate. `as` (semantiek) los van `size`, `gradient`, `align`, `flush`. `hero` en `h1`: kapitalen met gradient. `h2`–`h6` "rustig & effen": kapitalen, regelafstand 100%, effen kleur — h2 in de kleur van `gradient` (`none`/`accent` = accentkleur), h3 wit, h4–h6 kleine gespatieerde labels (h4 in de kleur, h5–h6 lichtgrijs). Zelfde stijl voor kale h2–h6 en in rich text. |
 | `SectionHeading.astro` | Gecentreerde eyebrow + h2 met gradient (Webflow `.section-heading`), optioneel `text` eronder; `spacing` default/compact/none. |
 | `BackgroundVideo.astro`| Rookvideo als decoratieve laag: poster (AVIF/WebP) + lazy `<video>` (gedrag: `background-video.ts`).    |
 | `Carousel.astro`       | Scroll-snap-carousel met pijlknoppen (Owl-instellingen 1/1/2/3), items lijnen uit op de container. Minder items dan er passen: gecentreerd, zonder knoppen. |
 | `TestimonialCard.astro`| Kaart met foto, quote (Gate italic), oranje lijn en naam – organisatie (beide optioneel).             |
 | `Polaroid.astro`       | Foto met witte polaroidrand, schaduw, kanteling (`--polaroid-rotate`) en optionele caption.            |
-| `VimeoEmbed.astro`     | Vimeo-iframe met vaste verhouding, loading=lazy, optioneel background-modus.                            |
+| `VimeoEmbed.astro`     | Vimeo met vaste verhouding, altijd `dnt=1`. Met bediening: gevel (thumbnail + afspeelknop uit oEmbed, `lib/vimeo.ts`), speler laadt pas bij klik (`vimeo-facade.ts`) + VideoObject-JSON-LD. `background`: decoratief lazy iframe. |
 | `CmsPicture.astro`     | Drop-in i.p.v. astro:assets `<Picture>`: lokaal (`ImageMetadata`) ongewijzigd gedrag; Sanity (`RemoteImage`) srcset via Sanity's CDN (`?auto=format`), zonder `width`/`height`-attributen (Chromium-flexbug, zie image.ts) — `aspect-ratio` reserveert de ruimte. `aspectRatio`-prop om te croppen. |
 | `DecoTriangles.astro`  | Zes oranje driehoekjes rond een beeld (structuur exact als Webflow).                                    |
 | `CaseCard.astro`       | Casekaart: foto, diagonale gradient, titel + intro, link naar /cases/[slug].                              |
@@ -146,9 +159,9 @@ Houd dit bij bij elk nieuw component.
 | `MegaMenu.astro`   | Desktop-dropdowns (≥1280px), CSS hover/focus-within.                        |
 | `MenuPanel.astro`  | Volledig menupaneel met overlay en accordeongroepen (gedrag: `menu.ts`).     |
 | `Footer.astro`     | Footer: linkkolommen (data), contact, logo + socials, juridische links, copyright. |
-| `PageBackground.astro` | Textuur (AVIF, na window.load) + grote B-outlines (inline SVG met masker) achter de pagina; `shapes` instelbaar. B's worden getekend bij in beeld (`draw-shapes.ts`). |
+| `PageBackground.astro` | Textuur (AVIF, na window.load) + grote B-outlines (inline SVG met masker) achter de pagina; `shapes` instelbaar. De B-laag is zo hoog als de B's zelf (niet als de pagina, `contain: layout paint`), zodat hij niet meeverandert als de pagina langer/korter wordt; `.page-bg` knipt af met `overflow: clip`. B's worden getekend bij in beeld (`draw-shapes.ts`). |
 | `WhatsAppButton.astro` | Zwevende WhatsApp-knop rechtsonder.                                           |
-| `Analytics.astro`  | GTM + CookieFirst, alleen bij `PUBLIC_ENABLE_TRACKING=true` (TODO).         |
+| `Analytics.astro`  | CookieFirst + GTM-KCTG3DST (async, `part="head"`/`"body"` voor de noscript), alleen bij `PUBLIC_ENABLE_TRACKING=true`. |
 
 ### Secties (`src/components/sections/`)
 
@@ -164,7 +177,7 @@ Houd dit bij bij elk nieuw component.
 | `CaseSpotlight.astro` | Kop + één grote CaseCard; case op slug uit `src/data/cases.ts`. |
 | `ImageFeature.astro` | Brede foto met gecentreerde titel + intro erover (mobiel eronder); `id="cinema"` = popcorn-cursor. |
 | `ServiceTiles.astro` | Kop + tekst en staande beeldtegels (2:3) naar dienstpagina's; hover groeit, titel oranje. `variant="team"`: teamleden met rol en hover-video (`teamTiles()` uit `data/team.ts`). |
-| `Faq.astro` | Veelgestelde vragen: accordeon (h3 + button) met FAQPage-structured data. |
+| `Faq.astro` | Veelgestelde vragen: accordeon (h3 + button, hoogte-animatie in CSS) met FAQPage-structured data. |
 | `RichTextSection.astro` | Smalle gecentreerde tekstkolom (rich text met koppen, lijsten, citaat, Vimeo); `align`; `standalone` (eerste sectie zonder hero, zoals de 404). Dienst-, case-, sitemap- en juridische pagina's. |
 | `FullWidthImage.astro` | 16:9-foto over de containerbreedte (casepagina's). |
 | `VideoFeature.astro` | Vimeo-video (lazy, met bediening) over de containerbreedte; `ratio`. |
@@ -188,11 +201,12 @@ Houd dit bij bij elk nieuw component.
 | `background-video.ts`  | IntersectionObserver: video-src zetten en afspelen in beeld, pauzeren erbuiten. |
 | `carousel.ts`          | `.is-scrollable` als niet alles past (alleen dan knoppen en slepen); pijlknoppen scrollen één item, disabled aan begin/eind; slepen met de muis (snap bij loslaten). |
 | `cinema-cursor.ts`     | Popcorn-cursor + spoor, alleen bij een sectie met id="cinema" en een muis.  |
-| `accordion.ts`         | Generiek accordeon: `[data-accordion-trigger]` + aria-controls; zet aria-expanded en `data-open`, de animatie is CSS (grid-rows 0fr ↔ 1fr). |
+| `accordion.ts`         | Generiek accordeon: `[data-accordion-trigger]` + aria-controls; zet aria-expanded en `data-open` (animatie in CSS: grid-rows 0fr ↔ 1fr). Houdt de aangeklikte vraag exact op dezelfde plek (scrollcorrectie, ook onder Lenis); `html { overflow-anchor: none }`. |
 | `contact-form.ts`      | Formulier via fetch versturen, knop "Verzenden...", succes- of foutmelding.  |
 | `multiselect.ts`       | Meerkeuze-dropdown in formulieren (`[data-multiselect]`, `<details>` met checkboxes): samenvatting, sluiten bij klik buiten/Escape. |
 | `case-filter.ts`       | Casesoverzicht filteren (`[data-case-grid]`) per doelgroep en dienst; `?filter=` kiest vooraf; melding bij geen resultaat. |
 | `draw-shapes.ts`       | B-outlines op de achtergrond één keer tekenen zodra ze in beeld komen (masker + stroke-dashoffset, `--duration-draw`). |
+| `vimeo-facade.ts`       | Vimeo-gevel: bij klik de thumbnail vervangen door de speler (autoplay) en focus erop. |
 | `hover-video.ts`       | Teamtegels: video laadt bij eerste hover en speelt, pauzeert bij verlaten (alleen muis, motion aan). |
 | `menu.ts`              | Menupaneel openen/sluiten (GSAP), overlay, Escape, focus-trap, scroll-lock zonder de scrollbalk te verbergen (wiel/touch/toetsen blokkeren), accordeon. |
 | `navbar-autohide.ts`   | Navbar verbergen/tonen op scrollrichting; blijft staan bovenaan, met open menu of bij focus erin. |

@@ -10,8 +10,10 @@ export const page: PageData = {
   slug: 'offerte-aanvragen',
   title: 'Offerte aanvragen',
   meta: {
+    schema: { type: 'webpage', relation: 'mainEntity' },
     title: 'Offerte aanvragen voor je event? | Bold Productions',
-    description: 'Geen standaard prijslijst, maar een eerlijk verhaal. Ontvang een voorstel op maat voor jouw event. Ontdek Bold.',
+    description:
+      'Geen standaard prijslijst, maar een eerlijk verhaal. Ontvang een voorstel op maat voor jouw event. Ontdek Bold.',
   },
   sections: [
     {

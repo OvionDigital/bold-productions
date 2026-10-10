@@ -43,7 +43,7 @@ Voeg `?static=1` toe aan een URL om Lenis en alle animaties uit te zetten (zo ma
    ```
    Wrangler toont de URL, bijvoorbeeld `https://preview.bold-productions.pages.dev`.
 
-Zolang dit een preview is, stuurt `public/_headers` op alle paden `X-Robots-Tag: noindex` mee. Haal die regel weg bij livegang (er staat een TODO bij).
+`public/_headers` stuurt `X-Robots-Tag: noindex` alleen mee op `*.pages.dev` (preview- en branch-URL's); het echte domein is vanzelf indexeerbaar, dus bij de livegang hoeft daar niets aan te veranderen.
 
 ### Automatisch deployen (GitHub Action)
 

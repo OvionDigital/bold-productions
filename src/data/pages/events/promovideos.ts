@@ -16,8 +16,14 @@ export const page: PageData = {
   slug: 'events/promovideos',
   title: "Promovideo's",
   meta: {
+    schema: {
+      type: 'service',
+      serviceType: 'Event Promovideo Productie',
+      name: 'Promovideo laten maken? | Bold Productions',
+    },
     title: 'Promotiefilm laten maken ? | Bold Productions',
-    description: "Trek mensen van de bank af. Wij maken event promo's die overtuigen, FOMO creëren en tickets verkopen. Ontdek Bold.",
+    description:
+      "Trek mensen van de bank af. Wij maken event promo's die overtuigen, FOMO creëren en tickets verkopen. Ontdek Bold.",
   },
   sections: [
     {
@@ -327,7 +333,9 @@ export const page: PageData = {
             question: 'Wat als ik niet goed weet hoe ik de video moet inzetten?',
             answer: [
               {
-                p: ['Dan denken we daar samen over na. We adviseren niet alleen over de productie, maar ook over timing en kanalen.'],
+                p: [
+                  'Dan denken we daar samen over na. We adviseren niet alleen over de productie, maar ook over timing en kanalen.',
+                ],
               },
             ],
           },

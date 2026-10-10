@@ -20,8 +20,14 @@ export const page: PageData = {
   slug: 'zakelijke-events',
   title: 'Zakelijke events',
   meta: {
+    schema: {
+      type: 'service',
+      serviceType: 'Zakelijke Videoproduktie & Contentstrategie',
+      catalog: { name: 'Zakelijke Content Diensten', items: ['Recaps', 'Aftermovies', 'Fotografie', "Casevideo's"] },
+    },
     title: 'Zakelijke eventcontent laten maken? | Bold Productions',
-    description: 'Bereik concrete doelen met strategische video en foto. De contentpartner voor eventbureaus en planners. Ontdek Bold.',
+    description:
+      'Bereik concrete doelen met strategische video en foto. De contentpartner voor eventbureaus en planners. Ontdek Bold.',
   },
   sections: [
     {
@@ -342,7 +348,8 @@ export const page: PageData = {
             ],
           },
           {
-            question: 'Wij organiseren meerdere zakelijke events per jaar. Kunnen jullie een vaste contentpartner zijn?',
+            question:
+              'Wij organiseren meerdere zakelijke events per jaar. Kunnen jullie een vaste contentpartner zijn?',
             answer: [
               {
                 p: [

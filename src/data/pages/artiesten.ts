@@ -22,6 +22,14 @@ export const page: PageData = {
   slug: 'artiesten',
   title: 'Artiesten',
   meta: {
+    schema: {
+      type: 'service',
+      serviceType: 'Band & Artiesten Videoproduktie',
+      catalog: {
+        name: 'Artiesten Content Diensten',
+        items: ["Bandpromo's", "Artiestenpromo's", 'Recaps', 'Social content', 'Fotografie'],
+      },
+    },
     title: 'Band & artiestenpromo laten maken? | Bold Productions',
     description:
       'Overtuig boekers en vergroot je fanbase. De filmende roadie voor vette bandpromo’s, fotografie en social content. Ontdek Bold.',
@@ -72,7 +80,9 @@ export const page: PageData = {
         gradient: 'yellow',
         body: [
           {
-            p: ['Maar niet alleen als planken onder je voeten. Je verdient een podium dat de zaal of tent overstijgt. '],
+            p: [
+              'Maar niet alleen als planken onder je voeten. Je verdient een podium dat de zaal of tent overstijgt. ',
+            ],
           },
           {
             p: [
@@ -147,7 +157,9 @@ export const page: PageData = {
             ],
           },
           {
-            p: ['Want in deze cultuur voelen we ons thuis. We volgen nooit een vast format. We willen je eerst leren kennen. '],
+            p: [
+              'Want in deze cultuur voelen we ons thuis. We volgen nooit een vast format. We willen je eerst leren kennen. ',
+            ],
           },
           {
             p: [

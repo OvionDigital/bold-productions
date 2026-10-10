@@ -16,6 +16,7 @@ export const page: PageData = {
   slug: 'artiesten/fotografie',
   title: 'Fotografie',
   meta: {
+    schema: { type: 'service', serviceType: 'Artist Photography' },
     title: 'Band- en artiestenfotografie | Bold Productions',
     description:
       'Vang de vibe van je performance. Van dikke live-shots tot high-end portretten voor je EPK en socials. Professionele bandfotografie die boekers overtuigt.',

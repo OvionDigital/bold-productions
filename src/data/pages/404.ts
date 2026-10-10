@@ -36,7 +36,9 @@ export const page: PageData = {
         gradient: 'none',
         body: [
           {
-            p: ['Wat er ook is misgegaan — een verkeerde link, een typfout of gewoon pech — dit is niet de plek waar je wilde zijn.'],
+            p: [
+              'Wat er ook is misgegaan — een verkeerde link, een typfout of gewoon pech — dit is niet de plek waar je wilde zijn.',
+            ],
           },
           {
             p: ['Geen zorgen. Het overkomt de besten.'],

@@ -18,16 +18,16 @@
 /* ─── Fonts ─────────────────────────────────────────────────────────── */
 
 @font-face {
-  font-family: 'Gate';
-  src: url('/fonts/gate-400.woff2') format('woff2');
+  font-family: "Gate";
+  src: url("/fonts/gate-400.woff2") format("woff2");
   font-weight: 300 400; /* Webflow gebruikt soms 300; in de praktijk 400 */
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Gate';
-  src: url('/fonts/gate-400-italic.woff2') format('woff2');
+  font-family: "Gate";
+  src: url("/fonts/gate-400-italic.woff2") format("woff2");
   font-weight: 300 400;
   font-style: italic;
   font-display: swap;
@@ -35,19 +35,21 @@
 
 /* Inter: één variabel bestand (latin-subset) voor 300–700. 400/600/800 worden niet gebruikt. */
 @font-face {
-  font-family: 'Inter';
-  src: url('/fonts/inter-latin-var.woff2') format('woff2');
+  font-family: "Inter";
+  src: url("/fonts/inter-latin-var.woff2") format("woff2");
   font-weight: 300 700;
   font-style: normal;
   font-display: swap;
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
-    U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+    U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212,
+    U+2215, U+FEFF, U+FFFD;
 }
 
 /* Metrisch afgestemde fallbacks: minder layout-shift tijdens font-swap */
 @font-face {
-  font-family: 'Gate Fallback';
-  src: local('Arial');
+  font-family: "Gate Fallback";
+  src: local("Arial");
   size-adjust: 96.98%;
   ascent-override: 78.26%;
   descent-override: 20.62%;
@@ -55,8 +57,8 @@
 }
 
 @font-face {
-  font-family: 'Inter Fallback';
-  src: local('Arial');
+  font-family: "Inter Fallback";
+  src: local("Arial");
   size-adjust: 107.12%;
   ascent-override: 90.44%;
   descent-override: 22.52%;
@@ -68,7 +70,6 @@
   --color-orange: #ff5500;
   --color-orange-light: #ffc0a1;
   --color-shape-orange: #ff6b21;
-  --color-rec: #ff2a2a; /* REC-lampje (knopvoorstel zoeker) */ /* oranje B-outline op de achtergrond (Webflow-SVG) */
   --color-yellow: #f9ff00;
   --color-yellow-light: #feffd7;
   --color-green: #8bff3f;
@@ -119,14 +120,46 @@
   --color-whatsapp-a60: #25d36699;
 
   /* ─── Gradients ─────────────────────────────────────────────────── */
-  --gradient-orange: linear-gradient(135deg, var(--color-orange), var(--color-orange-light) 42%, var(--color-orange));
-  --gradient-yellow: linear-gradient(135deg, var(--color-yellow), var(--color-yellow-light) 42%, var(--color-yellow));
-  --gradient-green: linear-gradient(135deg, var(--color-green), var(--color-green-light) 42%, var(--color-green));
+  --gradient-orange: linear-gradient(
+    135deg,
+    var(--color-orange),
+    var(--color-orange-light) 42%,
+    var(--color-orange)
+  );
+  --gradient-yellow: linear-gradient(
+    135deg,
+    var(--color-yellow),
+    var(--color-yellow-light) 42%,
+    var(--color-yellow)
+  );
+  --gradient-green: linear-gradient(
+    135deg,
+    var(--color-green),
+    var(--color-green-light) 42%,
+    var(--color-green)
+  );
   --gradient-navbar: linear-gradient(#000000e6, var(--color-transparent));
-  --gradient-hero-overlay: radial-gradient(circle, var(--color-black-a50), var(--color-black-a70));
-  --gradient-card-shade: linear-gradient(0deg, var(--color-black-a70), var(--color-transparent));
-  --gradient-image-overlay: radial-gradient(circle, #0000004d, var(--color-black-a70));
-  --gradient-glass: linear-gradient(135deg, #00000029, #ffffff08 42%, #0000003d); /* casefeiten */
+  --gradient-hero-overlay: radial-gradient(
+    circle,
+    var(--color-black-a50),
+    var(--color-black-a70)
+  );
+  --gradient-card-shade: linear-gradient(
+    0deg,
+    var(--color-black-a70),
+    var(--color-transparent)
+  );
+  --gradient-image-overlay: radial-gradient(
+    circle,
+    #0000004d,
+    var(--color-black-a70)
+  );
+  --gradient-glass: linear-gradient(
+    135deg,
+    #00000029,
+    #ffffff08 42%,
+    #0000003d
+  ); /* casefeiten */
 
   /* ─── Accent (thema per doelgroep) ──────────────────────────────── */
   /* Standaard: oranje (events). Overschrijf met data-accent op een voorouder. */
@@ -135,14 +168,15 @@
   --accent-gradient: var(--gradient-orange);
 
   /* ─── Typografie: families ──────────────────────────────────────── */
-  --font-display: 'Gate', 'Gate Fallback', Arial, sans-serif;
-  --font-body: 'Inter', 'Inter Fallback', Arial, sans-serif;
-  --font-mono: 'Courier New', monospace;
+  --font-display: "Gate", "Gate Fallback", Arial, sans-serif;
+  --font-body: "Inter", "Inter Fallback", Arial, sans-serif;
+  --font-mono: "Courier New", monospace;
 
   /* ─── Typografie: gewichten ─────────────────────────────────────── */
   --fw-light: 300; /* ook voor Webflow 400 */
   --fw-medium: 500; /* ook voor Webflow 600 */
   --fw-bold: 700; /* ook voor Webflow 800 */
+  --fw-extra-bold: 800; /* ook voor Webflow 800 */
   --fw-display: 400; /* Gate kent alleen 400 */
 
   /* ─── Typografie: groottes ──────────────────────────────────────── */
@@ -240,19 +274,12 @@
   --button-height-small: 48px;
   --button-padding-x: 32px;
   --button-padding-x-small: 24px;
-  /* Knopvoorstellen op /styleguide (#knop-voorstellen); vervallen zodra er een gekozen is */
-  --button-alt-bar: 4px; /* vullen van onder: onderrand */
-  --button-alt-corner: 12px; /* zoeker: lengte hoeklijntjes */
-  --button-alt-offset: 6px; /* harde schaduw */
-  --button-alt-glow: 18px; /* neon */
-  --button-alt-glow-hover: 36px;
   --border-width-thick: 2px;
-  /* Kopvoorstellen op /styleguide (#kop-voorstellen); vervallen zodra er een gekozen is */
-  --heading-alt-marker: 0.8em; /* driehoekmarker: ruimte + grootte */
-  --heading-alt-bar: 6px; /* redactioneel: verticale balk */
+  --ls-button: 0.08em; /* kapitalen in knoppen */
   --icon-sm: 16px;
   --icon-md: 18px;
   --icon-lg: 20px;
+  --video-play-size: 72px; /* afspeelknop op Vimeo-gevel; 56px op mobiel */
   --icon-xl: 24px;
   --icon-touch: 36px;
   --icon-whatsapp: 28px;
@@ -314,8 +341,14 @@
   --reveal-distance: 24px;
   --ease-nav: cubic-bezier(0.25, 0.46, 0.45, 0.94);
   --ease-out: ease;
-  --ease-reveal: cubic-bezier(0.22, 1, 0.36, 1); /* zachte uitloop voor inkomende onderdelen */
-  --duration-curtain: 0.5s; /* paginaovergang: per fase (dichtschuiven, wegtrekken) */
+  --ease-reveal: cubic-bezier(
+    0.22,
+    1,
+    0.36,
+    1
+  ); /* zachte uitloop voor inkomende onderdelen */
+  --duration-page-sweep: 0.8s; /* paginaovergang: diagonale veeg (global.css) */
+  --page-sweep-lag: 0.16s; /* vertraging nieuwe pagina = breedte van de oranje band */
   --ease-curtain: cubic-bezier(0.76, 0, 0.24, 1);
   --duration-draw: 2.4s; /* B-outlines op de achtergrond worden getekend (draw-shapes.ts) */
   --ease-draw: cubic-bezier(0.65, 0, 0.35, 1);
@@ -332,6 +365,7 @@
   --z-menu-controls: 12;
   --z-navbar: 999;
   --z-whatsapp: 9000;
+  --z-skip-link: 9500; /* "Naar de inhoud" boven alles */
   --z-cursor: 9999;
 
   /* ─── Cursor ────────────────────────────────────────────────────── */
@@ -343,26 +377,26 @@
 /* Custom cursor alleen met een echte muis: niet op touch (telefoon/tablet). */
 @media (hover: hover) and (pointer: fine) {
   :root {
-    --cursor-default: url('../assets/cursor/triangle.svg') 2 2, auto;
-    --cursor-pointer: url('../assets/cursor/triangle-hover.svg') 2 2, pointer;
+    --cursor-default: url("../assets/cursor/triangle.svg") 2 2, auto;
+    --cursor-pointer: url("../assets/cursor/triangle-hover.svg") 2 2, pointer;
   }
 }
 
 /* ─── Accentthema's ─────────────────────────────────────────────────── */
 /* Webflow-varianten "geel" (artiesten) en "groen" (zakelijke events) */
-[data-accent='orange'] {
+[data-accent="orange"] {
   --accent: var(--color-orange);
   --accent-light: var(--color-orange-light);
   --accent-gradient: var(--gradient-orange);
 }
 
-[data-accent='yellow'] {
+[data-accent="yellow"] {
   --accent: var(--color-yellow);
   --accent-light: var(--color-yellow-light);
   --accent-gradient: var(--gradient-yellow);
 }
 
-[data-accent='green'] {
+[data-accent="green"] {
   --accent: var(--color-green);
   --accent-light: var(--color-green-light);
   --accent-gradient: var(--gradient-green);
@@ -408,6 +442,7 @@
   :root {
     --breadcrumbs-offset: 124px;
     --page-top-offset: 144px;
+    --video-play-size: 56px;
     --section-padding: 64px;
     --section-space: 64px;
     --polaroids-header-top: 120px;

@@ -18,6 +18,7 @@ import { initMultiselects } from './multiselect';
 import { initCaseFilters } from './case-filter';
 import { initHoverVideos } from './hover-video';
 import { initDrawShapes } from './draw-shapes';
+import { initVimeoFacades } from './vimeo-facade';
 import { initAnchorLinks, initScrollAnimations } from './scroll-animations';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -43,4 +44,5 @@ initMultiselects();
 initCaseFilters();
 initHoverVideos();
 initDrawShapes();
+initVimeoFacades();
 

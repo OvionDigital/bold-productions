@@ -9,6 +9,7 @@ import { portableTextToRich } from './portableText';
 import { casePage } from '../cases';
 import type { Accent } from '../../components/ui/Button.astro';
 import type { PageData } from '../sections';
+import type { PageSchema } from '../structured-data';
 
 /**
  * Paden die een vaste pagina in src/pages/ hebben; een Sanity-pagina met zo'n pad wordt
@@ -20,17 +21,20 @@ const QUERY = `{
   "pages": *[_type == "page" && defined(slug.current)] | order(slug.current asc) {
     title,
     "slug": slug.current,
+    _updatedAt,
     breadcrumbTitle,
     accent,
     metaTitle,
     metaDescription,
     noindex,
     "ogImage": ogImage.asset->url,
+    schemaType, serviceType, serviceName, serviceDescription, catalogName, catalogItems,
     "sections": sections[]${sectionsProjection}
   },
   "cases": *[_type == "caseStudy" && defined(slug.current)] {
     ...${caseCardProjection},
     introText,
+    _updatedAt,
     metaTitle,
     metaDescription,
     "sections": sections[]${sectionsProjection}
@@ -38,6 +42,7 @@ const QUERY = `{
 }`;
 
 interface PageDoc {
+  _updatedAt?: string;
   title: string;
   slug: string;
   breadcrumbTitle?: string;
@@ -46,10 +51,43 @@ interface PageDoc {
   metaDescription?: string;
   noindex?: boolean;
   ogImage?: string;
+  schemaType?: string;
+  serviceType?: string;
+  serviceName?: string;
+  serviceDescription?: string;
+  catalogName?: string;
+  catalogItems?: string[];
   sections?: Parameters<typeof mapSections>[0];
 }
 
+/** Structured-data-keuze van een pagina → PageSchema (lib/structured-data.ts) */
+function toSchema(doc: PageDoc): PageSchema | undefined {
+  switch (doc.schemaType) {
+    case 'service':
+      return doc.serviceType
+        ? {
+            type: 'service',
+            serviceType: doc.serviceType,
+            name: doc.serviceName || undefined,
+            description: doc.serviceDescription || undefined,
+            catalog: doc.catalogName && doc.catalogItems?.length ? { name: doc.catalogName, items: doc.catalogItems } : undefined,
+          }
+        : undefined;
+    case 'webpage-main':
+      return { type: 'webpage', relation: 'mainEntity' };
+    case 'webpage-publisher':
+      return { type: 'webpage', relation: 'publisher' };
+    case 'contact':
+      return { type: 'contact' };
+    case 'profile':
+      return { type: 'profile' };
+    default:
+      return undefined;
+  }
+}
+
 interface CaseDoc extends RawCase {
+  _updatedAt?: string;
   introText?: unknown;
   metaTitle?: string;
   metaDescription?: string;
@@ -74,11 +112,13 @@ export async function getCmsPages(): Promise<PageData[] | null> {
       title: doc.title,
       breadcrumbTitle: doc.breadcrumbTitle || undefined,
       accent: doc.accent,
+      updatedAt: doc._updatedAt,
       meta: {
         title: doc.metaTitle || `${doc.title} | Bold Productions`,
         description: doc.metaDescription ?? '',
-        ogImage: doc.ogImage,
+        ogImage: doc.ogImage ? `${doc.ogImage}?w=1200&h=630&fit=crop&fm=jpg` : undefined,
         noindex: Boolean(doc.noindex),
+        schema: toSchema(doc),
       },
       sections: mapSections(doc.sections, `/${doc.slug}`),
     }));
@@ -89,14 +129,15 @@ export async function getCmsPages(): Promise<PageData[] | null> {
       console.warn(`[sanity] Case '${doc.slug ?? doc.title}' overgeslagen: titel, URL-pad of foto ontbreekt.`);
       continue;
     }
-    result.push(
-      casePage({
+    result.push({
+      ...casePage({
         ...item,
         meta: { title: doc.metaTitle || item.title, description: doc.metaDescription || item.intro },
         introText: portableTextToRich(doc.introText),
         sections: mapSections(doc.sections, `/cases/${item.slug}`),
       }),
-    );
+      updatedAt: doc._updatedAt,
+    });
   }
   return result;
 }

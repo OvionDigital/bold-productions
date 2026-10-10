@@ -16,8 +16,10 @@ export const page: PageData = {
   slug: 'zakelijke-events/aftermovie',
   title: 'Aftermovie',
   meta: {
+    schema: { type: 'service', serviceType: 'Zakelijke Aftermovie Productie' },
     title: 'Zakelijke aftermovie laten maken? | Bold Productions',
-    description: 'Maak het succes van je event tastbaar. Strategische aftermovies voor zakelijke events en employer branding. Ontdek Bold.',
+    description:
+      'Maak het succes van je event tastbaar. Strategische aftermovies voor zakelijke events en employer branding. Ontdek Bold.',
   },
   sections: [
     {
@@ -190,7 +192,9 @@ export const page: PageData = {
         gradient: 'yellow',
         intro: [
           {
-            p: ['We werken altijd vanuit drie beginselen. Beetpakken. Beroeren. Blijven. Die gelden voor elk event, zakelijk of niet.'],
+            p: [
+              'We werken altijd vanuit drie beginselen. Beetpakken. Beroeren. Blijven. Die gelden voor elk event, zakelijk of niet.',
+            ],
           },
           {
             p: [
@@ -358,7 +362,8 @@ export const page: PageData = {
             ],
           },
           {
-            question: 'Wij organiseren jaarlijks meerdere events voor verschillende klanten. Kunnen jullie een vaste contentpartner zijn?',
+            question:
+              'Wij organiseren jaarlijks meerdere events voor verschillende klanten. Kunnen jullie een vaste contentpartner zijn?',
             answer: [
               {
                 p: [

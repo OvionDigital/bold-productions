@@ -16,8 +16,10 @@ export const page: PageData = {
   slug: 'events/social-content',
   title: 'Social content',
   meta: {
+    schema: { type: 'service', serviceType: 'Social Media Content Creatie' },
     title: 'Social content voor events | Bold Productions',
-    description: 'Creëer live FOMO en verkoop meer tickets. Snappy social content voor je event, van plan tot publicatie. Ontdek Bold.',
+    description:
+      'Creëer live FOMO en verkoop meer tickets. Snappy social content voor je event, van plan tot publicatie. Ontdek Bold.',
   },
   sections: [
     {
@@ -196,7 +198,9 @@ export const page: PageData = {
         gradient: 'yellow',
         intro: [
           {
-            p: ['Social content werkt alleen als er een plan achter zit. Niet als je op de dag zelf bedenkt wat je gaat posten. '],
+            p: [
+              'Social content werkt alleen als er een plan achter zit. Niet als je op de dag zelf bedenkt wat je gaat posten. ',
+            ],
           },
           {
             p: [

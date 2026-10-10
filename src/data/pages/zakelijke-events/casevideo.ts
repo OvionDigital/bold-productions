@@ -16,8 +16,10 @@ export const page: PageData = {
   slug: 'zakelijke-events/casevideo',
   title: 'Casevideo',
   meta: {
+    schema: { type: 'service', serviceType: 'Zakelijke Casevideo Productie' },
     title: 'Casevideo laten maken? | Bold Productions',
-    description: 'Maak van succesvolle projecten je beste verkoopargument. Overtuig nieuwe klanten met een ijzersterke casevideo.',
+    description:
+      'Maak van succesvolle projecten je beste verkoopargument. Overtuig nieuwe klanten met een ijzersterke casevideo.',
   },
   sections: [
     {
@@ -360,7 +362,8 @@ export const page: PageData = {
             ],
           },
           {
-            question: "Wij willen meerdere casevideo's maken van verschillende events. Kunnen jullie een vaste partner zijn?",
+            question:
+              "Wij willen meerdere casevideo's maken van verschillende events. Kunnen jullie een vaste partner zijn?",
             answer: [
               {
                 p: [

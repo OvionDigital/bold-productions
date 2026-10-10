@@ -16,8 +16,14 @@ export const page: PageData = {
   slug: 'events/fotografie',
   title: 'Fotografie',
   meta: {
+    schema: {
+      type: 'service',
+      serviceType: 'Professionele Eventfotografie',
+      name: 'Eventfotografie | Bold Productions',
+    },
     title: 'Evenement fotograaf | Bold Productions',
-    description: "Leg de energie van je event vast. Professionele foto's, direct inzetbaar voor je socials en sponsoren. Boek Bold.",
+    description:
+      "Leg de energie van je event vast. Professionele foto's, direct inzetbaar voor je socials en sponsoren. Boek Bold.",
   },
   sections: [
     {
@@ -209,7 +215,9 @@ export const page: PageData = {
             ],
           },
           {
-            p: ['Dat leggen we vooraf vast. Zodat we op de dag zelf precies weten wat we doen en jij er niet meer aan hoeft te denken.'],
+            p: [
+              'Dat leggen we vooraf vast. Zodat we op de dag zelf precies weten wat we doen en jij er niet meer aan hoeft te denken.',
+            ],
           },
           {
             p: [],
@@ -347,7 +355,9 @@ export const page: PageData = {
             question: "Zijn de foto's ook bruikbaar voor drukwerk of advertenties?",
             answer: [
               {
-                p: ['Ja. We leveren bestanden op in hoge resolutie, geschikt voor zowel digitaal gebruik als drukwerk.'],
+                p: [
+                  'Ja. We leveren bestanden op in hoge resolutie, geschikt voor zowel digitaal gebruik als drukwerk.',
+                ],
               },
             ],
           },

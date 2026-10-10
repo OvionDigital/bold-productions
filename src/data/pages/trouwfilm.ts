@@ -24,6 +24,8 @@ export const page: PageData = {
   slug: 'trouwfilm',
   title: 'Trouwfilm',
   meta: {
+    // Deelafbeelding zoals live (SPOT 4K still)
+    ogImage: spot4k02370505Still004,
     title: 'Videograaf bruiloft | Trouwvideograaf Bold Productions',
     description:
       'Is jullie trouwdatum nog vrij? Bekijk trouwfilms vanaf €2.420, zie hoe wij werken en weet binnen 24 uur of we kunnen. Zaterdagen zijn snel vergeven.',
@@ -386,7 +388,9 @@ export const page: PageData = {
             p: ['Je kunt lang uitleggen wat een stijl is. Je kunt hem ook gewoon laten zien.'],
           },
           {
-            p: ['Kijk naar het tempo. Naar wat wij wél in beeld brengen en wat we weglaten. Naar het moment waarop de muziek omslaat.'],
+            p: [
+              'Kijk naar het tempo. Naar wat wij wél in beeld brengen en wat we weglaten. Naar het moment waarop de muziek omslaat.',
+            ],
           },
           {
             p: [

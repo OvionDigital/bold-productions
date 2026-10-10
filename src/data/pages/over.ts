@@ -19,6 +19,7 @@ export const page: PageData = {
   slug: 'over',
   title: 'Over',
   meta: {
+    schema: { type: 'webpage', relation: 'publisher' },
     title: 'Over Bold Productions',
     description:
       'Maak kennis met ons team. Wij zijn dé eventspecialist die content maakt die tickets verkoopt. Ontdek waar wij voor staan.',

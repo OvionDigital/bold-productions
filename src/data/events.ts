@@ -11,6 +11,7 @@ import type { TestimonialsProps } from '../components/sections/Testimonials.astr
 import type { ImageFeatureProps } from '../components/sections/ImageFeature.astro';
 import type { ServiceTilesProps } from '../components/sections/ServiceTiles.astro';
 import type { FaqProps } from '../components/sections/Faq.astro';
+import type { PageData } from '../lib/sections';
 import heroImage from '../assets/images/events/hero-hrieps-festival.jpg';
 import optredenInTent from '../assets/images/events/optreden-in-tent.jpg';
 import preProductie from '../assets/images/events/tijdlijn-pre-productie.jpg';
@@ -26,7 +27,15 @@ import mikeAftermovie from '../assets/images/events/mike-aftermovie.jpg';
 import { clientLogos, trustedByTitle } from './logos';
 import { pickTestimonials } from './testimonials';
 
-export const meta = {
+export const meta: PageData['meta'] = {
+  schema: {
+    type: 'service',
+    serviceType: 'Event Videoproductie',
+    catalog: {
+      name: 'Event Content Diensten',
+      items: ["Promovideo's", "Eventvideo's", 'Aftermovies', 'Social Content', 'Event Fotografie'],
+    },
+  },
   title: 'Eventcontent laten maken? | Bold Productions',
   description:
     'Creëer FOMO en verkoop meer tickets. Strategische eventcontent voor, tijdens en na je event. Ontdek Bold.',
@@ -72,7 +81,9 @@ export const biggerThanTheDay: TextMediaProps = {
     { p: ['Dat lukt alleen met ', { text: 'strategische eventcontent', strong: true }, '.'] },
     {
       ul: [
-        ['Dan heeft elk moment van zichtbaarheid — hoe klein dat stukje content ook mag zijn — een rol in het grote geheel.'],
+        [
+          'Dan heeft elk moment van zichtbaarheid — hoe klein dat stukje content ook mag zijn — een rol in het grote geheel.',
+        ],
         ['Dan krijgt je event een visuele stijl die meteen voor herkenning (en hunkering) zorgt bij je doelgroep.'],
         ['Dan blijft je event overeind in een concurrerende markt. '],
       ],

@@ -74,6 +74,8 @@ const bgLg = `url("${lg.src}")`;
   .page-bg {
     --page-bg-image: var(--bgLg);
     position: relative;
+    /* B-laag mag langer zijn dan de pagina; afknippen zonder scrollcontainer (sticky blijft werken) */
+    overflow: clip;
     background-color: var(--color-page);
   }
 
@@ -99,10 +101,15 @@ const bgLg = `url("${lg.src}")`;
     }
   }
 
+  /*
+   * Hoogte volgt alleen de B's zelf, niet de pagina: zo verandert deze laag niet als de
+   * pagina langer of korter wordt (bijv. FAQ uitklappen) en hoeft hij niet opnieuw getekend
+   * te worden. contain houdt layout en paint binnen de laag.
+   */
   .page-bg__shapes {
     position: absolute;
     top: var(--page-shapes-offset);
-    bottom: 0;
+    contain: layout paint;
     z-index: 0;
     display: flex;
     flex-direction: column;
@@ -110,7 +117,6 @@ const bgLg = `url("${lg.src}")`;
     align-items: center;
     gap: var(--page-shapes-gap);
     width: 100%;
-    overflow: hidden;
     opacity: 0.3;
     mix-blend-mode: difference;
     pointer-events: none;

@@ -12,22 +12,30 @@ import { getCmsPages } from './sanity/pages';
 import { isRemoteImage, sanityImageUrl } from './sanity/image';
 import type { Crumb } from '../components/layout/Breadcrumbs.astro';
 import type { Accent } from '../components/ui/Button.astro';
+import type { PageSchema } from './structured-data';
 
 export interface BuiltPage {
   slug: string;
-  meta: { title: string; description: string; ogImage?: string; noindex: boolean };
+  updatedAt?: string;
+  meta: { title: string; description: string; ogImage?: string; noindex: boolean; schema?: PageSchema };
   accent: Accent;
   breadcrumbs: Crumb[];
   sections: PageSection[];
 }
 
-/** Deelafbeelding: eigen keuze, anders de hero-foto (1200×630). */
+/**
+ * Deelafbeelding (1200×630): eigen keuze, bij cases de casefoto (hero), anders leeg =
+ * de vaste Bold-afbeelding uit BaseLayout. Zelfde verdeling als live.
+ */
 async function ogImageFor(page: PageData): Promise<string | undefined> {
-  if (page.meta.ogImage) return page.meta.ogImage;
+  const own = page.meta.ogImage;
+  if (typeof own === 'string') return own;
+  if (own) return (await getImage({ src: own, width: 1200, height: 630, fit: 'cover', format: 'jpg' })).src;
+  if (!page.slug.startsWith('cases/')) return undefined;
   const hero = page.sections.find((s) => s.type === 'hero');
   if (!hero) return undefined;
   const src = hero.props.image.src;
-  if (isRemoteImage(src)) return sanityImageUrl(src.src, { width: 1200, height: 630 });
+  if (isRemoteImage(src)) return sanityImageUrl(src.src, { width: 1200, height: 630, format: 'jpg' });
   const image = await getImage({ src, width: 1200, height: 630, fit: 'cover', format: 'jpg' });
   return image.src;
 }
@@ -42,11 +50,13 @@ export function getAllPages(): Promise<BuiltPage[]> {
     return Promise.all(
       source.map(async (page) => ({
         slug: page.slug,
+        updatedAt: page.updatedAt,
         meta: {
           title: page.meta.title,
           description: page.meta.description,
           ogImage: await ogImageFor(page),
           noindex: Boolean(page.meta.noindex),
+          schema: page.meta.schema,
         },
         accent: page.accent ?? 'orange',
         breadcrumbs: buildBreadcrumbs(page, bySlug),

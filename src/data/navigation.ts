@@ -18,6 +18,9 @@ export interface NavGroup extends NavLink {
 
 export const cta: NavLink = { label: 'Bold to Action', href: '/offerte-aanvragen' };
 
+/** Link voor toetsenbordgebruikers die het menu overslaat (eerste Tab op de pagina) */
+export const skipLinkLabel = 'Naar de inhoud';
+
 export const breadcrumbLabels = {
   nav: 'Breadcrumb',
   home: 'Home',

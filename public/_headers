@@ -1,10 +1,20 @@
 # Cloudflare Pages headers — https://developers.cloudflare.com/pages/configuration/headers/
 
-# TODO(livegang): deze noindex-regel verwijderen zodra dit de productiesite wordt.
+# Alle pagina's: beveiliging (HSTS zoals live via Webflow)
 /*
-  X-Robots-Tag: noindex
+  Strict-Transport-Security: max-age=31536000
   X-Content-Type-Options: nosniff
+  X-Frame-Options: SAMEORIGIN
   Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()
+
+# Preview- en branch-URL's (*.pages.dev) nooit in Google; het echte domein wel.
+# Zo hoeft er bij de livegang niets aangepast te worden.
+https://:project.pages.dev/*
+  X-Robots-Tag: noindex
+
+https://:version.:project.pages.dev/*
+  X-Robots-Tag: noindex
 
 # Bestanden met vaste (of gehashte) namen: een jaar cachen.
 /fonts/*

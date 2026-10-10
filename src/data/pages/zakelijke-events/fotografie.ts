@@ -16,8 +16,10 @@ export const page: PageData = {
   slug: 'zakelijke-events/fotografie',
   title: 'Fotografie',
   meta: {
+    schema: { type: 'service', serviceType: 'Zakelijke Eventfotografie' },
     title: 'Zakelijke eventfotografie? | Bold Productions',
-    description: "Leg de impact vast. Professionele foto's van je event, direct inzetbaar voor al je marketingkanalen. Ontdek Bold.",
+    description:
+      "Leg de impact vast. Professionele foto's van je event, direct inzetbaar voor al je marketingkanalen. Ontdek Bold.",
   },
   sections: [
     {

@@ -13,6 +13,7 @@ export const icons = {
   'chevron-down': { viewBox: '0 0 24 24', stroke: true, paths: ['m6 9 6 6 6-6'] },
   'chevron-right': { viewBox: '0 0 24 24', stroke: true, paths: ['m9 18 6-6-6-6'] },
   plus: { viewBox: '0 0 24 24', stroke: true, paths: ['M5 12h14', 'M12 5v14'] },
+  play: { viewBox: '0 0 24 24', stroke: false, paths: ['M7 4.5v15a1 1 0 0 0 1.53.85l12-7.5a1 1 0 0 0 0-1.7l-12-7.5A1 1 0 0 0 7 4.5z'] },
   home: {
     viewBox: '0 0 24 24',
     stroke: true,

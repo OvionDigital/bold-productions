@@ -40,14 +40,19 @@ export function isRemoteImage(src: ImageMetadata | RemoteImage): src is RemoteIm
 }
 
 /** Sanity CDN-transform: schaalt (en croppt bij `height`), serveert het beste formaat voor de browser. */
-export function sanityImageUrl(base: string, { width, height, quality = 80 }: { width: number; height?: number; quality?: number }): string {
+/** `format: 'jpg'` voor deelafbeeldingen (niet elk platform toont WebP/AVIF); standaard kiest de CDN zelf. */
+export function sanityImageUrl(
+  base: string,
+  { width, height, quality = 80, format }: { width: number; height?: number; quality?: number; format?: 'jpg' },
+): string {
   const url = new URL(base);
   url.searchParams.set('w', String(Math.round(width)));
   if (height) {
     url.searchParams.set('h', String(Math.round(height)));
     url.searchParams.set('fit', 'crop');
   }
-  url.searchParams.set('auto', 'format');
+  if (format) url.searchParams.set('fm', format);
+  else url.searchParams.set('auto', 'format');
   url.searchParams.set('q', String(quality));
   return url.toString();
 }

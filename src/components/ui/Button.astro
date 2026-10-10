@@ -2,18 +2,22 @@
 /**
  * Knop of link met knopstijl.
  *
+ * Kapitalen in de body-font met ruime letterspatiëring, 2px rand en een effen "veeg" bij
+ * hover: de vulling loopt van links naar rechts in, of van boven naar onder als de knop
+ * een pijl omlaag heeft (icon="arrow-down"). Geen gradients.
+ *
  * Varianten (Webflow-klasse → variant):
- *   .button.orange / .button.yellow → primary  (gradient-vulling, zwarte tekst)
- *   .button.orange-outline          → outline  (accentrand, gradient-tekst)
- *   .button.white-outline           → ghost    (donker glas, witte tekst)
+ *   .button.orange / .button.yellow → primary  (accentvlak; bij hover zwart met accenttekst)
+ *   .button.orange-outline          → outline  (accentrand; bij hover accentvlak, zwarte tekst)
+ *   .button.white-outline           → ghost    (donker glas; bij hover wit vlak, zwarte tekst)
  * Kleur volgt het accent (data-accent op een voorouder) of de `accent`-prop.
  */
-import type { HTMLAttributes } from 'astro/types';
-import Icon, { type IconName } from './Icon.astro';
+import type { HTMLAttributes } from "astro/types";
+import Icon, { type IconName } from "./Icon.astro";
 
-export type ButtonVariant = 'primary' | 'outline' | 'ghost';
-export type ButtonSize = 'compact' | 'small' | 'default' | 'large';
-export type Accent = 'orange' | 'yellow' | 'green';
+export type ButtonVariant = "primary" | "outline" | "ghost";
+export type ButtonSize = "compact" | "small" | "default" | "large";
+export type Accent = "orange" | "yellow" | "green";
 
 interface Props {
   label: string;
@@ -27,73 +31,119 @@ interface Props {
   iconExpanded?: IconName;
   /** Toon op mobiel (≤767px) alleen het icoon, als vierkante knop. */
   iconOnlyOnMobile?: boolean;
-  type?: 'button' | 'submit';
-  target?: '_blank';
+  type?: "button" | "submit";
+  target?: "_blank";
   class?: string;
   /** Extra attributen, bijv. aria-expanded of data-*. */
-  attrs?: HTMLAttributes<'a'> & HTMLAttributes<'button'> & Record<`data-${string}`, string>;
+  attrs?: HTMLAttributes<"a"> &
+    HTMLAttributes<"button"> &
+    Record<`data-${string}`, string>;
 }
 
 const {
   label,
   href,
-  variant = 'primary',
-  size = 'default',
+  variant = "primary",
+  size = "default",
   accent,
-  icon = 'arrow-right',
+  icon = "arrow-right",
   iconExpanded,
   iconOnlyOnMobile = false,
-  type = 'button',
+  type = "button",
   target,
   class: className,
   attrs = {},
 } = Astro.props;
 
-const Tag = href ? 'a' : 'button';
+const Tag = href ? "a" : "button";
 const linkAttrs = href
-  ? { href, target, rel: target === '_blank' ? 'noopener noreferrer' : undefined }
+  ? {
+      href,
+      target,
+      rel: target === "_blank" ? "noopener noreferrer" : undefined,
+    }
   : { type };
-const iconMotion = icon === 'arrow-down' ? 'down' : icon === 'arrow-right' ? 'right' : undefined;
+const sweepDown = icon === "arrow-down";
+const iconMotion =
+  icon === "arrow-down" ? "down" : icon === "arrow-right" ? "right" : undefined;
 ---
 
 <Tag
-  class:list={['button', `button--${variant}`, `button--${size}`, { 'button--icon-only-mobile': iconOnlyOnMobile }, className]}
+  class:list={[
+    "button",
+    `button--${variant}`,
+    `button--${size}`,
+    {
+      "button--sweep-down": sweepDown,
+      "button--icon-only-mobile": iconOnlyOnMobile,
+    },
+    className,
+  ]}
   data-accent={accent}
   aria-label={iconOnlyOnMobile ? label : undefined}
   {...linkAttrs}
   {...attrs}
 >
   <span class="button__label">{label}</span>
-  {icon && <Icon name={icon} class:list={['button__icon', iconMotion && `button__icon--${iconMotion}`, iconExpanded && 'button__icon--collapsed']} />}
-  {iconExpanded && <Icon name={iconExpanded} class="button__icon button__icon--expanded" />}
+  {
+    icon && (
+      <Icon
+        name={icon}
+        class:list={[
+          "button__icon",
+          iconMotion && `button__icon--${iconMotion}`,
+          iconExpanded && "button__icon--collapsed",
+        ]}
+      />
+    )
+  }
+  {
+    iconExpanded && (
+      <Icon name={iconExpanded} class="button__icon button__icon--expanded" />
+    )
+  }
 </Tag>
 
 <style>
   .button {
+    --button-fill: var(--color-black);
     display: inline-flex;
     justify-content: center;
     align-items: center;
     gap: var(--space-8);
     height: var(--button-height);
     padding: var(--space-12) var(--button-padding-x);
-    border: var(--border-width) solid transparent;
+    border: var(--border-width-thick) solid transparent;
     border-radius: var(--radius-none);
     font-family: var(--font-body);
-    font-size: var(--fs-base);
-    font-weight: var(--fw-medium);
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-extra-bold);
     line-height: var(--lh-body);
+    letter-spacing: var(--ls-button);
     text-align: center;
     text-decoration: none;
+    text-transform: uppercase;
     white-space: nowrap;
-    background-position-x: center;
-    background-size: 100%;
-    transition: all var(--duration-fast) var(--ease-out);
+    /* Veeg: effen vulling die bij hover van links naar rechts (of boven naar onder) inloopt */
+    background-image: linear-gradient(var(--button-fill), var(--button-fill));
+    background-repeat: no-repeat;
+    background-position: left;
+    background-size: 0% 100%;
+    transition:
+      background-size var(--duration-base) var(--ease-reveal),
+      color var(--duration-base) var(--ease-reveal),
+      border-color var(--duration-base) var(--ease-reveal);
     cursor: var(--cursor-pointer);
   }
 
-  .button:hover {
-    background-size: 250%;
-    background-position: left;
+  .button--sweep-down {
+    background-position: top;
+    background-size: 100% 0%;
+  }
+
+  .button:hover,
+  .button:focus-visible {
+    background-size: 100% 100%;
   }
 
   .button :global(.button__icon) {
@@ -111,55 +161,53 @@ const iconMotion = icon === 'arrow-down' ? 'down' : icon === 'arrow-right' ? 'ri
 
   /* ─── Varianten ─── */
   .button--primary {
-    background-image: var(--accent-gradient);
+    --button-fill: var(--color-black);
+    background-color: var(--accent);
+    border-color: var(--accent);
     color: var(--color-black);
-    border-color: var(--color-white-a20);
   }
 
-  .button--primary:hover {
-    border-color: transparent;
+  .button--primary:hover,
+  .button--primary:focus-visible {
+    color: var(--accent);
   }
 
   .button--outline {
+    --button-fill: var(--accent);
     background-color: var(--color-black-a48);
     border-color: var(--accent);
     color: var(--accent);
-    transition:
-      background-color var(--duration-fast),
-      background-position var(--duration-fast);
-  }
-
-  .button--outline .button__label {
-    background-image: var(--accent-gradient);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
+    -webkit-backdrop-filter: blur(var(--blur-sm));
+    backdrop-filter: blur(var(--blur-sm));
   }
 
   .button--ghost {
+    --button-fill: var(--color-white);
     background-color: var(--color-black-a48);
     border-color: var(--color-gray-dark);
     color: var(--color-white);
     -webkit-backdrop-filter: blur(var(--blur-sm));
     backdrop-filter: blur(var(--blur-sm));
-    transition:
-      background-color var(--duration-fast),
-      background-position var(--duration-fast);
   }
 
   .button--outline:hover,
-  .button--ghost:hover {
-    background-color: var(--color-white-a8);
-    -webkit-backdrop-filter: blur(var(--blur-md));
-    backdrop-filter: blur(var(--blur-md));
+  .button--outline:focus-visible,
+  .button--ghost:hover,
+  .button--ghost:focus-visible {
+    color: var(--color-black);
+  }
+
+  .button--ghost:hover,
+  .button--ghost:focus-visible {
+    border-color: var(--color-white);
   }
 
   .button :global(.button__icon--expanded),
-  .button[aria-expanded='true'] :global(.button__icon--collapsed) {
+  .button[aria-expanded="true"] :global(.button__icon--collapsed) {
     display: none;
   }
 
-  .button[aria-expanded='true'] :global(.button__icon--expanded) {
+  .button[aria-expanded="true"] :global(.button__icon--expanded) {
     display: inline-block;
   }
 

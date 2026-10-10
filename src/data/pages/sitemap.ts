@@ -18,6 +18,7 @@ export const page: PageData = {
   slug: 'sitemap',
   title: 'Sitemap',
   meta: {
+    schema: { type: 'webpage', relation: 'publisher' },
     title: 'Sitemap',
     description: "Een overzicht van alle pagina's op weareboldproductions.com.",
   },

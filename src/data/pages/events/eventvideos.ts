@@ -16,8 +16,16 @@ export const page: PageData = {
   slug: 'events/eventvideos',
   title: "Eventvideo's",
   meta: {
+    schema: {
+      type: 'service',
+      serviceType: 'Eventvideo & Same-day Edit Productie',
+      name: 'Eventvideo laten maken? | Bold Productions',
+      description:
+        'Dag 1 is je beste verkoper. Creëer live FOMO met een vette eventvideo of same-day edit. Verkoop meer tickets.',
+    },
     title: 'Event video laten maken? | Bold Productions',
-    description: 'Dag 1 is je beste verkoper. Creëer live FOMO met een vette evenementen video of same-day edit. Verkoop meer tickets.',
+    description:
+      'Dag 1 is je beste verkoper. Creëer live FOMO met een vette evenementen video of same-day edit. Verkoop meer tickets.',
   },
   sections: [
     {

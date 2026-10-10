@@ -235,7 +235,9 @@ export const page: PageData = {
             question: "Maken jullie ook foto's?",
             answer: [
               {
-                p: ['Ja. Naast videografie verzorgen we ook eventfotografie, artiestenfotografie en zakelijke eventfotografie.'],
+                p: [
+                  'Ja. Naast videografie verzorgen we ook eventfotografie, artiestenfotografie en zakelijke eventfotografie.',
+                ],
               },
             ],
           },
@@ -243,7 +245,9 @@ export const page: PageData = {
             question: 'Hoe snel kunnen jullie beschikbaar zijn?',
             answer: [
               {
-                p: ['Dat hangt af van onze agenda en de omvang van je opdracht. Neem contact op en we kijken samen wat mogelijk is.'],
+                p: [
+                  'Dat hangt af van onze agenda en de omvang van je opdracht. Neem contact op en we kijken samen wat mogelijk is.',
+                ],
               },
             ],
           },

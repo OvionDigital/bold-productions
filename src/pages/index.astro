@@ -9,6 +9,9 @@ import PolaroidStack from '../components/sections/PolaroidStack.astro';
 import TextMedia from '../components/sections/TextMedia.astro';
 import * as localHome from '../data/home';
 import { getHomepageContent } from '../lib/sanity/homepage';
+import { homepageReviews } from '../data/seo';
+import { testimonials as allTestimonials } from '../data/testimonials';
+import type { Review } from '../lib/structured-data';
 
 /**
  * Proef: homepage-inhoud uit Sanity, met terugval op src/data/home.ts.
@@ -17,9 +20,15 @@ import { getHomepageContent } from '../lib/sanity/homepage';
  */
 const sanityContent = await getHomepageContent();
 const { meta, hero, trustedBy, intro, timeline, testimonials, backstage, micDrop } = sanityContent ?? localHome;
+
+/** Reviews in de structured data (selectie van live, src/data/seo.ts) */
+const reviews: Review[] = homepageReviews.map((id) => {
+  const t: { quote: string; name?: string; organisation?: string } = allTestimonials[id];
+  return { body: t.quote, author: t.name ?? t.organisation ?? '', authorType: t.name ? 'Person' : 'Organization' };
+});
 ---
 
-<BaseLayout title={meta.title} description={meta.description} ogImage={meta.ogImage}>
+<BaseLayout title={meta.title} description={meta.description} ogImage={meta.ogImage} structuredData={{ website: true, reviews }}>
   <Hero {...hero} />
   <LogoMarquee {...trustedBy} />
   <IntroHighlight {...intro} />

@@ -10,6 +10,7 @@ export const page: PageData = {
   slug: 'contact',
   title: 'Contact',
   meta: {
+    schema: { type: 'contact' },
     title: 'Contact Mike | Bold Productions',
     description:
       'Gewoon even praten. Geen gedoe of briefing nodig, maar direct contact met ons team. Bij jou, op locatie in Doetinchem of online.',

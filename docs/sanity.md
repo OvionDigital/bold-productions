@@ -23,6 +23,11 @@ vanuit `src/data/`). Wat de klant in Studio kan:
   vrije secties. Kop, kruimelpad en feitenbalk komen automatisch uit de
   kaartgegevens. Het casesoverzicht en "Uitgelichte case" lezen dezelfde cases.
 - **Testimonials, klantlogo's en teamleden** beheren; secties kiezen daaruit.
+- **SEO per pagina** (tab Instellingen & SEO): paginatitel, metabeschrijving, deelafbeelding
+  (leeg = vaste Bold-afbeelding), verbergen voor Google en "Soort pagina (voor Google)": dienst
+  (met soort dienst en optioneel aanbod), pagina over/van Bold, contactpagina of profiel van Mike.
+  Daaruit maakt de site de structured data; organisatie, Mike, FAQ, video's en kruimelpad gaan
+  automatisch. `/sitemap.xml` gebruikt de wijzigingsdatum uit Sanity.
 
 ## Hoe het werkt
 

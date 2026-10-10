@@ -1,9 +1,21 @@
 ---
 /**
- * Vimeo-video als embed met vaste verhouding, loading="lazy" (geen player.js).
- * `background` = zonder bediening, automatisch, gedempt en herhalend (Vimeo background=1).
+ * Vimeo-video met vaste verhouding (geen player.js).
+ *
+ * Met bediening (`background={false}`): een "gevel" — alleen een thumbnail met
+ * afspeelknop; de echte speler (± 450 kB JavaScript en cookies van Vimeo) laadt pas bij
+ * een klik en start dan meteen (scripts/vimeo-facade.ts). Zonder JS: link naar Vimeo.
+ * Plus VideoObject-structured data (titel, thumbnail, duur, uploaddatum uit oEmbed,
+ * src/lib/vimeo.ts), zodat Google de video kan indexeren.
+ *
+ * `background` (standaard): decoratief, automatisch, gedempt en herhalend (Vimeo
+ * background=1), lazy iframe. Altijd met dnt=1: Vimeo plaatst geen tracking-cookies.
+ *
  * `ratio`: vaste verhouding of een getal (hoogte / breedte, bijv. 0.5625 = 16:9).
  */
+import Icon from './Icon.astro';
+import { getVimeoMeta, isoDuration, thumbnailAt } from '../../lib/vimeo';
+
 interface Props {
   id: string;
   hash?: string;
@@ -16,23 +28,66 @@ interface Props {
 const { id, hash, title, ratio = 'square', background = true, class: className } = Astro.props;
 const params = new URLSearchParams({
   ...(hash ? { h: hash } : {}),
-  ...(background ? { autoplay: '1', loop: '1', muted: '1', background: '1' } : {}),
+  dnt: '1',
+  ...(background ? { autoplay: '1', loop: '1', muted: '1', background: '1' } : { autoplay: '1' }),
 });
 const src = `https://player.vimeo.com/video/${id}?${params.toString()}`;
+const meta = background ? null : await getVimeoMeta(id, hash);
+const watchUrl = `https://vimeo.com/${id}${hash ? `/${hash}` : ''}`;
+const thumbWidths = [480, 640, 960, 1280];
+
+const videoObject =
+  meta?.uploadDate && meta.thumbnail
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'VideoObject',
+        name: meta.title || title,
+        description: meta.description || meta.title || title,
+        thumbnailUrl: thumbnailAt(meta.thumbnail, 1280),
+        uploadDate: meta.uploadDate,
+        ...(meta.duration ? { duration: isoDuration(meta.duration) } : {}),
+        embedUrl: `https://player.vimeo.com/video/${id}${hash ? `?h=${hash}` : ''}`,
+      }
+    : undefined;
+const videoObjectHtml = videoObject ? JSON.stringify(videoObject).replaceAll('<', String.fromCharCode(92) + 'u003c') : undefined;
 ---
 
 <div
   class:list={['vimeo-embed', typeof ratio === 'string' && `vimeo-embed--${ratio}`, className]}
   style={typeof ratio === 'number' ? `aspect-ratio: 1 / ${ratio}` : undefined}
 >
-  <iframe
-    src={src}
-    title={title}
-    loading="lazy"
-    allow="autoplay; fullscreen; picture-in-picture"
-    referrerpolicy="strict-origin-when-cross-origin"
-    tabindex={background ? '-1' : undefined}
-    class:list={['vimeo-embed__iframe', { 'vimeo-embed__iframe--background': background }]}></iframe>
+  {
+    background ? (
+      <iframe
+        src={src}
+        title={title}
+        loading="lazy"
+        allow="autoplay; fullscreen; picture-in-picture"
+        referrerpolicy="strict-origin-when-cross-origin"
+        tabindex="-1"
+        class="vimeo-embed__iframe vimeo-embed__iframe--background"
+      />
+    ) : (
+      <a href={watchUrl} class="vimeo-embed__facade" data-vimeo-facade={src} data-title={title} target="_blank" rel="noopener">
+        {meta?.thumbnail && (
+          <img
+            src={thumbnailAt(meta.thumbnail, 960)}
+            srcset={thumbWidths.map((w) => `${thumbnailAt(meta.thumbnail, w)} ${w}w`).join(', ')}
+            sizes="(max-width: 991px) 100vw, 1140px"
+            alt=""
+            loading="lazy"
+            decoding="async"
+            class="vimeo-embed__thumb"
+          />
+        )}
+        <span class="vimeo-embed__play" aria-hidden="true">
+          <Icon name="play" />
+        </span>
+        <span class="visually-hidden">Video afspelen: {title}</span>
+      </a>
+    )
+  }
+  {videoObjectHtml && <script type="application/ld+json" is:inline set:html={videoObjectHtml} />}
 </div>
 
 <style>
@@ -40,6 +95,7 @@ const src = `https://player.vimeo.com/video/${id}?${params.toString()}`;
     position: relative;
     width: 100%;
     overflow: hidden;
+    background-color: var(--color-black);
   }
 
   .vimeo-embed--square {
@@ -54,7 +110,7 @@ const src = `https://player.vimeo.com/video/${id}?${params.toString()}`;
     aspect-ratio: 16 / 9;
   }
 
-  .vimeo-embed__iframe {
+  .vimeo-embed :global(.vimeo-embed__iframe) {
     position: absolute;
     top: 0;
     left: 0;
@@ -65,5 +121,51 @@ const src = `https://player.vimeo.com/video/${id}?${params.toString()}`;
 
   .vimeo-embed__iframe--background {
     pointer-events: none;
+  }
+
+  .vimeo-embed__facade {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--color-black);
+    cursor: var(--cursor-pointer);
+  }
+
+  .vimeo-embed__thumb {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--duration-slow) var(--ease-reveal);
+  }
+
+  .vimeo-embed__facade:hover .vimeo-embed__thumb {
+    transform: scale(1.03);
+  }
+
+  .vimeo-embed__play {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: var(--video-play-size);
+    height: var(--video-play-size);
+    border-radius: var(--radius-round);
+    background-color: var(--accent);
+    box-shadow: var(--shadow-card-hover);
+    transition: transform var(--duration-fast) var(--ease-out);
+  }
+
+  .vimeo-embed__play :global(.icon) {
+    --icon-size: var(--icon-lg);
+    margin-left: var(--space-4);
+  }
+
+  .vimeo-embed__facade:hover .vimeo-embed__play,
+  .vimeo-embed__facade:focus-visible .vimeo-embed__play {
+    transform: scale(1.08);
   }
 </style>
