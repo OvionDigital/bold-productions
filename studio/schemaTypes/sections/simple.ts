@@ -68,7 +68,7 @@ export const polaroidStackSection = defineType({
   title: "Polaroidstapel (foto's)",
   type: 'object',
   fields: [
-    defineField({ name: 'eyebrow', title: 'Eyebrow', type: 'string', validation: (r) => r.required() }),
+    defineField({ name: 'eyebrow', title: 'Eyebrow (optioneel)', type: 'string', description: 'Kleine kop boven de titel, bijv. "Bold backstage".' }),
     titleField(),
     gradientField('green'),
     defineField({

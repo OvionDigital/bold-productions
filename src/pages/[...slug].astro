@@ -1,22 +1,22 @@
 ---
 /**
- * Alle pagina's die de klant zelf in Sanity opbouwt (documenttype `page`). Header,
- * menu, footer en WhatsApp-knop komen uit BaseLayout; de inhoud is een vrije lijst
- * van de bestaande secties (PageSections). Vaste pagina's in src/pages/ gaan voor.
- * Zonder Sanity-configuratie worden er geen pagina's gebouwd.
+ * Alle pagina's behalve de homepage: dienst-, doelgroep-, case- en overige pagina's.
+ * Inhoud uit Sanity (pagina's en cases die de klant beheert) of, zonder Sanity, uit
+ * src/data — zie src/lib/pages.ts. Header, menu, footer en WhatsApp-knop komen uit
+ * BaseLayout; de inhoud is een lijst secties (PageSections).
  */
 import type { GetStaticPaths } from 'astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageSections from '../components/sections/PageSections.astro';
-import { getCmsPages, type CmsPage } from '../lib/sanity/pages';
+import { getAllPages, type BuiltPage } from '../lib/pages';
 
 export const getStaticPaths = (async () => {
-  const pages = await getCmsPages();
+  const pages = await getAllPages();
   return pages.map((page) => ({ params: { slug: page.slug }, props: { page } }));
 }) satisfies GetStaticPaths;
 
 interface Props {
-  page: CmsPage;
+  page: BuiltPage;
 }
 
 const { page } = Astro.props;

@@ -4,7 +4,8 @@
  * en knop naast een beeld of Vimeo-video, optioneel met driehoekjes.
  * - `reverse` zet het beeld links. Op ≤991 staat het beeld boven de tekst.
  * - media: Vimeo (vierkant) of afbeelding (staand 2:3, Webflow .image-5).
- * - `spacing`: 'margin' of 'section'; beide 192 marge (--section-space), 'section' knipt overflow af.
+ * - `spacing`: 'margin' of 'section'; beide 192 marge (--section-space), 'section' knipt horizontale
+ *   overflow af (verticaal niet: de driehoekjes steken boven en onder het beeld uit).
  * - `intro`: gecentreerde titel + tekst boven de rij (Webflow .form-compact-intro).
  * - Slot "content" vervangt de tekstkolom (bijv. een formulier).
  * - `id` = 'cinema' activeert de popcorn-cursor (scripts/cinema-cursor.ts).
@@ -118,7 +119,7 @@ const hasCustomContent = Astro.slots.has('content');
   }
 
   .text-media--section {
-    overflow: hidden;
+    overflow-x: clip;
   }
 
   .text-media__intro {

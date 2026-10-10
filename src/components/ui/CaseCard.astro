@@ -3,6 +3,8 @@
  * Casekaart (Webflow .work-overview-item): foto (3:2, ≤991 16:9, zoals live) met donkere
  * diagonale gradient, titel in groene gradient en intro (vanaf 1280px).
  * Hele kaart is een link naar /cases/[slug].
+ * `tags`: labels onderaan (doelgroep + diensten), zoals in het casesoverzicht
+ * (Webflow .work-overview-item.overview: ≤767 vierkant).
  */
 import Heading from './Heading.astro';
 import CmsPicture from './CmsPicture.astro';
@@ -10,14 +12,15 @@ import { caseUrl, type Case } from '../../data/cases';
 
 interface Props {
   item: Case;
+  tags?: string[];
   sizes?: string;
   class?: string;
 }
 
-const { item, sizes = '(max-width: 991px) 100vw, (max-width: 1439px) 67vw, 50vw', class: className } = Astro.props;
+const { item, tags, sizes = '(max-width: 991px) 100vw, (max-width: 1439px) 67vw, 50vw', class: className } = Astro.props;
 ---
 
-<a href={caseUrl(item.slug)} class:list={['case-card', className]}>
+<a href={caseUrl(item.slug)} class:list={['case-card', { 'case-card--tagged': tags?.length }, className]}>
   <span class="case-card__shade" aria-hidden="true"></span>
   <CmsPicture
     src={item.image.src}
@@ -32,6 +35,15 @@ const { item, sizes = '(max-width: 991px) 100vw, (max-width: 1439px) 67vw, 50vw'
   <span class="case-card__content">
     <Heading as="h3" text={item.title} gradient="green" flush class="case-card__title" />
     <span class="case-card__intro">{item.intro}</span>
+    {
+      tags?.length ? (
+        <span class="case-card__tags">
+          {tags.map((tag) => (
+            <span class="case-card__tag">{tag}</span>
+          ))}
+        </span>
+      ) : null
+    }
   </span>
 </a>
 
@@ -92,15 +104,50 @@ const { item, sizes = '(max-width: 991px) 100vw, (max-width: 1439px) 67vw, 50vw'
     line-height: var(--lh-paragraph);
   }
 
+  .case-card__tags {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: center;
+    gap: var(--space-8);
+  }
+
+  /* Webflow .work-overview-tag */
+  .case-card__tag {
+    padding: var(--space-4) var(--space-12);
+    border: var(--border-width) solid var(--color-white-a10);
+    background-color: var(--color-white-a6);
+    -webkit-backdrop-filter: blur(var(--blur-md));
+    backdrop-filter: blur(var(--blur-md));
+    color: var(--color-white);
+    font-size: var(--fs-sm);
+    line-height: var(--lh-body);
+  }
+
   @media (min-width: 1280px) {
     .case-card__intro {
       display: block;
+    }
+
+    .case-card__tag {
+      padding: var(--space-8) var(--space-20);
+      font-size: var(--fs-base);
     }
   }
 
   @media (max-width: 991px) {
     .case-card {
       aspect-ratio: 16 / 9;
+    }
+
+    .case-card--tagged {
+      aspect-ratio: 3 / 2;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .case-card--tagged {
+      aspect-ratio: 1;
     }
   }
 
@@ -114,6 +161,10 @@ const { item, sizes = '(max-width: 991px) 100vw, (max-width: 1439px) 67vw, 50vw'
   @media (max-width: 479px) {
     .case-card__content {
       padding: var(--space-24);
+    }
+
+    .case-card__tag {
+      padding: var(--space-4) var(--space-12);
     }
 
     .case-card__intro {

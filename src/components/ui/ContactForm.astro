@@ -1,8 +1,13 @@
 ---
 /**
- * Contactformulier (Webflow wf-form-Contact): velden uit de data, verzendknop,
+ * Formulier (Webflow wf-form-Contact / wf-form-Offerte): velden uit de data, verzendknop,
  * succes- en foutmelding. Verzenden via fetch (scripts/contact-form.ts) naar `action`.
  * Honeypot-veld tegen spam (geen reCAPTCHA). Veldnamen gelijk aan het Webflow-formulier.
+ *
+ * Veldtypes: tekstvelden, `heading` (tussenkop), `radio` (keuzerondjes) en `checkboxes`
+ * (meerkeuze-dropdown; <details>, tekst bijgewerkt door scripts/multiselect.ts).
+ * `labelSpacing: 'all'` = elk label 12px ruimte (Webflow .form-label), anders alleen
+ * het eerste (zoals het contactformulier live).
  *
  * TODO(formulier): backend kiezen en `action` vullen (zie README / data).
  */
@@ -10,7 +15,7 @@ import Button from './Button.astro';
 import RichText from './RichText.astro';
 import type { Rich } from '../../lib/rich';
 
-export interface ContactFormField {
+export interface ContactFormInput {
   name: string;
   label: string;
   type: 'text' | 'email' | 'tel' | 'textarea';
@@ -19,6 +24,20 @@ export interface ContactFormField {
   maxlength?: number;
   autocomplete?: string;
 }
+
+export type ContactFormField =
+  | ContactFormInput
+  | { type: 'heading'; label: string }
+  | { type: 'radio'; name: string; label: string; options: string[]; required?: boolean }
+  | {
+      type: 'checkboxes';
+      name: string;
+      label: string;
+      placeholder: string;
+      /** Tekst bij meerdere keuzes, {n} = aantal (bijv. '{n} diensten geselecteerd') */
+      countLabel: string;
+      options: string[];
+    };
 
 export interface ContactFormProps {
   name: string;
@@ -30,15 +49,17 @@ export interface ContactFormProps {
   submittingLabel: string;
   success: { title: string; text: Rich };
   error: string;
+  labelSpacing?: 'first' | 'all';
 }
 
 type Props = ContactFormProps;
 
-const { name, action, fields, optionalLabel, submitLabel, submittingLabel, success, error } = Astro.props;
-const formId = `form-${name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
+const { name, action, fields, optionalLabel, submitLabel, submittingLabel, success, error, labelSpacing = 'first' } = Astro.props;
+const slug = (value: string) => value.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+const formId = `form-${slug(name)}`;
 ---
 
-<div class="contact-form" data-contact-form>
+<div class:list={['contact-form', `contact-form--labels-${labelSpacing}`]} data-contact-form>
   <form
     id={formId}
     name={name}
@@ -49,13 +70,53 @@ const formId = `form-${name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
     data-submitting-label={submittingLabel}
   >
     {
-      fields.map((field) => {
-        const fieldId = `${formId}-${field.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
+      fields.map((field, index) => {
+        if (field.type === 'heading') {
+          return <h3 class:list={['contact-form__heading', { 'contact-form__heading--first': index === 0 }]}>{field.label}</h3>;
+        }
+        const fieldId = `${formId}-${slug(field.name)}`;
+        if (field.type === 'radio') {
+          return (
+            <fieldset class="contact-form__field contact-form__field--radio">
+              <legend class="contact-form__label contact-form__label--radio">{field.label}</legend>
+              {field.options.map((option) => (
+                <label class="contact-form__choice">
+                  <input type="radio" name={field.name} value={option} required={field.required} class="contact-form__choice-input" />
+                  <span class="contact-form__choice-box contact-form__choice-box--radio" aria-hidden="true" />
+                  <span>{option}</span>
+                </label>
+              ))}
+            </fieldset>
+          );
+        }
+        if (field.type === 'checkboxes') {
+          return (
+            <div class="contact-form__field">
+              <span class="contact-form__label" id={`${fieldId}-label`}>
+                {field.label}
+              </span>
+              <details class="contact-form__multi" data-multiselect>
+                <summary class="contact-form__multi-trigger" aria-describedby={`${fieldId}-label`} data-multiselect-summary data-placeholder={field.placeholder} data-count-label={field.countLabel}>
+                  {field.placeholder}
+                </summary>
+                <div class="contact-form__multi-panel" role="group" aria-labelledby={`${fieldId}-label`}>
+                  {field.options.map((option) => (
+                    <label class="contact-form__choice contact-form__choice--option">
+                      <input type="checkbox" name={field.name} value={option} class="contact-form__choice-input" />
+                      <span class="contact-form__choice-box" aria-hidden="true" />
+                      <span>{option}</span>
+                    </label>
+                  ))}
+                </div>
+              </details>
+            </div>
+          );
+        }
         return (
           <div class="contact-form__field">
             <label for={fieldId} class="contact-form__label">
               {field.label}
-              {!field.required && <span class="contact-form__optional"> {optionalLabel}</span>}
+              {!field.required && optionalLabel && <span class="contact-form__optional"> {optionalLabel}</span>}
             </label>
             {field.type === 'textarea' ? (
               <textarea
@@ -117,6 +178,128 @@ const formId = `form-${name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
   /* Zoals live: alleen het eerste label heeft 12px ruimte (Webflow .form-label) */
   .contact-form__field:first-child .contact-form__label {
     margin-bottom: var(--space-12);
+  }
+
+  .contact-form--labels-all .contact-form__label {
+    margin-bottom: var(--space-12);
+  }
+
+  /* Webflow .form-label.extra-margin: label direct na een groep keuzerondjes */
+  .contact-form__field--radio + .contact-form__field .contact-form__label {
+    margin-top: var(--space-24);
+  }
+
+  .contact-form__field--radio + .contact-form__field--radio {
+    margin-top: var(--space-24);
+  }
+
+  .contact-form__heading {
+    display: inline-block;
+    margin: var(--space-48) 0 0.75em;
+    background-image: var(--gradient-orange);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+
+  .contact-form__heading--first {
+    margin-top: 0;
+  }
+
+  .contact-form__field--radio {
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  .contact-form--labels-all .contact-form__label--radio {
+    margin-bottom: var(--space-4);
+    padding: 0;
+  }
+
+  .contact-form__choice {
+    position: relative;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: var(--space-8);
+    margin-bottom: var(--space-5);
+    padding: var(--space-4) var(--space-15);
+  }
+
+  .contact-form__choice--option {
+    gap: var(--space-10);
+    padding: var(--space-8) var(--space-15);
+  }
+
+  .contact-form__choice-input {
+    position: absolute;
+    z-index: var(--z-below);
+    opacity: 0;
+  }
+
+  /* Webflow .form-checkbox: vakje van 16px, oranje gevuld als het aangevinkt is */
+  .contact-form__choice-box {
+    flex: none;
+    width: var(--icon-sm);
+    height: var(--icon-sm);
+    border: var(--border-width) solid var(--color-gray-light);
+    border-radius: var(--radius-sm);
+  }
+
+  .contact-form__choice-box--radio {
+    border-radius: var(--radius-round);
+  }
+
+  .contact-form__choice-input:checked + .contact-form__choice-box {
+    border-color: var(--color-orange);
+    background-color: var(--color-orange);
+  }
+
+  .contact-form__choice-input:focus-visible + .contact-form__choice-box {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .contact-form__multi {
+    position: relative;
+    width: 100%;
+    margin-bottom: var(--space-32);
+  }
+
+  .contact-form__multi-trigger {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-16) var(--space-24);
+    background-color: var(--color-gray-dark);
+    font-size: var(--fs-base);
+    list-style: none;
+  }
+
+  .contact-form__multi-trigger::-webkit-details-marker {
+    display: none;
+  }
+
+  .contact-form__multi-trigger::after {
+    content: '\25BE';
+    margin-left: var(--space-8);
+    color: var(--color-gray);
+  }
+
+  .contact-form__multi-panel {
+    position: absolute;
+    top: calc(100% + var(--space-4));
+    left: 0;
+    z-index: var(--z-menu-overlay);
+    width: 100%;
+    padding: var(--space-8) var(--space-16);
+    border: var(--border-width) solid var(--color-gray-dark);
+    background-color: var(--color-black-a48);
+    -webkit-backdrop-filter: blur(var(--blur-md));
+    backdrop-filter: blur(var(--blur-md));
   }
 
   .contact-form__optional {

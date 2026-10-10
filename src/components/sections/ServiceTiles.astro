@@ -3,6 +3,9 @@
  * Beeldtegels die naar dienstpagina's linken (Webflow .five-blocks-section).
  * Kop + tekst, daarna staande tegels (2:3) met titel. Hover: tegel groeit, titel oranje.
  * ≥1440 alle tegels op één rij (even tegels 48px lager), daaronder 3 / 2 / 1 per rij.
+ *
+ * Variant `team` (Webflow .team-item): geen links maar teamleden, 9:16 (≥1920 2:3), met
+ * functie onder de naam en een video die bij hover afspeelt (scripts/hover-video.ts).
  */
 import type { ImageMetadata } from 'astro';
 import Container from '../ui/Container.astro';
@@ -11,11 +14,18 @@ import CmsPicture from '../ui/CmsPicture.astro';
 import type { HeadingGradient } from '../ui/Heading.astro';
 import type { RemoteImage } from '../../lib/sanity/image';
 import type { Rich } from '../../lib/rich';
+import { toLines } from '../../lib/text';
 
 export interface ServiceTile {
   label: string;
-  href: string;
+  /** Link (variant services) */
+  href?: string;
   image: { src: ImageMetadata | RemoteImage; alt: string };
+  /** Regel onder de titel, bijv. de functie van een teamlid ('
+' = nieuwe regel) */
+  subtitle?: string;
+  /** Video-URL die bij hover afspeelt (variant team) */
+  video?: string;
 }
 
 export interface ServiceTilesProps {
@@ -23,39 +33,45 @@ export interface ServiceTilesProps {
   gradient?: HeadingGradient;
   text?: Rich;
   items: ServiceTile[];
+  variant?: 'services' | 'team';
 }
 
 type Props = ServiceTilesProps;
 
-const { title, gradient = 'yellow', text, items } = Astro.props;
+const { title, gradient = 'yellow', text, items, variant = 'services' } = Astro.props;
 ---
 
-<section class="service-tiles">
+<section class:list={['service-tiles', `service-tiles--${variant}`]}>
   <Container data-animate>
     <SectionHeading title={title} gradient={gradient} text={text} />
   </Container>
   <Container width="wide">
     <ul class="service-tiles__row" role="list" data-animate-stagger>
       {
-        items.map((item) => (
-          <li class="service-tiles__item">
-            <a href={item.href} class="service-tiles__tile">
-              <CmsPicture
-                src={item.image.src}
-                alt={item.image.alt}
-                aspectRatio={2 / 3}
-                widths={[320, 480, 640, 800]}
-                sizes="(max-width: 479px) 100vw, (max-width: 767px) 50vw, (max-width: 1439px) 33vw, 20vw"
-                formats={['avif', 'webp']}
-                loading="lazy"
-                decoding="async"
-                class="service-tiles__image"
-              />
-              <span class="service-tiles__overlay" aria-hidden="true"></span>
-              <h3 class="service-tiles__title">{item.label}</h3>
-            </a>
-          </li>
-        ))
+        items.map((item) => {
+          const Tile = item.href ? 'a' : 'div';
+          return (
+            <li class="service-tiles__item">
+              <Tile href={item.href} class="service-tiles__tile" data-hover-video={item.video ? '' : undefined}>
+                {item.video && <video class="service-tiles__video" data-src={item.video} muted loop playsinline preload="none" aria-hidden="true" />}
+                <CmsPicture
+                  src={item.image.src}
+                  alt={item.image.alt}
+                  aspectRatio={2 / 3}
+                  widths={[320, 480, 640, 800]}
+                  sizes="(max-width: 479px) 100vw, (max-width: 767px) 50vw, (max-width: 1439px) 33vw, 20vw"
+                  formats={['avif', 'webp']}
+                  loading="lazy"
+                  decoding="async"
+                  class="service-tiles__image"
+                />
+                <span class="service-tiles__overlay" aria-hidden="true" />
+                <h3 class="service-tiles__title">{item.label}</h3>
+                {item.subtitle && <p class="service-tiles__subtitle">{toLines(item.subtitle).map((line, i) => (i > 0 ? [<br />, line] : line))}</p>}
+              </Tile>
+            </li>
+          );
+        })
       }
     </ul>
   </Container>
@@ -98,6 +114,37 @@ const { title, gradient = 'yellow', text, items } = Astro.props;
     color: var(--color-white);
     text-decoration: none;
     transition: transform var(--duration-fast);
+  }
+
+  .service-tiles--team .service-tiles__tile {
+    flex-direction: column;
+    gap: var(--space-24);
+    aspect-ratio: 9 / 16;
+    cursor: var(--cursor-default);
+  }
+
+  .service-tiles__video {
+    position: absolute;
+    inset: 0;
+    z-index: var(--z-base);
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity var(--duration-base) var(--ease-out);
+  }
+
+  .service-tiles__tile:hover .service-tiles__video {
+    opacity: 1;
+  }
+
+  .service-tiles__subtitle {
+    position: relative;
+    z-index: var(--z-content);
+    margin: 0;
+    line-height: var(--lh-body);
+    text-align: center;
+    transition: color var(--duration-fast);
   }
 
   .service-tiles__tile:hover {
@@ -151,6 +198,10 @@ const { title, gradient = 'yellow', text, items } = Astro.props;
   @media (min-width: 1920px) {
     .service-tiles__title {
       font-size: var(--fs-xl);
+    }
+
+    .service-tiles--team .service-tiles__tile {
+      aspect-ratio: 2 / 3;
     }
   }
 

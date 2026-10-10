@@ -1,10 +1,10 @@
 /**
- * Sectieblokken uit Sanity (studio/schemaTypes/sections/) → props van de bestaande
- * sectiecomponenten. Eén GROQ-projectie voor de hele `sections`-array en één mapper
- * per bloktype. PageSections.astro rendert het resultaat.
+ * Sectieblokken uit Sanity (studio/schemaTypes/sections/) → PageSection (lib/sections.ts),
+ * dus precies de props van de bestaande sectiecomponenten. Eén GROQ-projectie voor de
+ * hele `sections`-array en één mapper per bloktype. PageSections.astro rendert het resultaat.
  *
- * Nieuw blok? Schema in studio/schemaTypes/sections/, projectie + mapper hier, en
- * een regel in PageSections.astro.
+ * Nieuw blok? Schema in studio/schemaTypes/sections/, projectie + mapper hier, type in
+ * lib/sections.ts en een regel in PageSections.astro.
  *
  * Robuust tegen half ingevulde inhoud: een blok zonder verplichte inhoud (bijv. een
  * verwijderde testimonial of case) wordt overgeslagen met een waarschuwing in de
@@ -12,29 +12,37 @@
  */
 import { imageProjection, toRemoteImage, type SanityImageRef } from './image';
 import { portableTextToRich } from './portableText';
-import type { HeroProps } from '../../components/sections/Hero.astro';
-import type { LogoMarqueeProps } from '../../components/sections/LogoMarquee.astro';
-import type { IntroHighlightProps } from '../../components/sections/IntroHighlight.astro';
-import type { TimelineProps } from '../../components/sections/Timeline.astro';
-import type { TestimonialsProps } from '../../components/sections/Testimonials.astro';
-import type { PolaroidStackProps } from '../../components/sections/PolaroidStack.astro';
+import { caseGridProps, type Audience, type Case } from '../../data/cases';
+import type { FormChoice, PageSection } from '../sections';
 import type { TextMediaProps } from '../../components/sections/TextMedia.astro';
-import type { CaseSpotlightProps } from '../../components/sections/CaseSpotlight.astro';
-import type { ImageFeatureProps } from '../../components/sections/ImageFeature.astro';
-import type { ServiceTilesProps } from '../../components/sections/ServiceTiles.astro';
-import type { FaqProps } from '../../components/sections/Faq.astro';
 import type { HeadingGradient } from '../../components/ui/Heading.astro';
 import type { Accent } from '../../components/ui/Button.astro';
 import type { IconName } from '../../components/ui/icons';
+import { testimonialCarousel } from '../../data/testimonials';
 
 const ctaProjection = `{ label, href, accent }`;
+
+/** Kaartgegevens van een case (overzicht, uitgelichte case, casepagina). */
+export const caseCardProjection = `{
+  title,
+  "slug": slug.current,
+  intro,
+  "image": image${imageProjection},
+  audiences,
+  services,
+  client,
+  date,
+  video
+}`;
+
+const allCasesQuery = `*[_type == "caseStudy" && defined(slug.current)] | order(coalesce(sortOrder, 999) asc, _createdAt asc) ${caseCardProjection}`;
 
 /** Achter `sections` in een GROQ-query te plakken: `"sections": sections[]${sectionsProjection}`. */
 export const sectionsProjection = `{
   _type,
   _key,
   _type == "heroSection" => {
-    title, titleAccent, eyebrow, primaryCta, secondaryCta, buttonAccent,
+    title, titleAccent, accentInline, eyebrow, primaryCta, secondaryCta, buttonAccent,
     "image": image${imageProjection},
     video, videoOnMobile
   },
@@ -46,9 +54,10 @@ export const sectionsProjection = `{
     )
   },
   _type == "introHighlightSection" => { content, anchorId },
+  _type == "richTextSection" => { content, align, anchorId },
   _type == "timelineSection" => {
     title, gradient, intro, reverse,
-    "steps": steps[]{ number, title, text, "image": image${imageProjection}, "cta": cta${ctaProjection} },
+    "steps": steps[]{ number, title, text, "image": image${imageProjection}, video, "cta": cta${ctaProjection} },
     "cta": cta${ctaProjection}
   },
   _type == "testimonialsSection" => {
@@ -60,13 +69,13 @@ export const sectionsProjection = `{
     "photos": photos[]${imageProjection}
   },
   _type == "textMediaSection" => {
-    showContactForm, intro, title, gradient, body, "cta": cta${ctaProjection},
+    showContactForm, form, messagePlaceholder, intro, title, gradient, body, "cta": cta${ctaProjection},
     mediaType, "image": image${imageProjection}, video,
-    reverse, triangles, anchorId
+    reverse, triangles, layout, anchorId
   },
   _type == "caseSpotlightSection" => {
     title, gradient,
-    "case": case->{ title, "slug": slug.current, intro, "image": image${imageProjection} }
+    "case": case->${caseCardProjection}
   },
   _type == "imageFeatureSection" => {
     title, gradient, text, cinemaCursor,
@@ -76,7 +85,16 @@ export const sectionsProjection = `{
     title, gradient, text,
     "items": items[]{ label, href, "image": image${imageProjection} }
   },
-  _type == "faqSection" => { title, gradient, items[]{ question, answer }, anchorId }
+  _type == "teamSection" => {
+    title, gradient,
+    "members": members[]{ role, "member": member->{ name, role, "image": image${imageProjection}, "video": video.asset->url } }
+  },
+  _type == "faqSection" => { title, gradient, items[]{ question, answer }, anchorId },
+  _type == "fullWidthImageSection" => { "image": image${imageProjection} },
+  _type == "videoFeatureSection" => { video, ratio },
+  _type == "contactSection" => { content, links[]{ label, href }, form, messagePlaceholder, anchorId },
+  _type == "mapSection" => { title, gradient, text, src, label },
+  _type == "caseGridSection" => { anchorId, "cases": ${allCasesQuery} }
 }`;
 
 type Cta = { label?: string; href?: string; accent?: Accent };
@@ -86,31 +104,52 @@ type Img = SanityImageRef | null | undefined;
 /** Ruwe vorm van één sectie na `sectionsProjection` (alle velden optioneel: CMS-inhoud). */
 type RawSection = { _type: string; _key: string } & Record<string, any>;
 
-export type PageSection =
-  | { type: 'hero'; key: string; props: HeroProps }
-  | { type: 'breadcrumbs'; key: string }
-  | { type: 'logoMarquee'; key: string; props: LogoMarqueeProps }
-  | { type: 'introHighlight'; key: string; props: IntroHighlightProps }
-  | { type: 'timeline'; key: string; props: TimelineProps }
-  | { type: 'testimonials'; key: string; props: TestimonialsProps }
-  | { type: 'polaroidStack'; key: string; props: PolaroidStackProps }
-  | { type: 'textMedia'; key: string; props: TextMediaProps; contactForm: boolean }
-  | { type: 'caseSpotlight'; key: string; props: CaseSpotlightProps }
-  | { type: 'imageFeature'; key: string; props: ImageFeatureProps }
-  | { type: 'serviceTiles'; key: string; props: ServiceTilesProps }
-  | { type: 'faq'; key: string; props: FaqProps };
+/** Ruwe case na `caseCardProjection` */
+export interface RawCase {
+  title?: string;
+  slug?: string;
+  intro?: string;
+  image?: Img;
+  audiences?: string[] | null;
+  services?: string[] | null;
+  client?: string | null;
+  date?: string | null;
+  video?: Vimeo | null;
+}
 
 const hasImage = (img: Img): img is SanityImageRef => Boolean(img?.src);
 const image = (img: SanityImageRef) => ({ src: toRemoteImage(img), alt: img.alt ?? '' });
 const cta = (c: Cta | null | undefined) => (c?.label && c.href ? { label: c.label, href: c.href, accent: c.accent ?? undefined } : undefined);
 const gradient = (g: unknown) => (g ?? undefined) as HeadingGradient | undefined;
 const opt = <T>(v: T | null | undefined) => v ?? undefined;
+const vimeo = (v: Vimeo | null | undefined, fallbackTitle: string) => (v?.id ? { id: v.id, hash: opt(v.hash) || undefined, title: v.title || fallbackTitle } : undefined);
+const formChoice = (name: unknown, messagePlaceholder: unknown): FormChoice => ({
+  name: name === 'offerte' || name === 'trouwfilm' ? name : 'contact',
+  messagePlaceholder: typeof messagePlaceholder === 'string' && messagePlaceholder ? messagePlaceholder : undefined,
+});
 
 class SkipSection extends Error {}
 /** Verplichte inhoud: leeg (ook een lege lijst) = blok overslaan. */
 function need<T>(value: T | null | undefined | false | '', what: string): T {
   if (!value || (Array.isArray(value) && value.length === 0)) throw new SkipSection(what);
   return value;
+}
+
+/** Ruwe case → Case (zelfde vorm als src/data/cases.ts). `null` als titel, slug of foto ontbreekt. */
+export function toCase(raw: RawCase | null | undefined): Case | null {
+  if (!raw?.title || !raw.slug || !hasImage(raw.image)) return null;
+  return {
+    slug: raw.slug,
+    title: raw.title,
+    intro: raw.intro ?? '',
+    // Decoratief: de titel staat al op de kaart en in de hero
+    image: { src: toRemoteImage(raw.image), alt: '' },
+    audiences: (raw.audiences ?? []) as Audience[],
+    services: raw.services ?? [],
+    client: opt(raw.client),
+    date: opt(raw.date),
+    video: vimeo(raw.video, `${raw.title} – Bold Productions`),
+  };
 }
 
 const mappers: Record<string, (s: RawSection) => PageSection> = {
@@ -123,6 +162,7 @@ const mappers: Record<string, (s: RawSection) => PageSection> = {
       props: {
         title: need(s.title, 'titel ontbreekt'),
         titleAccent: s.titleAccent ?? '',
+        accentInline: Boolean(s.accentInline),
         eyebrow: s.eyebrow ?? '',
         primaryCta: cta(s.primaryCta),
         secondaryCta: s.secondaryCta?.label
@@ -157,6 +197,12 @@ const mappers: Record<string, (s: RawSection) => PageSection> = {
     props: { id: opt(s.anchorId), content: portableTextToRich(s.content) },
   }),
 
+  richTextSection: (s) => ({
+    type: 'richText',
+    key: s._key,
+    props: { id: opt(s.anchorId), content: need(portableTextToRich(s.content), 'tekst ontbreekt'), align: s.align === 'center' ? 'center' : undefined },
+  }),
+
   timelineSection: (s) => ({
     type: 'timeline',
     key: s._key,
@@ -165,13 +211,14 @@ const mappers: Record<string, (s: RawSection) => PageSection> = {
       gradient: gradient(s.gradient),
       intro: portableTextToRich(s.intro),
       reverse: Boolean(s.reverse),
-      steps: ((s.steps ?? []) as { number?: string; title?: string; text?: unknown; image: Img; cta?: Cta }[])
-        .filter((step) => hasImage(step.image))
+      steps: ((s.steps ?? []) as { number?: string; title?: string; text?: unknown; image: Img; video?: Vimeo; cta?: Cta }[])
+        .filter((step) => hasImage(step.image) || step.video?.id)
         .map((step) => ({
-          number: step.number ?? '',
+          number: step.number || undefined,
           title: step.title ?? '',
           text: portableTextToRich(step.text),
-          image: image(step.image as SanityImageRef),
+          image: hasImage(step.image) ? image(step.image) : undefined,
+          video: hasImage(step.image) ? undefined : vimeo(step.video, step.title ?? ''),
           cta: cta(step.cta),
         })),
       cta: cta(s.cta),
@@ -185,7 +232,7 @@ const mappers: Record<string, (s: RawSection) => PageSection> = {
       eyebrow: s.eyebrow ?? '',
       title: s.title ?? '',
       gradient: gradient(s.gradient),
-      carousel: { label: 'Testimonials', prevLabel: 'Vorige', nextLabel: 'Volgende' },
+      carousel: testimonialCarousel,
       items: need(
         ((s.items ?? []) as ({ quote?: string; name?: string; organisation?: string; image: Img } | null)[])
           .filter((t): t is NonNullable<typeof t> => Boolean(t?.quote) && hasImage(t?.image))
@@ -212,52 +259,38 @@ const mappers: Record<string, (s: RawSection) => PageSection> = {
   }),
 
   textMediaSection: (s) => {
-    const form = Boolean(s.showContactForm);
+    const withForm = Boolean(s.showContactForm);
     const video: Vimeo | undefined = s.video;
     const media: TextMediaProps['media'] =
       s.mediaType === 'vimeo'
         ? { type: 'vimeo', id: need(video?.id, 'Vimeo-ID ontbreekt'), hash: opt(video?.hash), title: video?.title ?? '' }
         : { type: 'image', ...image(need(hasImage(s.image) && s.image, 'foto ontbreekt')) };
+    // Zonder keuze (oudere blokken): foto = rustig (zoals /events), video = standaard
+    const calm = s.layout ? s.layout === 'section' : media.type === 'image';
     return {
       type: 'textMedia',
       key: s._key,
-      contactForm: form,
+      form: withForm ? formChoice(s.form, s.messagePlaceholder) : undefined,
       props: {
         id: opt(s.anchorId),
-        title: form ? undefined : opt(s.title),
+        title: withForm ? undefined : opt(s.title),
         gradient: gradient(s.gradient),
-        body: form ? undefined : portableTextToRich(s.body),
-        cta: form ? undefined : cta(s.cta),
+        body: withForm ? undefined : portableTextToRich(s.body),
+        cta: withForm ? undefined : cta(s.cta),
         intro: s.intro?.title ? { title: s.intro.title, gradient: gradient(s.intro.gradient), text: portableTextToRich(s.intro.text) } : undefined,
         media,
         reverse: Boolean(s.reverse),
         triangles: Boolean(s.triangles),
-        // Gelijk aan live: met foto (Webflow .image-5) als 'section' zonder inloopanimatie,
-        // met video (homepage "Mike's mic drop") de standaard.
-        ...(media.type === 'image' ? { spacing: 'section' as const, animate: false } : {}),
+        ...(calm ? { spacing: 'section' as const, animate: false } : {}),
       },
     };
   },
 
-  caseSpotlightSection: (s) => {
-    const c = need(s.case as { title?: string; slug?: string; intro?: string; image: Img } | null, 'case ontbreekt');
-    return {
-      type: 'caseSpotlight',
-      key: s._key,
-      props: {
-        title: s.title ?? '',
-        gradient: gradient(s.gradient),
-        item: {
-          title: c.title ?? '',
-          slug: c.slug ?? '',
-          intro: c.intro ?? '',
-          // Decoratief: de titel staat al in de kaart (zoals src/data/cases.ts)
-          image: { src: toRemoteImage(need(hasImage(c.image) && c.image, 'casefoto ontbreekt')), alt: '' },
-          audiences: [],
-        },
-      },
-    };
-  },
+  caseSpotlightSection: (s) => ({
+    type: 'caseSpotlight',
+    key: s._key,
+    props: { title: s.title ?? '', gradient: gradient(s.gradient), item: need(toCase(s.case), 'case ontbreekt of is onvolledig') },
+  }),
 
   imageFeatureSection: (s) => ({
     type: 'imageFeature',
@@ -287,6 +320,27 @@ const mappers: Record<string, (s: RawSection) => PageSection> = {
     },
   }),
 
+  teamSection: (s) => ({
+    type: 'serviceTiles',
+    key: s._key,
+    props: {
+      title: s.title ?? '',
+      gradient: gradient(s.gradient),
+      variant: 'team',
+      items: need(
+        ((s.members ?? []) as { role?: string; member?: { name?: string; role?: string; image: Img; video?: string } | null }[])
+          .filter((m) => m.member?.name && hasImage(m.member.image))
+          .map(({ role, member }) => ({
+            label: member!.name!,
+            subtitle: role || member!.role || undefined,
+            image: image(member!.image as SanityImageRef),
+            video: opt(member!.video),
+          })),
+        'geen teamleden',
+      ),
+    },
+  }),
+
   faqSection: (s) => ({
     type: 'faq',
     key: s._key,
@@ -301,6 +355,48 @@ const mappers: Record<string, (s: RawSection) => PageSection> = {
         'geen vragen',
       ),
     },
+  }),
+
+  fullWidthImageSection: (s) => ({
+    type: 'fullWidthImage',
+    key: s._key,
+    props: { image: image(need(hasImage(s.image) && s.image, 'foto ontbreekt')) },
+  }),
+
+  videoFeatureSection: (s) => ({
+    type: 'videoFeature',
+    key: s._key,
+    props: { video: need(vimeo(s.video, 'Video Bold Productions'), 'Vimeo-ID ontbreekt'), ratio: opt(s.ratio) },
+  }),
+
+  contactSection: (s) => ({
+    type: 'contactSection',
+    key: s._key,
+    form: formChoice(s.form, s.messagePlaceholder),
+    props: {
+      id: opt(s.anchorId),
+      content: portableTextToRich(s.content),
+      links: ((s.links ?? []) as { label?: string; href?: string }[]).filter((l) => l.label && l.href).map((l) => ({ label: l.label!, href: l.href! })),
+      formWidth: s.form === 'offerte' ? 'narrow' : undefined,
+    },
+  }),
+
+  mapSection: (s) => ({
+    type: 'map',
+    key: s._key,
+    props: {
+      title: s.title ?? '',
+      gradient: gradient(s.gradient),
+      text: portableTextToRich(s.text),
+      src: need(s.src, 'kaartlink ontbreekt'),
+      label: s.label ?? '',
+    },
+  }),
+
+  caseGridSection: (s) => ({
+    type: 'caseGrid',
+    key: s._key,
+    props: { ...caseGridProps(((s.cases ?? []) as RawCase[]).map(toCase).filter((c): c is Case => c !== null)), id: opt(s.anchorId) },
   }),
 };
 

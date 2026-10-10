@@ -37,6 +37,18 @@ import Faq from '../components/sections/Faq.astro';
 import ContactForm from '../components/ui/ContactForm.astro';
 import { contactForm } from '../data/forms';
 import { biggerThanTheDay, caseSpotlight, cinema, contactSection, faq, services } from '../data/events';
+import RichTextSection from '../components/sections/RichTextSection.astro';
+import FullWidthImage from '../components/sections/FullWidthImage.astro';
+import VideoFeature from '../components/sections/VideoFeature.astro';
+import ContactSection from '../components/sections/ContactSection.astro';
+import MapSection from '../components/sections/MapSection.astro';
+import CaseGrid from '../components/sections/CaseGrid.astro';
+import CaseFacts from '../components/sections/CaseFacts.astro';
+import { getForm } from '../data/forms';
+import { pages } from '../data/pages';
+import { cases, caseGridProps } from '../data/cases';
+import { caseFacts } from '../lib/cases';
+import type { PageSection } from '../lib/sections';
 
 const colors = tokensByPrefix('--color-');
 const gradients = tokensByPrefix('--gradient-');
@@ -54,6 +66,20 @@ const blurs = tokensByPrefix('--blur-');
 const motion = tokensByPrefix('--duration-', '--ease-', '--marquee-');
 const layers = tokensByPrefix('--z-');
 
+/** Voorbeeldprops uit de echte pagina-inhoud (src/data/pages + cases): eerste sectie van dat type. */
+const allSections: PageSection[] = [...pages.flatMap((p) => p.sections), ...cases.flatMap((c) => c.sections ?? [])];
+function example<T extends PageSection['type']>(type: T) {
+  const found = allSections.find((s): s is Extract<PageSection, { type: T }> => s.type === type);
+  if (!found) throw new Error(`Geen voorbeeld voor sectie '${type}' in src/data`);
+  return found;
+}
+const richTextExample = example('richText');
+const fullWidthImageExample = example('fullWidthImage');
+const videoFeatureExample = example('videoFeature');
+const contactSectionExample = example('contactSection');
+const mapExample = example('map');
+const teamExample = allSections.find((s) => s.type === 'serviceTiles' && s.props.variant === 'team') as Extract<PageSection, { type: 'serviceTiles' }>;
+
 const accents = ['orange', 'yellow', 'green'] as const;
 const variants = ['primary', 'outline', 'ghost'] as const;
 const buttonSizes = ['small', 'default', 'large'] as const;
@@ -70,8 +96,43 @@ const nav = [
   ['section-heading', 'SectionHeading'],
   ['container', 'Container'],
   ['layout', 'Layout'],
+  ['knop-voorstellen', 'Knop: 6 voorstellen'],
   ['secties', 'Secties'],
 ];
+
+/** Knopvoorstellen (#knop-voorstellen): alleen hier gestyled, via .sg-look--{id}. */
+const looks = [
+  {
+    id: 1,
+    name: 'Driehoekhoek',
+    text: "De hoek rechtsonder is weggeknipt, als de oranje driehoekjes bij de foto's. Bij outline en ghost wordt die hoek een gevuld accentdriehoekje dat bij hover groeit. Rustig, maar herkenbaar Bold.",
+  },
+  {
+    id: 2,
+    name: 'Neon',
+    text: "Effen accentkleur met een zachte gloed, zoals de neon B's op de achtergrond. Outline: dunne lijn, gloeiende tekst. Bij hover gaat de gloed harder aan, als een lamp. Sluit aan bij concert- en festivalsfeer.",
+  },
+  {
+    id: 3,
+    name: 'Gate caps + veeg',
+    text: 'Label in Gate (de displayletter van de koppen) in kapitalen met ruime spatiëring, dikkere rand. Bij hover veegt de vulling van links naar rechts in. Meest typografisch, past bij de eyebrows.',
+  },
+  {
+    id: 4,
+    name: 'Schuin (ticket)',
+    text: 'Parallellogram: de knop staat schuin, tekst blijft recht. Energiek en sportief, als een festivalticket of een lichtbundel. Werkt in alle varianten met behoud van de rand.',
+  },
+  {
+    id: 5,
+    name: 'Pil + icoonbol',
+    text: 'Afgeronde pil met de pijl in een eigen rondje dat bij hover een kwartslag draait. Moderner en vriendelijker; het grootste contrast met de huidige hoekige stijl.',
+  },
+  {
+    id: 6,
+    name: 'Harde schaduw',
+    text: 'Effen vlak met een harde, verschoven schaduw (posterstijl). Bij hover wordt de knop "ingedrukt" in zijn schaduw. Brutaal en tastbaar; valt het meest op.',
+  },
+] as const;
 ---
 
 <BaseLayout
@@ -517,6 +578,41 @@ const nav = [
 
     <Container>
       <!-- ─── Secties ─────────────────────────────────────────────── -->
+      <section class="sg-section" id="knop-voorstellen">
+        <h2 class="sg-title">Knop: 6 voorstellen</h2>
+        <p class="sg-note">
+          Alternatieven voor <code>&lt;Button&gt;</code>, elk met solid (<code>primary</code>), <code>outline</code> en{' '}
+          <code>ghost</code> in de drie accentkleuren. Hover over de knoppen. Alleen op deze pagina gestyled
+          (<code>.sg-look--n</code>); na een keuze komt die stijl in <code>Button.astro</code> en vervallen de{' '}
+          <code>--button-alt-*</code>-tokens.
+        </p>
+        <div class="sg-demo">
+          <p class="sg-label">Huidig (gelijk aan live)</p>
+          <div class="sg-row sg-row--center">
+            <Button label="Bold to action" href="#knop-voorstellen" />
+            <Button label="Waarom zou je?" href="#knop-voorstellen" variant="outline" icon="arrow-down" />
+            <Button label="Bekijk hoe" href="#knop-voorstellen" variant="ghost" />
+          </div>
+        </div>
+        {
+          looks.map((look) => (
+            <div class:list={['sg-demo', 'sg-look', `sg-look--${look.id}`]}>
+              <p class="sg-label">
+                {look.id}. {look.name}
+              </p>
+              <p class="sg-note">{look.text}</p>
+              {accents.map((accent) => (
+                <div class="sg-row sg-row--center" data-accent={accent}>
+                  <Button label="Bold to action" href="#knop-voorstellen" />
+                  <Button label="Waarom zou je?" href="#knop-voorstellen" variant="outline" icon="arrow-down" />
+                  <Button label="Bekijk hoe" href="#knop-voorstellen" variant="ghost" />
+                </div>
+              ))}
+            </div>
+          ))
+        }
+      </section>
+
       <section class="sg-section" id="secties">
         <h2 class="sg-title">Secties</h2>
         <h3 class="sg-subtitle">Hero</h3>
@@ -553,10 +649,11 @@ const nav = [
       <h3 class="sg-subtitle">Timeline</h3>
       <p class="sg-note">
         <code>&lt;Timeline title intro steps cta gradient reverse /&gt;</code>. Stappen: foto (16:9) + tekstblok met
-        rookvideo. Voorbeeld met één stap, <code>reverse</code> en groene gradient:
+        rookvideo, afwisselend foto links/rechts; <code>reverse</code> begint met de foto rechts. Voorbeeld met twee
+        stappen, <code>reverse</code> en groene gradient:
       </p>
     </Container>
-    <Timeline {...timeline} steps={timeline.steps.slice(0, 1)} reverse gradient="green" cta={{ ...timeline.cta!, accent: 'green' }} />
+    <Timeline {...timeline} steps={timeline.steps.slice(0, 2)} reverse gradient="green" cta={{ ...timeline.cta!, accent: 'green' }} />
 
     <Container>
       <h3 class="sg-subtitle">BackgroundVideo (ui)</h3>
@@ -661,6 +758,76 @@ const nav = [
     <TextMedia {...contactSection}>
       <ContactForm slot="content" {...contactForm} name="Contact styleguide" />
     </TextMedia>
+
+    <Container>
+      <h3 class="sg-subtitle">ServiceTiles — variant team</h3>
+      <p class="sg-note">
+        <code>&lt;ServiceTiles variant="team" items /&gt;</code>: teamleden (<code>src/data/team.ts</code>,
+        <code>teamTiles()</code>) met naam en rol; bij hover speelt het korte video'tje (<code>hover-video.ts</code>).
+      </p>
+    </Container>
+    <ServiceTiles {...teamExample.props} />
+
+    <Container>
+      <h3 class="sg-subtitle">RichTextSection</h3>
+      <p class="sg-note">
+        <code>&lt;RichTextSection id content align /&gt;</code>: smalle gecentreerde tekstkolom (dienst-, case- en juridische
+        pagina's). Koppen krijgen de gradient, Vimeo-video's kunnen in de tekst staan.
+      </p>
+    </Container>
+    <RichTextSection {...richTextExample.props} id="sg-richtext" />
+
+    <Container>
+      <h3 class="sg-subtitle">CaseFacts</h3>
+      <p class="sg-note">
+        <code>&lt;CaseFacts items /&gt;</code>: feitenbalk op een casepagina (klant, datum, doelgroep, diensten), gevuld met
+        <code>caseFacts(case)</code> uit <code>lib/cases.ts</code>.
+      </p>
+    </Container>
+    <CaseFacts {...caseFacts(cases[0]!)} />
+
+    <Container>
+      <h3 class="sg-subtitle">FullWidthImage</h3>
+      <p class="sg-note"><code>&lt;FullWidthImage image /&gt;</code>: 16:9-foto over de containerbreedte.</p>
+    </Container>
+    <FullWidthImage {...fullWidthImageExample.props} />
+
+    <Container>
+      <h3 class="sg-subtitle">VideoFeature</h3>
+      <p class="sg-note">
+        <code>&lt;VideoFeature video ratio /&gt;</code>: Vimeo (lazy iframe, met bediening) over de containerbreedte.
+      </p>
+    </Container>
+    <VideoFeature {...videoFeatureExample.props} />
+
+    <Container>
+      <h3 class="sg-subtitle">CaseGrid</h3>
+      <p class="sg-note">
+        <code>&lt;CaseGrid filters items emptyText label /&gt;</code>, props via <code>caseGridProps(cases)</code>. Filteren in
+        <code>case-filter.ts</code>; <code>?filter=events</code> kiest vooraf een doelgroep. Hier vier cases.
+      </p>
+    </Container>
+    <CaseGrid {...caseGridProps(cases.slice(0, 4))} id="sg-casegrid" />
+
+    <Container>
+      <h3 class="sg-subtitle">ContactSection (+ ContactForm)</h3>
+      <p class="sg-note">
+        <code>&lt;ContactSection id content links formWidth&gt;&lt;ContactForm slot="form" … /&gt;&lt;/ContactSection&gt;</code>:
+        tekst met bel-, mail- en WhatsApp-link naast het formulier (contact, offerte, trouwfilm; met meerkeuzevelden via
+        <code>multiselect.ts</code>).
+      </p>
+    </Container>
+    <ContactSection {...contactSectionExample.props} id="sg-contact">
+      <ContactForm slot="form" {...getForm(contactSectionExample.form)} name="Contact styleguide 2" />
+    </ContactSection>
+
+    <Container>
+      <h3 class="sg-subtitle">MapSection</h3>
+      <p class="sg-note">
+        <code>&lt;MapSection title gradient text src label /&gt;</code>: Google Maps-iframe, lazy geladen.
+      </p>
+    </Container>
+    <MapSection {...mapExample.props} />
   </div>
 </BaseLayout>
 
@@ -952,5 +1119,224 @@ const nav = [
     .sg-scale__row {
       grid-template-columns: 1fr;
     }
+  }
+
+  /* ─── Knopvoorstellen (#knop-voorstellen) ─────────────────────────── */
+  .sg-look {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-24);
+  }
+
+  .sg-look :global(.button) {
+    position: relative;
+  }
+
+  /* Gradient-tekst van de huidige outline uit; elk voorstel kiest zelf */
+  .sg-look.sg-look :global(.button--outline .button__label) {
+    background-image: none;
+    -webkit-text-fill-color: currentColor;
+  }
+
+  /* 1. Driehoekhoek */
+  .sg-look--1 :global(.button--primary) {
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--button-alt-notch)), calc(100% - var(--button-alt-notch)) 100%, 0 100%);
+  }
+
+  .sg-look--1 :global(.button--outline),
+  .sg-look--1 :global(.button--ghost) {
+    color: var(--color-white);
+  }
+
+  .sg-look--1 :global(.button--outline::after),
+  .sg-look--1 :global(.button--ghost::after) {
+    content: '';
+    position: absolute;
+    right: calc(var(--border-width) * -1);
+    bottom: calc(var(--border-width) * -1);
+    width: var(--button-alt-notch);
+    height: var(--button-alt-notch);
+    background-color: var(--accent);
+    clip-path: polygon(100% 0, 100% 100%, 0 100%);
+    transition:
+      width var(--duration-fast) var(--ease-out),
+      height var(--duration-fast) var(--ease-out);
+  }
+
+  .sg-look--1 :global(.button--outline:hover::after),
+  .sg-look--1 :global(.button--ghost:hover::after) {
+    width: calc(var(--button-alt-notch) * 2);
+    height: calc(var(--button-alt-notch) * 2);
+  }
+
+  /* 2. Neon */
+  .sg-look--2 :global(.button--primary) {
+    background-image: none;
+    background-color: var(--accent);
+    border-color: var(--accent);
+    box-shadow: 0 0 var(--button-alt-glow) color-mix(in srgb, var(--accent) 55%, transparent);
+  }
+
+  .sg-look--2 :global(.button--primary:hover) {
+    box-shadow: 0 0 var(--button-alt-glow-hover) color-mix(in srgb, var(--accent) 80%, transparent);
+  }
+
+  .sg-look--2 :global(.button--outline) {
+    color: var(--accent);
+    text-shadow: 0 0 var(--space-8) color-mix(in srgb, var(--accent) 70%, transparent);
+    box-shadow:
+      0 0 var(--button-alt-glow) color-mix(in srgb, var(--accent) 35%, transparent),
+      inset 0 0 var(--space-12) color-mix(in srgb, var(--accent) 25%, transparent);
+  }
+
+  .sg-look--2 :global(.button--outline:hover),
+  .sg-look--2 :global(.button--ghost:hover) {
+    background-color: color-mix(in srgb, var(--accent) 12%, transparent);
+    border-color: var(--accent);
+    box-shadow:
+      0 0 var(--button-alt-glow-hover) color-mix(in srgb, var(--accent) 55%, transparent),
+      inset 0 0 var(--space-16) color-mix(in srgb, var(--accent) 35%, transparent);
+  }
+
+  /* 3. Gate caps + veeg */
+  .sg-look--3 :global(.button) {
+    border-width: var(--border-width-thick);
+    font-family: var(--font-display);
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-display);
+    letter-spacing: var(--ls-label);
+    text-transform: uppercase;
+    background-repeat: no-repeat;
+    background-position: left;
+    transition:
+      background-size var(--duration-base) var(--ease-reveal),
+      color var(--duration-base) var(--ease-reveal);
+  }
+
+  .sg-look--3 :global(.button--primary) {
+    background-image: linear-gradient(var(--color-black), var(--color-black));
+    background-size: 0% 100%;
+    background-color: var(--accent);
+    border-color: var(--accent);
+  }
+
+  .sg-look--3 :global(.button--primary:hover) {
+    background-size: 100% 100%;
+    color: var(--accent);
+  }
+
+  .sg-look--3 :global(.button--outline),
+  .sg-look--3 :global(.button--ghost) {
+    background-image: linear-gradient(var(--accent), var(--accent));
+    background-size: 0% 100%;
+    color: var(--accent);
+  }
+
+  .sg-look--3 :global(.button--ghost) {
+    background-image: linear-gradient(var(--color-white), var(--color-white));
+    color: var(--color-white);
+  }
+
+  .sg-look--3 :global(.button--outline:hover),
+  .sg-look--3 :global(.button--ghost:hover) {
+    background-size: 100% 100%;
+    color: var(--color-black);
+  }
+
+  /* 4. Schuin (ticket): schuine knop, rechte inhoud */
+  .sg-look--4 :global(.button) {
+    transform: skewX(var(--button-alt-skew));
+  }
+
+  .sg-look--4 :global(.button > *) {
+    transform: skewX(calc(var(--button-alt-skew) * -1));
+  }
+
+  .sg-look--4 :global(.button:hover .button__icon--right) {
+    transform: skewX(calc(var(--button-alt-skew) * -1)) translateX(var(--space-4));
+  }
+
+  .sg-look--4 :global(.button:hover .button__icon--down) {
+    transform: skewX(calc(var(--button-alt-skew) * -1)) translateY(var(--space-4));
+  }
+
+  .sg-look--4 :global(.button--outline) {
+    color: var(--color-white);
+    border-width: var(--border-width-thick);
+  }
+
+  .sg-look--4 :global(.button--outline:hover) {
+    background-color: var(--accent);
+    color: var(--color-black);
+  }
+
+  /* 5. Pil + icoonbol */
+  .sg-look--5 :global(.button) {
+    gap: var(--space-16);
+    padding-right: var(--space-8);
+    border-radius: var(--radius-pill);
+  }
+
+  .sg-look--5 :global(.button .button__icon) {
+    box-sizing: content-box;
+    padding: var(--space-12);
+    border-radius: var(--radius-round);
+    background-color: var(--accent);
+    color: var(--color-black);
+    transition: transform var(--duration-base) var(--ease-reveal);
+  }
+
+  .sg-look--5 :global(.button--primary .button__icon) {
+    background-color: var(--color-black);
+    color: var(--accent);
+  }
+
+  .sg-look--5 :global(.button--ghost .button__icon) {
+    background-color: var(--color-white-a20);
+    color: var(--color-white);
+  }
+
+  .sg-look--5 :global(.button--outline) {
+    color: var(--color-white);
+  }
+
+  .sg-look--5 :global(.button:hover .button__icon--right) {
+    transform: rotate(-45deg);
+  }
+
+  .sg-look--5 :global(.button:hover .button__icon--down) {
+    transform: rotate(-90deg);
+  }
+
+  /* 6. Harde schaduw */
+  .sg-look--6 :global(.button) {
+    border-width: var(--border-width-thick);
+    transition:
+      transform var(--duration-fast) var(--ease-out),
+      box-shadow var(--duration-fast) var(--ease-out);
+  }
+
+  .sg-look--6 :global(.button--primary) {
+    background-image: none;
+    background-color: var(--accent);
+    border-color: var(--color-black);
+    box-shadow: var(--button-alt-offset) var(--button-alt-offset) 0 var(--color-white);
+  }
+
+  .sg-look--6 :global(.button--outline) {
+    background-color: var(--color-page);
+    color: var(--color-white);
+    box-shadow: var(--button-alt-offset) var(--button-alt-offset) 0 var(--accent);
+  }
+
+  .sg-look--6 :global(.button--ghost) {
+    background-color: var(--color-page);
+    border-color: var(--color-white);
+    box-shadow: var(--button-alt-offset) var(--button-alt-offset) 0 var(--color-white-a20);
+  }
+
+  .sg-look--6 :global(.button:hover) {
+    transform: translate(var(--button-alt-offset), var(--button-alt-offset));
+    box-shadow: 0 0 0 transparent;
   }
 </style>

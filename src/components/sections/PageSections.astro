@@ -1,8 +1,9 @@
 ---
 /**
- * Rendert een lijst sectieblokken (uit Sanity, zie lib/sanity/sections.ts) met de
+ * Rendert een lijst secties (lib/sections.ts; uit src/data/pages of Sanity) met de
  * bestaande sectiecomponenten. Zelf geen opmaak: elke sectie regelt zijn eigen stijl
- * en afstand, precies zoals op de handgebouwde pagina's.
+ * en afstand. Een kruimelpad als eerste sectie (pagina zonder hero) krijgt ruimte
+ * voor de vaste navbar.
  */
 import Hero from './Hero.astro';
 import LogoMarquee from './LogoMarquee.astro';
@@ -15,11 +16,18 @@ import CaseSpotlight from './CaseSpotlight.astro';
 import ImageFeature from './ImageFeature.astro';
 import ServiceTiles from './ServiceTiles.astro';
 import Faq from './Faq.astro';
+import RichTextSection from './RichTextSection.astro';
+import FullWidthImage from './FullWidthImage.astro';
+import VideoFeature from './VideoFeature.astro';
+import ContactSection from './ContactSection.astro';
+import MapSection from './MapSection.astro';
+import CaseGrid from './CaseGrid.astro';
+import CaseFacts from './CaseFacts.astro';
 import Breadcrumbs, { type Crumb } from '../layout/Breadcrumbs.astro';
 import ContactForm from '../ui/ContactForm.astro';
-import { contactForm } from '../../data/forms';
+import { getForm } from '../../data/forms';
 import { breadcrumbLabels } from '../../data/navigation';
-import type { PageSection } from '../../lib/sanity/sections';
+import type { PageSection } from '../../lib/sections';
 
 interface Props {
   sections: PageSection[];
@@ -30,12 +38,14 @@ const { sections, breadcrumbs } = Astro.props;
 ---
 
 {
-  sections.map((section) => {
+  sections.map((section, index) => {
     switch (section.type) {
       case 'hero':
         return <Hero {...section.props} />;
       case 'breadcrumbs':
-        return <Breadcrumbs items={breadcrumbs} homeLabel={breadcrumbLabels.home} label={breadcrumbLabels.nav} />;
+        return (
+          <Breadcrumbs items={breadcrumbs} homeLabel={breadcrumbLabels.home} label={breadcrumbLabels.nav} standalone={index === 0} />
+        );
       case 'logoMarquee':
         return <LogoMarquee {...section.props} />;
       case 'introHighlight':
@@ -47,9 +57,9 @@ const { sections, breadcrumbs } = Astro.props;
       case 'polaroidStack':
         return <PolaroidStack {...section.props} />;
       case 'textMedia':
-        return section.contactForm ? (
+        return section.form ? (
           <TextMedia {...section.props}>
-            <ContactForm slot="content" {...contactForm} />
+            <ContactForm slot="content" {...getForm(section.form)} />
           </TextMedia>
         ) : (
           <TextMedia {...section.props} />
@@ -62,6 +72,24 @@ const { sections, breadcrumbs } = Astro.props;
         return <ServiceTiles {...section.props} />;
       case 'faq':
         return <Faq {...section.props} />;
+      case 'richText':
+        return <RichTextSection {...section.props} standalone={index === 0} />;
+      case 'fullWidthImage':
+        return <FullWidthImage {...section.props} />;
+      case 'videoFeature':
+        return <VideoFeature {...section.props} />;
+      case 'contactSection':
+        return (
+          <ContactSection {...section.props}>
+            <ContactForm slot="form" {...getForm(section.form)} />
+          </ContactSection>
+        );
+      case 'map':
+        return <MapSection {...section.props} />;
+      case 'caseGrid':
+        return <CaseGrid {...section.props} />;
+      case 'caseFacts':
+        return <CaseFacts {...section.props} />;
     }
   })
 }

@@ -11,6 +11,8 @@ import merijn from '../assets/images/testimonials/merijn-peters.jpg';
 import manon from '../assets/images/testimonials/manon-diks.jpg';
 import dorpsfeest from '../assets/images/testimonials/dorpsfeest-wehl.jpg';
 import siemen from '../assets/images/testimonials/siemen-peters.jpg';
+import sam from '../assets/images/testimonials/sam-janssen.jpg';
+import jeff from '../assets/images/testimonials/jeff-straub.jpg';
 
 export const testimonials = {
   'reinier-peters': {
@@ -55,8 +57,25 @@ export const testimonials = {
     organisation: 'Organisatie Doorgedraaid Feestival',
     image: { src: siemen, alt: 'Siemen Peters' },
   },
+  'sam-janssen': {
+    quote:
+      'Dankzij de professionele bandpromo van Bold Productions kwam onze muziek echt tot leven. De video vangt perfect onze energie en stijl, en heeft onze zichtbaarheid enorm vergroot.',
+    name: 'Sam Janssen',
+    organisation: 'Proost! Band',
+    image: { src: sam, alt: 'Sam Janssen' },
+  },
+  'jeff-straub': {
+    quote:
+      'Ik werk al jaren met Mike samen en nu hij verdergaat als Bold Productions blijf ik net zo enthousiast als altijd. Mike is gewoon een super fijne vent om mee te werken: betrouwbaar, creatief en hij snapt precies wat ik met Saxypianoshow wil uitstralen.',
+    name: 'Jeff Straub',
+    organisation: 'Saxypianoshow',
+    image: { src: jeff, alt: 'Jeff Straub' },
+  },
 } satisfies Record<string, Testimonial>;
 
 export type TestimonialId = keyof typeof testimonials;
 
 export const pickTestimonials = (ids: TestimonialId[]): Testimonial[] => ids.map((id) => testimonials[id]);
+
+/** Labels van de testimonialcarousel (gelijk op elke pagina) */
+export const testimonialCarousel = { label: 'Testimonials', prevLabel: 'Vorige', nextLabel: 'Volgende' };

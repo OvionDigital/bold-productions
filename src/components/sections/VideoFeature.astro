@@ -1,0 +1,31 @@
+---
+/**
+ * Vimeo-video over de containerbreedte (Webflow .video-fullwidth-wrapper), met bediening.
+ * `ratio` = hoogte / breedte (Webflow padding-top), standaard 16:9.
+ */
+import Container from '../ui/Container.astro';
+import VimeoEmbed from '../ui/VimeoEmbed.astro';
+
+export interface VideoFeatureProps {
+  video: { id: string; hash?: string; title: string };
+  ratio?: number;
+}
+
+type Props = VideoFeatureProps;
+
+const { video, ratio = 0.5625 } = Astro.props;
+---
+
+<section class="video-feature" data-animate>
+  <Container>
+    <VimeoEmbed id={video.id} hash={video.hash} title={video.title} ratio={ratio} background={false} />
+  </Container>
+</section>
+
+<style>
+  .video-feature {
+    position: relative;
+    z-index: var(--z-base);
+    margin-block: var(--section-space);
+  }
+</style>

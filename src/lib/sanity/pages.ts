@@ -1,34 +1,40 @@
 /**
- * Pagina's die de klant zelf in Sanity opbouwt (documenttype `page`, zie
- * studio/schemaTypes/documents/page.ts). Gebouwd door src/pages/[...slug].astro:
- * één fetch voor alle pagina's tijdens de build, daarna statische HTML.
+ * Pagina's en cases uit Sanity (documenttypes `page` en `caseStudy`, zie
+ * studio/schemaTypes/documents/). Eén fetch voor alles tijdens de build, daarna
+ * statische HTML via src/pages/[...slug].astro (src/lib/pages.ts).
  */
 import { sanityClient, isSanityConfigured } from './client';
-import { isRemoteImage, sanityImageUrl } from './image';
-import { mapSections, sectionsProjection, type PageSection } from './sections';
+import { caseCardProjection, mapSections, sectionsProjection, toCase, type RawCase } from './sections';
+import { portableTextToRich } from './portableText';
+import { casePage } from '../cases';
 import type { Accent } from '../../components/ui/Button.astro';
-import type { Crumb } from '../../components/layout/Breadcrumbs.astro';
+import type { PageData } from '../sections';
 
 /**
- * Paden die al een vaste pagina in src/pages/ hebben; een Sanity-pagina met zo'n pad
- * wordt niet gebouwd (Studio weigert ze ook, zie RESERVED_SLUGS in page.ts — gelijk houden).
- * Waarde = naam in het kruimelpad van een subpagina (bijv. /events/aftermovie).
+ * Paden die een vaste pagina in src/pages/ hebben; een Sanity-pagina met zo'n pad wordt
+ * niet gebouwd (Studio weigert ze ook, zie RESERVED_SLUGS in page.ts — gelijk houden).
  */
-const STATIC_PAGES: Record<string, string> = {
-  events: 'Events',
-  styleguide: 'Styleguide',
-};
+const STATIC_PAGES = ['styleguide'];
 
-const QUERY = `*[_type == "page" && defined(slug.current)] | order(slug.current asc) {
-  title,
-  "slug": slug.current,
-  breadcrumbTitle,
-  accent,
-  metaTitle,
-  metaDescription,
-  noindex,
-  "ogImage": ogImage.asset->url,
-  "sections": sections[]${sectionsProjection}
+const QUERY = `{
+  "pages": *[_type == "page" && defined(slug.current)] | order(slug.current asc) {
+    title,
+    "slug": slug.current,
+    breadcrumbTitle,
+    accent,
+    metaTitle,
+    metaDescription,
+    noindex,
+    "ogImage": ogImage.asset->url,
+    "sections": sections[]${sectionsProjection}
+  },
+  "cases": *[_type == "caseStudy" && defined(slug.current)] {
+    ...${caseCardProjection},
+    introText,
+    metaTitle,
+    metaDescription,
+    "sections": sections[]${sectionsProjection}
+  }
 }`;
 
 interface PageDoc {
@@ -43,66 +49,54 @@ interface PageDoc {
   sections?: Parameters<typeof mapSections>[0];
 }
 
-export interface CmsPage {
-  slug: string;
-  meta: { title: string; description: string; ogImage?: string; noindex: boolean };
-  accent: Accent;
-  breadcrumbs: Crumb[];
-  sections: PageSection[];
+interface CaseDoc extends RawCase {
+  introText?: unknown;
+  metaTitle?: string;
+  metaDescription?: string;
+  sections?: Parameters<typeof mapSections>[0];
 }
 
-const fallbackLabel = (segment: string) => {
-  const words = segment.replace(/-/g, ' ');
-  return words.charAt(0).toUpperCase() + words.slice(1);
-};
+/** `null` als Sanity niet geconfigureerd is: dan gebruikt lib/pages.ts src/data. */
+export async function getCmsPages(): Promise<PageData[] | null> {
+  if (!isSanityConfigured || !sanityClient) return null;
+  const { pages, cases } = await sanityClient.fetch<{ pages: PageDoc[]; cases: CaseDoc[] }>(QUERY);
 
-/** Home › tussenliggende pagina's (met link als ze bestaan) › deze pagina. */
-function buildBreadcrumbs(doc: PageDoc, bySlug: Map<string, PageDoc>): Crumb[] {
-  const segments = doc.slug.split('/');
-  const parents = segments.slice(0, -1).map((segment, i) => {
-    const path = segments.slice(0, i + 1).join('/');
-    const parent = bySlug.get(path);
-    if (parent) return { label: parent.breadcrumbTitle || parent.title, href: `/${path}` };
-    if (path in STATIC_PAGES) return { label: STATIC_PAGES[path], href: `/${path}` };
-    return { label: fallbackLabel(segment) };
-  });
-  return [...parents, { label: doc.breadcrumbTitle || doc.title }];
-}
-
-/** Deelafbeelding: eigen keuze, anders de hero-foto (1200×630 via Sanity's CDN). */
-function ogImageFor(doc: PageDoc, sections: PageSection[]): string | undefined {
-  const heroSrc = sections.find((s) => s.type === 'hero')?.props.image.src;
-  const base = doc.ogImage ?? (heroSrc && isRemoteImage(heroSrc) ? heroSrc.src : undefined);
-  return base ? sanityImageUrl(base, { width: 1200, height: 630 }) : undefined;
-}
-
-/** Leeg als Sanity niet geconfigureerd is: dan bouwt [...slug].astro simpelweg geen pagina's. */
-export async function getCmsPages(): Promise<CmsPage[]> {
-  if (!isSanityConfigured || !sanityClient) return [];
-  const docs = await sanityClient.fetch<PageDoc[]>(QUERY);
-  const bySlug = new Map(docs.map((d) => [d.slug, d]));
-
-  return docs
+  const result: PageData[] = pages
     .filter((doc) => {
-      if (doc.slug in STATIC_PAGES) {
-        console.warn(`[sanity] Pagina '/${doc.slug}' overgeslagen: dat pad is al een vaste pagina in src/pages/.`);
+      if (STATIC_PAGES.includes(doc.slug) || doc.slug.startsWith('cases/')) {
+        console.warn(`[sanity] Pagina '/${doc.slug}' overgeslagen: dat pad is een vaste pagina of een case.`);
         return false;
       }
       return true;
     })
-    .map((doc) => {
-      const sections = mapSections(doc.sections, `/${doc.slug}`);
-      return {
-        slug: doc.slug,
-        meta: {
-          title: doc.metaTitle || `${doc.title} | Bold Productions`,
-          description: doc.metaDescription ?? '',
-          ogImage: ogImageFor(doc, sections),
-          noindex: Boolean(doc.noindex),
-        },
-        accent: doc.accent ?? 'orange',
-        breadcrumbs: buildBreadcrumbs(doc, bySlug),
-        sections,
-      };
-    });
+    .map((doc) => ({
+      slug: doc.slug,
+      title: doc.title,
+      breadcrumbTitle: doc.breadcrumbTitle || undefined,
+      accent: doc.accent,
+      meta: {
+        title: doc.metaTitle || `${doc.title} | Bold Productions`,
+        description: doc.metaDescription ?? '',
+        ogImage: doc.ogImage,
+        noindex: Boolean(doc.noindex),
+      },
+      sections: mapSections(doc.sections, `/${doc.slug}`),
+    }));
+
+  for (const doc of cases) {
+    const item = toCase(doc);
+    if (!item) {
+      console.warn(`[sanity] Case '${doc.slug ?? doc.title}' overgeslagen: titel, URL-pad of foto ontbreekt.`);
+      continue;
+    }
+    result.push(
+      casePage({
+        ...item,
+        meta: { title: doc.metaTitle || item.title, description: doc.metaDescription || item.intro },
+        introText: portableTextToRich(doc.introText),
+        sections: mapSections(doc.sections, `/cases/${item.slug}`),
+      }),
+    );
+  }
+  return result;
 }

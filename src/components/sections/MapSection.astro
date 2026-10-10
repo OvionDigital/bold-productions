@@ -1,0 +1,71 @@
+---
+/**
+ * "Waar vind je ons?": gecentreerde kop + tekst en een Google Maps-kaart (iframe,
+ * loading="lazy", pas geladen als hij in beeld komt). Webflow .maps.
+ */
+import Container from '../ui/Container.astro';
+import Heading, { type HeadingGradient } from '../ui/Heading.astro';
+import RichText from '../ui/RichText.astro';
+import type { Rich } from '../../lib/rich';
+
+export interface MapSectionProps {
+  title: string;
+  gradient?: HeadingGradient;
+  text: Rich;
+  /** Google Maps embed-URL (Delen → Kaart insluiten) */
+  src: string;
+  /** Toegankelijke naam van de kaart */
+  label: string;
+}
+
+type Props = MapSectionProps;
+
+const { title, gradient = 'orange', text, src, label } = Astro.props;
+---
+
+<section class="map-section">
+  <Container>
+    <div class="map-section__intro" data-animate>
+      <Heading as="h2" text={title} gradient={gradient} align="center" flush />
+      <RichText content={text} plain class="map-section__text" />
+    </div>
+    <iframe
+      src={src}
+      title={label}
+      loading="lazy"
+      referrerpolicy="no-referrer-when-downgrade"
+      allowfullscreen
+      class="map-section__map"
+      data-native-cursor></iframe>
+  </Container>
+</section>
+
+<style>
+  .map-section {
+    position: relative;
+    z-index: var(--z-base);
+    margin-block: var(--section-space);
+  }
+
+  /* Webflow .form-compact-intro in .col-6.col-richt-text */
+  .map-section__intro {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-24);
+    max-width: var(--container-narrow);
+    margin: 0 auto var(--space-48);
+    text-align: center;
+  }
+
+  .map-section__intro :global(.map-section__text p) {
+    margin-bottom: var(--space-10);
+  }
+
+  .map-section__map {
+    display: block;
+    width: 100%;
+    height: var(--map-height);
+    border: 0;
+  }
+</style>

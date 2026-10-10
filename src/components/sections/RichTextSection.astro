@@ -1,0 +1,93 @@
+---
+/**
+ * Tekstsectie (Webflow .section-text-center > .content-container): één smalle,
+ * gecentreerde kolom met rich text. Koppen (h1–h4) krijgen de oranje gradient (global.css),
+ * Vimeo-video's staan in de tekst. Gebruikt voor dienstpagina's ("Wat levert ... op?"),
+ * casepagina's, de sitemap en de juridische pagina's.
+ * `align: 'center'` centreert ook de tekst (Webflow .text-center).
+ * `standalone`: eerste sectie van een pagina zonder hero (zoals de 404): ruimte onder de vaste navbar.
+ */
+import Container from '../ui/Container.astro';
+import RichText from '../ui/RichText.astro';
+import type { Rich } from '../../lib/rich';
+
+export interface RichTextSectionProps {
+  /** Anker-doel, bijv. 'first-section' voor de heroknop */
+  id?: string;
+  content: Rich;
+  align?: 'start' | 'center';
+  /** Eerste sectie zonder hero erboven (zet PageSections automatisch) */
+  standalone?: boolean;
+}
+
+type Props = RichTextSectionProps;
+
+const { id, content, align = 'start', standalone = false } = Astro.props;
+---
+
+<section class:list={['rich-section', `rich-section--${align}`, { 'rich-section--standalone': standalone }]} id={id}>
+  <Container>
+    <div class="rich-section__row">
+      <RichText content={content} class="rich-section__content" />
+    </div>
+  </Container>
+</section>
+
+<style>
+  .rich-section {
+    position: relative;
+    z-index: var(--z-base);
+    margin-block: var(--section-space);
+    overflow: hidden;
+  }
+
+  .rich-section--standalone {
+    margin-top: 0;
+    padding-top: var(--page-top-offset);
+  }
+
+  .rich-section__row {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    margin-inline: var(--row-margin);
+  }
+
+  /* Webflow .col-6.col-richt-text */
+  .rich-section__row :global(.rich-section__content) {
+    width: 75%;
+    padding-inline: var(--column-gap);
+  }
+
+  .rich-section--center :global(.rich-section__content) {
+    text-align: center;
+  }
+
+  .rich-section :global(.rich-section__content strong) {
+    font-weight: var(--fw-bold);
+  }
+
+  @media (min-width: 1280px) {
+    .rich-section__row :global(.rich-section__content) {
+      width: 66.6667%;
+    }
+  }
+
+  @media (min-width: 1440px) {
+    .rich-section__row :global(.rich-section__content) {
+      width: 58.3333%;
+    }
+  }
+
+  @media (min-width: 1920px) {
+    .rich-section__row :global(.rich-section__content) {
+      width: 50%;
+    }
+  }
+
+  @media (max-width: 991px) {
+    .rich-section__row :global(.rich-section__content) {
+      width: 100%;
+    }
+  }
+</style>

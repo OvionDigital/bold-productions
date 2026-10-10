@@ -8,12 +8,15 @@
 import type { ImageMetadata } from 'astro';
 import Heading, { type HeadingGradient } from '../ui/Heading.astro';
 import CmsPicture from '../ui/CmsPicture.astro';
+import { toLines } from '../../lib/text';
 import type { RemoteImage } from '../../lib/sanity/image';
 
 export interface ImageFeatureProps {
   id?: string;
   title: string;
   gradient?: HeadingGradient;
+  /** Regeleinden met '
+' (Webflow <br>) */
   text: string;
   image: { src: ImageMetadata | RemoteImage; alt: string };
 }
@@ -38,7 +41,7 @@ const { id, title, gradient = 'green', text, image } = Astro.props;
     />
     <div class="image-feature__content">
       <Heading as="h2" text={title} gradient={gradient} align="center" flush class="image-feature__title" />
-      <p class="image-feature__text">{text}</p>
+      <p class="image-feature__text">{toLines(text).map((line, i) => (i > 0 ? [<br />, line] : line))}</p>
     </div>
   </div>
 </section>

@@ -14,6 +14,10 @@ import { initCarousels } from './carousel';
 import { initCinemaCursor } from './cinema-cursor';
 import { initAccordions } from './accordion';
 import { initContactForms } from './contact-form';
+import { initMultiselects } from './multiselect';
+import { initCaseFilters } from './case-filter';
+import { initHoverVideos } from './hover-video';
+import { initDrawShapes } from './draw-shapes';
 import { initAnchorLinks, initScrollAnimations } from './scroll-animations';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -35,4 +39,8 @@ initCarousels();
 initCinemaCursor();
 initAccordions();
 initContactForms();
+initMultiselects();
+initCaseFilters();
+initHoverVideos();
+initDrawShapes();
 

@@ -1,5 +1,5 @@
 import { defineType, defineField } from 'sanity';
-import { accentOptions } from '../fields';
+import { accentOptions, arrowIconField } from '../fields';
 
 /** Hero.astro — schermvullende kop bovenaan de pagina. */
 export const heroSection = defineType({
@@ -15,8 +15,22 @@ export const heroSection = defineType({
       description: 'Enter = nieuwe regel.',
       validation: (r) => r.required(),
     }),
-    defineField({ name: 'titleAccent', title: 'Titel, tweede regel (cursief accent)', type: 'string', validation: (r) => r.required() }),
-    defineField({ name: 'eyebrow', title: 'Eyebrow (kleine tekst onder de titel)', type: 'string', validation: (r) => r.required() }),
+    defineField({ name: 'titleAccent', title: 'Titel, laatste regel (cursief accent, optioneel)', type: 'string' }),
+    defineField({
+      name: 'accentInline',
+      title: 'Accent op dezelfde regel als de titel',
+      type: 'boolean',
+      description: 'Aan = "Gewoon even praten" op één regel i.p.v. het accent op een nieuwe regel.',
+      initialValue: false,
+    }),
+    defineField({
+      name: 'eyebrow',
+      title: 'Eyebrow (kleine tekst onder de titel)',
+      type: 'text',
+      rows: 2,
+      description: 'Enter = nieuwe regel.',
+      validation: (r) => r.required(),
+    }),
     defineField({
       name: 'primaryCta',
       title: 'Primaire knop (optioneel)',
@@ -41,20 +55,7 @@ export const heroSection = defineType({
           initialValue: '#first-section',
           validation: (r) => r.required(),
         }),
-        defineField({
-          name: 'icon',
-          title: 'Pijl',
-          type: 'string',
-          options: {
-            list: [
-              { title: 'Naar rechts', value: 'arrow-right' },
-              { title: 'Omlaag', value: 'arrow-down' },
-            ],
-            layout: 'radio',
-            direction: 'horizontal',
-          },
-          initialValue: 'arrow-down',
-        }),
+        arrowIconField(),
       ],
       options: { collapsible: true, collapsed: false },
     }),

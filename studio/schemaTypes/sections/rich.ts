@@ -1,5 +1,6 @@
 import { defineType, defineField, defineArrayMember } from 'sanity';
 import { anchorIdField, gradientField, plainText, titleField } from '../fields';
+import { formOptions, messagePlaceholderField } from './more';
 
 /** Timeline.astro — kop + genummerde stappen (foto | tekst) + slotknop. */
 export const timelineSection = defineType({
@@ -20,10 +21,18 @@ export const timelineSection = defineType({
           name: 'timelineStep',
           title: 'Stap',
           fields: [
-            defineField({ name: 'number', title: 'Nummer (bijv. 01)', type: 'string', validation: (r) => r.required() }),
+            defineField({ name: 'number', title: 'Nummer (bijv. 01, optioneel)', type: 'string' }),
             defineField({ name: 'title', title: 'Titel', type: 'string', validation: (r) => r.required() }),
             defineField({ name: 'text', title: 'Tekst', type: 'richText' }),
-            defineField({ name: 'image', title: 'Foto', type: 'imageWithAlt', validation: (r) => r.required() }),
+            defineField({
+              name: 'image',
+              title: 'Foto',
+              type: 'imageWithAlt',
+              description: 'Of een video hieronder.',
+              validation: (r) =>
+                r.custom((value, ctx) => (!value && !(ctx.parent as { video?: { id?: string } })?.video?.id ? 'Kies een foto of vul een video in.' : true)),
+            }),
+            defineField({ name: 'video', title: 'Vimeo-video i.p.v. foto (optioneel)', type: 'vimeoVideo', options: { collapsible: true, collapsed: true } }),
             defineField({ name: 'cta', title: 'Knop (optioneel)', type: 'ctaButton' }),
           ],
           preview: { select: { title: 'title', subtitle: 'number', media: 'image' } },
@@ -32,7 +41,13 @@ export const timelineSection = defineType({
       validation: (r) => r.required().min(1),
     }),
     defineField({ name: 'cta', title: 'Slotknop (optioneel)', type: 'ctaButton' }),
-    defineField({ name: 'reverse', title: 'Foto rechts i.p.v. links', type: 'boolean', initialValue: false }),
+    defineField({
+      name: 'reverse',
+      title: 'Eerste stap foto rechts',
+      description: 'De stappen wisselen af (foto links, rechts, links, …). Aan = beginnen met de foto rechts.',
+      type: 'boolean',
+      initialValue: false,
+    }),
   ],
   preview: {
     select: { title: 'title', count: 'steps.length', media: 'steps.0.image' },
@@ -48,11 +63,20 @@ export const textMediaSection = defineType({
   fields: [
     defineField({
       name: 'showContactForm',
-      title: 'Contactformulier i.p.v. tekst',
+      title: 'Formulier i.p.v. tekst',
       type: 'boolean',
-      description: 'Toont naast het beeld het standaard contactformulier. Titel, tekst en knop hieronder vervallen dan; gebruik de intro erboven.',
+      description: 'Toont naast het beeld een formulier. Titel, tekst en knop hieronder vervallen dan; gebruik de intro erboven.',
       initialValue: false,
     }),
+    defineField({
+      name: 'form',
+      title: 'Welk formulier',
+      type: 'string',
+      options: { list: formOptions, layout: 'radio' },
+      initialValue: 'contact',
+      hidden: ({ parent }) => !parent?.showContactForm,
+    }),
+    defineField({ ...messagePlaceholderField(), hidden: ({ parent }) => !parent?.showContactForm }),
     defineField({
       name: 'intro',
       title: 'Gecentreerde intro erboven (optioneel)',
@@ -102,6 +126,21 @@ export const textMediaSection = defineType({
     }),
     defineField({ name: 'reverse', title: 'Beeld links i.p.v. rechts', type: 'boolean', initialValue: false }),
     defineField({ name: 'triangles', title: 'Driehoekjes rond het beeld', type: 'boolean', initialValue: false }),
+    defineField({
+      name: 'layout',
+      title: 'Afstand en animatie',
+      type: 'string',
+      description: 'Standaard: schuift in bij scrollen. Rustig: zonder inschuifanimatie (zoals de eerste sectie op /events).',
+      options: {
+        list: [
+          { title: 'Standaard', value: 'margin' },
+          { title: 'Rustig', value: 'section' },
+        ],
+        layout: 'radio',
+        direction: 'horizontal',
+      },
+      initialValue: 'margin',
+    }),
     anchorIdField(),
   ],
   preview: {

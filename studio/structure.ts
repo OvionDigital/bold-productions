@@ -19,5 +19,10 @@ export const structure: StructureResolver = (S) =>
       S.divider(),
       S.documentTypeListItem('testimonial').title('Testimonials'),
       S.documentTypeListItem('clientLogo').title("Klantlogo's"),
-      S.documentTypeListItem('caseStudy').title('Cases'),
+      S.documentTypeListItem('caseStudy')
+        .title('Cases')
+        .child(S.documentTypeList('caseStudy').title('Cases').defaultOrdering([{ field: 'sortOrder', direction: 'asc' }])),
+      S.documentTypeListItem('teamMember')
+        .title('Team')
+        .child(S.documentTypeList('teamMember').title('Team').defaultOrdering([{ field: 'sortOrder', direction: 'asc' }])),
     ]);

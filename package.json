@@ -9,7 +9,7 @@
     "preview": "astro preview",
     "astro": "astro",
     "compare": "node scripts/compare.mjs",
-    "sanity:seed": "node --env-file=.env scripts/sanity-seed.mjs",
+    "sanity:seed": "node --env-file=.env --no-warnings=ExperimentalWarning --import ./scripts/sanity/register.mjs scripts/sanity-seed.ts",
     "deploy:preview": "astro build && wrangler pages deploy dist --project-name bold-productions --branch preview"
   },
   "dependencies": {

@@ -15,7 +15,10 @@ import { isRemoteImage, sanityImageUrl, type RemoteImage } from '../../lib/sanit
 
 export interface HeroProps {
   title: string;
+  /** Laatste deel van de titel, cursief in de accentkleur (leeg = geen) */
   titleAccent: string;
+  /** Accent op dezelfde regel als de titel i.p.v. eronder (bijv. "Gewoon even praten") */
+  accentInline?: boolean;
   eyebrow: string;
   primaryCta?: { label: string; href: string };
   secondaryCta?: { label: string; href: string; icon?: IconName };
@@ -26,8 +29,8 @@ export interface HeroProps {
 
 type Props = HeroProps;
 
-const { title, titleAccent, eyebrow, primaryCta, secondaryCta, image, video, accent } = Astro.props;
-const titleLines = toLines(title);
+const { title, titleAccent, accentInline = false, eyebrow, primaryCta, secondaryCta, image, video, accent } = Astro.props;
+const titleLines = title ? toLines(title) : [];
 
 /*
  * Eigen <picture> met art direction. Op staande schermen ≤767px is door object-fit: cover
@@ -75,7 +78,14 @@ const fallbackSrc = remoteImage
     <Container width="wide">
       <h1 class="hero__title">
         <span class="hero__title-main">
-          {titleLines.map((line) => <Fragment>{line}<br /></Fragment>)}
+          {
+            titleLines.map((line, i) => (
+              <Fragment>
+                {line}
+                {i < titleLines.length - 1 || (titleAccent && !accentInline) ? <br /> : titleAccent ? ' ' : null}
+              </Fragment>
+            ))
+          }
         </span>
         <span class="hero__title-accent">{titleAccent}</span>
       </h1>

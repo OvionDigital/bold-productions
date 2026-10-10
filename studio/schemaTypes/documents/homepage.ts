@@ -1,4 +1,5 @@
 import { defineType, defineField, defineArrayMember } from 'sanity';
+import { arrowIconField } from '../fields';
 
 const gradient = {
   type: 'string' as const,
@@ -44,6 +45,7 @@ export const homepage = defineType({
       fields: [
         defineField({ name: 'label', title: 'Label', type: 'string', validation: (r) => r.required() }),
         defineField({ name: 'href', title: 'Link (bijv. #first-section)', type: 'string', validation: (r) => r.required() }),
+        arrowIconField(),
       ],
     }),
     defineField({ name: 'heroImage', title: 'Achtergrondfoto (LCP)', type: 'imageWithAlt', group: 'hero', validation: (r) => r.required() }),

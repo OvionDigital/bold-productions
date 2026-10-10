@@ -1,8 +1,10 @@
 ---
 /**
  * Kleine kop in spatiëring boven een titel (Webflow: .subtitle),
- * bijv. "Ervoor. Tijdens. Erna" of "Vertrouwd door".
+ * bijv. "Ervoor. Tijdens. Erna" of "Vertrouwd door". Regeleinden met '
+'.
  */
+import { toLines } from '../../lib/text';
 interface Props {
   text: string;
   as?: 'p' | 'span' | 'h2' | 'h3' | 'div';
@@ -13,7 +15,7 @@ interface Props {
 const { text, as: Tag = 'p', align = 'start', class: className } = Astro.props;
 ---
 
-<Tag class:list={['eyebrow', `eyebrow--${align}`, className]}>{text}</Tag>
+<Tag class:list={['eyebrow', `eyebrow--${align}`, className]}>{toLines(text).map((line, i) => (i > 0 ? [<br />, line] : line))}</Tag>
 
 <style>
   .eyebrow {

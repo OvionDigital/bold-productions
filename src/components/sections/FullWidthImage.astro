@@ -1,0 +1,54 @@
+---
+/**
+ * Brede foto over de containerbreedte (Webflow .image-fullwidth > .image-12), 16:9.
+ * Op casepagina's tussen de tekstblokken.
+ */
+import type { ImageMetadata } from 'astro';
+import Container from '../ui/Container.astro';
+import CmsPicture from '../ui/CmsPicture.astro';
+import type { RemoteImage } from '../../lib/sanity/image';
+
+export interface FullWidthImageProps {
+  image: { src: ImageMetadata | RemoteImage; alt: string };
+}
+
+type Props = FullWidthImageProps;
+
+const { image } = Astro.props;
+---
+
+<section class="full-image" data-animate>
+  <Container>
+    <CmsPicture
+      src={image.src}
+      alt={image.alt}
+      aspectRatio={16 / 9}
+      widths={[480, 768, 1080, 1440, 1680, 2048]}
+      sizes="(max-width: 767px) 100vw, (max-width: 991px) 696px, (max-width: 1279px) 916px, (max-width: 1439px) 1116px, (max-width: 1919px) 1296px, 1656px"
+      formats={['avif', 'webp']}
+      loading="lazy"
+      decoding="async"
+      class="full-image__image"
+    />
+  </Container>
+</section>
+
+<style>
+  .full-image {
+    position: relative;
+    z-index: var(--z-base);
+    margin-block: var(--section-space);
+  }
+
+  .full-image :global(picture) {
+    display: block;
+  }
+
+  .full-image :global(.full-image__image) {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+  }
+</style>

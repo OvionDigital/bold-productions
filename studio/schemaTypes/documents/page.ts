@@ -6,7 +6,7 @@ import { sectionTypes } from '../sections';
  * URL-paden die al door een vaste Astro-pagina in src/pages/ gebruikt worden.
  * Moet gelijk blijven aan RESERVED_SLUGS in src/lib/sanity/pages.ts.
  */
-const RESERVED_SLUGS = ['styleguide', 'events'];
+const RESERVED_SLUGS = ['styleguide'];
 
 const slugify = (input: string) =>
   input
@@ -56,6 +56,7 @@ export const page = defineType({
             return 'Alleen kleine letters, cijfers, streepjes en slashes (bijv. "events/aftermovie"), geen slash aan begin of eind.';
           }
           if (RESERVED_SLUGS.includes(slug)) return `"/${slug}" bestaat al als vaste pagina. Kies een ander pad.`;
+          if (slug.startsWith('cases/')) return 'Paden onder /cases/ zijn voor cases. Maak een case aan onder "Cases".';
           return true;
         }),
     }),
@@ -73,7 +74,10 @@ export const page = defineType({
         r.required().min(1).error('Voeg minimaal één sectie toe.'),
         r
           .custom((sections?: { _type: string }[]) =>
-            !sections?.length || sections[0]._type === 'heroSection' ? true : 'Een pagina begint normaal met een Hero (de vaste navigatiebalk valt anders over de inhoud).',
+            // Kruimelpad of tekstsectie bovenaan (juridische pagina's, 404) krijgen zelf ruimte onder de navbar
+            !sections?.length || ['heroSection', 'breadcrumbsSection', 'richTextSection'].includes(sections[0]._type)
+              ? true
+              : 'Begin met een Hero, kruimelpad of tekstsectie; andere secties vallen bovenaan onder de vaste navigatiebalk.',
           )
           .warning(),
         r
@@ -117,7 +121,10 @@ export const page = defineType({
       rows: 3,
       group: 'settings',
       description: 'Ideaal 120–160 tekens.',
-      validation: (r) => [r.required(), r.max(170).warning('Langer dan 170 tekens wordt in Google afgekapt.')],
+      validation: (r) => [
+        r.custom((value?: string) => (value?.trim() ? true : 'Zonder beschrijving kiest Google zelf een stukje tekst van de pagina.')).warning(),
+        r.max(170).warning('Langer dan 170 tekens wordt in Google afgekapt.'),
+      ],
     }),
     defineField({
       name: 'ogImage',

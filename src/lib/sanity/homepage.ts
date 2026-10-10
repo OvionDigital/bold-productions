@@ -8,6 +8,7 @@ import { sanityClient, isSanityConfigured } from './client';
 import { imageProjection, toRemoteImage, type SanityImageRef } from './image';
 import { portableTextToRich } from './portableText';
 import type { HeroProps } from '../../components/sections/Hero.astro';
+import type { IconName } from '../../components/ui/icons';
 import type { LogoMarqueeProps } from '../../components/sections/LogoMarquee.astro';
 import type { IntroHighlightProps } from '../../components/sections/IntroHighlight.astro';
 import type { TimelineProps } from '../../components/sections/Timeline.astro';
@@ -57,7 +58,7 @@ interface HomepageDoc {
   heroTitleAccent: string;
   heroEyebrow: string;
   heroPrimaryCta?: { label: string; href: string };
-  heroSecondaryCta?: { label: string; href: string };
+  heroSecondaryCta?: { label: string; href: string; icon?: IconName | null };
   heroImage: SanityImageRef;
   heroVideo?: { id?: string; hash?: string; title?: string; loadOnMobile?: boolean };
   trustedByTitle: string;
@@ -113,7 +114,12 @@ export async function getHomepageContent(): Promise<HomepageContent | null> {
       titleAccent: doc.heroTitleAccent,
       eyebrow: doc.heroEyebrow,
       primaryCta: doc.heroPrimaryCta,
-      secondaryCta: doc.heroSecondaryCta,
+      secondaryCta: doc.heroSecondaryCta && {
+        label: doc.heroSecondaryCta.label,
+        href: doc.heroSecondaryCta.href,
+        // Oudere documenten zonder keuze: omlaag, zoals live
+        icon: doc.heroSecondaryCta.icon ?? 'arrow-down',
+      },
       image: { src: toRemoteImage(doc.heroImage), alt: doc.heroImage.alt },
       video: doc.heroVideo?.id ? { id: doc.heroVideo.id, hash: doc.heroVideo.hash, title: doc.heroVideo.title ?? '', loadOnMobile: doc.heroVideo.loadOnMobile } : undefined,
     },

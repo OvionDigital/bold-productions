@@ -1,0 +1,5 @@
+# Cloudflare Pages redirects — https://developers.cloudflare.com/pages/configuration/redirects/
+# Oude Webflow-paden die live (weareboldproductions.com) met een 301 doorsturen.
+# TODO(livegang): volledige lijst overnemen uit Webflow → Site settings → Publishing → 301 redirects.
+/dienstenpagina/zakelijke-events-fotografie /zakelijke-events/fotografie 301
+/dienstenpagina/zakelijke-events-aftermovie /zakelijke-events/aftermovie 301

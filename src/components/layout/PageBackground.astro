@@ -4,11 +4,15 @@
  * donkere textuur over de volle breedte en grote B-outlines die links/rechts
  * uit beeld steken. De textuur laadt pas na window.load (html.is-loaded) om
  * de LCP niet te vertragen; zonder JS direct.
+ *
+ * De B's staan inline (geen <img>), zodat ze getekend kunnen worden: een masker met
+ * een lijn langs elke contour onthult de vorm (stroke-dashoffset, pathLength 1).
+ * scripts/draw-shapes.ts start dat één keer zodra een B in beeld komt. Zonder JS,
+ * bij ?static=1 en bij prefers-reduced-motion staan ze er gewoon.
  */
 import { getImage } from 'astro:assets';
 import texture from '../../assets/decor/bold-background.jpg';
-import boldBGreen from '../../assets/decor/bold-b-green.svg';
-import boldBOrange from '../../assets/decor/bold-b-orange.svg';
+import boldBSvg from '../../assets/decor/bold-b-green.svg?raw';
 
 type Shape = { color: 'green' | 'orange'; side: 'left' | 'right' };
 
@@ -25,7 +29,11 @@ const defaultShapes: Shape[] = [
   { color: 'orange', side: 'left' },
 ];
 const { shapes = defaultShapes } = Astro.props;
-const shapeSrc = { green: boldBGreen.src, orange: boldBOrange.src };
+/** Eén vorm voor alle kleuren (de SVG's verschillen alleen in fill); kleur via CSS-token. */
+const shapePath = boldBSvg.match(/ d="([^"]+)"/)?.[1] ?? '';
+const shapeViewBox = boldBSvg.match(/viewBox="([^"]+)"/)?.[1] ?? '0 0 1819 2183';
+/** Losse contouren: elk wordt tegelijk van begin tot eind getekend. */
+const contours = shapePath.split(/(?=M)/).filter(Boolean);
 
 const [sm, md, lg] = await Promise.all(
   [800, 1440, 2560].map((width) => getImage({ src: texture, width, format: 'avif', quality: 50 })),
@@ -39,16 +47,22 @@ const bgLg = `url("${lg.src}")`;
   {
     shapes && (
       <div class="page-bg__shapes" aria-hidden="true">
-        {shapes.map((shape) => (
-          <img
-            src={shapeSrc[shape.color]}
-            alt=""
-            loading="lazy"
-            decoding="async"
+        {shapes.map((shape, index) => (
+          <svg
+            viewBox={shapeViewBox}
             width="1819"
             height="2183"
-            class:list={['page-bg__shape', `page-bg__shape--${shape.side}`]}
-          />
+            focusable="false"
+            class:list={['page-bg__shape', `page-bg__shape--${shape.side}`, `page-bg__shape--${shape.color}`]}
+            data-draw-shape
+          >
+            <mask id={`page-bg-mask-${index}`} maskUnits="userSpaceOnUse">
+              {contours.map((d) => (
+                <path d={d} pathLength="1" class="page-bg__stroke" />
+              ))}
+            </mask>
+            <path d={shapePath} mask={`url(#page-bg-mask-${index})`} class="page-bg__fill" />
+          </svg>
         ))}
       </div>
     )
@@ -116,6 +130,35 @@ const bgLg = `url("${lg.src}")`;
   .page-bg__shape--right {
     align-self: flex-end;
     transform: translate(15vw) rotateY(180deg);
+  }
+
+  .page-bg__shape--green {
+    color: var(--color-green);
+  }
+
+  .page-bg__shape--orange {
+    color: var(--color-shape-orange);
+  }
+
+  .page-bg__fill {
+    fill: currentColor;
+  }
+
+  /* Masker: brede witte lijn langs elke contour; getekend = volledig zichtbaar. */
+  .page-bg__stroke {
+    fill: none;
+    stroke: var(--color-white); /* maskerluminantie: wit = zichtbaar */
+    stroke-width: 24;
+    stroke-dasharray: 1 1;
+    stroke-dashoffset: 0;
+  }
+
+  .page-bg__shape.is-undrawn .page-bg__stroke {
+    stroke-dashoffset: 1;
+  }
+
+  .page-bg__shape.is-drawing .page-bg__stroke {
+    transition: stroke-dashoffset var(--duration-draw) var(--ease-draw);
   }
 
   @media (max-width: 991px) {

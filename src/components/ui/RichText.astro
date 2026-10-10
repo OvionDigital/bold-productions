@@ -1,11 +1,14 @@
 ---
 /**
- * Rendert het rich-text-model uit lib/rich.ts als <p>/<ul>.
+ * Rendert het rich-text-model uit lib/rich.ts: paragrafen, (ruime) opsommingen,
+ * genummerde lijsten, tussenkoppen, citaten en Vimeo-video's.
  * Standaard met de globale .rich-text-stijl (lijsticoon, marges); `plain` laat die weg.
+ * Een lege paragraaf is een witregel (Webflow <p>‍</p>).
  */
 import type { HTMLTag } from 'astro/types';
 import type { Rich } from '../../lib/rich';
 import RichInline from './RichInline.astro';
+import VimeoEmbed from './VimeoEmbed.astro';
 
 interface Props {
   content: Rich;
@@ -18,24 +21,65 @@ interface Props {
 }
 
 const { content, as: Tag = 'div', size = 'default', plain = false, class: className, ...rest } = Astro.props;
+const headingTag = (level: number) => `h${level}` as 'h1';
 ---
 
 <Tag class:list={[{ 'rich-text': !plain, 'rich-text--lead': size === 'lead' }, className]} {...rest}>
   {
-    content.map((block) =>
-      'p' in block ? (
-        <p>
-          <RichInline segments={block.p} />
-        </p>
-      ) : (
-        <ul role="list">
-          {block.ul.map((item) => (
-            <li>
-              <RichInline segments={item} />
-            </li>
-          ))}
-        </ul>
-      ),
-    )
+    content.map((block) => {
+      if ('p' in block) {
+        return block.p.length ? (
+          <p>
+            <RichInline segments={block.p} />
+          </p>
+        ) : (
+          <p>&zwj;</p>
+        );
+      }
+      if ('ul' in block) {
+        // Ruim: elk item een eigen lijst (zoals op de live site), anders één lijst
+        const lists = block.spaced ? block.ul.map((item) => [item]) : [block.ul];
+        return lists.map((items) => (
+          <ul role="list">
+            {items.map((item) => (
+              <li>
+                <RichInline segments={item} />
+              </li>
+            ))}
+          </ul>
+        ));
+      }
+      if ('ol' in block) {
+        return (
+          <ol>
+            {block.ol.map((item) => (
+              <li>
+                <RichInline segments={item} />
+              </li>
+            ))}
+          </ol>
+        );
+      }
+      if ('h' in block) {
+        const H = headingTag(block.level);
+        return (
+          <H>
+            <RichInline segments={block.h} />
+          </H>
+        );
+      }
+      if ('quote' in block) {
+        return (
+          <blockquote>
+            <RichInline segments={block.quote} />
+          </blockquote>
+        );
+      }
+      return (
+        <figure class="rich-text__video" style={`--video-width: ${block.video.width ?? 100}%`}>
+          <VimeoEmbed id={block.video.id} hash={block.video.hash} title={block.video.title} ratio={block.video.ratio} background={false} />
+        </figure>
+      );
+    })
   }
 </Tag>

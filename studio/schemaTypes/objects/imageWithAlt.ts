@@ -11,7 +11,6 @@ export const imageWithAlt = defineType({
       title: 'Alt-tekst',
       description: 'Beschrijvend voor beeldmateriaal, organisatienaam voor logo’s, of leeg laten bij puur decoratief beeld.',
       type: 'string',
-      validation: (r) => r.required(),
     }),
   ],
 });

@@ -74,6 +74,10 @@ const { id, content } = Astro.props;
     font-weight: var(--fw-display);
   }
 
+  .intro__text :global(a) {
+    text-decoration: none;
+  }
+
   @media (min-width: 1280px) {
     .intro__col {
       width: 66.6667%;

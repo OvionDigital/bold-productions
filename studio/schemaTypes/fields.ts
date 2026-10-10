@@ -27,6 +27,23 @@ export const gradientField = (initialValue: string, name = 'gradient') =>
     initialValue,
   });
 
+/** Pijl op de tweede heroknop (Button icon); live meestal omlaag naar de eerste sectie. */
+export const arrowIconField = () =>
+  defineField({
+    name: 'icon',
+    title: 'Pijl',
+    type: 'string',
+    options: {
+      list: [
+        { title: 'Naar rechts', value: 'arrow-right' },
+        { title: 'Omlaag', value: 'arrow-down' },
+      ],
+      layout: 'radio',
+      direction: 'horizontal',
+    },
+    initialValue: 'arrow-down',
+  });
+
 /** Titels mogen over meerdere regels: Enter = nieuwe regel (Heading zet '\n' om naar <br>). */
 export const titleField = (title = 'Titel', required = true) =>
   defineField({

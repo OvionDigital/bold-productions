@@ -2,12 +2,13 @@
 /**
  * Vimeo-video als embed met vaste verhouding, loading="lazy" (geen player.js).
  * `background` = zonder bediening, automatisch, gedempt en herhalend (Vimeo background=1).
+ * `ratio`: vaste verhouding of een getal (hoogte / breedte, bijv. 0.5625 = 16:9).
  */
 interface Props {
   id: string;
   hash?: string;
   title: string;
-  ratio?: 'square' | 'portrait' | 'landscape';
+  ratio?: 'square' | 'portrait' | 'landscape' | number;
   background?: boolean;
   class?: string;
 }
@@ -20,7 +21,10 @@ const params = new URLSearchParams({
 const src = `https://player.vimeo.com/video/${id}?${params.toString()}`;
 ---
 
-<div class:list={['vimeo-embed', `vimeo-embed--${ratio}`, className]}>
+<div
+  class:list={['vimeo-embed', typeof ratio === 'string' && `vimeo-embed--${ratio}`, className]}
+  style={typeof ratio === 'number' ? `aspect-ratio: 1 / ${ratio}` : undefined}
+>
   <iframe
     src={src}
     title={title}

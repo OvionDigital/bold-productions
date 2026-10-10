@@ -152,7 +152,7 @@ export const legalLinks: NavLink[] = [
   { label: 'Privacyverklaring', href: '/privacyverklaring' },
   { label: 'Cookiebeleid', href: '/cookiebeleid' },
   { label: 'Algemene Voorwaarden', href: '/algemene-voorwaarden' },
-  { label: 'Sitemap', href: 'https://www.weareboldproductions.com/sitemap/' },
+  { label: 'Sitemap', href: '/sitemap' },
 ];
 
 export const copyright = '© Bold Productions 2026';

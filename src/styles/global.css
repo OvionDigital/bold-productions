@@ -165,6 +165,14 @@ blockquote {
   margin: 0 0 var(--space-10);
 }
 
+/* Citaat in rich text (Webflow-standaard blockquote) */
+.rich-text blockquote {
+  padding: var(--space-10) var(--space-20);
+  border-left: 5px solid var(--color-quote-border);
+  font-size: var(--fs-blockquote);
+  line-height: var(--lh-relaxed);
+}
+
 figure {
   margin: 0 0 var(--space-10);
 }
@@ -195,6 +203,27 @@ figure {
 
 .rich-text--lead {
   font-size: var(--fs-lead);
+}
+
+/* Koppen in rich text: oranje gradient (Webflow .content-container h1–h4) */
+.rich-text :is(h1, h2, h3, h4) {
+  background-image: var(--gradient-orange);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+.rich-text :is(h1, h3) {
+  display: inline-block;
+}
+
+/* Vimeo-video in de tekst (Webflow .w-richtext-figure-type-video, gecentreerd) */
+.rich-text__video {
+  clear: both;
+  width: var(--video-width, 100%);
+  max-width: 100%;
+  margin: 0 auto var(--space-10);
 }
 
 /* ─── Utilities ─────────────────────────────────────────────────────── */

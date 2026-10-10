@@ -10,6 +10,15 @@ import {
   testimonialsSection,
 } from './simple';
 import { serviceTilesSection, textMediaSection, timelineSection } from './rich';
+import {
+  caseGridSection,
+  contactSection,
+  fullWidthImageSection,
+  mapSection,
+  richTextSection,
+  teamSection,
+  videoFeatureSection,
+} from './more';
 
 /**
  * Alle blokken waarmee een pagina opgebouwd kan worden, in de volgorde van het
@@ -21,6 +30,7 @@ export const sectionTypes = [
   breadcrumbsSection,
   logoMarqueeSection,
   introHighlightSection,
+  richTextSection,
   textMediaSection,
   timelineSection,
   testimonialsSection,
@@ -28,5 +38,14 @@ export const sectionTypes = [
   caseSpotlightSection,
   imageFeatureSection,
   serviceTilesSection,
+  teamSection,
   faqSection,
+  fullWidthImageSection,
+  videoFeatureSection,
+  contactSection,
+  mapSection,
+  caseGridSection,
 ];
+
+/** Blokken voor de inhoud van een case (onder de vaste kop met hero, intro en feiten). */
+export const caseSectionTypes = sectionTypes.filter((t) => !['heroSection', 'breadcrumbsSection', 'caseGridSection'].includes(t.name));

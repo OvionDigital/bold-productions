@@ -11,6 +11,8 @@
  * daarvan reserveert een inline `aspect-ratio` de ruimte (geen CLS), en bepaalt de
  * sectie-CSS (object-fit, eigen aspect-ratio) verder de weergave, zoals al het geval was.
  *
+ * Een lokale SVG gaat ongewijzigd als <img> mee (geen rasterisering).
+ *
  * `aspectRatio` (breedte/hoogte) croppt zowel bij Sanity (via h= in de URL) als bij een
  * lokale bron (via Picture's fit="cover").
  */
@@ -68,6 +70,8 @@ const fallbackHeight = Math.round(fallbackWidth / cssAspectRatio);
       class={className}
       style={`aspect-ratio: ${cssAspectRatio};`}
     />
+  ) : (src as ImageMetadata).format === 'svg' ? (
+    <img src={src.src} width={src.width} height={src.height} alt={alt} loading={loading} decoding={decoding} class={className} />
   ) : (
     <Picture
       src={src as ImageMetadata}

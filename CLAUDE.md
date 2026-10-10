@@ -4,7 +4,7 @@
 
 Herbouw van de website van **Bold Productions** (videoproductie voor events, artiesten en zakelijke events) in Astro. De huidige site draait op Webflow en is traag. Het doel is een **pixel-getrouwe, veel snellere** versie.
 
-- Fase 1: alleen de homepage, als proef. Daarna volgen ~40 pagina's die grotendeels dezelfde secties gebruiken met andere inhoud. Bouw daarom alles herbruikbaar.
+- Fase 1 (homepage) en fase 2 (alle overige pagina's van de live site, inclusief 13 cases en de juridische pagina's) zijn gebouwd. Elke pagina is een lijst herbruikbare secties; nieuwe pagina's bouw je uit dezelfde secties.
 - Referentie: https://www.weareboldproductions.com/ (live) en https://boldproductions.webflow.io/ (staging, identiek).
 - Webflow-HTML wordt **niet** geëxporteerd of gekopieerd. Bouw schone, semantische componenten.
 - Bronnen in `reference/`: `webflow-custom-head.html` (custom CSS), `webflow-custom-footer.html` (custom JS), `rook-web.mp4` (rookvideo, in gebruik als `public/video/rook.mp4`).
@@ -72,15 +72,20 @@ src/
   components/ui/                basiscomponenten
   components/layout/            Header, Footer, Analytics (en later MegaMenu, MenuPanel)
   components/sections/          één component per sectie, alle inhoud via props
-  data/                         home.ts, navigation.ts (inhoud)
-  lib/                          helpers (text.ts, tokens.ts), lib/sanity/ (CMS-koppeling, zie hieronder)
+  data/                         home.ts, navigation.ts, cases.ts, team.ts, forms.ts, … (inhoud)
+  data/pages/                   één bestand per pagina (PageData), opgesomd in data/pages/index.ts
+  data/case-pages/              inhoud (introtekst + secties) per case, gekoppeld in data/cases.ts
+  lib/                          helpers (text.ts, tokens.ts, rich.ts), sections.ts (PageData/PageSection),
+                                pages.ts (alle pagina's: Sanity of src/data), cases.ts (casepagina-opbouw),
+                                lib/sanity/ (CMS-koppeling, zie hieronder)
   scripts/                      main.ts (entry) + modules
   styles/tokens.css, global.css
-  pages/index.astro, events.astro, styleguide.astro
-  pages/[...slug].astro         alle pagina's die de klant in Sanity opbouwt
+  pages/index.astro, styleguide.astro
+  pages/[...slug].astro         alle overige pagina's en cases (Sanity, anders src/data)
 public/fonts, public/video, public/favicons, public/_headers
 scripts/compare.mjs             visuele vergelijking
-scripts/sanity-seed.mjs         src/data naar Sanity (alleen ontbrekende documenten; --force overschrijft)
+scripts/sanity-seed.ts          npm run sanity:seed: src/data naar Sanity (vult alleen aan; --force overschrijft,
+                                --dry-run controleert zonder te schrijven). Loader: scripts/sanity/
 studio/                         Sanity Studio (losse app, eigen package.json)
 .github/workflows/deploy.yml    build + Cloudflare Pages-deploy (na Sanity-publicatie, push of handmatig)
 docs/homepage-secties.md        inventaris homepage
@@ -90,8 +95,12 @@ docs/sanity.md                  Sanity-opzet, pagina's bouwen, online zetten —
 **CMS (branch `feature/sanity-cms`):** `index.astro` haalt de homepage-inhoud
 op uit Sanity via `src/lib/sanity/homepage.ts` en valt terug op `src/data/home.ts`
 als `PUBLIC_SANITY_PROJECT_ID` niet gezet is — lokaal werken zonder Sanity blijft dus
-gewoon werken. Daarnaast bouwt de klant eigen **pagina's** (`page`) uit de bestaande
-secties: elk sectiecomponent heeft een bloktype in `studio/schemaTypes/sections/` en
+gewoon werken (`PUBLIC_SANITY_PROJECT_ID= npx astro build` bouwt bewust uit src/data).
+Alle andere pagina's (`page`) en cases (`caseStudy`) komen via `src/lib/pages.ts` uit
+Sanity, of uit `src/data/pages` + `src/data/cases.ts` als Sanity niet geconfigureerd of
+leeg is. Beide bronnen leveren `PageData` (`src/lib/sections.ts`). Inhoud gewijzigd in
+`src/data`? Dan staat Sanity daarna achter: `npm run sanity:seed` vult alleen aan,
+`-- --force` vervangt (overschrijft wijzigingen van de klant). Pagina's bestaan uit secties: elk sectiecomponent heeft een bloktype in `studio/schemaTypes/sections/` en
 een mapper in `src/lib/sanity/sections.ts`; `[...slug].astro` rendert ze via
 `PageSections`. Nieuwe sectie of nieuwe prop die de klant moet kunnen zetten? Ook
 schema + mapper bijwerken. Rich text uit Sanity (Portable Text) wordt omgezet naar het
@@ -125,7 +134,7 @@ Houd dit bij bij elk nieuw component.
 | `CmsPicture.astro`     | Drop-in i.p.v. astro:assets `<Picture>`: lokaal (`ImageMetadata`) ongewijzigd gedrag; Sanity (`RemoteImage`) srcset via Sanity's CDN (`?auto=format`), zonder `width`/`height`-attributen (Chromium-flexbug, zie image.ts) — `aspect-ratio` reserveert de ruimte. `aspectRatio`-prop om te croppen. |
 | `DecoTriangles.astro`  | Zes oranje driehoekjes rond een beeld (structuur exact als Webflow).                                    |
 | `CaseCard.astro`       | Casekaart: foto, diagonale gradient, titel + intro, link naar /cases/[slug].                              |
-| `ContactForm.astro`    | Contactformulier (velden uit data), honeypot, succes/fout; verzenden via `contact-form.ts` naar `PUBLIC_CONTACT_ENDPOINT`. |
+| `ContactForm.astro`    | Formulier (velden uit `data/forms.ts`: contact, offerte, trouwfilm; tekst, keuzerondjes, meerkeuze-dropdown), honeypot, succes/fout; verzenden via `contact-form.ts` naar `PUBLIC_CONTACT_ENDPOINT`. |
 | `VimeoBackground.astro`| Vimeo-achtergrondvideo (cover). Laadt na window.load, fadet in bij 'play' (gedrag: `hero-video.ts`).    |
 
 ### Layout (`src/components/layout/`)
@@ -137,7 +146,7 @@ Houd dit bij bij elk nieuw component.
 | `MegaMenu.astro`   | Desktop-dropdowns (≥1280px), CSS hover/focus-within.                        |
 | `MenuPanel.astro`  | Volledig menupaneel met overlay en accordeongroepen (gedrag: `menu.ts`).     |
 | `Footer.astro`     | Footer: linkkolommen (data), contact, logo + socials, juridische links, copyright. |
-| `PageBackground.astro` | Textuur (AVIF, na window.load) + grote B-outlines achter de pagina; `shapes` instelbaar.   |
+| `PageBackground.astro` | Textuur (AVIF, na window.load) + grote B-outlines (inline SVG met masker) achter de pagina; `shapes` instelbaar. B's worden getekend bij in beeld (`draw-shapes.ts`). |
 | `WhatsAppButton.astro` | Zwevende WhatsApp-knop rechtsonder.                                           |
 | `Analytics.astro`  | GTM + CookieFirst, alleen bij `PUBLIC_ENABLE_TRACKING=true` (TODO).         |
 
@@ -148,15 +157,22 @@ Houd dit bij bij elk nieuw component.
 | `Hero.astro` | Schermvullende hero: titel + italic accentregel, eyebrow, 2 knoppen, poster-afbeelding (LCP) en optionele Vimeo-video. |
 | `LogoMarquee.astro` | Logostrip met kop tussen lijnen en eindeloze CSS-marquee van logo-tegels. |
 | `IntroHighlight.astro` | Gecentreerde Gate-introtekst met groene accenten en scroll-highlight per letter. |
-| `Timeline.astro` | Kop (titel + rich text) met genummerde stappen: foto + tekstblok met rookvideo (knop per stap optioneel), CTA; `reverse`, `gradient`. |
+| `Timeline.astro` | Kop (titel + rich text) met genummerde stappen: foto + tekstblok met rookvideo (knop per stap optioneel), CTA; `gradient`. Stappen wisselen af (oneven foto links, even rechts); `reverse` begint rechts. |
 | `Testimonials.astro` | Kop + carousel met TestimonialCards over de volle breedte, rook- en B-achtergrond. |
 | `PolaroidStack.astro` | Sticky kop + polaroids die bij scrollen over elkaar schuiven (pure CSS), gelijk aan live. |
 | `TextMedia.astro` | Tekst naast beeld (2:3) of Vimeo (1:1); `reverse`, `triangles`, `spacing` (margin/section), `intro` erboven, slot `content` voor bv. een formulier; `id="cinema"` = popcorn-cursor. |
 | `CaseSpotlight.astro` | Kop + één grote CaseCard; case op slug uit `src/data/cases.ts`. |
 | `ImageFeature.astro` | Brede foto met gecentreerde titel + intro erover (mobiel eronder); `id="cinema"` = popcorn-cursor. |
-| `ServiceTiles.astro` | Kop + tekst en staande beeldtegels (2:3) naar dienstpagina's; hover groeit, titel oranje. |
+| `ServiceTiles.astro` | Kop + tekst en staande beeldtegels (2:3) naar dienstpagina's; hover groeit, titel oranje. `variant="team"`: teamleden met rol en hover-video (`teamTiles()` uit `data/team.ts`). |
 | `Faq.astro` | Veelgestelde vragen: accordeon (h3 + button) met FAQPage-structured data. |
-| `PageSections.astro` | Geen eigen opmaak: rendert een lijst Sanity-blokken (`lib/sanity/sections.ts`) met de componenten hierboven; TextMedia + `contactForm` = met ContactForm. |
+| `RichTextSection.astro` | Smalle gecentreerde tekstkolom (rich text met koppen, lijsten, citaat, Vimeo); `align`; `standalone` (eerste sectie zonder hero, zoals de 404). Dienst-, case-, sitemap- en juridische pagina's. |
+| `FullWidthImage.astro` | 16:9-foto over de containerbreedte (casepagina's). |
+| `VideoFeature.astro` | Vimeo-video (lazy, met bediening) over de containerbreedte; `ratio`. |
+| `ContactSection.astro` | Tekst met bel/mail/WhatsApp-links naast een formulier (slot `form`); `formWidth`. Contact, offerte, trouwfilm. |
+| `MapSection.astro` | Kop + tekst en Google Maps-iframe (lazy). |
+| `CaseGrid.astro` | Casesoverzicht: filterknoppen (doelgroep, dienst) + raster CaseCards; props via `caseGridProps()` (gedrag: `case-filter.ts`). |
+| `CaseFacts.astro` | Feitenbalk op een casepagina (klant, datum, doelgroep, diensten); props via `caseFacts()` in `lib/cases.ts`. |
+| `PageSections.astro` | Geen eigen opmaak: rendert een lijst `PageSection`s (`lib/sections.ts`, uit src/data of Sanity) met de componenten hierboven; TextMedia/ContactSection + `form` = met ContactForm. |
 
 ### Scripts (`src/scripts/`)
 
@@ -173,5 +189,9 @@ Houd dit bij bij elk nieuw component.
 | `cinema-cursor.ts`     | Popcorn-cursor + spoor, alleen bij een sectie met id="cinema" en een muis.  |
 | `accordion.ts`         | Generiek accordeon: `[data-accordion-trigger]` + aria-controls, hoogte 0 ↔ auto (0,3 s). |
 | `contact-form.ts`      | Formulier via fetch versturen, knop "Verzenden...", succes- of foutmelding.  |
+| `multiselect.ts`       | Meerkeuze-dropdown in formulieren (`[data-multiselect]`, `<details>` met checkboxes): samenvatting, sluiten bij klik buiten/Escape. |
+| `case-filter.ts`       | Casesoverzicht filteren (`[data-case-grid]`) per doelgroep en dienst; `?filter=` kiest vooraf; melding bij geen resultaat. |
+| `draw-shapes.ts`       | B-outlines op de achtergrond één keer tekenen zodra ze in beeld komen (masker + stroke-dashoffset, `--duration-draw`). |
+| `hover-video.ts`       | Teamtegels: video laadt bij eerste hover en speelt, pauzeert bij verlaten (alleen muis, motion aan). |
 | `menu.ts`              | Menupaneel openen/sluiten (GSAP), overlay, Escape, focus-trap, scroll-lock zonder de scrollbalk te verbergen (wiel/touch/toetsen blokkeren), accordeon. |
 | `navbar-autohide.ts`   | Navbar verbergen/tonen op scrollrichting; blijft staan bovenaan, met open menu of bij focus erin. |

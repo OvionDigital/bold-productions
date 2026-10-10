@@ -5,6 +5,7 @@ import { vimeoVideo } from './objects/vimeoVideo';
 import { testimonial } from './documents/testimonial';
 import { clientLogo } from './documents/clientLogo';
 import { caseStudy } from './documents/caseStudy';
+import { teamMember } from './documents/teamMember';
 import { homepage } from './documents/homepage';
 import { page } from './documents/page';
 import { sectionTypes } from './sections';
@@ -18,6 +19,7 @@ export const schemaTypes = [
   testimonial,
   clientLogo,
   caseStudy,
+  teamMember,
   homepage,
   page,
 ];

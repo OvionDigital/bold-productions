@@ -1,0 +1,143 @@
+---
+/**
+ * Contactblok (Webflow .contact-section / .offerte-section): tekst met contactlinks
+ * (bellen, mailen, WhatsApp) en daarnaast het formulier (slot "form").
+ * Onder 1440px onder elkaar, gecentreerd. `formWidth: 'narrow'` = smallere formulierkolom
+ * vanaf 1920px (offerteformulier, Webflow .form-col).
+ */
+import Container from '../ui/Container.astro';
+import RichText from '../ui/RichText.astro';
+import Icon from '../ui/Icon.astro';
+import type { IconName } from '../ui/icons';
+import type { Rich } from '../../lib/rich';
+
+export interface ContactLink {
+  label: string;
+  href: string;
+}
+
+export interface ContactSectionProps {
+  id?: string;
+  content: Rich;
+  links: ContactLink[];
+  formWidth?: 'default' | 'narrow';
+}
+
+type Props = ContactSectionProps;
+
+const { id, content, links, formWidth = 'default' } = Astro.props;
+
+const iconFor = (href: string): IconName =>
+  href.startsWith('tel:') ? 'phone' : href.startsWith('mailto:') ? 'mail' : 'whatsapp-outline';
+---
+
+<section class="contact-section" id={id}>
+  <Container>
+    <div class="contact-section__row">
+      <div class="contact-section__col">
+        <RichText content={content} class="contact-section__text" />
+        <ul class="contact-section__links" role="list">
+          {
+            links.map((link) => (
+              <li>
+                <a
+                  href={link.href}
+                  class="contact-section__link"
+                  target={link.href.startsWith('http') ? '_blank' : undefined}
+                  rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                >
+                  <Icon name={iconFor(link.href)} size="var(--icon-lg)" />
+                  <span class="contact-section__link-text">{link.label}</span>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+      <div class:list={['contact-section__col', { 'contact-section__col--narrow': formWidth === 'narrow' }]}>
+        <slot name="form" />
+      </div>
+    </div>
+  </Container>
+</section>
+
+<style>
+  .contact-section {
+    position: relative;
+    z-index: var(--z-base);
+    margin-block: var(--section-space);
+  }
+
+  .contact-section__row {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    gap: var(--space-64);
+    margin-inline: var(--row-margin);
+  }
+
+  .contact-section__col {
+    width: 75%;
+    padding-inline: var(--column-gap);
+  }
+
+  .contact-section :global(.contact-section__text) {
+    margin-bottom: var(--space-24);
+  }
+
+  .contact-section__links {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* Icoon in de linkkleur (groen), tekst wit — zoals live */
+  .contact-section__link {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: var(--space-12);
+    padding-block: var(--space-8);
+    text-decoration: none;
+  }
+
+  .contact-section__link-text {
+    color: var(--color-white);
+  }
+
+  @media (min-width: 1280px) {
+    .contact-section__col {
+      width: 66.6667%;
+    }
+  }
+
+  @media (min-width: 1440px) {
+    .contact-section__row {
+      flex-direction: row;
+      justify-content: center;
+      align-items: flex-start;
+      gap: var(--space-48);
+    }
+  }
+
+  @media (min-width: 1920px) {
+    .contact-section__row {
+      justify-content: space-between;
+    }
+
+    .contact-section__col {
+      width: 50%;
+    }
+
+    .contact-section__col--narrow {
+      width: 41.6667%;
+    }
+  }
+
+  @media (max-width: 991px) {
+    .contact-section__col {
+      width: 100%;
+    }
+  }
+</style>

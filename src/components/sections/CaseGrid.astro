@@ -1,0 +1,194 @@
+---
+/**
+ * Casesoverzicht (Webflow .work-filters + .work-overview): filterknoppen per groep
+ * (doelgroep, dienst) en een raster met casekaarten (twee per rij, ≤991 één).
+ * Filteren in scripts/case-filter.ts; ?filter=<doelgroep> in de URL kiest vooraf een
+ * doelgroep (menulinks "Cases → Events" e.d.). Zonder JS staan alle cases er.
+ */
+import CaseCard from '../ui/CaseCard.astro';
+import type { Case } from '../../data/cases';
+
+export interface CaseGridFilter {
+  /** Waarop gefilterd wordt: doelgroep van de case of een van de diensten */
+  name: 'audience' | 'service';
+  label: string;
+  /** Eerste optie = alles tonen (waarde 'alle') */
+  options: { label: string; value: string }[];
+}
+
+export interface CaseGridItem {
+  item: Case;
+  /** Labels op de kaart (doelgroep + diensten) */
+  tags: string[];
+  /** Filterwaarden */
+  audiences: string[];
+  services: string[];
+}
+
+export interface CaseGridProps {
+  id?: string;
+  filters: CaseGridFilter[];
+  items: CaseGridItem[];
+  emptyText: string;
+  /** Toegankelijke naam van de filtergroep, bijv. 'Cases filteren' */
+  label: string;
+}
+
+type Props = CaseGridProps;
+
+const { id, filters, items, emptyText, label } = Astro.props;
+---
+
+<section class="case-grid" id={id} data-case-grid>
+  <div class="case-grid__filters" role="group" aria-label={label}>
+    {
+      filters.map((filter) => (
+        <div class="case-grid__filter" data-case-filter={filter.name}>
+          <p class="case-grid__filter-label">{filter.label}</p>
+          <div class="case-grid__filter-options">
+            {filter.options.map((option, i) => (
+              <button type="button" class="case-grid__pill" data-value={option.value} aria-pressed={i === 0 ? 'true' : 'false'}>
+                {option.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      ))
+    }
+  </div>
+
+  <ul class="case-grid__list" role="list">
+    {
+      items.map(({ item, tags, audiences, services }) => (
+        <li class="case-grid__item" data-audiences={audiences.join('|')} data-services={services.join('|')}>
+          <CaseCard item={item} tags={tags} sizes="(max-width: 991px) 100vw, 50vw" />
+        </li>
+      ))
+    }
+  </ul>
+  <p class="case-grid__empty" hidden data-case-empty>{emptyText}</p>
+</section>
+
+<style>
+  .case-grid {
+    position: relative;
+    z-index: var(--z-base);
+    margin-block: var(--section-space);
+  }
+
+  .case-grid__filters {
+    display: flex;
+    flex-direction: column;
+    margin: 0 var(--container-padding-wide) var(--space-48);
+  }
+
+  .case-grid__filter-label {
+    margin-bottom: var(--space-16);
+    color: var(--color-orange);
+    font-size: var(--fs-base);
+    letter-spacing: var(--ls-label);
+    line-height: var(--lh-body);
+    text-transform: uppercase;
+  }
+
+  .case-grid__filter-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-8);
+  }
+
+  .case-grid__filter + .case-grid__filter .case-grid__filter-options {
+    row-gap: var(--space-12);
+  }
+
+  /* Webflow .work-overview-tag als knop */
+  .case-grid__pill {
+    padding: var(--space-4) var(--space-12);
+    border: var(--border-width) solid var(--color-white-a10);
+    background-color: var(--color-white-a6);
+    -webkit-backdrop-filter: blur(var(--blur-md));
+    backdrop-filter: blur(var(--blur-md));
+    color: var(--color-white-a70);
+    font-size: var(--fs-base);
+    line-height: var(--lh-body);
+    transition:
+      border-color var(--duration-fast),
+      background-color var(--duration-fast),
+      color var(--duration-fast);
+  }
+
+  .case-grid__pill:hover {
+    border-color: var(--color-orange-a30);
+    background-color: var(--color-orange-light-a6);
+    color: var(--color-orange-light);
+  }
+
+  .case-grid__pill[aria-pressed='true'] {
+    border-color: var(--color-orange-a70);
+    background-color: var(--color-orange-a6);
+    color: var(--color-orange);
+  }
+
+  .case-grid__list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: var(--space-48);
+    margin: 0;
+    padding: 0 var(--container-padding-wide);
+    list-style: none;
+  }
+
+  .case-grid__item {
+    width: calc(50% - var(--space-24));
+  }
+
+  .case-grid__item[hidden] {
+    display: none;
+  }
+
+  .case-grid__empty {
+    width: 100%;
+    margin: 0;
+    padding: var(--space-64) var(--space-48);
+    color: var(--color-white-a70);
+    font-size: var(--fs-base);
+    text-align: center;
+  }
+
+  @media (min-width: 1280px) {
+    .case-grid__pill {
+      padding: var(--space-8) var(--space-20);
+    }
+  }
+
+  @media (min-width: 1920px) {
+    .case-grid__filters {
+      flex-direction: row;
+      gap: var(--space-64);
+    }
+  }
+
+  @media (max-width: 991px) {
+    .case-grid__item {
+      width: 100%;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .case-grid__list {
+      gap: var(--space-36);
+    }
+  }
+
+  @media (max-width: 479px) {
+    .case-grid__list {
+      gap: var(--space-24);
+    }
+
+    .case-grid__pill {
+      padding: var(--space-4) var(--space-12);
+    }
+  }
+</style>

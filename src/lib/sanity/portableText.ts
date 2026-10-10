@@ -2,10 +2,12 @@
  * Zet Sanity Portable Text (uit het `richText`-schema in studio/) om naar het
  * bestaande Rich-model (src/lib/rich.ts). RichText.astro en alle componenten
  * blijven zo ongewijzigd, of de tekst nu uit src/data komt of uit Sanity.
- * Ondersteunt alleen wat het schema toestaat: paragrafen, bullet-lijsten,
- * vet/cursief en links. Onbekende opmaak wordt genegeerd (geen crash op CMS-inhoud).
+ * Ondersteunt wat het schema toestaat: paragrafen, koppen (h1–h6), citaat,
+ * opsommingen (bullet, spaced, number), vet/cursief, links en Vimeo-video's.
+ * Onbekende opmaak wordt genegeerd (geen crash op CMS-inhoud).
+ * scripts/sanity-seed.ts doet de omgekeerde omzetting (richToPortableText).
  */
-import type { Inline, InlineSegment, Rich } from '../rich';
+import type { HeadingLevel, Inline, InlineSegment, Rich } from '../rich';
 
 interface PortableTextSpan {
   _type: 'span';
@@ -16,13 +18,20 @@ interface PortableTextSpan {
 interface PortableTextBlock {
   _type: 'block';
   style?: string;
-  listItem?: 'bullet';
+  listItem?: 'bullet' | 'spaced' | 'number';
   children?: PortableTextSpan[];
   markDefs?: { _key: string; _type: string; href?: string }[];
 }
 
+interface PortableTextVideo {
+  _type: 'richVideo';
+  video?: { id?: string; hash?: string; title?: string };
+  ratio?: number;
+  width?: number;
+}
+
 function spanToSegment(span: PortableTextSpan, markDefs: PortableTextBlock['markDefs']): InlineSegment {
-  // Een span met alleen '\n' staat voor { br: true } (zie scripts/sanity-seed.mjs).
+  // Een span met alleen '\n' staat voor { br: true } (zie scripts/sanity-seed.ts).
   if (span.text === '\n') return { br: true };
   const marks = span.marks ?? [];
   const linkDef = markDefs?.find((d) => d._type === 'link' && marks.includes(d._key));
@@ -33,27 +42,45 @@ function spanToSegment(span: PortableTextSpan, markDefs: PortableTextBlock['mark
 }
 
 function blockToInline(block: PortableTextBlock): Inline {
-  return (block.children ?? []).map((span) => spanToSegment(span, block.markDefs));
+  const segments = (block.children ?? []).map((span) => spanToSegment(span, block.markDefs));
+  // Lege regel in de editor = één lege span: witregel
+  return segments.length === 1 && segments[0] === '' ? [] : segments;
 }
 
 export function portableTextToRich(blocks: unknown): Rich {
   if (!Array.isArray(blocks)) return [];
-  const typed = blocks as PortableTextBlock[];
   const result: Rich = [];
-  let currentList: Inline[] | null = null;
+  let list: { kind: string; items: Inline[] } | null = null;
 
-  for (const block of typed) {
-    if (block._type !== 'block') continue;
-    if (block.listItem === 'bullet') {
-      if (!currentList) {
-        currentList = [];
-        result.push({ ul: currentList });
+  for (const raw of blocks as (PortableTextBlock | PortableTextVideo)[]) {
+    if (raw._type === 'richVideo') {
+      list = null;
+      if (raw.video?.id) {
+        result.push({
+          video: { id: raw.video.id, hash: raw.video.hash || undefined, title: raw.video.title ?? '', ratio: raw.ratio ?? 0.5625, width: raw.width ?? undefined },
+        });
       }
-      currentList.push(blockToInline(block));
-    } else {
-      currentList = null;
-      result.push({ p: blockToInline(block) });
+      continue;
     }
+    if (raw._type !== 'block') continue;
+    const block = raw;
+
+    if (block.listItem) {
+      if (!list || list.kind !== block.listItem) {
+        list = { kind: block.listItem, items: [] };
+        if (block.listItem === 'number') result.push({ ol: list.items });
+        else if (block.listItem === 'spaced') result.push({ ul: list.items, spaced: true });
+        else result.push({ ul: list.items });
+      }
+      list.items.push(blockToInline(block));
+      continue;
+    }
+    list = null;
+
+    const heading = block.style?.match(/^h([1-6])$/);
+    if (heading) result.push({ h: blockToInline(block), level: Number(heading[1]) as HeadingLevel });
+    else if (block.style === 'blockquote') result.push({ quote: blockToInline(block) });
+    else result.push({ p: blockToInline(block) });
   }
   return result;
 }

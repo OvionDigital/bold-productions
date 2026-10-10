@@ -19,7 +19,19 @@ const { segments } = Astro.props;
     ) : 'br' in s ? (
       <br />
     ) : s.href ? (
-      <a href={s.href}>{s.text}</a>
+      <a href={s.href}>
+        {s.strong && s.em ? (
+          <strong>
+            <em>{s.text}</em>
+          </strong>
+        ) : s.strong ? (
+          <strong>{s.text}</strong>
+        ) : s.em ? (
+          <em>{s.text}</em>
+        ) : (
+          s.text
+        )}
+      </a>
     ) : s.strong && s.em ? (
       <strong>
         <em>{s.text}</em>
