@@ -2,11 +2,13 @@
  * Navigatie per deel van de site (sitemap oktober 2026):
  * - Events (/events/…): doelgroepen Organisatoren, Artiesten, Zakelijke events.
  * - Business (/business/…): doelgroepen Fundament, Campagnes, Content, Fotografie.
- * - Neutraal (homepage, juridische pagina's, sitemap, 404, landingspagina's): Events en Business.
+ * - Neutraal (homepage, juridische pagina's, sitemap, 404, landingspagina's): geen menu, alleen
+ *   knoppen Bold Events en Bold Business (op de homepage pas zichtbaar na de split-hero).
  * Doelgroepen en diensten komen uit data/taxonomy.ts (één lijst per doelgroep), zodat menu,
  * menupaneel, footer en CMS altijd hetzelfde tonen. BaseLayout kiest de set op het pad.
  */
 import { audiences, audienceUrl, services, serviceUrl, type Category } from './taxonomy';
+import type { Accent } from '../components/ui/Button.astro';
 
 export interface NavLink {
   label: string;
@@ -24,12 +26,21 @@ export interface NavGroup extends NavLink {
 
 export type SiteSection = Category | 'neutral';
 
+/** Knop in de navbar; `shortLabel` op schermen ≤479px (past naast het logo) */
+export interface NavButton extends NavLink {
+  accent: Accent;
+  shortLabel?: string;
+}
+
 export interface SiteNavigation {
   /** Waar het logo naartoe linkt */
   home: string;
+  /** Leeg = geen megamenu en geen menuknop/-paneel (neutraal) */
   nav: NavGroup[];
   /** Knop rechtsboven en bovenaan het menupaneel; neutraal geen */
   cta?: NavLink;
+  /** Knoppen rechtsboven i.p.v. een menu (neutraal: de keuze Events/Business) */
+  buttons?: NavButton[];
   footer: NavGroup[];
 }
 
@@ -123,9 +134,11 @@ export const navigation: Record<SiteSection, SiteNavigation> = {
   },
   neutral: {
     home: '/',
-    nav: [
-      { label: 'Events', href: '/events', inHeader: true, children: [] },
-      { label: 'Business', href: '/business', inHeader: true, children: [] },
+    // Geen menu: alleen de keuze tussen de twee delen (kleuren als in de split-hero)
+    nav: [],
+    buttons: [
+      { label: 'Bold Events', shortLabel: 'Events', href: '/events', accent: 'green' },
+      { label: 'Bold Business', shortLabel: 'Business', href: '/business', accent: 'yellow' },
     ],
     footer: [
       {

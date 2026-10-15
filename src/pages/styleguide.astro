@@ -534,6 +534,25 @@ const nav = [
 
     <Container>
       <p class="sg-note sg-note--spaced">
+        Neutrale pagina's (juridisch, sitemap, 404, landingspagina's, homepage): geen menu, alleen de knoppen
+        <code>buttons</code> (Bold Events / Bold Business). Op de homepage met <code>revealAfter="[data-split-hero]"</code>:
+        de balk verschijnt pas na de split-hero.
+      </p>
+    </Container>
+    <div class="sg-frame">
+      <Header
+        nav={navigation.neutral.nav}
+        buttons={navigation.neutral.buttons}
+        home={navigation.neutral.home}
+        menuLabel={header.menuLabel}
+        logoAlt={header.logoAlt}
+        homeTitle={header.homeTitle}
+        currentPath="/algemene-voorwaarden"
+      />
+    </div>
+
+    <Container>
+      <p class="sg-note sg-note--spaced">
         <code>&lt;Breadcrumbs items homeLabel label /&gt;</code>: kruimelpad onder de hero; laatste item = huidige pagina.
       </p>
     </Container>

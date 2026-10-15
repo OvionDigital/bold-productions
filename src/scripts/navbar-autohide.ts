@@ -3,16 +3,25 @@
  * Blijft zichtbaar: bovenaan de pagina (binnen de eigen hoogte), met het menupaneel
  * open, of bij toetsenbordfocus in de navbar (CSS :focus-within).
  * Uit bij ?static=1 en prefers-reduced-motion: de navbar blijft dan gewoon vast staan.
+ *
+ * data-reveal-after="<selector>" (homepage: de split-hero): de navbar is verborgen tot dat
+ * element voorbij is (CSS: .navbar[data-reveal-after]:not(.is-revealed)). Dit deel werkt
+ * altijd, ook zonder beweging; daarna geldt het gewone verbergen/tonen.
  */
 import { motionEnabled } from './env';
 
 export function initNavbarAutoHide(): void {
   const navbar = document.querySelector<HTMLElement>('[data-navbar]');
-  if (!navbar || !motionEnabled) return;
+  if (!navbar) return;
 
   // Beveiliging tegen dubbele init (dev-server hot-reload), zie menu.ts.
   if (navbar.dataset.autohideInitialized) return;
   navbar.dataset.autohideInitialized = 'true';
+
+  const revealSelector = navbar.dataset.revealAfter;
+  const revealTarget = revealSelector ? document.querySelector<HTMLElement>(revealSelector) : null;
+  /** Voorbij het reveal-element (of er is er geen) */
+  const revealed = () => !revealTarget || revealTarget.getBoundingClientRect().bottom <= navbar.offsetHeight;
 
   const threshold = navbar.offsetHeight;
   // Kleine scrollverschillen (bijv. een resync-schokje van Lenis vlak na het
@@ -26,8 +35,19 @@ export function initNavbarAutoHide(): void {
   const update = () => {
     ticking = false;
     const y = Math.max(0, window.scrollY);
-    const menuOpen = document.documentElement.classList.contains('is-menu-open');
 
+    if (revealTarget) {
+      const isRevealed = revealed();
+      navbar.classList.toggle('is-revealed', isRevealed);
+      if (!isRevealed) {
+        navbar.classList.remove('is-hidden');
+        lastY = y;
+        return;
+      }
+    }
+    if (!motionEnabled) return;
+
+    const menuOpen = document.documentElement.classList.contains('is-menu-open');
     if (menuOpen || y <= threshold) {
       navbar.classList.remove('is-hidden');
       lastY = y; // altijd resyncen zodat we na sluiten vanaf de juiste positie meten
@@ -45,6 +65,8 @@ export function initNavbarAutoHide(): void {
     // Binnen de dead zone: niets doen, ook lastY niet bijwerken.
   };
 
+  if (!motionEnabled && !revealTarget) return;
+  update();
   window.addEventListener(
     'scroll',
     () => {

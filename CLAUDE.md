@@ -75,7 +75,7 @@ h1's, alt-teksten en alle structured data zijn gelijk. Opbouw:
 - Regeleinden in titels: `\n` in de data. `Heading` zet dat om naar `<br>`.
 - **Gedeelde inhoud** staat in eigen databestanden en wordt op id gekozen: `src/data/testimonials.ts` (`pickTestimonials`), `src/data/logos.ts`, `src/data/cases.ts`. Nooit kopiëren per pagina.
 - **Indeling** (`src/data/taxonomy.ts`): Events óf Business → één doelgroep → diensten per doelgroep (één lijst per doelgroep, met URL-slug). Bron voor menu, menupaneel, footer, casesfilter en het CMS (cases en testimonials: soort + doelgroep + diensten; klantlogo's: soort + doelgroep). Studio-velden in `studio/schemaTypes/taxonomy.ts`, omzetting in `src/lib/sanity/taxonomy.ts` (houd de drie gelijk).
-- **Drie delen van de site**, elk met eigen menu, CTA en footer (`navigation[sectionOf(pad)]` in `data/navigation.ts`, gekozen door `BaseLayout`): `events` (/events…), `business` (/business…) en `neutral` (homepage, juridische pagina's, sitemap, 404, landingspagina's; menu Events/Business, geen CTA). Het logo linkt naar de homepage van dat deel.
+- **Drie delen van de site**, elk met eigen menu, CTA en footer (`navigation[sectionOf(pad)]` in `data/navigation.ts`, gekozen door `BaseLayout`): `events` (/events…), `business` (/business…) en `neutral` (homepage, juridische pagina's, sitemap, 404, landingspagina's; geen menu, alleen knoppen Bold Events/Bold Business; op de homepage pas na de split-hero). Het logo linkt naar de homepage van dat deel.
 - Opgemaakte tekst in data: het model uit `src/lib/rich.ts` (geen HTML-strings), renderen met `RichText`.
 - Fonts: Gate 400 normal/italic (Webflow-300 → 400), Inter variabel 300–700 (Webflow-400/600/800 → 300/500/700). Gebruik `--fw-light|medium|bold|display`.
 
@@ -163,7 +163,7 @@ Houd dit bij bij elk nieuw component.
 
 | Component          | Uitleg                                                                      |
 | ------------------ | --------------------------------------------------------------------------- |
-| `Header.astro`     | Vaste navigatiebalk: logo (`home`), MegaMenu, CTA (optioneel) en menuknop (+ MenuPanel); menu per deel van de site (`navigation.ts`). Verbergt bij scrollen omlaag, verschijnt bij scrollen omhoog (gedrag: `navbar-autohide.ts`). |
+| `Header.astro`     | Vaste navigatiebalk: logo (`home`), MegaMenu, CTA (optioneel) en menuknop (+ MenuPanel); menu per deel van de site (`navigation.ts`). Leeg `nav` + `buttons` = neutraal: alleen de knoppen Bold Events/Bold Business (≤479 korte labels), geen menu. `revealAfter`: verborgen tot dat element voorbij is (homepage: split-hero). Verbergt bij scrollen omlaag, verschijnt bij scrollen omhoog (gedrag: `navbar-autohide.ts`). |
 | `Breadcrumbs.astro` | Kruimelpad onder de hero (home-icoon, stappen, huidige pagina).          |
 | `MegaMenu.astro`   | Desktop-dropdowns (≥1280px), CSS hover/focus-within; groep zonder kinderen = gewone link. |
 | `MenuPanel.astro`  | Volledig menupaneel met overlay en accordeongroepen (gedrag: `menu.ts`); groep zonder kinderen = losse link. |
@@ -220,4 +220,4 @@ Houd dit bij bij elk nieuw component.
 | `vimeo-facade.ts`       | Vimeo-gevel: bij klik de thumbnail vervangen door de speler (autoplay) en focus erop. |
 | `hover-video.ts`       | Teamtegels: video laadt bij eerste hover en speelt, pauzeert bij verlaten (alleen muis, motion aan). |
 | `menu.ts`              | Menupaneel openen/sluiten (GSAP), overlay, Escape, focus-trap, scroll-lock zonder de scrollbalk te verbergen (wiel/touch/toetsen blokkeren), accordeon. |
-| `navbar-autohide.ts`   | Navbar verbergen/tonen op scrollrichting; blijft staan bovenaan, met open menu of bij focus erin. |
+| `navbar-autohide.ts`   | Navbar verbergen/tonen op scrollrichting; blijft staan bovenaan, met open menu of bij focus erin. `data-reveal-after`: verborgen tot dat element voorbij is (ook zonder beweging). |

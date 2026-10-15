@@ -27,6 +27,8 @@ interface Props {
   noindex?: boolean;
   /** Header, footer en WhatsApp-knop tonen (uit voor bijv. de styleguide) */
   chrome?: boolean;
+  /** CSS-selector: navbar pas tonen als dit element voorbij is (homepage: '[data-split-hero]') */
+  headerRevealAfter?: string;
   /** Voor preloads van het LCP-beeld per pagina */
   preloadImage?: { src: string; srcset?: string; sizes?: string; type?: string };
   /** Structured data (src/lib/structured-data.ts); niet op noindex-pagina's */
@@ -45,6 +47,7 @@ const {
   accent = 'orange',
   noindex = false,
   chrome = true,
+  headerRevealAfter,
   preloadImage,
   structuredData,
 } = Astro.props;
@@ -135,6 +138,8 @@ const jsonLdHtml = jsonLd ? JSON.stringify(jsonLd).replaceAll('<', String.fromCh
           nav={siteNav.nav}
           cta={siteNav.cta}
           home={siteNav.home}
+          buttons={siteNav.buttons}
+          revealAfter={headerRevealAfter}
           menuLabel={header.menuLabel}
           logoAlt={header.logoAlt}
           homeTitle={header.homeTitle}

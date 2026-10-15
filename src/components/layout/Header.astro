@@ -5,12 +5,14 @@
  * Verbergt bij scrollen naar beneden, verschijnt weer bij scrollen naar boven
  * (scripts/navbar-autohide.ts). Blijft staan bovenaan de pagina, met open menu,
  * of bij focus erin (toetsenbord); uit bij ?static=1 en reduced motion.
+ * Neutrale pagina's: geen menu, alleen `buttons` (Bold Events / Bold Business). `revealAfter`:
+ * verborgen tot dat element voorbij is (homepage: de split-hero heeft zelf het logo en de keuze).
  */
 import { Picture } from 'astro:assets';
 import Button from '../ui/Button.astro';
 import MegaMenu from './MegaMenu.astro';
 import MenuPanel from './MenuPanel.astro';
-import type { NavGroup, NavLink } from '../../data/navigation';
+import type { NavButton, NavGroup, NavLink } from '../../data/navigation';
 import logo from '../../assets/brand/bold-productions-logo.png';
 
 interface Props {
@@ -19,17 +21,22 @@ interface Props {
   cta?: NavLink;
   /** Waar het logo naartoe linkt (homepage van dit deel van de site) */
   home?: string;
+  /** Knoppen i.p.v. een menu (neutrale pagina's); met een leeg `nav` geen megamenu en geen menuknop */
+  buttons?: NavButton[];
+  /** CSS-selector: navbar pas tonen als dit element voorbij is (homepage: de split-hero) */
+  revealAfter?: string;
   menuLabel: string;
   logoAlt: string;
   homeTitle: string;
   currentPath: string;
 }
 
-const { nav, cta, home = '/', menuLabel, logoAlt, homeTitle, currentPath } = Astro.props;
+const { nav, cta, home = '/', buttons = [], revealAfter, menuLabel, logoAlt, homeTitle, currentPath } = Astro.props;
+const hasMenu = nav.length > 0;
 const isHome = currentPath === home;
 ---
 
-<header class="navbar" data-navbar>
+<header class="navbar" data-navbar data-reveal-after={revealAfter}>
   <div class="navbar__inner">
     <div class="navbar__brand">
       <a href={home} title={homeTitle} aria-current={isHome ? 'page' : undefined} class="navbar__logo">
@@ -45,23 +52,37 @@ const isHome = currentPath === home;
       </a>
     </div>
 
-    <MegaMenu groups={nav.filter((group) => group.inHeader)} currentPath={currentPath} />
+    {hasMenu && <MegaMenu groups={nav.filter((group) => group.inHeader)} currentPath={currentPath} />}
 
     <div class="navbar__actions">
       {cta && <Button label={cta.label} href={cta.href} size="small" class="navbar__cta" />}
-      <div class="navbar__menu">
-        <Button
-          label={menuLabel}
-          variant="ghost"
-          size="compact"
-          icon="menu"
-          iconExpanded="close"
-          iconOnlyOnMobile
-          class="navbar__toggle"
-          attrs={{ 'aria-expanded': 'false', 'aria-controls': 'menu-panel', 'data-menu-toggle': '' }}
-        />
-        <MenuPanel id="menu-panel" groups={nav} cta={cta} currentPath={currentPath} />
-      </div>
+      {
+        buttons.map((button) => (
+          <a href={button.href} class="navbar__choice-link" data-accent={button.accent}>
+            <Button label={button.label} as="span" variant="outline" accent={button.accent} size="small" icon={null} class="navbar__choice navbar__choice--full" />
+            {button.shortLabel && (
+              <Button label={button.shortLabel} as="span" variant="outline" accent={button.accent} size="small" icon={null} class="navbar__choice navbar__choice--short" />
+            )}
+          </a>
+        ))
+      }
+      {
+        hasMenu && (
+          <div class="navbar__menu">
+            <Button
+              label={menuLabel}
+              variant="ghost"
+              size="compact"
+              icon="menu"
+              iconExpanded="close"
+              iconOnlyOnMobile
+              class="navbar__toggle"
+              attrs={{ 'aria-expanded': 'false', 'aria-controls': 'menu-panel', 'data-menu-toggle': '' }}
+            />
+            <MenuPanel id="menu-panel" groups={nav} cta={cta} currentPath={currentPath} />
+          </div>
+        )
+      }
     </div>
   </div>
 </header>
@@ -80,6 +101,12 @@ const isHome = currentPath === home;
   }
 
   .navbar.is-hidden {
+    transform: translateY(-100%);
+  }
+
+  /* Homepage: verborgen tot de split-hero voorbij is (scripts/navbar-autohide.ts). Alleen met
+     JS (klasse .js vóór de eerste paint), zodat de navbar zonder JS gewoon zichtbaar blijft. */
+  :global(.js) .navbar[data-reveal-after]:not(.is-revealed):not(:has(:focus-visible)) {
     transform: translateY(-100%);
   }
 
@@ -128,6 +155,16 @@ const isHome = currentPath === home;
     z-index: var(--z-menu-controls);
   }
 
+  /* Neutraal: keuzeknoppen als link (Button als vorm) */
+  .navbar__choice-link {
+    display: inline-flex;
+    text-decoration: none;
+  }
+
+  .navbar__choice-link :global(.navbar__choice--short) {
+    display: none;
+  }
+
   .navbar__menu {
     position: relative;
   }
@@ -153,6 +190,20 @@ const isHome = currentPath === home;
   @media (max-width: 479px) {
     .navbar__actions :global(.navbar__cta) {
       display: none;
+    }
+
+    .navbar__actions:has(.navbar__choice-link) {
+      gap: var(--space-8);
+    }
+
+    /* Korte labels (Events / Business) passen naast het logo */
+    .navbar__choice-link:has(:global(.navbar__choice--short)) :global(.navbar__choice--full) {
+      display: none;
+    }
+
+    .navbar__choice-link :global(.navbar__choice--short) {
+      display: inline-flex;
+      padding-inline: var(--space-12);
     }
   }
 </style>
