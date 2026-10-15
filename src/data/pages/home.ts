@@ -6,7 +6,7 @@
 import type { PageData } from '../../lib/sections';
 import { teamTiles } from '../team';
 import { contact } from '../navigation';
-import splitEvents from '../../assets/images/home/split-events.jpg';
+import splitEvents from '../../assets/images/events/hero-hrieps-festival.jpg';
 import splitBusiness from '../../assets/images/cases/mikexdeliveformule-finis-100-jaar-4.jpg';
 
 export const page: PageData = {

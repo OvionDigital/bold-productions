@@ -1,6 +1,7 @@
 /**
  * Bold Business (/business/…). De inhoud volgt nog; tot die tijd:
- * - /business, de vier doelgroepen en hun diensten (data/taxonomy.ts): placeholder
+ * - /business: business-home.ts (Webflow /business).
+ * - De vier doelgroepen en hun diensten (data/taxonomy.ts): placeholder
  *   (hero + korte tekst), noindex en dus buiten sitemap.xml. Menu en footer linken er al naar.
  * - Cases, Over Bold, Mike, Contact en Offerte aanvragen: dezelfde inhoud als onder /events,
  *   met links naar de Business-versies. /business/cases toont alleen Business-cases (nog geen:
@@ -9,6 +10,7 @@
 import type { PageData, PageSection } from '../../lib/sections';
 import { audiences, services, type Audience } from '../taxonomy';
 import { cases, caseGridProps } from '../cases';
+import { page as businessHome } from './business-home';
 import { page as eventsCases } from './events/cases';
 import { page as eventsOver } from './events/over-bold';
 import { page as eventsMike } from './events/over-bold/mike';
@@ -55,7 +57,7 @@ const copy = (page: PageData, slug: string, sections: PageSection[] = page.secti
 const businessCases = cases.filter((item) => item.category === 'business');
 
 export const businessPages: PageData[] = [
-  placeholder('business', 'Bold Business', 'Content voor bedrijven die bold in plaats van boring (willen) zijn.'),
+  businessHome,
   ...audiences.business.flatMap((audience) => [
     placeholder(`business/${audience.value}`, audience.title, 'Bold Business'),
     ...services[audience.value as Audience].map((service) =>
