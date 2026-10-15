@@ -1,5 +1,25 @@
 # Cloudflare Pages redirects — https://developers.cloudflare.com/pages/configuration/redirects/
-# Oude Webflow-paden die live (weareboldproductions.com) met een 301 doorsturen.
+# Redirects gaan vóór bestanden: nooit een regel op een pad dat nu een pagina is.
 # TODO(livegang): volledige lijst overnemen uit Webflow → Site settings → Publishing → 301 redirects.
-/dienstenpagina/zakelijke-events-fotografie /zakelijke-events/fotografie 301
-/dienstenpagina/zakelijke-events-aftermovie /zakelijke-events/aftermovie 301
+
+# Oude Webflow-paden (direct naar de nieuwe plek, geen ketens)
+/dienstenpagina/zakelijke-events-fotografie /events/zakelijke-events/fotografie 301
+/dienstenpagina/zakelijke-events-aftermovie /events/zakelijke-events/aftermovie 301
+
+# Herstructurering oktober 2026 (src/lib/url-migration.ts): alles onder /events,
+# Events heet Organisatoren. /events zelf is nu de Events-homepage (geen redirect).
+/events/promovideos /events/organisatoren/promovideos 301
+/events/eventvideos /events/organisatoren/eventvideos 301
+/events/aftermovie /events/organisatoren/aftermovie 301
+/events/social-content /events/organisatoren/social-content 301
+/events/fotografie /events/organisatoren/fotografie 301
+/artiesten /events/artiesten 301
+/artiesten/* /events/artiesten/:splat 301
+/zakelijke-events /events/zakelijke-events 301
+/zakelijke-events/* /events/zakelijke-events/:splat 301
+/cases /events/cases 301
+/cases/* /events/cases/:splat 301
+/over /events/over-bold 301
+/over/* /events/over-bold/:splat 301
+/contact /events/contact 301
+/offerte-aanvragen /events/offerte-aanvragen 301

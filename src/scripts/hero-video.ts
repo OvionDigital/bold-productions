@@ -10,7 +10,8 @@ import { motionEnabled } from './env';
 const VIMEO_ORIGIN = 'https://player.vimeo.com';
 
 export function initHeroVideo(): void {
-  const wrappers = [...document.querySelectorAll<HTMLElement>('[data-vimeo-bg]')];
+  // Hover-video's (split-hero) regelt split-hero.ts
+  const wrappers = [...document.querySelectorAll<HTMLElement>('[data-vimeo-bg]:not([data-play-on-hover])')];
   if (!wrappers.length || !motionEnabled) return;
 
   const isMobile = window.matchMedia('(max-width: 767px)').matches;

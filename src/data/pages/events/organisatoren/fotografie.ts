@@ -2,18 +2,18 @@
  * /events/fotografie — teksten letterlijk van www.weareboldproductions.com/events/fotografie.
  * Gegenereerd uit de live pagina; daarna vrij te bewerken (of in Sanity).
  */
-import type { PageData } from '../../../lib/sections';
-import { trustedByTitle, clientLogos } from '../../../data/logos';
-import { testimonialCarousel, pickTestimonials } from '../../../data/testimonials';
-import boldProductions98 from '../../../assets/images/contact/bold-productions-98.jpg';
-import doorgedraaid17Jpg from '../../../assets/images/events/fotografie/doorgedraaid-17-jpg.jpg';
-import boldProductions7 from '../../../assets/images/events/fotografie/bold-productions-7.jpg';
-import boldProductions128 from '../../../assets/images/events/fotografie/bold-productions-128.jpg';
-import dienstEventvideos from '../../../assets/images/events/dienst-eventvideos.avif';
-import mikeAftermovie from '../../../assets/images/events/mike-aftermovie.jpg';
+import type { PageData } from '../../../../lib/sections';
+import { trustedByTitle, clientLogos } from '../../../logos';
+import { testimonialCarousel, pickTestimonials } from '../../../testimonials';
+import boldProductions98 from '../../../../assets/images/contact/bold-productions-98.jpg';
+import doorgedraaid17Jpg from '../../../../assets/images/events/fotografie/doorgedraaid-17-jpg.jpg';
+import boldProductions7 from '../../../../assets/images/events/fotografie/bold-productions-7.jpg';
+import boldProductions128 from '../../../../assets/images/events/fotografie/bold-productions-128.jpg';
+import dienstEventvideos from '../../../../assets/images/events/dienst-eventvideos.avif';
+import mikeAftermovie from '../../../../assets/images/events/mike-aftermovie.jpg';
 
 export const page: PageData = {
-  slug: 'events/fotografie',
+  slug: 'events/organisatoren/fotografie',
   title: 'Fotografie',
   meta: {
     schema: {
@@ -272,7 +272,7 @@ export const page: PageData = {
         ],
         cta: {
           label: 'Plan een gesprek',
-          href: '/offerte-aanvragen',
+          href: '/events/offerte-aanvragen',
           accent: 'yellow',
         },
       },

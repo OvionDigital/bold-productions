@@ -2,18 +2,18 @@
  * /artiesten/recap — teksten letterlijk van www.weareboldproductions.com/artiesten/recap.
  * Gegenereerd uit de live pagina; daarna vrij te bewerken (of in Sanity).
  */
-import type { PageData } from '../../../lib/sections';
-import { trustedByTitle, artistLogos } from '../../../data/logos';
-import { testimonialCarousel, pickTestimonials } from '../../../data/testimonials';
-import heroFestivalOptreden from '../../../assets/images/home/hero-festival-optreden.jpg';
-import mikeDoorgedraaidLogo1216 from '../../../assets/images/artiesten/recap/mike-doorgedraaid-logo-1-216.jpg';
-import mikeDoorgedraaidLogo1230 from '../../../assets/images/artiesten/mike-doorgedraaid-logo-1-230.jpg';
-import boldProductions79 from '../../../assets/images/artiesten/recap/bold-productions-79.jpg';
-import boldProductions106 from '../../../assets/images/artiesten/recap/bold-productions-106.jpg';
-import mikeAftermovie from '../../../assets/images/events/mike-aftermovie.jpg';
+import type { PageData } from '../../../../lib/sections';
+import { trustedByTitle, artistLogos } from '../../../logos';
+import { testimonialCarousel, pickTestimonials } from '../../../testimonials';
+import heroFestivalOptreden from '../../../../assets/images/home/hero-festival-optreden.jpg';
+import mikeDoorgedraaidLogo1216 from '../../../../assets/images/artiesten/recap/mike-doorgedraaid-logo-1-216.jpg';
+import mikeDoorgedraaidLogo1230 from '../../../../assets/images/artiesten/mike-doorgedraaid-logo-1-230.jpg';
+import boldProductions79 from '../../../../assets/images/artiesten/recap/bold-productions-79.jpg';
+import boldProductions106 from '../../../../assets/images/artiesten/recap/bold-productions-106.jpg';
+import mikeAftermovie from '../../../../assets/images/events/mike-aftermovie.jpg';
 
 export const page: PageData = {
-  slug: 'artiesten/recap',
+  slug: 'events/artiesten/recap',
   title: 'Recap',
   meta: {
     schema: { type: 'service', serviceType: 'Artist Recap Productie' },
@@ -234,7 +234,7 @@ export const page: PageData = {
         ],
         cta: {
           label: 'Bel Bold',
-          href: '/offerte-aanvragen',
+          href: '/events/offerte-aanvragen',
           accent: 'yellow',
         },
       },

@@ -1,7 +1,12 @@
 /**
- * Navigatie: hoofdmenu (header + menupaneel) en footer.
- * Teksten en URL's letterlijk van www.weareboldproductions.com.
+ * Navigatie per deel van de site (sitemap oktober 2026):
+ * - Events (/events/…): doelgroepen Organisatoren, Artiesten, Zakelijke events.
+ * - Business (/business/…): doelgroepen Fundament, Campagnes, Content, Fotografie.
+ * - Neutraal (homepage, juridische pagina's, sitemap, 404, landingspagina's): Events en Business.
+ * Doelgroepen en diensten komen uit data/taxonomy.ts (één lijst per doelgroep), zodat menu,
+ * menupaneel, footer en CMS altijd hetzelfde tonen. BaseLayout kiest de set op het pad.
  */
+import { audiences, audienceUrl, services, serviceUrl, type Category } from './taxonomy';
 
 export interface NavLink {
   label: string;
@@ -11,12 +16,29 @@ export interface NavLink {
 }
 
 export interface NavGroup extends NavLink {
+  /** Leeg = losse link (menupaneel zonder uitklapper, header zonder dropdown) */
   children: NavLink[];
   /** Toon in de header-dropdowns (desktop ≥1280px). Anders alleen in het menupaneel. */
   inHeader?: boolean;
 }
 
-export const cta: NavLink = { label: 'Bold to Action', href: '/offerte-aanvragen' };
+export type SiteSection = Category | 'neutral';
+
+export interface SiteNavigation {
+  /** Waar het logo naartoe linkt */
+  home: string;
+  nav: NavGroup[];
+  /** Knop rechtsboven en bovenaan het menupaneel; neutraal geen */
+  cta?: NavLink;
+  footer: NavGroup[];
+}
+
+/** /events en alles eronder = events, idem business; de rest neutraal */
+export function sectionOf(path: string): SiteSection {
+  if (path === '/events' || path.startsWith('/events/')) return 'events';
+  if (path === '/business' || path.startsWith('/business/')) return 'business';
+  return 'neutral';
+}
 
 /** Link voor toetsenbordgebruikers die het menu overslaat (eerste Tab op de pagina) */
 export const skipLinkLabel = 'Naar de inhoud';
@@ -32,107 +54,93 @@ export const header = {
   homeTitle: 'Naar home',
 };
 
-export const mainNav: NavGroup[] = [
-  {
-    label: 'Events',
-    href: '/events',
-    inHeader: true,
-    children: [
-      { label: "Promovideo's", href: '/events/promovideos' },
-      { label: "Eventvideo's", href: '/events/eventvideos' },
-      { label: 'Aftermovie', href: '/events/aftermovie' },
-      { label: 'Social content', href: '/events/social-content' },
-      { label: 'Fotografie', href: '/events/fotografie' },
-    ],
-  },
-  {
-    label: 'Artiesten',
-    href: '/artiesten',
-    inHeader: true,
-    children: [
-      { label: 'Bandpromo', href: '/artiesten/bandpromo' },
-      { label: 'Artiestenpromo', href: '/artiesten/artiestenpromo' },
-      { label: 'Recap', href: '/artiesten/recap' },
-      { label: 'Social content', href: '/artiesten/social-content' },
-      { label: 'Fotografie', href: '/artiesten/fotografie' },
-    ],
-  },
-  {
-    label: 'Zakelijke events',
-    href: '/zakelijke-events',
-    inHeader: true,
-    children: [
-      { label: "Promovideo's", href: '/zakelijke-events/promovideo' },
-      { label: 'Aftermovie', href: '/zakelijke-events/aftermovie' },
-      { label: 'Fotografie', href: '/zakelijke-events/fotografie' },
-      { label: 'Casevideo', href: '/zakelijke-events/casevideo' },
-    ],
-  },
-  {
-    label: 'Cases',
-    href: '/cases',
-    children: [
-      { label: 'Events', href: '/cases?filter=events' },
-      { label: 'Artiesten', href: '/cases?filter=artiesten' },
-      { label: 'Zakelijke events', href: '/cases?filter=zakelijke-events' },
-    ],
-  },
-  {
-    label: 'Over Bold',
-    href: '/over',
-    children: [{ label: 'Mike Ampting', href: '/over/mike' }],
-  },
-  {
-    label: 'Contact',
-    href: '/contact',
-    children: [{ label: 'Offerte Aanvragen', href: '/offerte-aanvragen' }],
-  },
-];
+/** Doelgroep met al haar diensten (menu en footer) */
+const audienceGroup = (category: Category, audience: (typeof audiences)[Category][number], label = audience.title): NavGroup => ({
+  label,
+  href: audienceUrl(category, audience.value),
+  inHeader: true,
+  children: services[audience.value].map((service) => ({ label: service.title, href: serviceUrl(category, audience.value, service) })),
+});
 
-export const footerColumns: NavGroup[] = [
-  {
-    label: 'Voor events',
-    href: '/events',
-    children: [
-      { label: "Promovideo's", href: '/events/promovideos' },
-      { label: "Eventvideo's", href: '/events/eventvideos' },
-      { label: 'Aftermovie', href: '/events/aftermovie' },
-      { label: 'Social content', href: '/events/social-content' },
-      { label: 'Fotografie', href: '/events/fotografie' },
+/** Cases, Over Bold, Contact en Offerte aanvragen: in beide delen, eigen pad */
+function generalGroups(category: Category): NavGroup[] {
+  return [
+    {
+      label: 'Cases',
+      href: `/${category}/cases`,
+      children: audiences[category].map((a) => ({ label: a.title, href: `/${category}/cases?filter=${a.value}` })),
+    },
+    { label: 'Over Bold', href: `/${category}/over-bold`, children: [{ label: 'Mike Ampting', href: `/${category}/over-bold/mike` }] },
+    { label: 'Contact', href: `/${category}/contact`, children: [] },
+    { label: 'Offerte aanvragen', href: `/${category}/offerte-aanvragen`, children: [] },
+  ];
+}
+
+/** Footerkolom "Bold Productions" */
+const boldProductionsColumn = (category: Category): NavGroup => ({
+  label: 'Bold Productions',
+  href: `/${category}/over-bold`,
+  children: [
+    { label: 'Cases', href: `/${category}/cases` },
+    { label: 'Over Mike', href: `/${category}/over-bold/mike` },
+    { label: 'Contact', href: `/${category}/contact` },
+    { label: 'Offerte aanvragen', href: `/${category}/offerte-aanvragen`, bold: true },
+  ],
+});
+
+const ctaFor = (category: Category): NavLink => ({ label: 'Bold to Action', href: `/${category}/offerte-aanvragen` });
+
+/** Footerkoppen van Events (zoals live, "events" = organisatoren) */
+const eventsFooterLabels: Record<string, string> = {
+  organisatoren: 'Voor organisatoren',
+  artiesten: 'Voor artiesten',
+  'zakelijke-events': 'Voor zakelijke events',
+};
+
+const contentGroup = audiences.business.find((a) => a.value === 'content')!;
+const aiService = services.content.find((s) => s.slug === 'ai')!;
+
+export const navigation: Record<SiteSection, SiteNavigation> = {
+  events: {
+    home: '/events',
+    cta: ctaFor('events'),
+    nav: [...audiences.events.map((a) => audienceGroup('events', a)), ...generalGroups('events')],
+    footer: [
+      ...audiences.events.map((a) => ({ ...audienceGroup('events', a, eventsFooterLabels[a.value]), inHeader: undefined })),
+      boldProductionsColumn('events'),
     ],
   },
-  {
-    label: 'Voor artiesten',
-    href: '/artiesten',
-    children: [
-      { label: 'Bandpromo', href: '/artiesten/bandpromo' },
-      { label: 'Artiestenpromo', href: '/artiesten/artiestenpromo' },
-      { label: 'Recap', href: '/artiesten/recap' },
-      { label: 'Social content', href: '/artiesten/social-content' },
-      { label: 'Fotografie', href: '/artiesten/fotografie' },
+  business: {
+    home: '/business',
+    cta: ctaFor('business'),
+    nav: [
+      ...audiences.business.map((a) => audienceGroup('business', a)),
+      // Losse ingang in het menupaneel (sitemap), dezelfde pagina als Content › AI
+      { label: aiService.title, href: serviceUrl('business', contentGroup.value, aiService), children: [] },
+      ...generalGroups('business'),
+    ],
+    footer: [...audiences.business.map((a) => ({ ...audienceGroup('business', a), inHeader: undefined })), boldProductionsColumn('business')],
+  },
+  neutral: {
+    home: '/',
+    nav: [
+      { label: 'Events', href: '/events', inHeader: true, children: [] },
+      { label: 'Business', href: '/business', inHeader: true, children: [] },
+    ],
+    footer: [
+      {
+        label: 'Bold Events',
+        href: '/events',
+        children: audiences.events.map((a) => ({ label: a.title, href: audienceUrl('events', a.value) })),
+      },
+      {
+        label: 'Bold Business',
+        href: '/business',
+        children: audiences.business.map((a) => ({ label: a.title, href: audienceUrl('business', a.value) })),
+      },
     ],
   },
-  {
-    label: 'Voor zakelijke events',
-    href: '/zakelijke-events',
-    children: [
-      { label: "Promovideo's", href: '/zakelijke-events/promovideo' },
-      { label: 'Aftermovie', href: '/zakelijke-events/aftermovie' },
-      { label: 'Fotografie', href: '/zakelijke-events/fotografie' },
-      { label: 'Casevideo', href: '/zakelijke-events/casevideo' },
-    ],
-  },
-  {
-    label: 'Bold Productions',
-    href: '/over',
-    children: [
-      { label: 'Cases', href: '/cases' },
-      { label: 'Over Mike', href: '/over/mike' },
-      { label: 'Contact', href: '/contact' },
-      { label: 'Offerte aanvragen', href: '/offerte-aanvragen', bold: true },
-    ],
-  },
-];
+};
 
 export const contact = {
   heading: 'Contactgegevens',

@@ -2,18 +2,18 @@
  * /zakelijke-events/fotografie — teksten letterlijk van www.weareboldproductions.com/zakelijke-events/fotografie.
  * Gegenereerd uit de live pagina; daarna vrij te bewerken (of in Sanity).
  */
-import type { PageData } from '../../../lib/sections';
-import { trustedByTitle, businessLogos } from '../../../data/logos';
-import { testimonialCarousel, pickTestimonials } from '../../../data/testimonials';
-import mikeWaterschapHuisfeestje194 from '../../../assets/images/zakelijke-events/fotografie/mike-waterschap-huisfeestje-194.jpg';
-import mikeSkndag40 from '../../../assets/images/zakelijke-events/fotografie/mike-skndag-40.jpg';
-import mikeWaterschapHuisfeestje2 from '../../../assets/images/zakelijke-events/fotografie/mike-waterschap-huisfeestje-2.jpg';
-import mikeWaterschapHuisfeestje202 from '../../../assets/images/zakelijke-events/fotografie/mike-waterschap-huisfeestje-202.jpg';
-import mikeWaterschapHuisfeestje38 from '../../../assets/images/zakelijke-events/fotografie/mike-waterschap-huisfeestje-38.jpg';
-import mikeAftermovie from '../../../assets/images/events/mike-aftermovie.jpg';
+import type { PageData } from '../../../../lib/sections';
+import { trustedByTitle, businessLogos } from '../../../logos';
+import { testimonialCarousel, pickTestimonials } from '../../../testimonials';
+import mikeWaterschapHuisfeestje194 from '../../../../assets/images/zakelijke-events/fotografie/mike-waterschap-huisfeestje-194.jpg';
+import mikeSkndag40 from '../../../../assets/images/zakelijke-events/fotografie/mike-skndag-40.jpg';
+import mikeWaterschapHuisfeestje2 from '../../../../assets/images/zakelijke-events/fotografie/mike-waterschap-huisfeestje-2.jpg';
+import mikeWaterschapHuisfeestje202 from '../../../../assets/images/zakelijke-events/fotografie/mike-waterschap-huisfeestje-202.jpg';
+import mikeWaterschapHuisfeestje38 from '../../../../assets/images/zakelijke-events/fotografie/mike-waterschap-huisfeestje-38.jpg';
+import mikeAftermovie from '../../../../assets/images/events/mike-aftermovie.jpg';
 
 export const page: PageData = {
-  slug: 'zakelijke-events/fotografie',
+  slug: 'events/zakelijke-events/fotografie',
   title: 'Fotografie',
   meta: {
     schema: { type: 'service', serviceType: 'Zakelijke Eventfotografie' },
@@ -30,7 +30,7 @@ export const page: PageData = {
         eyebrow: 'Professioneel. Herkenbaar. Klaar voor gebruik.',
         primaryCta: {
           label: 'Boek Bold',
-          href: '/offerte-aanvragen',
+          href: '/events/offerte-aanvragen',
         },
         secondaryCta: {
           label: 'Lees hoe',
@@ -94,7 +94,7 @@ export const page: PageData = {
         ],
         cta: {
           label: 'Dit wil je',
-          href: '/offerte-aanvragen',
+          href: '/events/offerte-aanvragen',
           accent: 'green',
         },
         media: {
@@ -246,7 +246,7 @@ export const page: PageData = {
         ],
         cta: {
           label: 'Bel Bold',
-          href: '/offerte-aanvragen',
+          href: '/events/offerte-aanvragen',
           accent: 'yellow',
         },
         reverse: true,

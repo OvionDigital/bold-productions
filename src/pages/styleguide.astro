@@ -17,7 +17,7 @@ import Header from '../components/layout/Header.astro';
 import WhatsAppButton from '../components/layout/WhatsAppButton.astro';
 import Footer from '../components/layout/Footer.astro';
 import Breadcrumbs from '../components/layout/Breadcrumbs.astro';
-import { breadcrumbLabels, contact, copyright, cta, footerColumns, footerLogoAlt, header, legalLinks, mainNav, socials } from '../data/navigation';
+import { breadcrumbLabels, contact, copyright, footerLogoAlt, header, legalLinks, navigation, socials } from '../data/navigation';
 import Hero from '../components/sections/Hero.astro';
 import LogoMarquee from '../components/sections/LogoMarquee.astro';
 import IntroHighlight from '../components/sections/IntroHighlight.astro';
@@ -29,6 +29,8 @@ import TestimonialCard from '../components/ui/TestimonialCard.astro';
 import PolaroidStack from '../components/sections/PolaroidStack.astro';
 import Polaroid from '../components/ui/Polaroid.astro';
 import TextMedia from '../components/sections/TextMedia.astro';
+import SplitHero from '../components/sections/SplitHero.astro';
+import { page as homePage } from '../data/pages/home';
 import { backstage, hero, intro, micDrop, testimonials, timeline, trustedBy } from '../data/home';
 import CaseSpotlight from '../components/sections/CaseSpotlight.astro';
 import ImageFeature from '../components/sections/ImageFeature.astro';
@@ -51,6 +53,11 @@ import { cases, caseGridProps } from '../data/cases';
 import { caseFacts } from '../lib/cases';
 import type { PageSection } from '../lib/sections';
 
+/** Voorbeeldprops uit de homepage (src/data/pages/home.ts) */
+const splitHero = homePage.sections.find((s) => s.type === 'splitHero')?.props;
+const mailMikeSection = homePage.sections.find((s) => s.type === 'textMedia' && s.props.id === 'mail-mike');
+const mailMike = mailMikeSection?.type === 'textMedia' ? mailMikeSection.props : undefined;
+
 const colors = tokensByPrefix('--color-');
 const gradients = tokensByPrefix('--gradient-');
 const fontSizes = tokensByPrefix('--fs-');
@@ -60,7 +67,7 @@ const families = tokensByPrefix('--font-');
 const weights = tokensByPrefix('--fw-');
 const spacing = tokensByPrefix('--space-');
 const layout = tokensByPrefix('--section-', '--column-', '--row-', '--container-', '--navbar-');
-const sizes = tokensByPrefix('--button-', '--icon-', '--carousel-', '--whatsapp-', '--logo-', '--hero-');
+const sizes = tokensByPrefix('--button-', '--icon-', '--carousel-', '--whatsapp-', '--logo-', '--hero-', '--split-hero-');
 const radii = tokensByPrefix('--radius-', '--border-');
 const shadows = tokensByPrefix('--shadow-');
 const blurs = tokensByPrefix('--blur-');
@@ -514,12 +521,13 @@ const nav = [
     </Container>
     <div class="sg-frame">
       <Header
-        nav={mainNav}
-        cta={cta}
+        nav={navigation.events.nav}
+        cta={navigation.events.cta}
+        home={navigation.events.home}
         menuLabel={header.menuLabel}
         logoAlt={header.logoAlt}
         homeTitle={header.homeTitle}
-        currentPath="/events"
+        currentPath="/events/organisatoren"
       />
       <WhatsAppButton href={contact.whatsapp.href} label={contact.whatsapp.label} />
     </div>
@@ -530,7 +538,7 @@ const nav = [
       </p>
     </Container>
     <Breadcrumbs
-      items={[{ label: 'Events', href: '/events' }, { label: 'Aftermovie' }]}
+      items={[{ label: 'Events', href: '/events/organisatoren' }, { label: 'Aftermovie' }]}
       homeLabel={breadcrumbLabels.home}
       label={breadcrumbLabels.nav}
     />
@@ -539,7 +547,7 @@ const nav = [
       <p class="sg-note sg-note--spaced"><code>Footer</code>: kolommen, contact, logo en socials, juridische links.</p>
     </Container>
     <Footer
-      columns={footerColumns}
+      columns={navigation.events.footer}
       contact={contact}
       socials={socials}
       legalLinks={legalLinks}
@@ -561,6 +569,18 @@ const nav = [
     </Container>
     <div class="sg-frame sg-frame--section">
       <Hero {...hero} video={undefined} accent="yellow" />
+    </div>
+
+    <Container>
+      <h3 class="sg-subtitle">SplitHero</h3>
+      <p class="sg-note">
+        <code>&lt;SplitHero title halves /&gt;</code>: homepage, keuze tussen Events en Business. Per helft titel, tekst,
+        knop (de hele helft is de link), <code>accent</code>, foto en optioneel Vimeo. ≥1280 groeit de helft onder de muis
+        (60/40), gloeit de naad in haar kleur en speelt de video (na window.load); ≤1279 onder elkaar. Logo = h1.
+      </p>
+    </Container>
+    <div class="sg-frame sg-frame--section">
+      {splitHero && <SplitHero {...splitHero} />}
     </div>
 
     <Container>
@@ -647,6 +667,14 @@ const nav = [
       </p>
     </Container>
     <TextMedia {...biggerThanTheDay} id="sg-image-variant" />
+
+    <Container>
+      <p class="sg-note">
+        Met <code>links</code> (ContactLinks: bellen, mailen, WhatsApp; icoon volgt het soort link), zoals "Mail Mike" op de
+        homepage:
+      </p>
+    </Container>
+    {mailMike && <TextMedia {...mailMike} id="sg-links-variant" />}
 
     <Container>
       <h3 class="sg-subtitle">CaseCard (ui) + CaseSpotlight</h3>
@@ -739,11 +767,11 @@ const nav = [
     <Container>
       <h3 class="sg-subtitle">CaseGrid</h3>
       <p class="sg-note">
-        <code>&lt;CaseGrid filters items emptyText label /&gt;</code>, props via <code>caseGridProps(cases)</code>. Filteren in
+        <code>&lt;CaseGrid filters items emptyText label /&gt;</code>, props via <code>caseGridProps(cases, 'events')</code>. Filteren in
         <code>case-filter.ts</code>; <code>?filter=events</code> kiest vooraf een doelgroep. Hier vier cases.
       </p>
     </Container>
-    <CaseGrid {...caseGridProps(cases.slice(0, 4))} id="sg-casegrid" />
+    <CaseGrid {...caseGridProps(cases.slice(0, 4), 'events')} id="sg-casegrid" />
 
     <Container>
       <h3 class="sg-subtitle">ContactSection (+ ContactForm)</h3>

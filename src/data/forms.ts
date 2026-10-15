@@ -11,7 +11,7 @@ const success = (first: string): ContactFormProps['success'] => ({
   title: 'Goed bezig.',
   text: [
     { p: [first] },
-    { p: ['In de tussentijd kun je alvast een kijkje nemen bij ', { text: 'onze cases', href: '/cases' }, '.'] },
+    { p: ['In de tussentijd kun je alvast een kijkje nemen bij ', { text: 'onze cases', href: '/events/cases' }, '.'] },
   ],
 });
 

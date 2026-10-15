@@ -109,7 +109,7 @@ export const sections: PageSection[] = [
               'Van zijn optredens maakten we gerichte ',
               {
                 text: 'recaps',
-                href: '/artiesten/recap',
+                href: '/events/artiesten/recap',
               },
               '. Korte, krachtige beelden die laten zien hoe Jeff een zaal meeneemt. Ideaal voor boekers die in seconden willen zien of een act bij hen past.',
             ],

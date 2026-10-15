@@ -4,9 +4,10 @@ import { sectionTypes } from '../sections';
 
 /**
  * URL-paden die al door een vaste Astro-pagina in src/pages/ gebruikt worden.
- * Moet gelijk blijven aan RESERVED_SLUGS in src/lib/sanity/pages.ts.
+ * Moet gelijk blijven aan STATIC_PAGES in src/lib/sanity/pages.ts. /events = de Events-homepage
+ * (document "Events-homepage").
  */
-const RESERVED_SLUGS = ['styleguide'];
+const RESERVED_SLUGS = ['styleguide', 'events'];
 
 const slugify = (input: string) =>
   input
@@ -21,7 +22,7 @@ const slugify = (input: string) =>
 /**
  * Een pagina die de klant zelf opbouwt uit de bestaande secties. Header, menu, footer
  * en WhatsApp-knop staan er automatisch omheen (BaseLayout). Gebouwd door
- * src/pages/[...slug].astro.
+ * src/pages/[...slug].astro. URL-pad "home" = de homepage (/), niet /home.
  */
 export const page = defineType({
   name: 'page',
@@ -46,17 +47,17 @@ export const page = defineType({
       type: 'slug',
       group: ['content', 'settings'],
       description:
-        'Het adres van de pagina na weareboldproductions.com/, zonder slash aan begin of eind. Bijv. "events/aftermovie" of "over-ons". Een slash maakt een subpagina.',
+        'Het adres van de pagina na weareboldproductions.com/, zonder slash aan begin of eind. Bijv. "events/organisatoren/aftermovie" of "business/content". Een slash maakt een subpagina. "home" is de homepage. Onder events/ krijgt de pagina het Events-menu, onder business/ het Business-menu, anders het neutrale menu.',
       options: { source: 'title', slugify },
       validation: (r) =>
         r.required().custom((value?: { current?: string }) => {
           const slug = value?.current ?? '';
           if (!slug) return 'Vul een URL-pad in.';
           if (!/^[a-z0-9]+(?:-[a-z0-9]+)*(?:\/[a-z0-9]+(?:-[a-z0-9]+)*)*$/.test(slug)) {
-            return 'Alleen kleine letters, cijfers, streepjes en slashes (bijv. "events/aftermovie"), geen slash aan begin of eind.';
+            return 'Alleen kleine letters, cijfers, streepjes en slashes (bijv. "events/organisatoren/aftermovie"), geen slash aan begin of eind.';
           }
           if (RESERVED_SLUGS.includes(slug)) return `"/${slug}" bestaat al als vaste pagina. Kies een ander pad.`;
-          if (slug.startsWith('cases/')) return 'Paden onder /cases/ zijn voor cases. Maak een case aan onder "Cases".';
+          if (/^(events|business)\/cases\//.test(slug)) return 'Paden onder /events/cases/ en /business/cases/ zijn voor cases. Maak een case aan onder "Cases".';
           return true;
         }),
     }),
@@ -75,9 +76,9 @@ export const page = defineType({
         r
           .custom((sections?: { _type: string }[]) =>
             // Kruimelpad of tekstsectie bovenaan (juridische pagina's, 404) krijgen zelf ruimte onder de navbar
-            !sections?.length || ['heroSection', 'breadcrumbsSection', 'richTextSection'].includes(sections[0]._type)
+            !sections?.length || ['heroSection', 'splitHeroSection', 'breadcrumbsSection', 'richTextSection'].includes(sections[0]._type)
               ? true
-              : 'Begin met een Hero, kruimelpad of tekstsectie; andere secties vallen bovenaan onder de vaste navigatiebalk.',
+              : 'Begin met een (keuze)hero, kruimelpad of tekstsectie; andere secties vallen bovenaan onder de vaste navigatiebalk.',
           )
           .warning(),
         r

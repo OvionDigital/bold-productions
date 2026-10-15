@@ -6,6 +6,7 @@
  * voor de vaste navbar.
  */
 import Hero from './Hero.astro';
+import SplitHero from './SplitHero.astro';
 import LogoMarquee from './LogoMarquee.astro';
 import IntroHighlight from './IntroHighlight.astro';
 import Timeline from './Timeline.astro';
@@ -43,6 +44,8 @@ const { sections, breadcrumbs } = Astro.props;
     switch (section.type) {
       case 'hero':
         return <Hero {...section.props} />;
+      case 'splitHero':
+        return <SplitHero {...section.props} />;
       case 'breadcrumbs':
         return (
           <Breadcrumbs items={breadcrumbs} homeLabel={breadcrumbLabels.home} label={breadcrumbLabels.nav} standalone={index === 0} />

@@ -2,12 +2,12 @@
  * /offerte-aanvragen — teksten letterlijk van www.weareboldproductions.com/offerte-aanvragen.
  * Gegenereerd uit de live pagina; daarna vrij te bewerken (of in Sanity).
  */
-import type { PageData } from '../../lib/sections';
-import hf20260404141600F53da6ceF2c742669148Fed3 from '../../assets/images/offerte-aanvragen/hf-20260404-141600-f53da6ce-f2c7-4266-9148-fed3481c249c.jpg';
-import hf20260501121116608252682b8c4682B3b9Fcce from '../../assets/images/offerte-aanvragen/hf-20260501-121116-60825268-2b8c-4682-b3b9-fcce2af3e714.jpg';
+import type { PageData } from '../../../lib/sections';
+import hf20260404141600F53da6ceF2c742669148Fed3 from '../../../assets/images/offerte-aanvragen/hf-20260404-141600-f53da6ce-f2c7-4266-9148-fed3481c249c.jpg';
+import hf20260501121116608252682b8c4682B3b9Fcce from '../../../assets/images/offerte-aanvragen/hf-20260501-121116-60825268-2b8c-4682-b3b9-fcce2af3e714.jpg';
 
 export const page: PageData = {
-  slug: 'offerte-aanvragen',
+  slug: 'events/offerte-aanvragen',
   title: 'Offerte aanvragen',
   meta: {
     schema: { type: 'webpage', relation: 'mainEntity' },

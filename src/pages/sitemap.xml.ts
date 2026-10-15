@@ -1,18 +1,21 @@
 /**
- * /sitemap.xml — alle indexeerbare pagina's (homepage + src/pages/[...slug] behalve noindex,
+ * /sitemap.xml — alle indexeerbare pagina's (homepage, /events + src/pages/[...slug] behalve noindex,
  * de 404 en de styleguide). Zelfde opzet als de Webflow-sitemap; lastmod uit Sanity
  * (laatste wijziging van de pagina) als die bekend is. Wordt bij elke build opnieuw gemaakt.
  */
 import type { APIRoute } from 'astro';
-import { getAllPages } from '../lib/pages';
+import { getHomePage, getRoutedPages } from '../lib/pages';
 
 const EXCLUDE = new Set(['404']);
 
 export const GET: APIRoute = async ({ site }) => {
   const origin = site!.origin;
-  const pages = (await getAllPages()).filter((page) => !page.meta.noindex && !EXCLUDE.has(page.slug));
+  const pages = (await getRoutedPages()).filter((page) => !page.meta.noindex && !EXCLUDE.has(page.slug));
+  const home = await getHomePage();
   const urls: { loc: string; lastmod?: string }[] = [
-    { loc: origin },
+    { loc: origin, lastmod: home.updatedAt },
+    // Events-homepage (src/pages/events.astro)
+    { loc: `${origin}/events` },
     ...pages.map((page) => ({ loc: `${origin}/${page.slug}`, lastmod: page.updatedAt })),
   ];
   const body = `<?xml version="1.0" encoding="UTF-8"?>

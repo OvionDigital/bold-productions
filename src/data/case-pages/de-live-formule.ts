@@ -32,17 +32,17 @@ export const introText: Rich = [
       ' verzorgde de volledige contentproductie op die avond. Een ',
       {
         text: 'aftermovie',
-        href: '/events/aftermovie',
+        href: '/events/organisatoren/aftermovie',
       },
       ' die de sfeer en energie vastlegt. Een complete ',
       {
         text: 'fotoreportage  ',
-        href: '/zakelijke-events/fotografie',
+        href: '/events/zakelijke-events/fotografie',
       },
       'voor direct gebruik. En een ',
       {
         text: 'casevideo  ',
-        href: '/zakelijke-events/casevideo',
+        href: '/events/zakelijke-events/casevideo',
       },
       'waarin Manon van De Live Formule zelf het woord neemt om te vertellen wat ze hebben neergezet en waarom het werkt.',
     ],

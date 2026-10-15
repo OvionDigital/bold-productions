@@ -1,10 +1,11 @@
 /**
  * Alle testimonials op één plek. Pagina's kiezen ze op id met pickTestimonials().
  * Teksten letterlijk van de live site (met de afgesproken aanpassingen bij
- * 'reinier-peters' en 'dorpsfeest-wehl').
+ * 'reinier-peters' en 'dorpsfeest-wehl'). Indeling (soort, doelgroep, diensten): data/taxonomy.ts.
  * Later te vervangen door een content collection of CMS met dezelfde velden.
  */
 import type { Testimonial } from '../components/ui/TestimonialCard.astro';
+import type { Targeting } from './taxonomy';
 import reinier from '../assets/images/testimonials/reinier-peters.jpg';
 import ralph from '../assets/images/testimonials/ralph-buisman.jpg';
 import merijn from '../assets/images/testimonials/merijn-peters.jpg';
@@ -21,6 +22,7 @@ export const testimonials = {
     // Artiesten- en privénaam zijn gelijk: één keer tonen
     name: 'Reinier Peters',
     image: { src: reinier, alt: 'Reinier Peters' },
+    category: 'events', audience: 'artiesten', services: ['Artiestenpromo'],
   },
   'ralph-buisman': {
     quote:
@@ -28,6 +30,7 @@ export const testimonials = {
     name: 'Ralph Buisman',
     organisation: 'RHBFOTO',
     image: { src: ralph, alt: 'Ralph Buisman' },
+    category: 'events', audience: 'organisatoren', services: ['Aftermovie'],
   },
   'merijn-peters': {
     quote:
@@ -35,6 +38,7 @@ export const testimonials = {
     name: 'Merijn Peters',
     organisation: 'KARAKTER',
     image: { src: merijn, alt: 'Merijn Peters' },
+    category: 'events', audience: 'artiesten', services: ['Bandpromo'],
   },
   'manon-diks': {
     quote:
@@ -42,6 +46,7 @@ export const testimonials = {
     name: 'Manon Diks',
     organisation: 'De Live Formule',
     image: { src: manon, alt: 'Manon Diks' },
+    category: 'events', audience: 'zakelijke-events', services: ['Aftermovie', 'Fotografie'],
   },
   'dorpsfeest-wehl': {
     quote:
@@ -49,6 +54,7 @@ export const testimonials = {
     // Alleen de organisatie tonen (live staat als naam 'Organisatie')
     organisation: 'Dorpsfeest Wehl',
     image: { src: dorpsfeest, alt: 'Dorpsfeest Wehl' },
+    category: 'events', audience: 'organisatoren', services: ['Aftermovie', 'Fotografie', 'Eventvideo'],
   },
   'siemen-peters': {
     quote:
@@ -56,6 +62,7 @@ export const testimonials = {
     name: 'Siemen Peters',
     organisation: 'Organisatie Doorgedraaid Feestival',
     image: { src: siemen, alt: 'Siemen Peters' },
+    category: 'events', audience: 'organisatoren', services: ['Aftermovie', 'Fotografie'],
   },
   'sam-janssen': {
     quote:
@@ -63,6 +70,7 @@ export const testimonials = {
     name: 'Sam Janssen',
     organisation: 'Proost! Band',
     image: { src: sam, alt: 'Sam Janssen' },
+    category: 'events', audience: 'artiesten', services: ['Bandpromo'],
   },
   'jeff-straub': {
     quote:
@@ -70,12 +78,18 @@ export const testimonials = {
     name: 'Jeff Straub',
     organisation: 'Saxypianoshow',
     image: { src: jeff, alt: 'Jeff Straub' },
+    category: 'events', audience: 'artiesten', services: ['Artiestenpromo', 'Fotografie', 'Recap'],
   },
-} satisfies Record<string, Testimonial>;
+} satisfies Record<string, Testimonial & Targeting>;
 
 export type TestimonialId = keyof typeof testimonials;
 
-export const pickTestimonials = (ids: TestimonialId[]): Testimonial[] => ids.map((id) => testimonials[id]);
+/** Alleen de kaartgegevens; de indeling (Targeting) is voor het CMS. */
+export const pickTestimonials = (ids: TestimonialId[]): Testimonial[] =>
+  ids.map((id) => {
+    const { category, audience, services, ...card } = testimonials[id];
+    return card;
+  });
 
 /** Labels van de testimonialcarousel (gelijk op elke pagina) */
 export const testimonialCarousel = { label: 'Testimonials', prevLabel: 'Vorige', nextLabel: 'Volgende' };

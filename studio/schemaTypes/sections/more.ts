@@ -1,5 +1,5 @@
 import { defineType, defineField, defineArrayMember } from 'sanity';
-import { anchorIdField, gradientField, plainText, titleField } from '../fields';
+import { anchorIdField, contactLinksField, gradientField, plainText, titleField } from '../fields';
 
 /** Formulierkeuze (src/data/forms.ts) */
 export const formOptions = [
@@ -86,23 +86,7 @@ export const contactSection = defineType({
   type: 'object',
   fields: [
     defineField({ name: 'content', title: 'Tekst', type: 'richText', validation: (r) => r.required() }),
-    defineField({
-      name: 'links',
-      title: 'Contactlinks',
-      type: 'array',
-      description: 'Icoon kiest zichzelf: tel: = telefoon, mailto: = mail, anders WhatsApp.',
-      of: [
-        defineArrayMember({
-          type: 'object',
-          name: 'contactLink',
-          fields: [
-            defineField({ name: 'label', title: 'Tekst', type: 'string', validation: (r) => r.required() }),
-            defineField({ name: 'href', title: 'Link (tel:, mailto: of https://wa.me/…)', type: 'string', validation: (r) => r.required() }),
-          ],
-          preview: { select: { title: 'label', subtitle: 'href' } },
-        }),
-      ],
-    }),
+    contactLinksField(),
     defineField({
       name: 'form',
       title: 'Formulier',

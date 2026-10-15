@@ -8,14 +8,10 @@
  */
 import Container from '../ui/Container.astro';
 import RichText from '../ui/RichText.astro';
-import Icon from '../ui/Icon.astro';
-import type { IconName } from '../ui/icons';
+import ContactLinks, { type ContactLink } from '../ui/ContactLinks.astro';
 import type { Rich } from '../../lib/rich';
 
-export interface ContactLink {
-  label: string;
-  href: string;
-}
+export type { ContactLink };
 
 export interface ContactSectionProps {
   id?: string;
@@ -27,9 +23,6 @@ export interface ContactSectionProps {
 type Props = ContactSectionProps;
 
 const { id, content, links, formWidth = 'default' } = Astro.props;
-
-const iconFor = (href: string): IconName =>
-  href.startsWith('tel:') ? 'phone' : href.startsWith('mailto:') ? 'mail' : 'whatsapp-outline';
 ---
 
 <section class="contact-section" id={id}>
@@ -37,23 +30,7 @@ const iconFor = (href: string): IconName =>
     <div class="contact-section__row">
       <div class="contact-section__col">
         <RichText content={content} class="contact-section__text" />
-        <ul class="contact-section__links" role="list">
-          {
-            links.map((link) => (
-              <li>
-                <a
-                  href={link.href}
-                  class="contact-section__link"
-                  target={link.href.startsWith('http') ? '_blank' : undefined}
-                  rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-                >
-                  <Icon name={iconFor(link.href)} size="var(--icon-lg)" />
-                  <span class="contact-section__link-text">{link.label}</span>
-                </a>
-              </li>
-            ))
-          }
-        </ul>
+        <ContactLinks links={links} />
       </div>
       <div class:list={['contact-section__col', { 'contact-section__col--narrow': formWidth === 'narrow' }]}>
         <slot name="form" />
@@ -85,26 +62,6 @@ const iconFor = (href: string): IconName =>
 
   .contact-section :global(.contact-section__text) {
     margin-bottom: var(--space-24);
-  }
-
-  .contact-section__links {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-
-  /* Icoon in de linkkleur (groen), tekst wit — zoals live */
-  .contact-section__link {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    gap: var(--space-12);
-    padding-block: var(--space-8);
-    text-decoration: none;
-  }
-
-  .contact-section__link-text {
-    color: var(--color-white);
   }
 
   @media (min-width: 1280px) {

@@ -45,7 +45,9 @@ export function initCaseFilters(): void {
       });
     });
 
-    const preset = new URLSearchParams(window.location.search).get('filter');
+    // ?filter=events was vóór de herstructurering de doelgroep organisatoren (oude links)
+    const raw = new URLSearchParams(window.location.search).get('filter');
+    const preset = raw === 'events' ? 'organisatoren' : raw;
     const audience = groups.find((g) => g.dataset.caseFilter === 'audience');
     if (preset && audience) {
       select(audience, preset);

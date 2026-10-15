@@ -42,12 +42,12 @@ export const sections: PageSection[] = [
             'De uitdaging was om uit al die drukte precies die beelden te halen die het gevoel van de avond samenvatten. De trots. De verbinding. De energie van een organisatie die samen viert wat ze heeft opgebouwd. En dat te vertalen naar een ',
             {
               text: 'aftermovie ',
-              href: '/zakelijke-events/aftermovie',
+              href: '/events/zakelijke-events/aftermovie',
             },
             'en ',
             {
               text: 'fotoreportage ',
-              href: '/zakelijke-events/fotografie',
+              href: '/events/zakelijke-events/fotografie',
             },
             'die intern breed inzetbaar zijn, lang na de avond zelf.',
           ],

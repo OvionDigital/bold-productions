@@ -2,18 +2,18 @@
  * /events/social-content — teksten letterlijk van www.weareboldproductions.com/events/social-content.
  * Gegenereerd uit de live pagina; daarna vrij te bewerken (of in Sanity).
  */
-import type { PageData } from '../../../lib/sections';
-import { trustedByTitle, clientLogos } from '../../../data/logos';
-import { testimonialCarousel, pickTestimonials } from '../../../data/testimonials';
-import mikeWaterschapHuisfeestje221 from '../../../assets/images/events/social-content/mike-waterschap-huisfeestje-221.jpg';
-import boldProductions93 from '../../../assets/images/events/social-content/bold-productions-93.jpg';
-import reemSprenkeler111 from '../../../assets/images/events/social-content/reem-sprenkeler-111.jpg';
-import reemSprenkeler54 from '../../../assets/images/events/social-content/reem-sprenkeler-54.jpg';
-import reemSprenkeler55 from '../../../assets/images/events/social-content/reem-sprenkeler-55.jpg';
-import mikeAftermovie from '../../../assets/images/events/mike-aftermovie.jpg';
+import type { PageData } from '../../../../lib/sections';
+import { trustedByTitle, clientLogos } from '../../../logos';
+import { testimonialCarousel, pickTestimonials } from '../../../testimonials';
+import mikeWaterschapHuisfeestje221 from '../../../../assets/images/events/social-content/mike-waterschap-huisfeestje-221.jpg';
+import boldProductions93 from '../../../../assets/images/events/social-content/bold-productions-93.jpg';
+import reemSprenkeler111 from '../../../../assets/images/events/social-content/reem-sprenkeler-111.jpg';
+import reemSprenkeler54 from '../../../../assets/images/events/social-content/reem-sprenkeler-54.jpg';
+import reemSprenkeler55 from '../../../../assets/images/events/social-content/reem-sprenkeler-55.jpg';
+import mikeAftermovie from '../../../../assets/images/events/mike-aftermovie.jpg';
 
 export const page: PageData = {
-  slug: 'events/social-content',
+  slug: 'events/organisatoren/social-content',
   title: 'Social content',
   meta: {
     schema: { type: 'service', serviceType: 'Social Media Content Creatie' },
@@ -292,7 +292,7 @@ export const page: PageData = {
         ],
         cta: {
           label: 'Plan een gesprek',
-          href: '/offerte-aanvragen',
+          href: '/events/offerte-aanvragen',
           accent: 'yellow',
         },
       },

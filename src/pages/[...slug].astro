@@ -1,6 +1,6 @@
 ---
 /**
- * Alle pagina's behalve de homepage: dienst-, doelgroep-, case- en overige pagina's.
+ * Alle pagina's behalve de homepage en /events: dienst-, doelgroep-, case- en overige pagina's.
  * Inhoud uit Sanity (pagina's en cases die de klant beheert) of, zonder Sanity, uit
  * src/data — zie src/lib/pages.ts. Header, menu, footer en WhatsApp-knop komen uit
  * BaseLayout; de inhoud is een lijst secties (PageSections).
@@ -8,10 +8,10 @@
 import type { GetStaticPaths } from 'astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageSections from '../components/sections/PageSections.astro';
-import { getAllPages, type BuiltPage } from '../lib/pages';
+import { getRoutedPages, type BuiltPage } from '../lib/pages';
 
 export const getStaticPaths = (async () => {
-  const pages = await getAllPages();
+  const pages = await getRoutedPages();
   return pages.map((page) => ({ params: { slug: page.slug }, props: { page } }));
 }) satisfies GetStaticPaths;
 

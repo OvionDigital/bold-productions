@@ -2,24 +2,24 @@
  * /artiesten — teksten letterlijk van www.weareboldproductions.com/artiesten.
  * Gegenereerd uit de live pagina; daarna vrij te bewerken (of in Sanity).
  */
-import type { PageData } from '../../lib/sections';
-import { trustedByTitle, artistLogos } from '../../data/logos';
-import { testimonialCarousel, pickTestimonials } from '../../data/testimonials';
-import mikeDoorgedraaidLogo1230 from '../../assets/images/artiesten/mike-doorgedraaid-logo-1-230.jpg';
-import dennisDrumd from '../../assets/images/artiesten/dennis-drumd.jpg';
-import spotPleinpopAlphen00145503Still033 from '../../assets/images/aftermovie-laten-maken/spot-pleinpop-alphen-00-14-55-03-still033.jpg';
-import bold92 from '../../assets/images/aftermovie-laten-maken/bold-92.jpg';
-import mikeDoorgedraaidLogo1217 from '../../assets/images/artiesten/mike-doorgedraaid-logo-1-217.jpg';
-import bioscoop from '../../assets/images/events/bioscoop.jpg';
-import mikeDorpsfeestwehlzaterdag258 from '../../assets/images/artiesten/mike-dorpsfeestwehlzaterdag-258.jpg';
-import mikeDorpsfeestwehlzaterdag224 from '../../assets/images/artiesten/mike-dorpsfeestwehlzaterdag-224.jpg';
-import boldProductions73 from '../../assets/images/artiesten/bold-productions-73.jpg';
-import mikeDorpsfeestwehlvrijdag28 from '../../assets/images/artiesten/mike-dorpsfeestwehlvrijdag-28.jpg';
-import mikeDoorgedraaidLogo1134 from '../../assets/images/artiesten/mike-doorgedraaid-logo-1-134.jpg';
-import mikeAftermovie from '../../assets/images/events/mike-aftermovie.jpg';
+import type { PageData } from '../../../lib/sections';
+import { trustedByTitle, artistLogos } from '../../logos';
+import { testimonialCarousel, pickTestimonials } from '../../testimonials';
+import mikeDoorgedraaidLogo1230 from '../../../assets/images/artiesten/mike-doorgedraaid-logo-1-230.jpg';
+import dennisDrumd from '../../../assets/images/artiesten/dennis-drumd.jpg';
+import spotPleinpopAlphen00145503Still033 from '../../../assets/images/aftermovie-laten-maken/spot-pleinpop-alphen-00-14-55-03-still033.jpg';
+import bold92 from '../../../assets/images/aftermovie-laten-maken/bold-92.jpg';
+import mikeDoorgedraaidLogo1217 from '../../../assets/images/artiesten/mike-doorgedraaid-logo-1-217.jpg';
+import bioscoop from '../../../assets/images/events/bioscoop.jpg';
+import mikeDorpsfeestwehlzaterdag258 from '../../../assets/images/artiesten/mike-dorpsfeestwehlzaterdag-258.jpg';
+import mikeDorpsfeestwehlzaterdag224 from '../../../assets/images/artiesten/mike-dorpsfeestwehlzaterdag-224.jpg';
+import boldProductions73 from '../../../assets/images/artiesten/bold-productions-73.jpg';
+import mikeDorpsfeestwehlvrijdag28 from '../../../assets/images/artiesten/mike-dorpsfeestwehlvrijdag-28.jpg';
+import mikeDoorgedraaidLogo1134 from '../../../assets/images/artiesten/mike-doorgedraaid-logo-1-134.jpg';
+import mikeAftermovie from '../../../assets/images/events/mike-aftermovie.jpg';
 
 export const page: PageData = {
-  slug: 'artiesten',
+  slug: 'events/artiesten',
   title: 'Artiesten',
   meta: {
     schema: {
@@ -43,7 +43,7 @@ export const page: PageData = {
         eyebrow: 'BOLD IS JE FILMENDE ROADIE',
         primaryCta: {
           label: 'Boek Bold',
-          href: '/offerte-aanvragen',
+          href: '/events/offerte-aanvragen',
         },
         secondaryCta: {
           label: 'Hoe werkt dat?',
@@ -127,7 +127,7 @@ export const page: PageData = {
         ],
         cta: {
           label: 'Ik wil dat',
-          href: '/offerte-aanvragen',
+          href: '/events/offerte-aanvragen',
           accent: 'yellow',
         },
         media: {
@@ -221,7 +221,7 @@ export const page: PageData = {
         ],
         cta: {
           label: 'Bel Bold',
-          href: '/offerte-aanvragen',
+          href: '/events/offerte-aanvragen',
           accent: 'yellow',
         },
       },
@@ -277,7 +277,7 @@ export const page: PageData = {
         items: [
           {
             label: 'Bandpromo',
-            href: '/artiesten/bandpromo',
+            href: '/events/artiesten/bandpromo',
             image: {
               src: mikeDorpsfeestwehlzaterdag258,
               alt: 'Foto van een gitarist tijdens een live-optreden.',
@@ -285,7 +285,7 @@ export const page: PageData = {
           },
           {
             label: 'Artiestenpromo',
-            href: '/artiesten/artiestenpromo',
+            href: '/events/artiesten/artiestenpromo',
             image: {
               src: mikeDorpsfeestwehlzaterdag224,
               alt: 'Zanger Xander de Buisonjé tijdens een tentfeest. Foto: Bold Productions contentspecialist voor Events & Artiesten.',
@@ -293,7 +293,7 @@ export const page: PageData = {
           },
           {
             label: 'social-content',
-            href: '/artiesten/social-content',
+            href: '/events/artiesten/social-content',
             image: {
               src: boldProductions73,
               alt: 'Foto van een zangeres tijdens een live-optreden. Vastgelegd door Bold Productions contentspecialist voor Events & Artiesten.',
@@ -301,7 +301,7 @@ export const page: PageData = {
           },
           {
             label: 'Recap',
-            href: '/artiesten/recap',
+            href: '/events/artiesten/recap',
             image: {
               src: mikeDorpsfeestwehlvrijdag28,
               alt: 'DJ Willem de Wijs tijdens een live-optreden. Foto: Bold Productions contentspecialist voor Events & Artiesten.',
@@ -309,7 +309,7 @@ export const page: PageData = {
           },
           {
             label: 'Fotografie',
-            href: '/artiesten/fotografie',
+            href: '/events/artiesten/fotografie',
             image: {
               src: mikeDoorgedraaidLogo1134,
               alt: 'Sfeerbeeld tijdens het Doorgedraaid Feestival. Foto: Bold Productions contentspecialist voor Events & Artiesten.',

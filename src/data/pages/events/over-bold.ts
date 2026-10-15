@@ -2,21 +2,21 @@
  * /over — teksten letterlijk van www.weareboldproductions.com/over.
  * Gegenereerd uit de live pagina; daarna vrij te bewerken (of in Sanity).
  */
-import type { PageData } from '../../lib/sections';
-import { teamTiles } from '../../data/team';
-import { testimonialCarousel, pickTestimonials } from '../../data/testimonials';
-import tijdlijnVoorLegendsOfRock from '../../assets/images/home/tijdlijn-voor-legends-of-rock.jpg';
-import mikeAmpting from '../../assets/images/team/mike-ampting.jpg';
-import f7ab9527E17b4f6d8e7fBd8d80c6a87a from '../../assets/images/over/f7ab9527-e17b-4f6d-8e7f-bd8d80c6a87a.jpg';
-import boldDoorgedraaid2 from '../../assets/images/events/eventvideos/bold-doorgedraaid-2.jpg';
-import boldDoorgedraaid5 from '../../assets/images/over/bold-doorgedraaid-5.jpg';
-import boldDoorgedraaid3 from '../../assets/images/events/promovideos/bold-doorgedraaid-3.jpg';
-import bold85 from '../../assets/images/over/bold-85.jpg';
-import rhbfoto8 from '../../assets/images/over/rhbfoto-8.jpg';
-import mikeAftermovie from '../../assets/images/events/mike-aftermovie.jpg';
+import type { PageData } from '../../../lib/sections';
+import { teamTiles } from '../../team';
+import { testimonialCarousel, pickTestimonials } from '../../testimonials';
+import tijdlijnVoorLegendsOfRock from '../../../assets/images/home/tijdlijn-voor-legends-of-rock.jpg';
+import mikeAmpting from '../../../assets/images/team/mike-ampting.jpg';
+import f7ab9527E17b4f6d8e7fBd8d80c6a87a from '../../../assets/images/over/f7ab9527-e17b-4f6d-8e7f-bd8d80c6a87a.jpg';
+import boldDoorgedraaid2 from '../../../assets/images/events/eventvideos/bold-doorgedraaid-2.jpg';
+import boldDoorgedraaid5 from '../../../assets/images/over/bold-doorgedraaid-5.jpg';
+import boldDoorgedraaid3 from '../../../assets/images/events/promovideos/bold-doorgedraaid-3.jpg';
+import bold85 from '../../../assets/images/over/bold-85.jpg';
+import rhbfoto8 from '../../../assets/images/over/rhbfoto-8.jpg';
+import mikeAftermovie from '../../../assets/images/events/mike-aftermovie.jpg';
 
 export const page: PageData = {
-  slug: 'over',
+  slug: 'events/over-bold',
   title: 'Over',
   meta: {
     schema: { type: 'webpage', relation: 'publisher' },
@@ -33,7 +33,7 @@ export const page: PageData = {
         eyebrow: 'Een contentproductiebedrijf dat één ding retegoed doet.\nEvents. En dat al jaren.',
         primaryCta: {
           label: 'Boek Bold',
-          href: '/offerte-aanvragen',
+          href: '/events/offerte-aanvragen',
         },
         secondaryCta: {
           label: 'Ontdek meer',

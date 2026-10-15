@@ -1,8 +1,9 @@
 /**
  * Klantlogo's ("Vertrouwd door"), per doelgroep een eigen strip zoals live.
- * Alt = organisatienaam.
+ * Alt = organisatienaam. Indeling (soort + doelgroep): data/taxonomy.ts.
  */
 import type { Logo } from '../components/sections/LogoMarquee.astro';
+import type { Targeting } from './taxonomy';
 import vunzigeDeuntjes from '../assets/logos/vunzige-deuntjes.png';
 import proost from '../assets/logos/proost.png';
 import zinInDeZomer from '../assets/logos/zin-in-de-zomer.png';
@@ -31,44 +32,47 @@ import superminds from '../assets/logos/image-1.png';
 import broodMetSpelen from '../assets/logos/brood-met-spelen-ong.png';
 import deLiveFormule from '../assets/logos/frame-1.png';
 
+/** Logo met indeling (soort + doelgroep, geen diensten), voor het CMS */
+export type TaggedLogo = Logo & Omit<Targeting, 'services'>;
+
 /** Events (homepage, /events en dienstpagina's voor events) */
-export const clientLogos: Logo[] = [
-  { src: vunzigeDeuntjes, alt: 'Vunzige Deuntjes' },
-  { src: proost, alt: 'Proost' },
-  { src: zinInDeZomer, alt: 'Zin in de Zomer' },
-  { src: dorpsfeestWehl, alt: 'Dorpsfeest Wehl' },
-  { src: soenda, alt: 'Soenda' },
-  { src: bospop, alt: 'Bospop' },
-  { src: zwarteCross, alt: 'Zwarte Cross' },
-  { src: drift, alt: 'Drift' },
-  { src: doorgedraaid, alt: 'Doorgedraaid' },
+export const clientLogos: TaggedLogo[] = [
+  { src: vunzigeDeuntjes, alt: 'Vunzige Deuntjes', category: 'events', audience: 'organisatoren' },
+  { src: proost, alt: 'Proost', category: 'events', audience: 'artiesten' },
+  { src: zinInDeZomer, alt: 'Zin in de Zomer', category: 'events', audience: 'organisatoren' },
+  { src: dorpsfeestWehl, alt: 'Dorpsfeest Wehl', category: 'events', audience: 'organisatoren' },
+  { src: soenda, alt: 'Soenda', category: 'events', audience: 'organisatoren' },
+  { src: bospop, alt: 'Bospop', category: 'events', audience: 'organisatoren' },
+  { src: zwarteCross, alt: 'Zwarte Cross', category: 'events', audience: 'organisatoren' },
+  { src: drift, alt: 'Drift', category: 'events', audience: 'organisatoren' },
+  { src: doorgedraaid, alt: 'Doorgedraaid', category: 'events', audience: 'organisatoren' },
 ];
 
 /** Artiesten (/artiesten en subpagina's) */
-export const artistLogos: Logo[] = [
-  { src: whyGoHome, alt: 'Why Go Home' },
-  { src: deSfeermakers, alt: 'De Sfeermakers' },
-  { src: saxypianoshow, alt: 'Saxypianoshow' },
-  { src: sf, alt: 'SF' },
-  { src: oneEternity, alt: 'One Eternity' },
-  { src: proost, alt: 'Proost' },
-  { src: ianZwaardski, alt: 'Ian Zwaardski' },
-  { src: reinierPeters, alt: 'Reinier Peters' },
-  { src: karakter, alt: 'Karakter' },
-  { src: joriekeSterken, alt: 'Jorieke Sterken' },
+export const artistLogos: TaggedLogo[] = [
+  { src: whyGoHome, alt: 'Why Go Home', category: 'events', audience: 'artiesten' },
+  { src: deSfeermakers, alt: 'De Sfeermakers', category: 'events', audience: 'artiesten' },
+  { src: saxypianoshow, alt: 'Saxypianoshow', category: 'events', audience: 'artiesten' },
+  { src: sf, alt: 'SF', category: 'events', audience: 'artiesten' },
+  { src: oneEternity, alt: 'One Eternity', category: 'events', audience: 'artiesten' },
+  { src: proost, alt: 'Proost', category: 'events', audience: 'artiesten' },
+  { src: ianZwaardski, alt: 'Ian Zwaardski', category: 'events', audience: 'artiesten' },
+  { src: reinierPeters, alt: 'Reinier Peters', category: 'events', audience: 'artiesten' },
+  { src: karakter, alt: 'Karakter', category: 'events', audience: 'artiesten' },
+  { src: joriekeSterken, alt: 'Jorieke Sterken', category: 'events', audience: 'artiesten' },
 ];
 
 /** Zakelijke events (/zakelijke-events en subpagina's) */
-export const businessLogos: Logo[] = [
-  { src: pimm, alt: 'PIM&M' },
-  { src: waterschap, alt: 'Waterschap Rijn en IJssel' },
-  { src: basil, alt: 'Basil' },
-  { src: feestkoning, alt: 'Feestkoning' },
-  { src: mediacows, alt: 'Mediacows' },
-  { src: t3Live, alt: 'T3 Live' },
-  { src: superminds, alt: 'Superminds' },
-  { src: broodMetSpelen, alt: 'Brood met Spelen' },
-  { src: deLiveFormule, alt: 'De Live Formule' },
+export const businessLogos: TaggedLogo[] = [
+  { src: pimm, alt: 'PIM&M', category: 'events', audience: 'zakelijke-events' },
+  { src: waterschap, alt: 'Waterschap Rijn en IJssel', category: 'events', audience: 'zakelijke-events' },
+  { src: basil, alt: 'Basil', category: 'events', audience: 'zakelijke-events' },
+  { src: feestkoning, alt: 'Feestkoning', category: 'events', audience: 'zakelijke-events' },
+  { src: mediacows, alt: 'Mediacows', category: 'events', audience: 'zakelijke-events' },
+  { src: t3Live, alt: 'T3 Live', category: 'events', audience: 'zakelijke-events' },
+  { src: superminds, alt: 'Superminds', category: 'events', audience: 'zakelijke-events' },
+  { src: broodMetSpelen, alt: 'Brood met Spelen', category: 'events', audience: 'zakelijke-events' },
+  { src: deLiveFormule, alt: 'De Live Formule', category: 'events', audience: 'zakelijke-events' },
 ];
 
 export const trustedByTitle = 'Vertrouwd door';

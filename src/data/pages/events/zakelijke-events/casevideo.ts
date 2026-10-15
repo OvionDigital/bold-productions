@@ -2,18 +2,18 @@
  * /zakelijke-events/casevideo — teksten letterlijk van www.weareboldproductions.com/zakelijke-events/casevideo.
  * Gegenereerd uit de live pagina; daarna vrij te bewerken (of in Sanity).
  */
-import type { PageData } from '../../../lib/sections';
-import { trustedByTitle, businessLogos } from '../../../data/logos';
-import { testimonialCarousel, pickTestimonials } from '../../../data/testimonials';
-import rhbfoto131 from '../../../assets/images/zakelijke-events/casevideo/rhbfoto-131.jpg';
-import rhbfoto282 from '../../../assets/images/zakelijke-events/casevideo/rhbfoto-282.jpg';
-import rhbfoto417 from '../../../assets/images/zakelijke-events/casevideo/rhbfoto-417.jpg';
-import mikeWaterschapHuisfeestje14 from '../../../assets/images/zakelijke-events/casevideo/mike-waterschap-huisfeestje-14.jpg';
-import mikeWaterschapHuisfeestje159 from '../../../assets/images/zakelijke-events/casevideo/mike-waterschap-huisfeestje-159.jpg';
-import mikeAftermovie from '../../../assets/images/events/mike-aftermovie.jpg';
+import type { PageData } from '../../../../lib/sections';
+import { trustedByTitle, businessLogos } from '../../../logos';
+import { testimonialCarousel, pickTestimonials } from '../../../testimonials';
+import rhbfoto131 from '../../../../assets/images/zakelijke-events/casevideo/rhbfoto-131.jpg';
+import rhbfoto282 from '../../../../assets/images/zakelijke-events/casevideo/rhbfoto-282.jpg';
+import rhbfoto417 from '../../../../assets/images/zakelijke-events/casevideo/rhbfoto-417.jpg';
+import mikeWaterschapHuisfeestje14 from '../../../../assets/images/zakelijke-events/casevideo/mike-waterschap-huisfeestje-14.jpg';
+import mikeWaterschapHuisfeestje159 from '../../../../assets/images/zakelijke-events/casevideo/mike-waterschap-huisfeestje-159.jpg';
+import mikeAftermovie from '../../../../assets/images/events/mike-aftermovie.jpg';
 
 export const page: PageData = {
-  slug: 'zakelijke-events/casevideo',
+  slug: 'events/zakelijke-events/casevideo',
   title: 'Casevideo',
   meta: {
     schema: { type: 'service', serviceType: 'Zakelijke Casevideo Productie' },
@@ -30,7 +30,7 @@ export const page: PageData = {
         eyebrow: 'Het sterkste visitekaartje dat een eventbureau kan hebben.',
         primaryCta: {
           label: 'Boek Bold',
-          href: '/offerte-aanvragen',
+          href: '/events/offerte-aanvragen',
         },
         secondaryCta: {
           label: 'Hoe dan?',
@@ -116,7 +116,7 @@ export const page: PageData = {
         ],
         cta: {
           label: 'En dat wil je',
-          href: '/offerte-aanvragen',
+          href: '/events/offerte-aanvragen',
         },
         media: {
           type: 'image',
@@ -282,7 +282,7 @@ export const page: PageData = {
         ],
         cta: {
           label: 'Bel Bold',
-          href: '/offerte-aanvragen',
+          href: '/events/offerte-aanvragen',
           accent: 'yellow',
         },
       },

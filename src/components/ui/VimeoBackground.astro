@@ -3,6 +3,7 @@
  * Vimeo-achtergrondvideo (background=1) die de container vult (cover).
  * Het iframe krijgt pas een src na window.load (scripts/hero-video.ts) en fadet in
  * zodra Vimeo 'play' meldt. Tot die tijd blijft de poster (bijv. hero-afbeelding) zichtbaar.
+ * `playOnHover`: pas laden en afspelen als de muis op het blok komt (split-hero, scripts/split-hero.ts).
  */
 interface Props {
   id: string;
@@ -10,10 +11,12 @@ interface Props {
   /** Ook laden op schermen ≤767px */
   loadOnMobile?: boolean;
   title: string;
+  /** Laden/afspelen bij hover van de dichtstbijzijnde [data-split-half] i.p.v. na window.load */
+  playOnHover?: boolean;
   class?: string;
 }
 
-const { id, hash, loadOnMobile = false, title, class: className } = Astro.props;
+const { id, hash, loadOnMobile = false, title, playOnHover = false, class: className } = Astro.props;
 const params = new URLSearchParams({
   ...(hash ? { h: hash } : {}),
   autoplay: '1',
@@ -27,7 +30,7 @@ const params = new URLSearchParams({
 const src = `https://player.vimeo.com/video/${id}?${params.toString()}`;
 ---
 
-<div class:list={['vimeo-bg', className]} data-vimeo-bg data-load-on-mobile={loadOnMobile ? 'true' : 'false'} aria-hidden="true">
+<div class:list={['vimeo-bg', className]} data-vimeo-bg data-load-on-mobile={loadOnMobile ? 'true' : 'false'} data-play-on-hover={playOnHover ? '' : undefined} aria-hidden="true">
   <iframe
     class="vimeo-bg__iframe"
     data-src={src}

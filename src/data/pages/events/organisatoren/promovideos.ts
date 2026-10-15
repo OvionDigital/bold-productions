@@ -2,18 +2,18 @@
  * /events/promovideos — teksten letterlijk van www.weareboldproductions.com/events/promovideos.
  * Gegenereerd uit de live pagina; daarna vrij te bewerken (of in Sanity).
  */
-import type { PageData } from '../../../lib/sections';
-import { trustedByTitle, clientLogos } from '../../../data/logos';
-import { testimonialCarousel, pickTestimonials } from '../../../data/testimonials';
-import spotSeq00400301Still001 from '../../../assets/images/events/promovideos/spot-seq-00-40-03-01-still001.jpg';
-import doorgedraaid8 from '../../../assets/images/events/promovideos/doorgedraaid-8.jpg';
-import boldDoorgedraaid56 from '../../../assets/images/events/promovideos/bold-doorgedraaid-56.jpg';
-import boldDoorgedraaid3 from '../../../assets/images/events/promovideos/bold-doorgedraaid-3.jpg';
-import boldProductionsPiratenCafe162 from '../../../assets/images/events/promovideos/bold-productions-piraten-cafe-162.jpg';
-import mikeAftermovie from '../../../assets/images/events/mike-aftermovie.jpg';
+import type { PageData } from '../../../../lib/sections';
+import { trustedByTitle, clientLogos } from '../../../logos';
+import { testimonialCarousel, pickTestimonials } from '../../../testimonials';
+import spotSeq00400301Still001 from '../../../../assets/images/events/promovideos/spot-seq-00-40-03-01-still001.jpg';
+import doorgedraaid8 from '../../../../assets/images/events/promovideos/doorgedraaid-8.jpg';
+import boldDoorgedraaid56 from '../../../../assets/images/events/promovideos/bold-doorgedraaid-56.jpg';
+import boldDoorgedraaid3 from '../../../../assets/images/events/promovideos/bold-doorgedraaid-3.jpg';
+import boldProductionsPiratenCafe162 from '../../../../assets/images/events/promovideos/bold-productions-piraten-cafe-162.jpg';
+import mikeAftermovie from '../../../../assets/images/events/mike-aftermovie.jpg';
 
 export const page: PageData = {
-  slug: 'events/promovideos',
+  slug: 'events/organisatoren/promovideos',
   title: "Promovideo's",
   meta: {
     schema: {
@@ -38,7 +38,7 @@ export const page: PageData = {
         },
         secondaryCta: {
           label: 'Zo doen we dat',
-          href: '/offerte-aanvragen',
+          href: '/events/offerte-aanvragen',
           icon: 'arrow-right',
         },
         image: {
@@ -262,7 +262,7 @@ export const page: PageData = {
         ],
         cta: {
           label: 'Plan een gesprek',
-          href: '/offerte-aanvragen',
+          href: '/events/offerte-aanvragen',
           accent: 'yellow',
         },
       },

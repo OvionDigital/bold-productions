@@ -12,10 +12,10 @@ import PageBackground from '../components/layout/PageBackground.astro';
 import WhatsAppButton from '../components/layout/WhatsAppButton.astro';
 import type { Accent } from '../components/ui/Button.astro';
 import { buildStructuredData, type PageSchema, type Review } from '../lib/structured-data';
-import { breadcrumbLabels, skipLinkLabel } from '../data/navigation';
+import { breadcrumbLabels, navigation, sectionOf, skipLinkLabel } from '../data/navigation';
 import ogDefault from '../assets/seo/og-default.jpg';
 import logo from '../assets/brand/bold-productions-logo.png';
-import { contact, copyright, cta, footerColumns, footerLogoAlt, header, legalLinks, mainNav, socials } from '../data/navigation';
+import { contact, copyright, footerLogoAlt, header, legalLinks, socials } from '../data/navigation';
 
 interface Props {
   title: string;
@@ -52,6 +52,8 @@ const {
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const currentPath = Astro.url.pathname.replace(/\.html$/, '').replace(/\/$/, '') || '/';
 // Zonder eigen keuze: de vaste Bold-deelafbeelding (zoals live)
+// Menu, CTA en footer van dit deel van de site (events, business of neutraal)
+const siteNav = navigation[sectionOf(currentPath)];
 const ogImageUrl = new URL(ogImage ?? ogDefault.src, Astro.site).href;
 const jsonLd =
   structuredData && !noindex
@@ -130,8 +132,9 @@ const jsonLdHtml = jsonLd ? JSON.stringify(jsonLd).replaceAll('<', String.fromCh
     {
       chrome && (
         <Header
-          nav={mainNav}
-          cta={cta}
+          nav={siteNav.nav}
+          cta={siteNav.cta}
+          home={siteNav.home}
           menuLabel={header.menuLabel}
           logoAlt={header.logoAlt}
           homeTitle={header.homeTitle}
@@ -146,7 +149,7 @@ const jsonLdHtml = jsonLd ? JSON.stringify(jsonLd).replaceAll('<', String.fromCh
       {
         chrome && (
           <Footer
-            columns={footerColumns}
+            columns={siteNav.footer}
             contact={contact}
             socials={socials}
             legalLinks={legalLinks}

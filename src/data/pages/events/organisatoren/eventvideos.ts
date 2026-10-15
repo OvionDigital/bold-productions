@@ -2,18 +2,18 @@
  * /events/eventvideos — teksten letterlijk van www.weareboldproductions.com/events/eventvideos.
  * Gegenereerd uit de live pagina; daarna vrij te bewerken (of in Sanity).
  */
-import type { PageData } from '../../../lib/sections';
-import { trustedByTitle, clientLogos } from '../../../data/logos';
-import { testimonialCarousel, pickTestimonials } from '../../../data/testimonials';
-import mikeDorpsfeestwehlvrijdag117 from '../../../assets/images/artiesten/social-content/mike-dorpsfeestwehlvrijdag-117.jpg';
-import doorgedraaid11Jpg from '../../../assets/images/events/eventvideos/doorgedraaid-11-jpg.jpg';
-import doorgedraaid14Jpg from '../../../assets/images/events/eventvideos/doorgedraaid-14-jpg.jpg';
-import boldDoorgedraaid2 from '../../../assets/images/events/eventvideos/bold-doorgedraaid-2.jpg';
-import doorgedraaid12Jpg from '../../../assets/images/events/eventvideos/doorgedraaid-12-jpg.jpg';
-import mikeAftermovie from '../../../assets/images/events/mike-aftermovie.jpg';
+import type { PageData } from '../../../../lib/sections';
+import { trustedByTitle, clientLogos } from '../../../logos';
+import { testimonialCarousel, pickTestimonials } from '../../../testimonials';
+import mikeDorpsfeestwehlvrijdag117 from '../../../../assets/images/artiesten/social-content/mike-dorpsfeestwehlvrijdag-117.jpg';
+import doorgedraaid11Jpg from '../../../../assets/images/events/eventvideos/doorgedraaid-11-jpg.jpg';
+import doorgedraaid14Jpg from '../../../../assets/images/events/eventvideos/doorgedraaid-14-jpg.jpg';
+import boldDoorgedraaid2 from '../../../../assets/images/events/eventvideos/bold-doorgedraaid-2.jpg';
+import doorgedraaid12Jpg from '../../../../assets/images/events/eventvideos/doorgedraaid-12-jpg.jpg';
+import mikeAftermovie from '../../../../assets/images/events/mike-aftermovie.jpg';
 
 export const page: PageData = {
-  slug: 'events/eventvideos',
+  slug: 'events/organisatoren/eventvideos',
   title: "Eventvideo's",
   meta: {
     schema: {
@@ -36,7 +36,7 @@ export const page: PageData = {
         eyebrow: 'Maar alleen als je het goed vastlegt. En snel deelt.',
         primaryCta: {
           label: 'Boek Bold',
-          href: '/offerte-aanvragen',
+          href: '/events/offerte-aanvragen',
         },
         secondaryCta: {
           label: 'Zo doen we dat',
@@ -258,7 +258,7 @@ export const page: PageData = {
         ],
         cta: {
           label: 'Plan een gesprek',
-          href: '/offerte-aanvragen',
+          href: '/events/offerte-aanvragen',
           accent: 'yellow',
         },
         reverse: true,

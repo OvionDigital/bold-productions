@@ -1,7 +1,8 @@
 import type { StructureResolver } from 'sanity/structure';
 
 /**
- * "Homepage" is een singleton: één document, geen lijst. "Pagina's" zijn vrij op te
+ * "Homepage (/)" is de pagina met URL-pad "home" (keuze Events/Business, uit secties).
+ * "Events-homepage (/events)" is een singleton met vaste onderdelen (de vroegere homepage). "Pagina's" zijn vrij op te
  * bouwen uit secties (src/pages/[...slug].astro). Testimonials, klantlogo's en cases
  * zijn herbruikbare inhoud die pagina's per sectie kiezen.
  */
@@ -10,7 +11,11 @@ export const structure: StructureResolver = (S) =>
     .title('Bold Productions')
     .items([
       S.listItem()
-        .title('Homepage')
+        .title('Homepage (/)')
+        .id('page-home')
+        .child(S.document().schemaType('page').documentId('page-home')),
+      S.listItem()
+        .title('Events-homepage (/events)')
         .id('homepage')
         .child(S.document().schemaType('homepage').documentId('homepage')),
       S.documentTypeListItem('page')

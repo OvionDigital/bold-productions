@@ -13,7 +13,7 @@ import boldBGreen from '../../assets/decor/bold-b-green.svg';
 interface Props {
   id: string;
   groups: NavGroup[];
-  cta: NavLink;
+  cta?: NavLink;
   currentPath: string;
 }
 
@@ -36,10 +36,21 @@ const boldBBg = `url("${boldBGreen.src}")`;
   aria-label="Menu"
   hidden
 >
-  <Button label={cta.label} href={cta.href} size="small" class="menu-panel__cta" />
+  {cta && <Button label={cta.label} href={cta.href} size="small" class="menu-panel__cta" />}
   {
     groups.map((group, index) => {
       const childrenId = `${id}-group-${index}`;
+      if (!group.children.length) {
+        return (
+          <div class="menu-panel__group">
+            <div class="menu-panel__parent">
+              <a href={group.href} class="menu-panel__parent-link" aria-current={isCurrent(group.href)}>
+                {group.label}
+              </a>
+            </div>
+          </div>
+        );
+      }
       return (
         <div class="menu-panel__group" data-menu-group>
           <div class="menu-panel__parent">

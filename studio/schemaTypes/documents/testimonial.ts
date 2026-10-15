@@ -1,4 +1,5 @@
 import { defineType, defineField } from 'sanity';
+import { targetingFields, targetingFieldset, targetingLabel } from '../taxonomy';
 
 /**
  * Herbruikbaar over pagina's (net als src/data/testimonials.ts nu). Een pagina kiest
@@ -8,14 +9,20 @@ export const testimonial = defineType({
   name: 'testimonial',
   title: 'Testimonial',
   type: 'document',
+  fieldsets: [targetingFieldset],
   fields: [
     defineField({ name: 'quote', title: 'Quote', type: 'text', rows: 4, validation: (r) => r.required() }),
     defineField({ name: 'name', title: 'Naam', type: 'string', description: 'Leeg laten als alleen de organisatienaam getoond wordt.' }),
     defineField({ name: 'organisation', title: 'Organisatie', type: 'string' }),
     defineField({ name: 'image', title: 'Foto', type: 'imageWithAlt', validation: (r) => r.required() }),
+    ...targetingFields(),
   ],
   preview: {
-    select: { title: 'name', subtitle: 'organisation', media: 'image' },
-    prepare: ({ title, subtitle, media }) => ({ title: title || subtitle || 'Testimonial', subtitle, media }),
+    select: { title: 'name', organisation: 'organisation', media: 'image', category: 'category', eventsAudience: 'eventsAudience', businessAudience: 'businessAudience' },
+    prepare: ({ title, organisation, media, ...doc }) => ({
+      title: title || organisation || 'Testimonial',
+      subtitle: [organisation, targetingLabel(doc)].filter(Boolean).join(' — '),
+      media,
+    }),
   },
 });

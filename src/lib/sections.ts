@@ -8,6 +8,7 @@
  * (studio/schemaTypes/sections, lib/sanity/sections.ts) en een voorbeeld op /styleguide.
  */
 import type { HeroProps } from '../components/sections/Hero.astro';
+import type { SplitHeroProps } from '../components/sections/SplitHero.astro';
 import type { LogoMarqueeProps } from '../components/sections/LogoMarquee.astro';
 import type { IntroHighlightProps } from '../components/sections/IntroHighlight.astro';
 import type { TimelineProps } from '../components/sections/Timeline.astro';
@@ -39,6 +40,8 @@ export interface FormChoice {
 
 export type PageSection = (
   | { type: 'hero'; props: HeroProps }
+  /** Homepage: keuze tussen Events en Business */
+  | { type: 'splitHero'; props: SplitHeroProps }
   | { type: 'breadcrumbs' }
   | { type: 'logoMarquee'; props: LogoMarqueeProps }
   | { type: 'introHighlight'; props: IntroHighlightProps }
@@ -66,7 +69,7 @@ export type PageSectionType = PageSection['type'];
 
 /** Eén pagina: naam (kruimelpad), URL-pad zonder slashes aan begin/eind, SEO en secties. */
 export interface PageData {
-  /** Bijv. 'events/aftermovie' of 'cases/drift' */
+  /** Bijv. 'events/organisatoren/aftermovie' of 'events/cases/drift'; 'home' = de homepage (/) */
   slug: string;
   /** Naam van de pagina (kruimelpad, intern) */
   title: string;

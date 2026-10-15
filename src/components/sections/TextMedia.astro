@@ -7,6 +7,7 @@
  * - `spacing`: 'margin' of 'section'; beide 192 marge (--section-space), 'section' knipt horizontale
  *   overflow af (verticaal niet: de driehoekjes steken boven en onder het beeld uit).
  * - `intro`: gecentreerde titel + tekst boven de rij (Webflow .form-compact-intro).
+ * - `links`: contactlinks (bellen, mailen, WhatsApp) onder de tekst.
  * - Slot "content" vervangt de tekstkolom (bijv. een formulier).
  * - `id` = 'cinema' activeert de popcorn-cursor (scripts/cinema-cursor.ts).
  */
@@ -18,6 +19,7 @@ import Button, { type Accent } from '../ui/Button.astro';
 import VimeoEmbed from '../ui/VimeoEmbed.astro';
 import DecoTriangles from '../ui/DecoTriangles.astro';
 import CmsPicture from '../ui/CmsPicture.astro';
+import ContactLinks, { type ContactLink } from '../ui/ContactLinks.astro';
 import type { RemoteImage } from '../../lib/sanity/image';
 import type { Rich } from '../../lib/rich';
 
@@ -30,6 +32,8 @@ export interface TextMediaProps {
   title?: string;
   gradient?: HeadingGradient;
   body?: Rich;
+  /** Bel/mail/WhatsApp-links onder de tekst (bijv. "Mail Mike" op de homepage) */
+  links?: ContactLink[];
   cta?: { label: string; href: string; accent?: Accent };
   media: Media;
   reverse?: boolean;
@@ -46,6 +50,7 @@ const {
   title,
   gradient = 'orange',
   body,
+  links,
   cta,
   media,
   reverse = false,
@@ -80,6 +85,7 @@ const hasCustomContent = Astro.slots.has('content');
               <div class="text-media__copy">
                 {title && <Heading as="h2" text={title} gradient={gradient} flush />}
                 {body && <RichText content={body} class="text-media__body" />}
+                {links && links.length > 0 && <ContactLinks links={links} />}
               </div>
               {cta && <Button label={cta.label} href={cta.href} accent={cta.accent} />}
             </div>

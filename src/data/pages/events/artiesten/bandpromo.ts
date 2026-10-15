@@ -2,18 +2,18 @@
  * /artiesten/bandpromo — teksten letterlijk van www.weareboldproductions.com/artiesten/bandpromo.
  * Gegenereerd uit de live pagina; daarna vrij te bewerken (of in Sanity).
  */
-import type { PageData } from '../../../lib/sections';
-import { trustedByTitle, artistLogos } from '../../../data/logos';
-import { testimonialCarousel, pickTestimonials } from '../../../data/testimonials';
-import mikeDorpsfeestwehlzaterdag256 from '../../../assets/images/artiesten/bandpromo/mike-dorpsfeestwehlzaterdag-256.jpg';
-import bold68 from '../../../assets/images/artiesten/bandpromo/bold-68.jpg';
-import mikexdeliveformuleFinis100Jaar129 from '../../../assets/images/artiesten/bandpromo/mikexdeliveformule-finis-100-jaar-129.jpg';
-import bold24 from '../../../assets/images/artiesten/bandpromo/bold-24.jpg';
-import bold83 from '../../../assets/images/artiesten/bandpromo/bold-83.jpg';
-import mikeAftermovie from '../../../assets/images/events/mike-aftermovie.jpg';
+import type { PageData } from '../../../../lib/sections';
+import { trustedByTitle, artistLogos } from '../../../logos';
+import { testimonialCarousel, pickTestimonials } from '../../../testimonials';
+import mikeDorpsfeestwehlzaterdag256 from '../../../../assets/images/artiesten/bandpromo/mike-dorpsfeestwehlzaterdag-256.jpg';
+import bold68 from '../../../../assets/images/artiesten/bandpromo/bold-68.jpg';
+import mikexdeliveformuleFinis100Jaar129 from '../../../../assets/images/artiesten/bandpromo/mikexdeliveformule-finis-100-jaar-129.jpg';
+import bold24 from '../../../../assets/images/artiesten/bandpromo/bold-24.jpg';
+import bold83 from '../../../../assets/images/artiesten/bandpromo/bold-83.jpg';
+import mikeAftermovie from '../../../../assets/images/events/mike-aftermovie.jpg';
 
 export const page: PageData = {
-  slug: 'artiesten/bandpromo',
+  slug: 'events/artiesten/bandpromo',
   title: 'Bandpromo',
   meta: {
     schema: { type: 'service', serviceType: 'Band Promovideo Productie' },
@@ -30,7 +30,7 @@ export const page: PageData = {
         eyebrow: 'Een bandpromo die boekingen oplevert. Niet eentje die in een map verdwijnt.',
         primaryCta: {
           label: 'Boek Bold',
-          href: '/offerte-aanvragen',
+          href: '/events/offerte-aanvragen',
         },
         secondaryCta: {
           label: 'Bekijk hoe',
@@ -289,7 +289,7 @@ export const page: PageData = {
         ],
         cta: {
           label: 'Bel Bold',
-          href: '/offerte-aanvragen',
+          href: '/events/offerte-aanvragen',
           accent: 'yellow',
         },
         reverse: true,

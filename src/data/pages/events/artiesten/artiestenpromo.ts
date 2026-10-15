@@ -2,18 +2,18 @@
  * /artiesten/artiestenpromo — teksten letterlijk van www.weareboldproductions.com/artiesten/artiestenpromo.
  * Gegenereerd uit de live pagina; daarna vrij te bewerken (of in Sanity).
  */
-import type { PageData } from '../../../lib/sections';
-import { trustedByTitle, artistLogos } from '../../../data/logos';
-import { testimonialCarousel, pickTestimonials } from '../../../data/testimonials';
-import mikeDorpsfeestwehlzaterdag43 from '../../../assets/images/artiesten/artiestenpromo/mike-dorpsfeestwehlzaterdag-43.jpg';
-import boldProductions12 from '../../../assets/images/artiesten/artiestenpromo/bold-productions-12.jpg';
-import boldProductions10 from '../../../assets/images/artiesten/artiestenpromo/bold-productions-10.jpg';
-import boldProductions110 from '../../../assets/images/artiesten/artiestenpromo/bold-productions-110.jpg';
-import heroHriepsFestival from '../../../assets/images/events/hero-hrieps-festival.jpg';
-import mikeAftermovie from '../../../assets/images/events/mike-aftermovie.jpg';
+import type { PageData } from '../../../../lib/sections';
+import { trustedByTitle, artistLogos } from '../../../logos';
+import { testimonialCarousel, pickTestimonials } from '../../../testimonials';
+import mikeDorpsfeestwehlzaterdag43 from '../../../../assets/images/artiesten/artiestenpromo/mike-dorpsfeestwehlzaterdag-43.jpg';
+import boldProductions12 from '../../../../assets/images/artiesten/artiestenpromo/bold-productions-12.jpg';
+import boldProductions10 from '../../../../assets/images/artiesten/artiestenpromo/bold-productions-10.jpg';
+import boldProductions110 from '../../../../assets/images/artiesten/artiestenpromo/bold-productions-110.jpg';
+import heroHriepsFestival from '../../../../assets/images/events/hero-hrieps-festival.jpg';
+import mikeAftermovie from '../../../../assets/images/events/mike-aftermovie.jpg';
 
 export const page: PageData = {
-  slug: 'artiesten/artiestenpromo',
+  slug: 'events/artiesten/artiestenpromo',
   title: 'Artiestenpromo',
   meta: {
     schema: { type: 'service', serviceType: 'Artiesten Promovideo Productie' },
@@ -30,7 +30,7 @@ export const page: PageData = {
         eyebrow: 'Zorg dat de beelden dat ook uitstralen.',
         primaryCta: {
           label: 'Boek Bold',
-          href: '/offerte-aanvragen',
+          href: '/events/offerte-aanvragen',
         },
         secondaryCta: {
           label: 'Helpen we mee',
@@ -93,7 +93,7 @@ export const page: PageData = {
         ],
         cta: {
           label: 'Dit wil je',
-          href: '/offerte-aanvragen',
+          href: '/events/offerte-aanvragen',
           accent: 'yellow',
         },
         media: {
@@ -250,7 +250,7 @@ export const page: PageData = {
         ],
         cta: {
           label: 'Boek Bold',
-          href: '/offerte-aanvragen',
+          href: '/events/offerte-aanvragen',
           accent: 'yellow',
         },
       },

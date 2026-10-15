@@ -1,5 +1,5 @@
 /**
- * Alle pagina's van src/pages/[...slug].astro (alles behalve de homepage): uit Sanity
+ * Alle pagina's (homepage = slug 'home', de rest via src/pages/[...slug].astro): uit Sanity
  * als dat geconfigureerd en gevuld is, anders uit src/data (pages + cases). Beide
  * leveren PageData (lib/sections.ts); hier komen kruimelpad en deelafbeelding erbij.
  */
@@ -31,7 +31,7 @@ async function ogImageFor(page: PageData): Promise<string | undefined> {
   const own = page.meta.ogImage;
   if (typeof own === 'string') return own;
   if (own) return (await getImage({ src: own, width: 1200, height: 630, fit: 'cover', format: 'jpg' })).src;
-  if (!page.slug.startsWith('cases/')) return undefined;
+  if (!/^(events|business)\/cases\//.test(page.slug)) return undefined;
   const hero = page.sections.find((s) => s.type === 'hero');
   if (!hero) return undefined;
   const src = hero.props.image.src;
@@ -40,13 +40,20 @@ async function ogImageFor(page: PageData): Promise<string | undefined> {
   return image.src;
 }
 
+/** Slug van de homepage (/): src/pages/index.astro, niet /home */
+export const HOME_SLUG = 'home';
+
 let cache: Promise<BuiltPage[]> | undefined;
 
 export function getAllPages(): Promise<BuiltPage[]> {
   cache ??= (async () => {
     const cms = await getCmsPages();
     const source: PageData[] = cms?.length ? cms : [...localPages, ...localCases.map(casePage)];
-    const bySlug = new Map(source.map((p) => [p.slug, p]));
+    // Homepage nog niet in Sanity: die uit src/data
+    if (!source.some((p) => p.slug === HOME_SLUG)) source.push(localPages.find((p) => p.slug === HOME_SLUG)!);
+    const bySlug = new Map<string, Pick<PageData, 'title' | 'breadcrumbTitle'>>(source.map((p) => [p.slug, p]));
+    // /events is een vaste pagina (src/pages/events.astro), geen PageData
+    bySlug.set('events', { title: 'Events' });
     return Promise.all(
       source.map(async (page) => ({
         slug: page.slug,
@@ -66,3 +73,8 @@ export function getAllPages(): Promise<BuiltPage[]> {
   })();
   return cache;
 }
+
+/** Alle pagina's van src/pages/[...slug].astro (zonder de homepage) */
+export const getRoutedPages = async () => (await getAllPages()).filter((page) => page.slug !== HOME_SLUG);
+
+export const getHomePage = async () => (await getAllPages()).find((page) => page.slug === HOME_SLUG)!;

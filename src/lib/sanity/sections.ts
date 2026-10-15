@@ -12,7 +12,9 @@
  */
 import { imageProjection, toRemoteImage, type SanityImageRef } from './image';
 import { portableTextToRich } from './portableText';
-import { caseGridProps, caseUrl, type Audience, type Case } from '../../data/cases';
+import { caseGridProps, caseUrl, type Case } from '../../data/cases';
+import type { Targeting } from '../../data/taxonomy';
+import { targetingProjection, toTargeting, type RawTargeting } from './taxonomy';
 import type { FormChoice, PageSection } from '../sections';
 import type { TextMediaProps } from '../../components/sections/TextMedia.astro';
 import type { LinkGroup } from '../../components/sections/LinkGroups.astro';
@@ -29,6 +31,7 @@ export const caseCardProjection = `{
   "slug": slug.current,
   intro,
   "image": image${imageProjection},
+  ${targetingProjection},
   audiences,
   services,
   client,
@@ -46,6 +49,10 @@ export const sectionsProjection = `{
     title, titleAccent, accentInline, eyebrow, primaryCta, secondaryCta, buttonAccent,
     "image": image${imageProjection},
     video, videoOnMobile
+  },
+  _type == "splitHeroSection" => {
+    title,
+    halves[]{ title, text, ctaLabel, href, accent, "image": image${imageProjection}, video }
   },
   _type == "logoMarqueeSection" => {
     title,
@@ -70,7 +77,7 @@ export const sectionsProjection = `{
     "photos": photos[]${imageProjection}
   },
   _type == "textMediaSection" => {
-    showContactForm, form, messagePlaceholder, intro, title, gradient, body, "cta": cta${ctaProjection},
+    showContactForm, form, messagePlaceholder, intro, title, gradient, body, links[]{ label, href }, "cta": cta${ctaProjection},
     mediaType, "image": image${imageProjection}, video,
     reverse, triangles, layout, anchorId
   },
@@ -111,7 +118,7 @@ type Img = SanityImageRef | null | undefined;
 type RawSection = { _type: string; _key: string } & Record<string, any>;
 
 /** Ruwe case na `caseCardProjection` */
-export interface RawCase {
+export interface RawCase extends RawTargeting {
   title?: string;
   slug?: string;
   intro?: string;
@@ -128,6 +135,10 @@ const image = (img: SanityImageRef) => ({ src: toRemoteImage(img), alt: img.alt 
 const cta = (c: Cta | null | undefined) => (c?.label && c.href ? { label: c.label, href: c.href, accent: c.accent ?? undefined } : undefined);
 const gradient = (g: unknown) => (g ?? undefined) as HeadingGradient | undefined;
 const opt = <T>(v: T | null | undefined) => v ?? undefined;
+const contactLinks = (links: { label?: string; href?: string }[] | null | undefined) => {
+  const list = (links ?? []).filter((l) => l.label && l.href).map((l) => ({ label: l.label!, href: l.href! }));
+  return list.length ? list : undefined;
+};
 const vimeo = (v: Vimeo | null | undefined, fallbackTitle: string) => (v?.id ? { id: v.id, hash: opt(v.hash) || undefined, title: v.title || fallbackTitle } : undefined);
 const formChoice = (name: unknown, messagePlaceholder: unknown): FormChoice => ({
   name: name === 'offerte' || name === 'trouwfilm' ? name : 'contact',
@@ -141,6 +152,17 @@ function need<T>(value: T | null | undefined | false | '', what: string): T {
   return value;
 }
 
+/**
+ * Oude velden (audiences[], services[]) van vóór de indeling Events/Business → doelgroep →
+ * diensten. Alleen zolang nog niet elke case gemigreerd is (npm run sanity:migrate-taxonomy).
+ */
+function legacyTargeting(raw: RawCase): Targeting {
+  const old = raw.audiences?.[0];
+  if (old === 'business') return { category: 'business', audience: 'fundament' };
+  const audience = old === 'artiesten' || old === 'zakelijke-events' ? old : 'organisatoren';
+  return { category: 'events', audience, services: raw.services ?? [] };
+}
+
 /** Ruwe case → Case (zelfde vorm als src/data/cases.ts). `null` als titel, slug of foto ontbreekt. */
 export function toCase(raw: RawCase | null | undefined): Case | null {
   if (!raw?.title || !raw.slug || !hasImage(raw.image)) return null;
@@ -150,15 +172,15 @@ export function toCase(raw: RawCase | null | undefined): Case | null {
     intro: raw.intro ?? '',
     // Decoratief: de titel staat al op de kaart en in de hero
     image: { src: toRemoteImage(raw.image), alt: '' },
-    audiences: (raw.audiences ?? []) as Audience[],
-    services: raw.services ?? [],
+    ...(toTargeting(raw) ?? legacyTargeting(raw)),
     client: opt(raw.client),
     date: opt(raw.date),
     video: vimeo(raw.video, `${raw.title} – Bold Productions`),
   };
 }
 
-const mappers: Record<string, (s: RawSection) => PageSection> = {
+/** `path`: pad van de pagina (bijv. '/business/cases'), voor blokken die van de soort afhangen */
+const mappers: Record<string, (s: RawSection, path: string) => PageSection> = {
   heroSection: (s) => {
     const img = need(hasImage(s.image) && s.image, 'achtergrondfoto ontbreekt');
     const video: Vimeo | undefined = s.video;
@@ -178,6 +200,25 @@ const mappers: Record<string, (s: RawSection) => PageSection> = {
         video: video?.id ? { id: video.id, hash: opt(video.hash), title: video.title ?? '', loadOnMobile: Boolean(s.videoOnMobile) } : undefined,
         accent: opt(s.buttonAccent),
       },
+    };
+  },
+
+  splitHeroSection: (s) => {
+    type RawHalf = { title?: string; text?: string; ctaLabel?: string; href?: string; accent?: Accent; image?: Img; video?: Vimeo };
+    const halves = ((s.halves ?? []) as RawHalf[])
+      .filter((h) => h.title && h.ctaLabel && h.href && hasImage(h.image))
+      .map((h) => ({
+        title: h.title!,
+        text: h.text ?? '',
+        cta: { label: h.ctaLabel!, href: h.href! },
+        accent: h.accent ?? 'orange',
+        image: image(h.image as SanityImageRef),
+        video: vimeo(h.video, h.title!),
+      }));
+    return {
+      type: 'splitHero',
+      key: s._key,
+      props: { title: s.title || 'Bold Productions', halves: need(halves.length === 2 && halves, 'twee volledige helften nodig') },
     };
   },
 
@@ -282,6 +323,7 @@ const mappers: Record<string, (s: RawSection) => PageSection> = {
         title: withForm ? undefined : opt(s.title),
         gradient: gradient(s.gradient),
         body: withForm ? undefined : portableTextToRich(s.body),
+        links: withForm ? undefined : contactLinks(s.links),
         cta: withForm ? undefined : cta(s.cta),
         intro: s.intro?.title ? { title: s.intro.title, gradient: gradient(s.intro.gradient), text: portableTextToRich(s.intro.text) } : undefined,
         media,
@@ -410,7 +452,7 @@ const mappers: Record<string, (s: RawSection) => PageSection> = {
       const links = ((s.cases ?? []) as RawCase[])
         .map(toCase)
         .filter((c): c is Case => c !== null)
-        .map((c) => ({ label: c.title, href: caseUrl(c.slug) }));
+        .map((c) => ({ label: c.title, href: caseUrl(c) }));
       const index = typeof s.casesGroupIndex === 'number' ? s.casesGroupIndex : groups.length;
       if (links.length) groups.splice(Math.max(0, Math.min(index, groups.length)), 0, { title: s.casesGroupTitle, links, auto: 'cases' });
     }
@@ -428,14 +470,20 @@ const mappers: Record<string, (s: RawSection) => PageSection> = {
     };
   },
 
-  caseGridSection: (s) => ({
+  caseGridSection: (s, path) => ({
     type: 'caseGrid',
     key: s._key,
-    props: { ...caseGridProps(((s.cases ?? []) as RawCase[]).map(toCase).filter((c): c is Case => c !== null)), id: opt(s.anchorId) },
+    props: {
+      ...caseGridProps(
+        ((s.cases ?? []) as RawCase[]).map(toCase).filter((c): c is Case => c !== null),
+        path.startsWith('/business') ? 'business' : 'events',
+      ),
+      id: opt(s.anchorId),
+    },
   }),
 };
 
-/** `context` = waar de sectie staat (voor de waarschuwing in de build-log). */
+/** `context` = pad van de pagina (voor blokken die van de soort afhangen en de waarschuwing in de build-log). */
 export function mapSections(raw: RawSection[] | null | undefined, context: string): PageSection[] {
   const result: PageSection[] = [];
   for (const section of raw ?? []) {
@@ -445,7 +493,7 @@ export function mapSections(raw: RawSection[] | null | undefined, context: strin
       continue;
     }
     try {
-      result.push(mapper(section));
+      result.push(mapper(section, context));
     } catch (err) {
       if (!(err instanceof SkipSection)) throw err;
       console.warn(`[sanity] ${context}: blok '${section._type}' overgeslagen (${err.message}).`);

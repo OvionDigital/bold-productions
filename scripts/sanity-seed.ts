@@ -31,6 +31,7 @@ import { cases } from '../src/data/cases';
 import { testimonials } from '../src/data/testimonials';
 import { team, teamOrder, type TeamMemberId } from '../src/data/team';
 import { artistLogos, businessLogos, clientLogos } from '../src/data/logos';
+import { targetingFields } from '../src/lib/sanity/taxonomy';
 import * as home from '../src/data/home';
 
 const { PUBLIC_SANITY_PROJECT_ID, PUBLIC_SANITY_DATASET, SANITY_API_WRITE_TOKEN } = process.env;
@@ -154,7 +155,7 @@ async function logoDocs(): Promise<Doc[]> {
     if (logoIdByPath.has(fsPath)) continue;
     const id = `clientLogo-${slugify(logo.alt)}`;
     logoIdByPath.set(fsPath, id);
-    docs.push({ _id: id, _type: 'clientLogo', name: logo.alt, image: await image({ src: logo.src }, false) });
+    docs.push({ _id: id, _type: 'clientLogo', name: logo.alt, image: await image({ src: logo.src }, false), ...targetingFields(logo) });
   }
   return docs;
 }
@@ -170,6 +171,7 @@ async function testimonialDocs(): Promise<Doc[]> {
       name: 'name' in t ? t.name : undefined,
       organisation: 'organisation' in t ? t.organisation : undefined,
       image: await image(t.image),
+      ...targetingFields(t),
     })),
   );
 }
@@ -209,6 +211,25 @@ async function toBlock(section: PageSection): Promise<Record<string, unknown> | 
         image: await image(p.image),
         video: p.video ? vimeo(p.video) : undefined,
         videoOnMobile: p.video?.loadOnMobile || undefined,
+      };
+    }
+    case 'splitHero': {
+      const p = section.props;
+      return {
+        _type: 'splitHeroSection',
+        title: p.title,
+        halves: await Promise.all(
+          p.halves.map(async (h) => ({
+            _type: 'splitHeroHalf',
+            title: h.title,
+            text: h.text,
+            ctaLabel: h.cta.label,
+            href: h.cta.href,
+            accent: h.accent,
+            image: await image(h.image),
+            video: h.video ? vimeo(h.video) : undefined,
+          })),
+        ),
       };
     }
     case 'breadcrumbs':
@@ -271,6 +292,7 @@ async function toBlock(section: PageSection): Promise<Record<string, unknown> | 
         title: p.title,
         gradient: p.gradient,
         body: richToPortableText(p.body),
+        links: p.links?.map((l) => ({ _type: 'contactLink', ...l })),
         cta: p.cta ? { _type: 'ctaButton', ...p.cta } : undefined,
         mediaType: p.media.type,
         image: p.media.type === 'image' ? await image(p.media) : undefined,
@@ -391,7 +413,13 @@ function schemaFields(schema: PageData['meta']['schema']): Record<string, unknow
   }
 }
 
-const pageId = (slug: string) => `page-${slug.replace(/\//g, '--')}`;
+/**
+ * Document-id per URL-pad. Bestaat er al een pagina met dat pad (ook na een URL-wijziging,
+ * scripts/sanity-migrate-urls.ts), dan dat document; anders page-<pad>. 'home' = page-home
+ * (de homepage, vast item in Studio).
+ */
+const existingPageIds = new Map<string, string>();
+const pageId = (slug: string) => existingPageIds.get(slug) ?? `page-${slug.replace(/\//g, '--')}`;
 
 async function pageDoc(page: PageData): Promise<Doc> {
   return {
@@ -421,8 +449,7 @@ async function caseDocs(): Promise<Doc[]> {
       intro: item.intro,
       image: await image(item.image, false),
       video: vimeo(item.video),
-      audiences: item.audiences,
-      services: item.services,
+      ...targetingFields(item),
       client: item.client,
       date: item.date,
       sortOrder: (index + 1) * 10,
@@ -515,6 +542,8 @@ async function main() {
   await write(await testimonialDocs(), 'Testimonials');
   await write(await teamDocs(), 'Teamleden');
   await write(await caseDocs(), 'Cases');
+  const existing = await client.fetch<{ _id: string; slug?: string }[]>('*[_type == "page" && !(_id in path("drafts.**"))]{ _id, "slug": slug.current }');
+  existing.forEach((doc) => doc.slug && existingPageIds.set(doc.slug, doc._id));
   const pageDocs: Doc[] = [];
   for (const page of pages) pageDocs.push(await pageDoc(page));
   await write(pageDocs, "Pagina's");

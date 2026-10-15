@@ -7,6 +7,7 @@ import { sanityClient, isSanityConfigured } from './client';
 import { caseCardProjection, mapSections, sectionsProjection, toCase, type RawCase } from './sections';
 import { portableTextToRich } from './portableText';
 import { casePage } from '../cases';
+import { caseUrl } from '../../data/cases';
 import type { Accent } from '../../components/ui/Button.astro';
 import type { PageData } from '../sections';
 import type { PageSchema } from '../structured-data';
@@ -15,7 +16,7 @@ import type { PageSchema } from '../structured-data';
  * Paden die een vaste pagina in src/pages/ hebben; een Sanity-pagina met zo'n pad wordt
  * niet gebouwd (Studio weigert ze ook, zie RESERVED_SLUGS in page.ts — gelijk houden).
  */
-const STATIC_PAGES = ['styleguide'];
+const STATIC_PAGES = ['styleguide', 'events'];
 
 const QUERY = `{
   "pages": *[_type == "page" && defined(slug.current)] | order(slug.current asc) {
@@ -101,7 +102,7 @@ export async function getCmsPages(): Promise<PageData[] | null> {
 
   const result: PageData[] = pages
     .filter((doc) => {
-      if (STATIC_PAGES.includes(doc.slug) || doc.slug.startsWith('cases/')) {
+      if (STATIC_PAGES.includes(doc.slug) || /^(events|business)\/cases\//.test(doc.slug)) {
         console.warn(`[sanity] Pagina '/${doc.slug}' overgeslagen: dat pad is een vaste pagina of een case.`);
         return false;
       }
@@ -134,7 +135,7 @@ export async function getCmsPages(): Promise<PageData[] | null> {
         ...item,
         meta: { title: doc.metaTitle || item.title, description: doc.metaDescription || item.intro },
         introText: portableTextToRich(doc.introText),
-        sections: mapSections(doc.sections, `/cases/${item.slug}`),
+        sections: mapSections(doc.sections, caseUrl(item)),
       }),
       updatedAt: doc._updatedAt,
     });

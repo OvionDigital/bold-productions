@@ -2,7 +2,7 @@
 /**
  * Casekaart (Webflow .work-overview-item): foto (3:2, ≤991 16:9, zoals live) met donkere
  * diagonale gradient, titel in groene gradient en intro (vanaf 1280px).
- * Hele kaart is een link naar /cases/[slug].
+ * Hele kaart is een link naar /<soort>/cases/[slug].
  * `tags`: labels onderaan (doelgroep + diensten), zoals in het casesoverzicht
  * (Webflow .work-overview-item.overview: ≤767 vierkant).
  */
@@ -20,7 +20,7 @@ interface Props {
 const { item, tags, sizes = '(max-width: 991px) 100vw, (max-width: 1439px) 67vw, 50vw', class: className } = Astro.props;
 ---
 
-<a href={caseUrl(item.slug)} class:list={['case-card', { 'case-card--tagged': tags?.length }, className]}>
+<a href={caseUrl(item)} class:list={['case-card', { 'case-card--tagged': tags?.length }, className]}>
   <span class="case-card__shade" aria-hidden="true"></span>
   <CmsPicture
     src={item.image.src}

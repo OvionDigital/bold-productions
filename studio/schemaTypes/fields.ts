@@ -1,4 +1,4 @@
-import { defineField } from 'sanity';
+import { defineField, defineArrayMember } from 'sanity';
 
 /**
  * Velden die in meerdere secties terugkomen. Waarden gelijk aan de props van de
@@ -75,3 +75,23 @@ export function plainText(blocks: unknown): string {
     .join(' ')
     .trim();
 }
+
+/** Bel/mail/WhatsApp-links (ContactLinks.astro): contactblok en tekst + beeld */
+export const contactLinksField = (title = 'Contactlinks') =>
+  defineField({
+    name: 'links',
+    title,
+    type: 'array',
+    description: 'Icoon kiest zichzelf: tel: = telefoon, mailto: = mail, anders WhatsApp.',
+    of: [
+      defineArrayMember({
+        type: 'object',
+        name: 'contactLink',
+        fields: [
+          defineField({ name: 'label', title: 'Tekst', type: 'string', validation: (r) => r.required() }),
+          defineField({ name: 'href', title: 'Link (tel:, mailto: of https://wa.me/…)', type: 'string', validation: (r) => r.required() }),
+        ],
+        preview: { select: { title: 'label', subtitle: 'href' } },
+      }),
+    ],
+  });

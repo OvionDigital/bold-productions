@@ -2,22 +2,22 @@
  * /zakelijke-events — teksten letterlijk van www.weareboldproductions.com/zakelijke-events.
  * Gegenereerd uit de live pagina; daarna vrij te bewerken (of in Sanity).
  */
-import type { PageData } from '../../lib/sections';
-import { trustedByTitle, businessLogos } from '../../data/logos';
-import { testimonialCarousel, pickTestimonials } from '../../data/testimonials';
-import mikexdeliveformuleFinis100Jaar4 from '../../assets/images/zakelijke-events/mikexdeliveformule-finis-100-jaar-4.jpg';
-import mikeSkndag65 from '../../assets/images/zakelijke-events/mike-skndag-65.jpg';
-import hf20260404141600F53da6ceF2c742669148Fed3 from '../../assets/images/offerte-aanvragen/hf-20260404-141600-f53da6ce-f2c7-4266-9148-fed3481c249c.jpg';
-import mikexdeliveformuleFinis100Jaar69 from '../../assets/images/zakelijke-events/mikexdeliveformule-finis-100-jaar-69.jpg';
-import bioscoop from '../../assets/images/events/bioscoop.jpg';
-import mikeSkndag137 from '../../assets/images/zakelijke-events/mike-skndag-137.jpg';
-import mikexdeliveformuleFinis100Jaar51 from '../../assets/images/zakelijke-events/mikexdeliveformule-finis-100-jaar-51.jpg';
-import mikexdeliveformuleFinis100Jaar39 from '../../assets/images/zakelijke-events/mikexdeliveformule-finis-100-jaar-39.jpg';
-import rhbfoto64 from '../../assets/images/zakelijke-events/rhbfoto-64.jpg';
-import mikeAftermovie from '../../assets/images/events/mike-aftermovie.jpg';
+import type { PageData } from '../../../lib/sections';
+import { trustedByTitle, businessLogos } from '../../logos';
+import { testimonialCarousel, pickTestimonials } from '../../testimonials';
+import mikexdeliveformuleFinis100Jaar4 from '../../../assets/images/zakelijke-events/mikexdeliveformule-finis-100-jaar-4.jpg';
+import mikeSkndag65 from '../../../assets/images/zakelijke-events/mike-skndag-65.jpg';
+import hf20260404141600F53da6ceF2c742669148Fed3 from '../../../assets/images/offerte-aanvragen/hf-20260404-141600-f53da6ce-f2c7-4266-9148-fed3481c249c.jpg';
+import mikexdeliveformuleFinis100Jaar69 from '../../../assets/images/zakelijke-events/mikexdeliveformule-finis-100-jaar-69.jpg';
+import bioscoop from '../../../assets/images/events/bioscoop.jpg';
+import mikeSkndag137 from '../../../assets/images/zakelijke-events/mike-skndag-137.jpg';
+import mikexdeliveformuleFinis100Jaar51 from '../../../assets/images/zakelijke-events/mikexdeliveformule-finis-100-jaar-51.jpg';
+import mikexdeliveformuleFinis100Jaar39 from '../../../assets/images/zakelijke-events/mikexdeliveformule-finis-100-jaar-39.jpg';
+import rhbfoto64 from '../../../assets/images/zakelijke-events/rhbfoto-64.jpg';
+import mikeAftermovie from '../../../assets/images/events/mike-aftermovie.jpg';
 
 export const page: PageData = {
-  slug: 'zakelijke-events',
+  slug: 'events/zakelijke-events',
   title: 'Zakelijke events',
   meta: {
     schema: {
@@ -38,7 +38,7 @@ export const page: PageData = {
         eyebrow: 'Met strategische (video)content bereik je ze makkelijker',
         primaryCta: {
           label: 'Boek Bold',
-          href: '/offerte-aanvragen',
+          href: '/events/offerte-aanvragen',
         },
         secondaryCta: {
           label: 'Hoe dan?',
@@ -115,7 +115,7 @@ export const page: PageData = {
         ],
         cta: {
           label: 'Helpen we mee',
-          href: '/offerte-aanvragen',
+          href: '/events/offerte-aanvragen',
           accent: 'green',
         },
         media: {
@@ -218,7 +218,7 @@ export const page: PageData = {
         ],
         cta: {
           label: 'Afspraak plannen',
-          href: '/offerte-aanvragen',
+          href: '/events/offerte-aanvragen',
           accent: 'yellow',
         },
         reverse: true,
@@ -268,7 +268,7 @@ export const page: PageData = {
         items: [
           {
             label: "Promovideo's",
-            href: '/zakelijke-events/promovideo',
+            href: '/events/zakelijke-events/promovideo',
             image: {
               src: mikeSkndag137,
               alt: 'Sfeerbeeld tijdens een bedrijfsfeest. Foto door Bold Productions contentspecialist voor Events & Artiesten.',
@@ -276,7 +276,7 @@ export const page: PageData = {
           },
           {
             label: 'Aftermovie',
-            href: '/zakelijke-events/aftermovie',
+            href: '/events/zakelijke-events/aftermovie',
             image: {
               src: mikexdeliveformuleFinis100Jaar51,
               alt: 'Foto tijdens een personeelfeest. Foto gemaakt door Bold Productions, contentspecialist voor Events & Artiesten.',
@@ -284,7 +284,7 @@ export const page: PageData = {
           },
           {
             label: 'casevideo',
-            href: '/zakelijke-events/casevideo',
+            href: '/events/zakelijke-events/casevideo',
             image: {
               src: mikexdeliveformuleFinis100Jaar39,
               alt: 'Foto van een event met De Live Formule. Vastgelegd door Bold Productions, contentspecialist voor Events & Artiesten.',
@@ -292,7 +292,7 @@ export const page: PageData = {
           },
           {
             label: 'eventfotografie',
-            href: '/zakelijke-events/fotografie',
+            href: '/events/zakelijke-events/fotografie',
             image: {
               src: rhbfoto64,
               alt: 'Sfeerbeeld tijdens een festival. Fotografie door Bold Productions, contentspecialist voor Events & Artiesten.',

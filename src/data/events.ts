@@ -94,7 +94,7 @@ export const biggerThanTheDay: TextMediaProps = {
       ],
     },
   ],
-  cta: { label: 'Maak het waar(d)', href: '/offerte-aanvragen' },
+  cta: { label: 'Maak het waar(d)', href: '/events/offerte-aanvragen' },
   media: {
     type: 'image',
     src: optredenInTent,
@@ -170,7 +170,7 @@ export const timeline: TimelineProps = {
       },
     },
   ],
-  cta: { label: "Let's talk strategy", href: '/offerte-aanvragen', accent: 'yellow' },
+  cta: { label: "Let's talk strategy", href: '/events/offerte-aanvragen', accent: 'yellow' },
 };
 
 export const caseSpotlight: CaseSpotlightProps = {
@@ -215,7 +215,7 @@ export const services: ServiceTilesProps = {
   items: [
     {
       label: "Promovideo's",
-      href: '/events/promovideos',
+      href: '/events/organisatoren/promovideos',
       image: {
         src: dienstPromovideos,
         alt: 'Sfeerbeeld van PROOST! BAND tijdens een live-optreden. Foto door Bold Productions contentspecialist voor Events & Artiesten.',
@@ -223,12 +223,12 @@ export const services: ServiceTilesProps = {
     },
     {
       label: "Eventvideo's",
-      href: '/events/eventvideos',
+      href: '/events/organisatoren/eventvideos',
       image: { src: dienstEventvideos, alt: 'Sfeerbeeld van een tentfeest.' },
     },
     {
       label: 'Social content',
-      href: '/events/social-content',
+      href: '/events/organisatoren/social-content',
       image: {
         src: dienstSocialContent,
         alt: 'Foto van een event bij De Vaste Clique. Vastgelegd door Bold Productions contentspecialist voor Events & Artiesten.',
@@ -236,7 +236,7 @@ export const services: ServiceTilesProps = {
     },
     {
       label: 'Aftermovies',
-      href: '/events/aftermovie',
+      href: '/events/organisatoren/aftermovie',
       image: {
         src: dienstAftermovies,
         alt: 'Sfeerbeeld van het Solexrace festival. Fotografie door Bold Productions contentspecialist voor Events & Artiesten.',
@@ -244,7 +244,7 @@ export const services: ServiceTilesProps = {
     },
     {
       label: 'Fotografie',
-      href: '/events/fotografie',
+      href: '/events/organisatoren/fotografie',
       image: {
         src: dienstFotografie,
         alt: 'Sfeerbeeld van een live-optreden. Foto door Bold Productions contentspecialist voor Events & Artiesten.',

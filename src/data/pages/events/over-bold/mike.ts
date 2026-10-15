@@ -2,14 +2,14 @@
  * /over/mike — teksten letterlijk van www.weareboldproductions.com/over/mike.
  * Gegenereerd uit de live pagina; daarna vrij te bewerken (of in Sanity).
  */
-import type { PageData } from '../../../lib/sections';
-import spotPleinpopAlphen00145503Still033 from '../../../assets/images/aftermovie-laten-maken/spot-pleinpop-alphen-00-14-55-03-still033.jpg';
-import mikeAmpting from '../../../assets/images/team/mike-ampting.jpg';
-import spotSeq01032214Still004 from '../../../assets/images/over/mike/spot-seq-01-03-22-14-still004.jpg';
-import mikeAftermovie from '../../../assets/images/events/mike-aftermovie.jpg';
+import type { PageData } from '../../../../lib/sections';
+import spotPleinpopAlphen00145503Still033 from '../../../../assets/images/aftermovie-laten-maken/spot-pleinpop-alphen-00-14-55-03-still033.jpg';
+import mikeAmpting from '../../../../assets/images/team/mike-ampting.jpg';
+import spotSeq01032214Still004 from '../../../../assets/images/over/mike/spot-seq-01-03-22-14-still004.jpg';
+import mikeAftermovie from '../../../../assets/images/events/mike-aftermovie.jpg';
 
 export const page: PageData = {
-  slug: 'over/mike',
+  slug: 'events/over-bold/mike',
   title: 'Mike',
   meta: {
     schema: { type: 'profile' },
@@ -26,7 +26,7 @@ export const page: PageData = {
         eyebrow: 'Creative Director en oprichter',
         primaryCta: {
           label: 'Boek Bold',
-          href: '/offerte-aanvragen',
+          href: '/events/offerte-aanvragen',
         },
         secondaryCta: {
           label: 'Ontdek meer',

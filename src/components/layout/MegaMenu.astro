@@ -22,17 +22,19 @@ const isCurrent = (href: string) => (href === currentPath ? 'page' : undefined);
         <li class="mega-menu__item">
           <a href={group.href} class="mega-menu__link" aria-current={isCurrent(group.href)}>
             <span>{group.label}</span>
-            <Icon name="chevron-down" class="mega-menu__arrow" />
+            {group.children.length > 0 && <Icon name="chevron-down" class="mega-menu__arrow" />}
           </a>
-          <ul class="mega-menu__dropdown" role="list">
-            {group.children.map((child) => (
-              <li>
-                <a href={child.href} class="mega-menu__dropdown-link" aria-current={isCurrent(child.href)}>
-                  {child.label}
-                </a>
-              </li>
-            ))}
-          </ul>
+          {group.children.length > 0 && (
+            <ul class="mega-menu__dropdown" role="list">
+              {group.children.map((child) => (
+                <li>
+                  <a href={child.href} class="mega-menu__dropdown-link" aria-current={isCurrent(child.href)}>
+                    {child.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )}
         </li>
       ))
     }

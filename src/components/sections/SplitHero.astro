@@ -1,0 +1,479 @@
+---
+/**
+ * Homepage-hero met de keuze tussen twee delen van de site (Webflow-embed .bold-hero-split):
+ * twee schermhoge helften (Events links, Business rechts), elk één grote link met foto
+ * (grijs en vaag), titel, tekst, knop en zwevende driehoekjes; in het midden een gloeiende
+ * naad en het logo (de h1).
+ * - ≥1280: de helft onder de muis wordt breder (60/40), de naad gloeit in haar accentkleur
+ *   en haar Vimeo-video start vanaf het begin (scripts/split-hero.ts; pas na window.load).
+ * - ≤1279: onder elkaar, elk een halve schermhoogte, geen video en geen naad.
+ * - Accent per helft (`accent`): kleur van titel, knop en gloed.
+ * Driehoekposities zijn vaste decoratiegeometrie uit Webflow (bewuste uitzondering op de
+ * token-regel, net als DecoTriangles); de rechterhelft spiegelt de linker.
+ */
+import type { ImageMetadata } from 'astro';
+import Heading from '../ui/Heading.astro';
+import Eyebrow from '../ui/Eyebrow.astro';
+import Button, { type Accent } from '../ui/Button.astro';
+import CmsPicture from '../ui/CmsPicture.astro';
+import VimeoBackground from '../ui/VimeoBackground.astro';
+import type { RemoteImage } from '../../lib/sanity/image';
+import logo from '../../assets/brand/bold-productions-logo.png';
+import { Picture } from 'astro:assets';
+
+export interface SplitHeroHalf {
+  title: string;
+  /** Regeleinden met '\n' */
+  text: string;
+  /** Knoptekst; de hele helft linkt naar `href` */
+  cta: { label: string; href: string };
+  accent: Accent;
+  image: { src: ImageMetadata | RemoteImage; alt: string };
+  /** Speelt bij hover (≥1280) */
+  video?: { id: string; hash?: string; title: string };
+}
+
+export interface SplitHeroProps {
+  /** Tekst van de h1 (alt van het logo) */
+  title: string;
+  halves: SplitHeroHalf[];
+}
+
+type Props = SplitHeroProps;
+
+const { title, halves } = Astro.props;
+
+/** Driehoekjes in de linkerhelft (Webflow); rechts gespiegeld. top/left in %, maat in px. */
+const particles = [
+  { top: 20, left: 72, w: 20, h: 18, rot: 10, dur: 7.5, delay: 0, dx: 6, dy: -7, grad: 1 },
+  { top: 34, left: 88, w: 16, h: 15, rot: 150, dur: 8.6, delay: 0.6, dx: -5, dy: 6, grad: 2 },
+  { top: 48, left: 60, w: 24, h: 22, rot: 60, dur: 6.9, delay: 1.2, dx: 7, dy: 5, grad: 1, large: true },
+  { top: 62, left: 82, w: 14, h: 13, rot: 200, dur: 9.1, delay: 1.8, dx: -6, dy: -5, grad: 2 },
+  { top: 76, left: 68, w: 18, h: 16, rot: 100, dur: 7.2, delay: 2.4, dx: 5, dy: -6, grad: 1 },
+  { top: 14, left: 30, w: 22, h: 20, rot: 300, dur: 8.3, delay: 0.3, dx: -7, dy: 6, grad: 2 },
+  { top: 50, left: 12, w: 15, h: 14, rot: 40, dur: 9.8, delay: 1.5, dx: 6, dy: -5, grad: 1 },
+  { top: 82, left: 38, w: 19, h: 17, rot: 220, dur: 7.8, delay: 0.9, dx: -5, dy: 7, grad: 2 },
+];
+
+/** Rond het logo; posities t.o.v. het logovlak */
+const logoParticles = [
+  { pos: 'top: -14%; left: -10%', w: 14, h: 13, rot: 20, dur: 7.2, delay: 0, dx: 6, dy: -8, grad: 1 },
+  { pos: 'top: -8%; right: -16%', w: 12, h: 11, rot: 160, dur: 8.1, delay: 0.8, dx: -6, dy: 6, grad: 2 },
+  { pos: 'bottom: -12%; left: -6%', w: 13, h: 12, rot: 210, dur: 7.6, delay: 1.4, dx: 5, dy: 7, grad: 1 },
+  { pos: 'bottom: -16%; right: -10%', w: 11, h: 10, rot: 90, dur: 6.9, delay: 0.4, dx: -5, dy: -6, grad: 2 },
+  { pos: 'top: 4%; left: -22%', w: 12, h: 11, rot: 260, dur: 8.8, delay: 1.9, dx: -5, dy: 5, grad: 1 },
+  { pos: 'bottom: 2%; right: -24%', w: 13, h: 12, rot: 130, dur: 7.4, delay: 1.1, dx: 6, dy: -5, grad: 2 },
+];
+
+const motion = (p: { rot: number; dur: number; delay: number; dx: number; dy: number }) =>
+  `--tri-rot: ${p.rot}deg; --tri-duration: ${p.dur}s; --tri-delay: ${p.delay}s; --tri-drift-x: ${p.dx}px; --tri-drift-y: ${p.dy}px;`;
+
+const halfParticles = (mirror: boolean) =>
+  particles.map((p) => ({
+    ...p,
+    style: `top: ${p.top}%; left: ${mirror ? 100 - p.left : p.left}%; width: ${p.w}px; height: ${p.h}px; ${motion({ ...p, dx: mirror ? -p.dx : p.dx })}`,
+  }));
+---
+
+<section class="split-hero" data-split-hero>
+  <svg class="split-hero__defs" width="0" height="0" aria-hidden="true" focusable="false">
+    <defs>
+      <linearGradient id="split-hero-g1" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#ff8a3d"></stop>
+        <stop offset="100%" stop-color="#cc3300"></stop>
+      </linearGradient>
+      <linearGradient id="split-hero-g2" x1="100%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="#ff6600"></stop>
+        <stop offset="100%" stop-color="#8a1f00"></stop>
+      </linearGradient>
+    </defs>
+  </svg>
+
+  {
+    halves.map((half, i) => (
+      <a href={half.cta.href} class:list={['split-hero__half', i === 0 ? 'split-hero__half--left' : 'split-hero__half--right']} data-accent={half.accent} data-split-half>
+        <div class="split-hero__media">
+          <CmsPicture
+            src={half.image.src}
+            alt=""
+            widths={[480, 768, 1024, 1440, 1920]}
+            sizes="(max-width: 1279px) 100vw, 60vw"
+            loading="eager"
+            fetchpriority={i === 0 ? 'high' : 'auto'}
+            class="split-hero__image"
+          />
+          {half.video && <VimeoBackground id={half.video.id} hash={half.video.hash} title={half.video.title} playOnHover class="split-hero__video" />}
+        </div>
+        <div class="split-hero__overlay" />
+        <div class="split-hero__particles" aria-hidden="true">
+          {halfParticles(i > 0).map((p) => (
+            <div class="split-hero__tri" style={p.style}>
+              <svg viewBox={p.large ? '0 0 26 24' : '0 0 22 20'} focusable="false">
+                <polygon points={p.large ? '13,2 24,22 2,22' : '11,2 20,18 2,18'} fill={`url(#split-hero-g${p.grad})`} />
+              </svg>
+            </div>
+          ))}
+        </div>
+        <div class="split-hero__content">
+          <Heading as="h2" text={half.title} gradient={half.accent} align="center" flush class="split-hero__title" />
+          <Eyebrow text={half.text} align="center" class="split-hero__text" />
+          <Button as="span" label={half.cta.label} accent={half.accent} />
+        </div>
+      </a>
+    ))
+  }
+
+  <div class="split-hero__seam" aria-hidden="true"></div>
+  <div class="split-hero__logo-particles" aria-hidden="true">
+    {
+      logoParticles.map((p) => (
+        <div class="split-hero__tri" style={`${p.pos}; width: ${p.w}px; height: ${p.h}px; ${motion(p)}`}>
+          <svg viewBox="0 0 22 20" focusable="false">
+            <polygon points="11,2 20,18 2,18" fill={`url(#split-hero-g${p.grad})`} />
+          </svg>
+        </div>
+      ))
+    }
+  </div>
+  <h1 class="split-hero__logo">
+    <Picture
+      src={logo}
+      alt={title}
+      widths={[144, 192, 288, 384]}
+      sizes="(max-width: 767px) 144px, 192px"
+      formats={['avif', 'webp']}
+      loading="eager"
+      class="split-hero__logo-img"
+    />
+  </h1>
+</section>
+
+<style>
+  .split-hero {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    min-height: 100vh;
+    min-height: 100dvh;
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  .split-hero__defs {
+    position: absolute;
+  }
+
+  .split-hero__half {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+    min-height: 100vh;
+    min-height: 100dvh;
+    padding: var(--space-64) var(--split-hero-gutter);
+    overflow: hidden;
+    color: var(--color-white);
+    text-align: center;
+    text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
+    animation: split-hero-fade var(--duration-intro) var(--ease-out) backwards;
+    transition: width var(--duration-base) var(--ease-out);
+  }
+
+  .split-hero__half--right {
+    animation-delay: var(--stagger-step);
+  }
+
+  .split-hero__media {
+    position: absolute;
+    inset: 0;
+    z-index: var(--z-below);
+    overflow: hidden;
+  }
+
+  .split-hero :global(.split-hero__image) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(100%) blur(var(--split-hero-image-blur));
+    transform: scale(var(--split-hero-image-scale));
+    transition:
+      opacity var(--duration-slow) var(--ease-out),
+      filter var(--duration-slow) var(--ease-out);
+  }
+
+  .split-hero__overlay {
+    position: absolute;
+    inset: 0;
+    z-index: var(--z-base);
+    background-image: var(--gradient-split-overlay);
+    pointer-events: none;
+  }
+
+  .split-hero__particles {
+    position: absolute;
+    inset: 0;
+    z-index: var(--z-base);
+    overflow: hidden;
+    opacity: 0.65;
+    pointer-events: none;
+    transition: opacity var(--duration-slow) var(--ease-out);
+  }
+
+  .split-hero__tri {
+    position: absolute;
+    pointer-events: none;
+    animation: split-hero-drift var(--tri-duration) ease-in-out var(--tri-delay) infinite;
+    transition: filter var(--duration-slow) var(--ease-out);
+  }
+
+  .split-hero__tri svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .split-hero__half:hover .split-hero__particles,
+  .split-hero__half:focus-visible .split-hero__particles {
+    opacity: 1;
+  }
+
+  .split-hero__half:hover .split-hero__tri,
+  .split-hero__half:focus-visible .split-hero__tri {
+    filter: brightness(1.3) drop-shadow(var(--shadow-tri-glow));
+  }
+
+  .split-hero__content {
+    position: relative;
+    z-index: var(--z-content);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-24);
+    width: var(--split-hero-content);
+    max-width: 70%;
+    animation: split-hero-rise var(--duration-intro) var(--ease-reveal) 0.22s backwards;
+  }
+
+  .split-hero__half--right .split-hero__content {
+    animation-delay: 0.34s;
+  }
+
+  .split-hero :global(.split-hero__text) {
+    font-size: var(--fs-intro);
+    font-weight: var(--fw-light);
+    color: var(--color-white-a80);
+  }
+
+  .split-hero__seam {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    z-index: var(--z-content);
+    width: var(--split-hero-seam);
+    height: 100%;
+    background: linear-gradient(to bottom, var(--color-transparent), var(--seam-color, var(--color-seam)) 15%, var(--seam-color, var(--color-seam)) 85%, var(--color-transparent));
+    transform: translateX(-50%);
+    pointer-events: none;
+    transition:
+      left var(--duration-base) var(--ease-out),
+      box-shadow var(--duration-slow) var(--ease-out);
+  }
+
+  .split-hero__logo,
+  .split-hero__logo-particles {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: var(--split-hero-logo);
+    height: var(--split-hero-logo);
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    transition: left var(--duration-base) var(--ease-out);
+  }
+
+  .split-hero__logo-particles {
+    z-index: var(--z-content);
+  }
+
+  .split-hero__logo {
+    z-index: var(--z-menu-overlay);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    animation: split-hero-pop var(--duration-slow) var(--ease-pop) 0.5s backwards;
+  }
+
+  .split-hero :global(.split-hero__logo-img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(var(--shadow-logo));
+    animation: split-hero-pulse var(--duration-pulse) ease-in-out 0.5s infinite;
+  }
+
+  /* Intro: de basisstijl is de eindstand, zodat alles zichtbaar is zonder animatie (?static=1) */
+  @keyframes split-hero-fade {
+    from {
+      opacity: 0;
+    }
+  }
+
+  @keyframes split-hero-rise {
+    from {
+      opacity: 0;
+      transform: translateY(var(--reveal-distance));
+    }
+  }
+
+  @keyframes split-hero-pop {
+    0% {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.2);
+    }
+    60% {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1.06);
+    }
+  }
+
+  @keyframes split-hero-pulse {
+    50% {
+      transform: scale(1.08);
+    }
+  }
+
+  @keyframes split-hero-drift {
+    0%,
+    100% {
+      transform: translate(0, 0) rotate(var(--tri-rot));
+      opacity: 0.55;
+    }
+    50% {
+      transform: translate(var(--tri-drift-x), var(--tri-drift-y)) rotate(calc(var(--tri-rot) + 6deg));
+      opacity: 0.85;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .split-hero__half:hover,
+    .split-hero__half:focus-visible {
+      width: var(--split-hero-grow);
+    }
+
+    .split-hero:has(.split-hero__half:hover) .split-hero__half:not(:hover),
+    .split-hero:has(.split-hero__half:focus-visible) .split-hero__half:not(:focus-visible) {
+      width: var(--split-hero-shrink);
+    }
+
+    .split-hero:has(.split-hero__half--left:hover, .split-hero__half--left:focus-visible) :is(.split-hero__seam, .split-hero__logo, .split-hero__logo-particles) {
+      left: var(--split-hero-grow);
+    }
+
+    .split-hero:has(.split-hero__half--right:hover, .split-hero__half--right:focus-visible) :is(.split-hero__seam, .split-hero__logo, .split-hero__logo-particles) {
+      left: var(--split-hero-shrink);
+    }
+
+    /* Naad gloeit in de kleur van de gekozen helft (Events groen, Business geel) */
+    .split-hero:has(.split-hero__half--left:hover, .split-hero__half--left:focus-visible) .split-hero__seam {
+      --seam-color: var(--color-green);
+      box-shadow: var(--shadow-seam-green);
+    }
+
+    .split-hero:has(.split-hero__half--right:hover, .split-hero__half--right:focus-visible) .split-hero__seam {
+      --seam-color: var(--color-yellow);
+      box-shadow: var(--shadow-seam-yellow);
+    }
+
+    /* Video alleen zichtbaar onder de muis en zodra hij speelt; dan wijkt de foto */
+    .split-hero__half:not(.is-hovered) :global(.vimeo-bg) {
+      opacity: 0;
+    }
+
+    .split-hero__half.is-hovered:has(:global(.vimeo-bg.is-playing)) :global(.split-hero__image) {
+      opacity: 0;
+    }
+  }
+
+  @media (max-width: 1279px) {
+    .split-hero {
+      flex-direction: column;
+    }
+
+    .split-hero__half {
+      width: 100%;
+      min-height: 50vh;
+      min-height: 50dvh;
+      padding: var(--space-56) var(--split-hero-gutter-tablet);
+    }
+
+    .split-hero__content {
+      max-width: var(--split-hero-content-tablet);
+    }
+
+    .split-hero__seam,
+    .split-hero :global(.split-hero__video) {
+      display: none;
+    }
+
+    .split-hero :global(.split-hero__image) {
+      filter: none;
+      transform: none;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .split-hero__half {
+      padding: var(--space-48) var(--split-hero-gutter);
+    }
+
+    .split-hero__content {
+      max-width: 100%;
+      gap: var(--space-16);
+    }
+
+    .split-hero :global(.split-hero__text) {
+      font-size: var(--fs-base);
+      letter-spacing: var(--ls-label);
+    }
+
+    .split-hero__logo,
+    .split-hero__logo-particles {
+      width: var(--split-hero-logo-mobile);
+      height: var(--split-hero-logo-mobile);
+    }
+  }
+
+  @media (max-width: 479px) {
+    .split-hero__half {
+      padding: var(--space-32) var(--split-hero-gutter);
+    }
+
+    .split-hero__content {
+      gap: var(--space-12);
+    }
+
+    .split-hero :global(.split-hero__text) {
+      letter-spacing: var(--ls-label-tight);
+    }
+
+    .split-hero__logo,
+    .split-hero__logo-particles {
+      width: calc(var(--split-hero-logo-mobile) * 0.8);
+      height: calc(var(--split-hero-logo-mobile) * 0.8);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .split-hero__tri {
+      display: none;
+    }
+  }
+</style>

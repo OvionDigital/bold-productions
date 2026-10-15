@@ -11,7 +11,7 @@ import { cases, caseUrl } from '../cases';
 export const casesLinkGroup = (title: string): LinkGroup => ({
   title,
   auto: 'cases',
-  links: cases.map((item) => ({ label: item.title, href: caseUrl(item.slug) })),
+  links: cases.map((item) => ({ label: item.title, href: caseUrl(item) })),
 });
 
 export const page: PageData = {
@@ -36,22 +36,22 @@ export const page: PageData = {
             title: 'Algemeen',
             links: [
               { label: 'Home', href: '/' },
-              { label: 'Over ons', href: '/over' },
-              { label: 'Over Mike', href: '/over/mike' },
-              { label: 'Cases (Ons werk)', href: '/cases' },
-              { label: 'Contact', href: '/contact' },
-              { label: 'Offerte aanvragen', href: '/offerte-aanvragen' },
+              { label: 'Over ons', href: '/events/over-bold' },
+              { label: 'Over Mike', href: '/events/over-bold/mike' },
+              { label: 'Cases (Ons werk)', href: '/events/cases' },
+              { label: 'Contact', href: '/events/contact' },
+              { label: 'Offerte aanvragen', href: '/events/offerte-aanvragen' },
             ],
           },
           {
             title: 'Events',
             links: [
-              { label: 'Events Overzicht', href: '/events' },
-              { label: 'Eventvideos', href: '/events/eventvideos' },
-              { label: 'Aftermovies', href: '/events/aftermovie' },
-              { label: 'Promovideos', href: '/events/promovideos' },
-              { label: 'Social Content', href: '/events/social-content' },
-              { label: 'Fotografie', href: '/events/fotografie' },
+              { label: 'Events Overzicht', href: '/events/organisatoren' },
+              { label: 'Eventvideos', href: '/events/organisatoren/eventvideos' },
+              { label: 'Aftermovies', href: '/events/organisatoren/aftermovie' },
+              { label: 'Promovideos', href: '/events/organisatoren/promovideos' },
+              { label: 'Social Content', href: '/events/organisatoren/social-content' },
+              { label: 'Fotografie', href: '/events/organisatoren/fotografie' },
             ],
           },
           {
@@ -59,23 +59,23 @@ export const page: PageData = {
             links: [
               {
                 label: 'Zakelijke Events Overzicht',
-                href: '/zakelijke-events',
+                href: '/events/zakelijke-events',
               },
-              { label: 'Promovideo', href: '/zakelijke-events/promovideo' },
-              { label: 'Casevideo', href: '/zakelijke-events/casevideo' },
-              { label: 'Aftermovie', href: '/zakelijke-events/aftermovie' },
-              { label: 'Fotografie', href: '/zakelijke-events/fotografie' },
+              { label: 'Promovideo', href: '/events/zakelijke-events/promovideo' },
+              { label: 'Casevideo', href: '/events/zakelijke-events/casevideo' },
+              { label: 'Aftermovie', href: '/events/zakelijke-events/aftermovie' },
+              { label: 'Fotografie', href: '/events/zakelijke-events/fotografie' },
             ],
           },
           {
             title: 'Artiesten',
             links: [
-              { label: 'Artiesten Overzicht', href: '/artiesten' },
-              { label: 'Artiestenpromo', href: '/artiesten/artiestenpromo' },
-              { label: 'Bandpromo', href: '/artiesten/bandpromo' },
-              { label: 'Recap', href: '/artiesten/recap' },
-              { label: 'Social Content', href: '/artiesten/social-content' },
-              { label: 'Fotografie', href: '/artiesten/fotografie' },
+              { label: 'Artiesten Overzicht', href: '/events/artiesten' },
+              { label: 'Artiestenpromo', href: '/events/artiesten/artiestenpromo' },
+              { label: 'Bandpromo', href: '/events/artiesten/bandpromo' },
+              { label: 'Recap', href: '/events/artiesten/recap' },
+              { label: 'Social Content', href: '/events/artiesten/social-content' },
+              { label: 'Fotografie', href: '/events/artiesten/fotografie' },
             ],
           },
           {

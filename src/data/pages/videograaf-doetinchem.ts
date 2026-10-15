@@ -54,7 +54,7 @@ export const page: PageData = {
         ],
         cta: {
           label: 'Bekijk ons werk',
-          href: '/cases',
+          href: '/events/cases',
           accent: 'yellow',
         },
         media: {
@@ -134,7 +134,7 @@ export const page: PageData = {
         ],
         cta: {
           label: 'Bel Bold',
-          href: '/offerte-aanvragen',
+          href: '/events/offerte-aanvragen',
           accent: 'yellow',
         },
       },
@@ -187,7 +187,7 @@ export const page: PageData = {
         ],
         cta: {
           label: 'Bel Bold',
-          href: '/offerte-aanvragen',
+          href: '/events/offerte-aanvragen',
         },
         media: {
           type: 'image',

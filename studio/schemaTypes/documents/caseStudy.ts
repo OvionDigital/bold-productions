@@ -1,17 +1,10 @@
 import { defineType, defineField, defineArrayMember } from 'sanity';
 import { caseSectionTypes } from '../sections';
-
-const audienceOptions = [
-  { title: 'Events', value: 'events' },
-  { title: 'Artiesten', value: 'artiesten' },
-  { title: 'Zakelijke events', value: 'zakelijke-events' },
-  { title: 'Business', value: 'business' },
-];
-
-const serviceOptions = ['Promovideo', 'Eventvideo', 'Aftermovie', 'Social content', 'Fotografie', 'Bandpromo', 'Artiestenpromo', 'Casevideo', 'Recap'];
+import { targetingFields, targetingFieldset } from '../taxonomy';
 
 /**
- * Case: kaart (overzicht en "Uitgelichte case") én de detailpagina /cases/<slug>.
+ * Case: kaart (overzicht en "Uitgelichte case") én de detailpagina /events/cases/<slug> of
+ * /business/cases/<slug> (naar "Events of Business").
  * De pagina begint altijd met hero (titel, intro, foto), kruimelpad, introtekst en de
  * feitenbalk (klant, datum, doelgroep, dienst); daaronder de vrije secties.
  * Zelfde velden als src/data/cases.ts.
@@ -25,11 +18,12 @@ export const caseStudy = defineType({
     { name: 'content', title: 'Inhoud' },
     { name: 'seo', title: 'SEO' },
   ],
+  fieldsets: [targetingFieldset],
   fields: [
     defineField({ name: 'title', title: 'Titel', type: 'string', group: 'card', validation: (r) => r.required() }),
     defineField({
       name: 'slug',
-      title: 'URL-pad (na /cases/)',
+      title: 'URL-pad (na /events/cases/ of /business/cases/)',
       type: 'slug',
       group: 'card',
       options: { source: 'title' },
@@ -59,23 +53,7 @@ export const caseStudy = defineType({
       group: 'card',
       options: { collapsible: true, collapsed: true },
     }),
-    defineField({
-      name: 'audiences',
-      title: 'Doelgroep',
-      type: 'array',
-      group: 'card',
-      of: [defineArrayMember({ type: 'string' })],
-      options: { list: audienceOptions },
-      validation: (r) => r.required().min(1),
-    }),
-    defineField({
-      name: 'services',
-      title: 'Diensten',
-      type: 'array',
-      group: 'card',
-      of: [defineArrayMember({ type: 'string' })],
-      options: { list: serviceOptions.map((s) => ({ title: s, value: s })) },
-    }),
+    ...targetingFields({ group: 'card' }),
     defineField({ name: 'client', title: 'Klant', type: 'string', group: 'card' }),
     defineField({ name: 'date', title: 'Datum (zoals getoond, bijv. 6-7-2025)', type: 'string', group: 'card' }),
     defineField({ name: 'sortOrder', title: 'Volgorde in het overzicht', type: 'number', group: 'card', description: 'Laag = eerst.' }),

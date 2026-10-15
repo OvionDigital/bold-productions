@@ -116,6 +116,11 @@
   --color-orange-a60: #ff550099;
   --color-orange-a70: #ff5500b3;
   --color-orange-light-a6: #ff9e6d0f;
+  --color-green-a25: #8bff3f40; /* gloed naad split-hero */
+  --color-green-a55: #8bff3f8c;
+  --color-yellow-a25: #f9ff0040;
+  --color-yellow-a55: #f9ff008c;
+  --color-seam: #ff8a3de6; /* naad tussen Events en Business (split-hero) */
   --color-whatsapp-a40: #25d36666;
   --color-whatsapp-a60: #25d36699;
 
@@ -149,6 +154,7 @@
     var(--color-black-a70),
     var(--color-transparent)
   );
+  --gradient-split-overlay: radial-gradient(circle, #0000008f, #000000c2); /* split-hero: 56% → 76% zwart */
   --gradient-image-overlay: radial-gradient(
     circle,
     #0000004d,
@@ -222,6 +228,7 @@
   --ls-heading: -0.02em;
   --ls-subtitle: 0.26em;
   --ls-label: 0.18em;
+  --ls-label-tight: 0.1em; /* split-hero-tekst ≤479 */
   --ls-caption: 0.05em;
 
   /* ─── Spacing ───────────────────────────────────────────────────── */
@@ -242,6 +249,7 @@
   --space-36: 36px;
   --space-42: 42px;
   --space-48: 48px;
+  --space-56: 56px;
   --space-64: 64px;
   --space-96: 96px;
   --space-112: 112px;
@@ -311,6 +319,17 @@
   --dropdown-min-width: 250px;
   --menu-panel-min-width: 500px;
   --menu-panel-padding-top: 110px;
+  --split-hero-logo: 192px; /* logo midden in de split-hero */
+  --split-hero-logo-mobile: 144px; /* ≤767 */
+  --split-hero-content: 768px; /* tekstblok per helft */
+  --split-hero-content-tablet: 448px; /* ≤1279 */
+  --split-hero-gutter: 6vw; /* zijpadding per helft; ≤1279 8vw, ≤767 6vw */
+  --split-hero-gutter-tablet: 8vw;
+  --split-hero-seam: 2px;
+  --split-hero-grow: 60%; /* breedte van de helft onder de muis (≥1280) */
+  --split-hero-shrink: 40%;
+  --split-hero-image-blur: 6px;
+  --split-hero-image-scale: 1.06;
 
   /* ─── Randen & radii ────────────────────────────────────────────── */
   --border-width: 1px;
@@ -325,6 +344,10 @@
   --shadow-card-hover: 0 0 32px var(--color-black-a50);
   --shadow-whatsapp: 0 4px 16px var(--color-whatsapp-a40);
   --shadow-whatsapp-hover: 0 6px 20px var(--color-whatsapp-a60);
+  --shadow-tri-glow: 0 4px 10px var(--color-orange-a50); /* driehoekjes split-hero bij hover */
+  --shadow-logo: 0 8px 24px var(--color-black-a40);
+  --shadow-seam-green: -20px 0 40px 4px var(--color-green-a55), -60px 0 110px 14px var(--color-green-a25);
+  --shadow-seam-yellow: 20px 0 40px 4px var(--color-yellow-a55), 60px 0 110px 14px var(--color-yellow-a25);
 
   /* ─── Blur ──────────────────────────────────────────────────────── */
   --blur-sm: 4px;
@@ -353,6 +376,9 @@
   --duration-draw: 2.4s; /* B-outlines op de achtergrond worden getekend (draw-shapes.ts) */
   --ease-draw: cubic-bezier(0.65, 0, 0.35, 1);
   --marquee-duration: 14s;
+  --duration-intro: 0.9s; /* split-hero: helften en tekst komen binnen */
+  --duration-pulse: 4s; /* split-hero: logo ademt */
+  --ease-pop: cubic-bezier(0.34, 1.56, 0.64, 1); /* overshoot (logo split-hero) */
 
   /* ─── Lagen ─────────────────────────────────────────────────────── */
   --z-below: -1;

@@ -32,6 +32,8 @@ interface Props {
   /** Toon op mobiel (≤767px) alleen het icoon, als vierkante knop. */
   iconOnlyOnMobile?: boolean;
   type?: "button" | "submit";
+  /** Alleen de knopvorm, zonder eigen link of knop (binnen een element dat al klikbaar is) */
+  as?: "span";
   target?: "_blank";
   class?: string;
   /** Extra attributen, bijv. aria-expanded of data-*. */
@@ -50,13 +52,16 @@ const {
   iconExpanded,
   iconOnlyOnMobile = false,
   type = "button",
+  as,
   target,
   class: className,
   attrs = {},
 } = Astro.props;
 
-const Tag = href ? "a" : "button";
-const linkAttrs = href
+const Tag = as ?? (href ? "a" : "button");
+const linkAttrs = as
+  ? {}
+  : href
   ? {
       href,
       target,

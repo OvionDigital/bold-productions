@@ -2,13 +2,13 @@
  * /cases — teksten letterlijk van www.weareboldproductions.com/cases.
  * Gegenereerd uit de live pagina; daarna vrij te bewerken (of in Sanity).
  */
-import type { PageData } from '../../lib/sections';
-import { caseGrid } from '../../data/cases';
-import { teamTiles } from '../../data/team';
-import bold56 from '../../assets/images/cases/bold-56.jpg';
+import type { PageData } from '../../../lib/sections';
+import { eventsCaseGrid } from '../../cases';
+import { teamTiles } from '../../team';
+import bold56 from '../../../assets/images/cases/bold-56.jpg';
 
 export const page: PageData = {
-  slug: 'cases',
+  slug: 'events/cases',
   title: 'Cases',
   meta: {
     schema: {
@@ -29,7 +29,7 @@ export const page: PageData = {
         eyebrow: 'Doen we voor je',
         primaryCta: {
           label: 'Boek Bold',
-          href: '/offerte-aanvragen',
+          href: '/events/offerte-aanvragen',
         },
         secondaryCta: {
           label: 'Dik werk',
@@ -87,7 +87,7 @@ export const page: PageData = {
     },
     {
       type: 'caseGrid',
-      props: caseGrid,
+      props: eventsCaseGrid,
     },
     {
       type: 'serviceTiles',

@@ -15,7 +15,7 @@ const gradient = {
  */
 export const homepage = defineType({
   name: 'homepage',
-  title: 'Homepage',
+  title: 'Events-homepage (/events)',
   type: 'document',
   groups: [
     { name: 'meta', title: 'SEO' },

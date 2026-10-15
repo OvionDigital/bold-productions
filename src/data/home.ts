@@ -35,7 +35,7 @@ export const hero: HeroProps = {
   title: 'Video’s die je event',
   titleAccent: 'laten leven',
   eyebrow: 'Ervoor. Tijdens. Erna',
-  primaryCta: { label: 'Bold to action', href: '/offerte-aanvragen' },
+  primaryCta: { label: 'Bold to action', href: '/events/offerte-aanvragen' },
   secondaryCta: { label: 'Waarom zou je?', href: '#first-section', icon: 'arrow-down' },
   image: {
     src: heroImage,
@@ -103,7 +103,7 @@ export const timeline: TimelineProps = {
         src: timelineVoor,
         alt: 'Actiefoto van een zanger die het publiek bespringt tijdens Legends of Rock. Vastgelegd door Bold Productions contentspecialist voor Events & Artiesten.',
       },
-      cta: { label: 'Bekijk hoe', href: '/events/promovideos' },
+      cta: { label: 'Bekijk hoe', href: '/events/organisatoren/promovideos' },
     },
     {
       number: '02',
@@ -121,7 +121,7 @@ export const timeline: TimelineProps = {
         src: timelineTijdens,
         alt: 'Gitarist tijdens een live-optreden. Foto door Bold Productions contentspecialist voor Events & Artiesten.',
       },
-      cta: { label: 'Bekijk hoe', href: '/events/eventvideos' },
+      cta: { label: 'Bekijk hoe', href: '/events/organisatoren/eventvideos' },
     },
     {
       number: '03',
@@ -131,10 +131,10 @@ export const timeline: TimelineProps = {
         src: timelineNa,
         alt: 'Sfeerbeeld van festivalgangers. Vastgelegd door Bold Productions contentspecialist voor Events & Artiesten.',
       },
-      cta: { label: 'Bekijk hoe', href: '/events/aftermovie' },
+      cta: { label: 'Bekijk hoe', href: '/events/organisatoren/aftermovie' },
     },
   ],
-  cta: { label: 'Make it Bold. Sell Tickets', href: '/offerte-aanvragen', accent: 'yellow' },
+  cta: { label: 'Make it Bold. Sell Tickets', href: '/events/offerte-aanvragen', accent: 'yellow' },
 };
 
 export const testimonials: TestimonialsProps = {

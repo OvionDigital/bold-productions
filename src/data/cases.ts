@@ -1,6 +1,7 @@
 /**
- * Cases: één bron voor alle plekken waar cases verschijnen (uitgelicht, overzicht /cases
- * en de detailpagina /cases/[slug]). Volgorde = volgorde in het overzicht (zoals live).
+ * Cases: één bron voor alle plekken waar cases verschijnen (uitgelicht, overzicht
+ * /events/cases of /business/cases en de detailpagina /<soort>/cases/[slug], naar de
+ * soort van de case). Volgorde = volgorde in het overzicht (zoals live).
  * Teksten letterlijk van de live site. In Sanity: documenttype 'caseStudy' met dezelfde velden.
  *
  * Een casepagina = hero (titel, intro, foto) + kruimelpad + introtekst + feitenbalk +
@@ -11,6 +12,7 @@ import type { RemoteImage } from '../lib/sanity/image';
 import type { Rich } from '../lib/rich';
 import type { PageSection } from '../lib/sections';
 import type { CaseGridProps } from '../components/sections/CaseGrid.astro';
+import { audiences, audienceTitle, type Category, type Targeting } from './taxonomy';
 import {
   introText as pluggerzXZwarteCross2026Intro,
   sections as pluggerzXZwarteCross2026Sections,
@@ -44,36 +46,14 @@ import mikeWaterschapHuisfeestje194 from '../assets/images/cases/mike-waterschap
 import zdhFedbal150 from '../assets/images/cases/zdh-fedbal-150.jpg';
 import spotSeq00273208Still012 from '../assets/images/cases/spot-seq-00-27-32-08-still012.jpg';
 
-export type Audience = 'events' | 'artiesten' | 'zakelijke-events' | 'business';
 
-export const audienceLabels: Record<Audience, string> = {
-  events: 'Events',
-  artiesten: 'Artiesten',
-  'zakelijke-events': 'Zakelijke events',
-  business: 'Business',
-};
-
-/** Diensten waarop gefilterd kan worden (overzicht) en die op een case kunnen staan */
-export const caseServices = [
-  'Promovideo',
-  'Eventvideo',
-  'Aftermovie',
-  'Social content',
-  'Fotografie',
-  'Bandpromo',
-  'Artiestenpromo',
-  'Casevideo',
-  'Recap',
-];
-
-export interface Case {
+/** category/audience/services: zie data/taxonomy.ts */
+export interface Case extends Targeting {
   slug: string;
   title: string;
   /** Korte vraag/intro onder de titel (kaart en hero) */
   intro: string;
   image: { src: ImageMetadata | RemoteImage; alt: string };
-  audiences: Audience[];
-  services?: string[];
   client?: string;
   /** Zoals live, bijv. '6-7-2025' */
   date?: string;
@@ -104,8 +84,9 @@ export const cases: Case[] = [
       src: pluggerzZwarteCross2026,
       alt: '',
     },
-    audiences: ['events'],
-    services: ['Casevideo', 'Eventvideo', 'Fotografie', 'Social content'],
+    category: 'events',
+    audience: 'organisatoren',
+    services: ['Eventvideo', 'Fotografie', 'Social content'],
     client: 'Pluggerz',
     date: '19-7-2026',
     meta: {
@@ -123,7 +104,8 @@ export const cases: Case[] = [
       src: boldProductionsXPaellaDinershowHorizonta,
       alt: '',
     },
-    audiences: ['events'],
+    category: 'events',
+    audience: 'organisatoren',
     services: ['Promovideo', 'Fotografie', 'Aftermovie'],
     client: 'La Terazza & DOS Events',
     date: '13-06-2026',
@@ -142,7 +124,8 @@ export const cases: Case[] = [
       src: kadeFeestenAankondigingsvideoFinal000001,
       alt: '',
     },
-    audiences: ['events'],
+    category: 'events',
+    audience: 'organisatoren',
     services: ['Promovideo'],
     client: 'PIMM',
     date: '24-4-2026',
@@ -161,8 +144,9 @@ export const cases: Case[] = [
       src: mikeDoorgedraaidLogo1204,
       alt: '',
     },
-    audiences: ['events'],
-    services: ['Aftermovie', 'Fotografie', 'Recap'],
+    category: 'events',
+    audience: 'organisatoren',
+    services: ['Aftermovie', 'Fotografie'],
     client: 'Doorgedraaid Feestival',
     date: '27-04-2025',
     meta: {
@@ -180,7 +164,8 @@ export const cases: Case[] = [
       src: boldProductions59,
       alt: '',
     },
-    audiences: ['artiesten'],
+    category: 'events',
+    audience: 'artiesten',
     services: ['Bandpromo'],
     client: 'Proost!',
     date: '4-11-2025',
@@ -199,7 +184,8 @@ export const cases: Case[] = [
       src: rhbfoto2,
       alt: '',
     },
-    audiences: ['events'],
+    category: 'events',
+    audience: 'organisatoren',
     services: ['Aftermovie', 'Fotografie', 'Eventvideo'],
     client: 'Dorpsfeest Wehl',
     date: '6-7-2025',
@@ -218,7 +204,8 @@ export const cases: Case[] = [
       src: img240920212916EspritIctJitskeseckel,
       alt: '',
     },
-    audiences: ['zakelijke-events'],
+    category: 'events',
+    audience: 'zakelijke-events',
     services: ['Aftermovie'],
     client: 'Superminds',
     date: '09-11-2025',
@@ -237,7 +224,8 @@ export const cases: Case[] = [
       src: mikexdeliveformuleFinis100Jaar4,
       alt: '',
     },
-    audiences: ['zakelijke-events'],
+    category: 'events',
+    audience: 'zakelijke-events',
     services: ['Aftermovie', 'Fotografie'],
     client: 'De Live Formule',
     date: '14-01-2026',
@@ -256,7 +244,8 @@ export const cases: Case[] = [
       src: bold40jaarhuwelijk169,
       alt: '',
     },
-    audiences: ['artiesten'],
+    category: 'events',
+    audience: 'artiesten',
     services: ['Artiestenpromo', 'Fotografie', 'Recap'],
     client: 'Saxypianoshow',
     date: '15-03-2025',
@@ -275,7 +264,8 @@ export const cases: Case[] = [
       src: boldProductionsWhyGoHomeAhoy15,
       alt: '',
     },
-    audiences: ['artiesten'],
+    category: 'events',
+    audience: 'artiesten',
     services: ['Bandpromo'],
     client: 'Why Go Home',
     date: '19-12-2025',
@@ -294,7 +284,8 @@ export const cases: Case[] = [
       src: mikeWaterschapHuisfeestje194,
       alt: '',
     },
-    audiences: ['zakelijke-events'],
+    category: 'events',
+    audience: 'zakelijke-events',
     services: ['Aftermovie', 'Fotografie'],
     client: 'Waterschap Rijn Ijssel',
     date: '09-11-2025',
@@ -313,7 +304,8 @@ export const cases: Case[] = [
       src: zdhFedbal150,
       alt: '',
     },
-    audiences: ['events'],
+    category: 'events',
+    audience: 'organisatoren',
     services: ['Aftermovie'],
     client: 'RHBFoto',
     date: '16-2-2025',
@@ -332,7 +324,8 @@ export const cases: Case[] = [
       src: spotSeq00273208Still012,
       alt: '',
     },
-    audiences: ['events'],
+    category: 'events',
+    audience: 'organisatoren',
     services: ['Social content'],
     client: 'DRIFT',
     date: '18-7-2025',
@@ -345,7 +338,8 @@ export const cases: Case[] = [
   },
 ];
 
-export const caseUrl = (slug: string) => `/cases/${slug}`;
+/** /events/cases/<slug> of /business/cases/<slug>, naar de soort van de case */
+export const caseUrl = (item: Pick<Case, 'slug' | 'category'>) => `/${item.category}/cases/${item.slug}`;
 
 export function getCase(slug: string): Case {
   const found = cases.find((c) => c.slug === slug);
@@ -353,8 +347,11 @@ export function getCase(slug: string): Case {
   return found;
 }
 
-/** Filters en kaarten voor het overzicht /cases (CaseGrid). Live alleen het doelgroepfilter. */
-export function caseGridProps(items: Case[] = cases): CaseGridProps {
+/**
+ * Filters en kaarten voor /events/cases of /business/cases (CaseGrid): alleen cases van die
+ * soort, filter op de doelgroepen van die soort. Live alleen het doelgroepfilter.
+ */
+export function caseGridProps(items: Case[], category: Category): CaseGridProps {
   return {
     label: 'Cases filteren',
     emptyText: 'Er zijn geen actieve cases gevonden met deze filters. Pas de filters aan.',
@@ -362,21 +359,20 @@ export function caseGridProps(items: Case[] = cases): CaseGridProps {
       {
         name: 'audience',
         label: 'Doelgroep',
-        options: [
-          { label: 'Alle', value: 'alle' },
-          ...(['events', 'artiesten', 'zakelijke-events', 'business'] as const).map((a) => ({ label: audienceLabels[a], value: a })),
-        ],
+        options: [{ label: 'Alle', value: 'alle' }, ...audiences[category].map((a) => ({ label: a.title, value: a.value }))],
       },
       // Een dienstfilter kan erbij (CaseGrid ondersteunt het), maar staat live niet zichtbaar:
       // { name: 'service', label: 'Dienst', options: [{ label: 'Alle', value: 'alle' }, ...diensten] }
     ],
-    items: items.map((item) => ({
-      item,
-      tags: [...item.audiences.map((a) => audienceLabels[a]), ...(item.services ?? [])],
-      audiences: item.audiences,
-      services: item.services ?? [],
-    })),
+    items: items
+      .filter((item) => item.category === category)
+      .map((item) => ({
+        item,
+        tags: [audienceTitle(item.audience), ...(item.services ?? [])],
+        audiences: [item.audience],
+        services: item.services ?? [],
+      })),
   };
 }
 
-export const caseGrid = caseGridProps();
+export const eventsCaseGrid = caseGridProps(cases, 'events');

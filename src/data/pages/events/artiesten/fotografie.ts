@@ -2,18 +2,18 @@
  * /artiesten/fotografie — teksten letterlijk van www.weareboldproductions.com/artiesten/fotografie.
  * Gegenereerd uit de live pagina; daarna vrij te bewerken (of in Sanity).
  */
-import type { PageData } from '../../../lib/sections';
-import { trustedByTitle, artistLogos } from '../../../data/logos';
-import { testimonialCarousel, pickTestimonials } from '../../../data/testimonials';
-import boldProductions71 from '../../../assets/images/artiesten/fotografie/bold-productions-71.jpg';
-import bold18 from '../../../assets/images/artiesten/fotografie/bold-18.jpg';
-import boldProductions100 from '../../../assets/images/artiesten/fotografie/bold-productions-100.jpg';
-import levilenting28 from '../../../assets/images/artiesten/fotografie/levilenting-28.jpg';
-import boldProductionsPiratenCafe162 from '../../../assets/images/artiesten/fotografie/bold-productions-piraten-cafe-162.jpg';
-import mikeAftermovie from '../../../assets/images/events/mike-aftermovie.jpg';
+import type { PageData } from '../../../../lib/sections';
+import { trustedByTitle, artistLogos } from '../../../logos';
+import { testimonialCarousel, pickTestimonials } from '../../../testimonials';
+import boldProductions71 from '../../../../assets/images/artiesten/fotografie/bold-productions-71.jpg';
+import bold18 from '../../../../assets/images/artiesten/fotografie/bold-18.jpg';
+import boldProductions100 from '../../../../assets/images/artiesten/fotografie/bold-productions-100.jpg';
+import levilenting28 from '../../../../assets/images/artiesten/fotografie/levilenting-28.jpg';
+import boldProductionsPiratenCafe162 from '../../../../assets/images/artiesten/fotografie/bold-productions-piraten-cafe-162.jpg';
+import mikeAftermovie from '../../../../assets/images/events/mike-aftermovie.jpg';
 
 export const page: PageData = {
-  slug: 'artiesten/fotografie',
+  slug: 'events/artiesten/fotografie',
   title: 'Fotografie',
   meta: {
     schema: { type: 'service', serviceType: 'Artist Photography' },
@@ -30,7 +30,7 @@ export const page: PageData = {
         eyebrow: 'Dat gaan we veranderen.',
         primaryCta: {
           label: 'Boek Bold',
-          href: '/offerte-aanvragen',
+          href: '/events/offerte-aanvragen',
         },
         secondaryCta: {
           label: "Let's go",
@@ -118,7 +118,7 @@ export const page: PageData = {
         ],
         cta: {
           label: 'Dat wil ik',
-          href: '/offerte-aanvragen',
+          href: '/events/offerte-aanvragen',
         },
         media: {
           type: 'image',
@@ -274,7 +274,7 @@ export const page: PageData = {
         ],
         cta: {
           label: 'Boek Bold',
-          href: '/offerte-aanvragen',
+          href: '/events/offerte-aanvragen',
           accent: 'yellow',
         },
       },

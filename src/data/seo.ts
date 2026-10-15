@@ -29,7 +29,7 @@ export const organization = {
 export const founder = {
   name: 'Mike Ampting',
   jobTitle: 'Creative Director & Videograaf',
-  path: '/over/mike',
+  path: '/events/over-bold/mike',
   sameAs: ['https://www.linkedin.com/in/mikeampting/', 'https://www.instagram.com/mikeampting/'],
   description:
     'Oprichter van Bold Productions en specialist in eventcontent. Mike combineert videografie met strategische conceptontwikkeling om FOMO te creëren en ticketverkoop voor festivals en artiesten te stimuleren.',

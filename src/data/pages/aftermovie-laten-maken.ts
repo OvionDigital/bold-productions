@@ -31,7 +31,7 @@ export const page: PageData = {
         eyebrow: 'Je festival duurde één weekend.\nDe aftermovie duurt een jaar.',
         primaryCta: {
           label: 'Boek Bold',
-          href: '/offerte-aanvragen',
+          href: '/events/offerte-aanvragen',
         },
         secondaryCta: {
           label: 'Hoe werkt dat?',
@@ -78,7 +78,7 @@ export const page: PageData = {
         ],
         cta: {
           label: 'Ik wil dat',
-          href: '/offerte-aanvragen',
+          href: '/events/offerte-aanvragen',
           accent: 'yellow',
         },
         media: {
@@ -296,7 +296,7 @@ export const page: PageData = {
         ],
         cta: {
           label: 'Bel Bold',
-          href: '/offerte-aanvragen',
+          href: '/events/offerte-aanvragen',
           accent: 'yellow',
         },
       },

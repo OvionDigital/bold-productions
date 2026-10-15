@@ -3,7 +3,8 @@
  * (hero met titel, intro en foto + kruimelpad + introtekst + feitenbalk) en daarna de
  * vrije secties van de case. Zelfde opbouw als live (Webflow-CMS-template).
  */
-import { audienceLabels, caseLabels, type Case } from '../data/cases';
+import { caseLabels, caseUrl, type Case } from '../data/cases';
+import { audienceTitle } from '../data/taxonomy';
 import type { PageData, PageSection } from './sections';
 
 export function caseFacts(item: Case) {
@@ -11,7 +12,7 @@ export function caseFacts(item: Case) {
     items: [
       { label: caseLabels.client, values: item.client ? [item.client] : [] },
       { label: caseLabels.date, values: item.date ? [item.date] : [] },
-      { label: caseLabels.audience, values: item.audiences.map((a) => audienceLabels[a]) },
+      { label: caseLabels.audience, values: [audienceTitle(item.audience)] },
       { label: caseLabels.service, values: item.services ?? [] },
     ].filter((fact) => fact.values.length),
   };
@@ -39,7 +40,7 @@ export function casePage(item: Case): PageData {
   sections.push(...(item.sections ?? []));
 
   return {
-    slug: `cases/${item.slug}`,
+    slug: caseUrl(item).slice(1),
     title: item.title,
     meta: item.meta ?? { title: item.title, description: item.intro },
     sections,

@@ -2,18 +2,18 @@
  * /events/aftermovie — teksten letterlijk van www.weareboldproductions.com/events/aftermovie.
  * Gegenereerd uit de live pagina; daarna vrij te bewerken (of in Sanity).
  */
-import type { PageData } from '../../../lib/sections';
-import { trustedByTitle, clientLogos } from '../../../data/logos';
-import { testimonialCarousel, pickTestimonials } from '../../../data/testimonials';
-import spotSeq00225218Still013 from '../../../assets/images/events/aftermovie/spot-seq-00-22-52-18-still013.jpg';
-import bold68 from '../../../assets/images/artiesten/bandpromo/bold-68.jpg';
-import boldProductions36 from '../../../assets/images/events/aftermovie/bold-productions-36.jpg';
-import boldProductions127 from '../../../assets/images/events/aftermovie/bold-productions-127.jpg';
-import boldProductions87 from '../../../assets/images/events/aftermovie/bold-productions-87.jpg';
-import mikeAftermovie from '../../../assets/images/events/mike-aftermovie.jpg';
+import type { PageData } from '../../../../lib/sections';
+import { trustedByTitle, clientLogos } from '../../../logos';
+import { testimonialCarousel, pickTestimonials } from '../../../testimonials';
+import spotSeq00225218Still013 from '../../../../assets/images/events/aftermovie/spot-seq-00-22-52-18-still013.jpg';
+import bold68 from '../../../../assets/images/artiesten/bandpromo/bold-68.jpg';
+import boldProductions36 from '../../../../assets/images/events/aftermovie/bold-productions-36.jpg';
+import boldProductions127 from '../../../../assets/images/events/aftermovie/bold-productions-127.jpg';
+import boldProductions87 from '../../../../assets/images/events/aftermovie/bold-productions-87.jpg';
+import mikeAftermovie from '../../../../assets/images/events/mike-aftermovie.jpg';
 
 export const page: PageData = {
-  slug: 'events/aftermovie',
+  slug: 'events/organisatoren/aftermovie',
   title: 'Aftermovie',
   meta: {
     schema: { type: 'service', serviceType: 'Event Aftermovie Productie' },
@@ -30,7 +30,7 @@ export const page: PageData = {
         eyebrow: 'Maar meteen herkenbaar voor je publiek',
         primaryCta: {
           label: 'Boek Bold',
-          href: '/offerte-aanvragen',
+          href: '/events/offerte-aanvragen',
         },
         secondaryCta: {
           label: 'Hoe dan?',
@@ -275,7 +275,7 @@ export const page: PageData = {
         ],
         cta: {
           label: 'Plan een gesprek',
-          href: '/offerte-aanvragen',
+          href: '/events/offerte-aanvragen',
           accent: 'yellow',
         },
       },

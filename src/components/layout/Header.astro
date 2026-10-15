@@ -15,21 +15,24 @@ import logo from '../../assets/brand/bold-productions-logo.png';
 
 interface Props {
   nav: NavGroup[];
-  cta: NavLink;
+  /** Leeg = geen knop (neutrale pagina's) */
+  cta?: NavLink;
+  /** Waar het logo naartoe linkt (homepage van dit deel van de site) */
+  home?: string;
   menuLabel: string;
   logoAlt: string;
   homeTitle: string;
   currentPath: string;
 }
 
-const { nav, cta, menuLabel, logoAlt, homeTitle, currentPath } = Astro.props;
-const isHome = currentPath === '/';
+const { nav, cta, home = '/', menuLabel, logoAlt, homeTitle, currentPath } = Astro.props;
+const isHome = currentPath === home;
 ---
 
 <header class="navbar" data-navbar>
   <div class="navbar__inner">
     <div class="navbar__brand">
-      <a href="/" title={homeTitle} aria-current={isHome ? 'page' : undefined} class="navbar__logo">
+      <a href={home} title={homeTitle} aria-current={isHome ? 'page' : undefined} class="navbar__logo">
         <Picture
           src={logo}
           alt={logoAlt}
@@ -45,7 +48,7 @@ const isHome = currentPath === '/';
     <MegaMenu groups={nav.filter((group) => group.inHeader)} currentPath={currentPath} />
 
     <div class="navbar__actions">
-      <Button label={cta.label} href={cta.href} size="small" class="navbar__cta" />
+      {cta && <Button label={cta.label} href={cta.href} size="small" class="navbar__cta" />}
       <div class="navbar__menu">
         <Button
           label={menuLabel}

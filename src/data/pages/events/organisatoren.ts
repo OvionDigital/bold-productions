@@ -2,7 +2,7 @@
  * /events — opbouw van de pagina; de inhoud zelf staat in src/data/events.ts
  * (handgebouwd en pixel-gecontroleerd, ook gebruikt op /styleguide).
  */
-import type { PageData } from '../../lib/sections';
+import type { PageData } from '../../../lib/sections';
 import {
   biggerThanTheDay,
   caseSpotlight,
@@ -15,10 +15,10 @@ import {
   testimonials,
   timeline,
   trustedBy,
-} from '../events';
+} from '../../events';
 
 export const page: PageData = {
-  slug: 'events',
+  slug: 'events/organisatoren',
   title: 'Events',
   meta,
   sections: [

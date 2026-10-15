@@ -2,18 +2,18 @@
  * /zakelijke-events/aftermovie — teksten letterlijk van www.weareboldproductions.com/zakelijke-events/aftermovie.
  * Gegenereerd uit de live pagina; daarna vrij te bewerken (of in Sanity).
  */
-import type { PageData } from '../../../lib/sections';
-import { trustedByTitle, businessLogos } from '../../../data/logos';
-import { testimonialCarousel, pickTestimonials } from '../../../data/testimonials';
-import mikeSkndag30 from '../../../assets/images/videograaf-doetinchem/mike-skndag-30.jpg';
-import rhbfoto21 from '../../../assets/images/zakelijke-events/aftermovie/rhbfoto-21.jpg';
-import mikexdeliveformuleFinis100Jaar8 from '../../../assets/images/zakelijke-events/aftermovie/mikexdeliveformule-finis-100-jaar-8.jpg';
-import mikexdeliveformuleFinis100Jaar77 from '../../../assets/images/zakelijke-events/aftermovie/mikexdeliveformule-finis-100-jaar-77.jpg';
-import mikexdeliveformuleFinis100Jaar205 from '../../../assets/images/zakelijke-events/aftermovie/mikexdeliveformule-finis-100-jaar-205.jpg';
-import mikeAftermovie from '../../../assets/images/events/mike-aftermovie.jpg';
+import type { PageData } from '../../../../lib/sections';
+import { trustedByTitle, businessLogos } from '../../../logos';
+import { testimonialCarousel, pickTestimonials } from '../../../testimonials';
+import mikeSkndag30 from '../../../../assets/images/videograaf-doetinchem/mike-skndag-30.jpg';
+import rhbfoto21 from '../../../../assets/images/zakelijke-events/aftermovie/rhbfoto-21.jpg';
+import mikexdeliveformuleFinis100Jaar8 from '../../../../assets/images/zakelijke-events/aftermovie/mikexdeliveformule-finis-100-jaar-8.jpg';
+import mikexdeliveformuleFinis100Jaar77 from '../../../../assets/images/zakelijke-events/aftermovie/mikexdeliveformule-finis-100-jaar-77.jpg';
+import mikexdeliveformuleFinis100Jaar205 from '../../../../assets/images/zakelijke-events/aftermovie/mikexdeliveformule-finis-100-jaar-205.jpg';
+import mikeAftermovie from '../../../../assets/images/events/mike-aftermovie.jpg';
 
 export const page: PageData = {
-  slug: 'zakelijke-events/aftermovie',
+  slug: 'events/zakelijke-events/aftermovie',
   title: 'Aftermovie',
   meta: {
     schema: { type: 'service', serviceType: 'Zakelijke Aftermovie Productie' },
@@ -30,7 +30,7 @@ export const page: PageData = {
         eyebrow: 'Zorg dat de aftermovie dat verschil maakt.',
         primaryCta: {
           label: 'Boek Bold',
-          href: '/offerte-aanvragen',
+          href: '/events/offerte-aanvragen',
         },
         secondaryCta: {
           label: 'Zo maken wij dat.',
@@ -291,7 +291,7 @@ export const page: PageData = {
         ],
         cta: {
           label: 'Plan een gesprek',
-          href: '/offerte-aanvragen',
+          href: '/events/offerte-aanvragen',
           accent: 'yellow',
         },
         reverse: true,

@@ -2,18 +2,18 @@
  * /artiesten/social-content — teksten letterlijk van www.weareboldproductions.com/artiesten/social-content.
  * Gegenereerd uit de live pagina; daarna vrij te bewerken (of in Sanity).
  */
-import type { PageData } from '../../../lib/sections';
-import { trustedByTitle, artistLogos } from '../../../data/logos';
-import { testimonialCarousel, pickTestimonials } from '../../../data/testimonials';
-import mikeDorpsfeestwehlzaterdag117 from '../../../assets/images/artiesten/social-content/mike-dorpsfeestwehlzaterdag-117.jpg';
-import mikeDorpsfeestwehlzaterdag168 from '../../../assets/images/artiesten/social-content/mike-dorpsfeestwehlzaterdag-168.jpg';
-import mikeDorpsfeestwehlzaterdag255 from '../../../assets/images/artiesten/social-content/mike-dorpsfeestwehlzaterdag-255.jpg';
-import mikeDorpsfeestwehlvrijdag117 from '../../../assets/images/artiesten/social-content/mike-dorpsfeestwehlvrijdag-117.jpg';
-import mikeDorpsfeestwehlvrijdag167 from '../../../assets/images/artiesten/social-content/mike-dorpsfeestwehlvrijdag-167.jpg';
-import mikeAftermovie from '../../../assets/images/events/mike-aftermovie.jpg';
+import type { PageData } from '../../../../lib/sections';
+import { trustedByTitle, artistLogos } from '../../../logos';
+import { testimonialCarousel, pickTestimonials } from '../../../testimonials';
+import mikeDorpsfeestwehlzaterdag117 from '../../../../assets/images/artiesten/social-content/mike-dorpsfeestwehlzaterdag-117.jpg';
+import mikeDorpsfeestwehlzaterdag168 from '../../../../assets/images/artiesten/social-content/mike-dorpsfeestwehlzaterdag-168.jpg';
+import mikeDorpsfeestwehlzaterdag255 from '../../../../assets/images/artiesten/social-content/mike-dorpsfeestwehlzaterdag-255.jpg';
+import mikeDorpsfeestwehlvrijdag117 from '../../../../assets/images/artiesten/social-content/mike-dorpsfeestwehlvrijdag-117.jpg';
+import mikeDorpsfeestwehlvrijdag167 from '../../../../assets/images/artiesten/social-content/mike-dorpsfeestwehlvrijdag-167.jpg';
+import mikeAftermovie from '../../../../assets/images/events/mike-aftermovie.jpg';
 
 export const page: PageData = {
-  slug: 'artiesten/social-content',
+  slug: 'events/artiesten/social-content',
   title: 'Social content',
   meta: {
     schema: {
@@ -34,7 +34,7 @@ export const page: PageData = {
         eyebrow: 'Zichtbaarheid wel.',
         primaryCta: {
           label: 'Boek Bold',
-          href: '/offerte-aanvragen',
+          href: '/events/offerte-aanvragen',
         },
         secondaryCta: {
           label: 'Boek Bold',
@@ -109,7 +109,7 @@ export const page: PageData = {
         ],
         cta: {
           label: "Let's go BOLD",
-          href: '/offerte-aanvragen',
+          href: '/events/offerte-aanvragen',
         },
         media: {
           type: 'image',
@@ -254,7 +254,7 @@ export const page: PageData = {
         ],
         cta: {
           label: 'Boek Bold',
-          href: '/offerte-aanvragen',
+          href: '/events/offerte-aanvragen',
           accent: 'yellow',
         },
         reverse: true,

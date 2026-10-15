@@ -2,12 +2,12 @@
  * /contact — teksten letterlijk van www.weareboldproductions.com/contact.
  * Gegenereerd uit de live pagina; daarna vrij te bewerken (of in Sanity).
  */
-import type { PageData } from '../../lib/sections';
-import { teamTiles } from '../../data/team';
-import boldProductions98 from '../../assets/images/contact/bold-productions-98.jpg';
+import type { PageData } from '../../../lib/sections';
+import { teamTiles } from '../../team';
+import boldProductions98 from '../../../assets/images/contact/bold-productions-98.jpg';
 
 export const page: PageData = {
-  slug: 'contact',
+  slug: 'events/contact',
   title: 'Contact',
   meta: {
     schema: { type: 'contact' },

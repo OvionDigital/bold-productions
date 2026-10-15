@@ -1,5 +1,5 @@
 import { defineType, defineField, defineArrayMember } from 'sanity';
-import { anchorIdField, gradientField, plainText, titleField } from '../fields';
+import { anchorIdField, contactLinksField, gradientField, plainText, titleField } from '../fields';
 import { formOptions, messagePlaceholderField } from './more';
 
 /** Timeline.astro — kop + genummerde stappen (foto | tekst) + slotknop. */
@@ -91,6 +91,7 @@ export const textMediaSection = defineType({
     defineField({ ...titleField('Titel', false), hidden: ({ parent }) => parent?.showContactForm }),
     defineField({ ...gradientField('orange'), hidden: ({ parent }) => parent?.showContactForm }),
     defineField({ name: 'body', title: 'Tekst', type: 'richText', hidden: ({ parent }) => parent?.showContactForm }),
+    defineField({ ...contactLinksField('Contactlinks onder de tekst (optioneel)'), hidden: ({ parent }) => parent?.showContactForm }),
     defineField({ name: 'cta', title: 'Knop (optioneel)', type: 'ctaButton', hidden: ({ parent }) => parent?.showContactForm }),
     defineField({
       name: 'mediaType',

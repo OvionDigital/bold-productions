@@ -1,4 +1,5 @@
 import { heroSection } from './hero';
+import { splitHeroSection } from './splitHero';
 import {
   breadcrumbsSection,
   caseSpotlightSection,
@@ -28,6 +29,7 @@ import {
  */
 export const sectionTypes = [
   heroSection,
+  splitHeroSection,
   breadcrumbsSection,
   logoMarqueeSection,
   introHighlightSection,
@@ -50,4 +52,4 @@ export const sectionTypes = [
 ];
 
 /** Blokken voor de inhoud van een case (onder de vaste kop met hero, intro en feiten). */
-export const caseSectionTypes = sectionTypes.filter((t) => !['heroSection', 'breadcrumbsSection', 'caseGridSection', 'linkGroupsSection'].includes(t.name));
+export const caseSectionTypes = sectionTypes.filter((t) => !['heroSection', 'splitHeroSection', 'breadcrumbsSection', 'caseGridSection', 'linkGroupsSection'].includes(t.name));

@@ -87,7 +87,7 @@ export const page: PageData = {
         ],
         cta: {
           label: 'Plan een kennismaking',
-          href: '/offerte-aanvragen',
+          href: '/events/offerte-aanvragen',
           accent: 'yellow',
         },
         media: {
@@ -236,7 +236,7 @@ export const page: PageData = {
         ],
         cta: {
           label: 'Bel Bold',
-          href: '/offerte-aanvragen',
+          href: '/events/offerte-aanvragen',
           accent: 'yellow',
         },
       },

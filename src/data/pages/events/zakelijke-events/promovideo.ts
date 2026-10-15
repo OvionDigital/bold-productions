@@ -2,18 +2,18 @@
  * /zakelijke-events/promovideo — teksten letterlijk van www.weareboldproductions.com/zakelijke-events/promovideo.
  * Gegenereerd uit de live pagina; daarna vrij te bewerken (of in Sanity).
  */
-import type { PageData } from '../../../lib/sections';
-import { trustedByTitle, businessLogos } from '../../../data/logos';
-import { testimonialCarousel, pickTestimonials } from '../../../data/testimonials';
-import mikeWaterschapHuisfeestje159 from '../../../assets/images/zakelijke-events/casevideo/mike-waterschap-huisfeestje-159.jpg';
-import rhbfoto412 from '../../../assets/images/aftermovie-laten-maken/rhbfoto-412.jpg';
-import rhbfoto30 from '../../../assets/images/zakelijke-events/promovideo/rhbfoto-30.jpg';
-import rhbfoto50 from '../../../assets/images/zakelijke-events/promovideo/rhbfoto-50.jpg';
-import rhbfoto135 from '../../../assets/images/zakelijke-events/promovideo/rhbfoto-135.jpg';
-import mikeAftermovie from '../../../assets/images/events/mike-aftermovie.jpg';
+import type { PageData } from '../../../../lib/sections';
+import { trustedByTitle, businessLogos } from '../../../logos';
+import { testimonialCarousel, pickTestimonials } from '../../../testimonials';
+import mikeWaterschapHuisfeestje159 from '../../../../assets/images/zakelijke-events/casevideo/mike-waterschap-huisfeestje-159.jpg';
+import rhbfoto412 from '../../../../assets/images/aftermovie-laten-maken/rhbfoto-412.jpg';
+import rhbfoto30 from '../../../../assets/images/zakelijke-events/promovideo/rhbfoto-30.jpg';
+import rhbfoto50 from '../../../../assets/images/zakelijke-events/promovideo/rhbfoto-50.jpg';
+import rhbfoto135 from '../../../../assets/images/zakelijke-events/promovideo/rhbfoto-135.jpg';
+import mikeAftermovie from '../../../../assets/images/events/mike-aftermovie.jpg';
 
 export const page: PageData = {
-  slug: 'zakelijke-events/promovideo',
+  slug: 'events/zakelijke-events/promovideo',
   title: 'Promovideo',
   meta: {
     schema: { type: 'service', serviceType: 'Zakelijke Promovideo Productie' },
@@ -30,7 +30,7 @@ export const page: PageData = {
         eyebrow: 'Regelen we',
         primaryCta: {
           label: 'Boek Bold',
-          href: '/offerte-aanvragen',
+          href: '/events/offerte-aanvragen',
         },
         secondaryCta: {
           label: 'Zo doen wij dat',
@@ -102,7 +102,7 @@ export const page: PageData = {
         ],
         cta: {
           label: 'Ik ook niet',
-          href: '/offerte-aanvragen',
+          href: '/events/offerte-aanvragen',
         },
         media: {
           type: 'image',
@@ -264,7 +264,7 @@ export const page: PageData = {
         ],
         cta: {
           label: 'Plan een gesprek',
-          href: '/offerte-aanvragen',
+          href: '/events/offerte-aanvragen',
           accent: 'yellow',
         },
       },
