@@ -38,8 +38,23 @@ interface Context {
   homeLabel?: string;
   /** Alleen op de homepage */
   website?: boolean;
+  /** /events (de vroegere homepage): reviews + gemiddelde score op de organisatie */
   reviews?: Review[];
+  /** Aanbod op de organisatie (hasOfferCatalog), zoals live op de homepage */
+  catalog?: { name: string; items: { name: string; path: string }[] };
+  /** Teamleden (behalve Mike) als employee op de organisatie, zoals live op /over */
+  employees?: string[];
+  /** Klanten (customer) op de organisatie, zoals live op de homepage */
+  customers?: string[];
 }
+
+/** "Ralph buisman" → "Ralph Buisman" (zichtbaar blijft de tekst letterlijk); tussenvoegsels klein */
+const TUSSENVOEGSELS = new Set(['van', 'de', 'der', 'den', 'het', 'ter', 'ten', 'te', 'in', "'t"]);
+const personName = (name: string) =>
+  name
+    .split(' ')
+    .map((word, i) => (i > 0 && TUSSENVOEGSELS.has(word) ? word : word.charAt(0).toUpperCase() + word.slice(1)))
+    .join(' ');
 
 type Node = Record<string, unknown>;
 
@@ -76,6 +91,21 @@ export function buildStructuredData(ctx: Context): Node {
     address: { '@type': 'PostalAddress', ...organization.address },
     geo: { '@type': 'GeoCoordinates', ...organization.geo },
     sameAs: organization.sameAs,
+    ...(ctx.employees?.length ? { employee: ctx.employees.map((name) => ({ '@type': 'Person', name: personName(name) })) } : {}),
+    ...(ctx.customers?.length ? { customer: ctx.customers.map((name) => ({ '@type': 'Organization', name })) } : {}),
+    // Zoals live: gemiddelde score van de reviews op deze pagina (allemaal 5)
+    ...(ctx.reviews?.length
+      ? { aggregateRating: { '@type': 'AggregateRating', ratingValue: '5', reviewCount: String(ctx.reviews.length), bestRating: '5', worstRating: '1' } }
+      : {}),
+    ...(ctx.catalog
+      ? {
+          hasOfferCatalog: {
+            '@type': 'OfferCatalog',
+            name: ctx.catalog.name,
+            itemListElement: ctx.catalog.items.map((item) => ({ '@type': 'Offer', itemOffered: { '@type': 'Service', name: item.name, url: url(item.path) } })),
+          },
+        }
+      : {}),
   };
 
   const graph: Node[] = [];

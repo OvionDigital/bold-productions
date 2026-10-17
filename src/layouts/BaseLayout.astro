@@ -39,6 +39,9 @@ interface Props {
     breadcrumbs?: { label: string; href?: string }[];
     website?: boolean;
     reviews?: Review[];
+    catalog?: { name: string; items: { name: string; path: string }[] };
+    employees?: string[];
+    customers?: string[];
   };
 }
 

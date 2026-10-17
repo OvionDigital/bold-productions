@@ -10,7 +10,7 @@ import type { GetStaticPaths } from 'astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageSections from '../components/sections/PageSections.astro';
 import { EVENTS_SLUG, getRoutedPages, type BuiltPage } from '../lib/pages';
-import { homepageReviews } from '../data/seo';
+import { eventsCatalog, eventsCustomers, founder, homepageReviews } from '../data/seo';
 import { testimonials } from '../data/testimonials';
 import type { Review } from '../lib/structured-data';
 
@@ -41,6 +41,11 @@ const reviews: Review[] | undefined =
         return { body: t.quote, author: t.name ?? t.organisation ?? '', authorType: t.name ? 'Person' : 'Organization' };
       })
     : undefined;
+
+/** Pagina over Bold met het team (Over Bold): de teamleden als employee, zoals live op /over */
+const team = page.sections.find((s) => s.type === 'serviceTiles' && s.props.variant === 'team');
+const employees =
+  page.meta.schema?.type === 'webpage' && team?.type === 'serviceTiles' ? team.props.items.map((item) => item.label).filter((name) => name !== founder.name) : undefined;
 ---
 
 <BaseLayout
@@ -49,7 +54,7 @@ const reviews: Review[] | undefined =
   ogImage={page.meta.ogImage}
   accent={page.accent}
   noindex={page.meta.noindex}
-  structuredData={{ schema: page.meta.schema, breadcrumbs: page.breadcrumbs, reviews }}
+  structuredData={{ schema: page.meta.schema, breadcrumbs: page.breadcrumbs, reviews, catalog: reviews ? eventsCatalog : undefined, customers: reviews ? eventsCustomers : undefined, employees }}
 >
   <PageSections sections={page.sections} breadcrumbs={page.breadcrumbs} />
 </BaseLayout>

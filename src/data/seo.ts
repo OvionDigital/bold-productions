@@ -51,8 +51,21 @@ export const contactPoint = {
   availableLanguage: ['Dutch', 'English'],
 };
 
-/** Reviews op de homepage (selectie van live), uit src/data/testimonials.ts */
+/** Reviews op de homepage (selectie van live), uit src/data/testimonials.ts. Sinds oktober 2026 op /events. */
 export const homepageReviews: TestimonialId[] = ['reinier-peters', 'merijn-peters', 'manon-diks', 'dorpsfeest-wehl', 'sam-janssen'];
+
+/** Klanten van de organisatie (live: op de homepage, nu /events), letterlijk van live */
+export const eventsCustomers = ['Zwarte Cross', 'Bospop', 'Soenda Festival', 'Drift', 'Smoorverliefd', 'Doorgedraaid', 'Proost!', 'Dorpsfeest Wehl'];
+
+/** Aanbod van de organisatie (live: op de homepage, nu /events), met de nieuwe URL's */
+export const eventsCatalog = {
+  name: 'Diensten Bold Productions',
+  items: [
+    { name: 'Event Content', path: '/events/organisatoren' },
+    { name: 'Artiesten & Bands', path: '/events/artiesten' },
+    { name: 'Zakelijke Events', path: '/events/zakelijke-events' },
+  ],
+};
 
 /** Werkgebied van alle diensten */
 export const areaServed = 'NL';

@@ -154,23 +154,23 @@ De gewone build verandert hier niet door: `dist/` bevat geen enkel byte van de p
 **Lokaal:** `npm run preview:dev` (http://localhost:4322; leest `.env`, het schrijf-token
 mag daar voor de concepten) en in `studio/` `npx sanity dev` → tab Voorbeeld.
 
-**Online (eenmalig):**
+**Online (staat sinds 17 oktober 2026):**
 
-1. sanity.io/manage → project → API → Tokens → **Add API token**, rechten **Viewer**.
-   In GitHub als secret `SANITY_API_READ_TOKEN`.
-2. GitHub-variabele `PREVIEW_WORKER` = `true` (en optioneel `PUBLIC_SANITY_STUDIO_URL`).
-   Het Cloudflare-token moet Workers mogen bewerken (template "Edit Cloudflare Workers").
-   Actions → Deploy → Run workflow: job `preview-worker` zet de Worker
-   `bold-productions-preview` online (`https://bold-productions-preview.<subdomein>.workers.dev`,
-   adres staat in de log). Daarna bij elke push opnieuw; publiceren hoeft niet, de Worker leest
-   Sanity live. Handmatig kan ook: `npm run preview:deploy` (na `npx wrangler login`, met
-   `SANITY_API_READ_TOKEN` in de omgeving).
-3. `studio/.env`:
-   ```
-   SANITY_STUDIO_PREVIEW_URL=https://bold-productions-preview.<subdomein>.workers.dev
-   SANITY_STUDIO_SITE_URL=https://www.weareboldproductions.com   # zolang Webflow live is: de pages.dev-URL
-   ```
-   en `cd studio && npx sanity deploy`.
+- Worker: `https://bold-productions-preview.simon-1ef.workers.dev` (Cloudflare-account van Ovion).
+  Leest Sanity live met een Viewer-token ("Preview Worker (Cloudflare)" in sanity.io/manage → API →
+  Tokens), dus na publiceren hoeft er niets opnieuw; alleen bij nieuwe code.
+- `studio/.env`: `SANITY_STUDIO_PREVIEW_URL` = die Worker, `SANITY_STUDIO_SITE_URL` =
+  `https://preview.bold-productions.pages.dev` zolang Webflow live is (daarna
+  `https://www.weareboldproductions.com` en opnieuw `npx sanity deploy`).
+- **Na een codewijziging de Worker opnieuw zetten:** `npm run preview:deploy` (na `npx wrangler login`,
+  met `SANITY_API_READ_TOKEN` in `.env`). De sitecode gebruikt het schrijf-token nergens, dus dat
+  komt nooit in de Worker.
+- **Automatisch via GitHub** (job `preview-worker` in deploy.yml) staat uit (`PREVIEW_WORKER` =
+  `false`): het Cloudflare-token in GitHub mag alleen Pages deployen ("No access to the specified
+  resource"). Aanzetten: Cloudflare → My Profile → API Tokens → het token van deze repo bewerken (of
+  een nieuw maken met template "Edit Cloudflare Workers") zodat het ook **Workers Scripts: Edit** heeft,
+  het in GitHub als `CLOUDFLARE_API_TOKEN` zetten en `PREVIEW_WORKER` op `true`. Daarna gaat de Worker
+  bij elke push mee (met het secret `SANITY_API_READ_TOKEN`).
 
 ## Online zetten (eenmalig)
 

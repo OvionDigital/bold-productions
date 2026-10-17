@@ -48,8 +48,8 @@ export const sanityClient: SanityClient | null = !isSanityConfigured
         apiVersion: '2025-02-19',
         useCdn: false,
         // Viewer-token (alleen lezen), nodig voor concepten. Staat alleen in de server-bundel.
-        // Lokaal mag het schrijf-token uit .env ook.
-        token: import.meta.env.SANITY_API_READ_TOKEN || import.meta.env.SANITY_API_WRITE_TOKEN,
+        // Bewust nooit het schrijf-token: dat zou in de Worker terechtkomen.
+        token: import.meta.env.SANITY_API_READ_TOKEN,
         perspective: 'drafts',
         stega: {
           enabled: true,
@@ -64,8 +64,7 @@ export const sanityClient: SanityClient | null = !isSanityConfigured
         // Geen API-CDN: een build die direct na "Publiceren" start (webhook) moet de
         // nieuwste inhoud zien; de CDN kan dan nog even de vorige versie geven.
         useCdn: false,
-        // Alleen gezet als er een token in de omgeving staat (bv. tijdens deploy
-        // met concepten inbegrepen); zonder token worden alleen published documents opgehaald.
-        token: import.meta.env.SANITY_API_WRITE_TOKEN || undefined,
+        // Geen token: de dataset is openbaar en de site toont alleen gepubliceerde inhoud
+        // (de CI-build heeft ook geen token).
         perspective: 'published',
       });

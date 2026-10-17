@@ -15,4 +15,6 @@ export default defineCliConfig({
     dataset: process.env.SANITY_STUDIO_DATASET || process.env.PUBLIC_SANITY_DATASET || 'production',
   },
   studioHost: 'bold-productions',
+  // Vaste app-id van de online Studio: `npx sanity deploy` vraagt er dan niet om
+  deployment: { appId: 'g8k61zwvfuwsat9ez1lgu69o' },
 });
