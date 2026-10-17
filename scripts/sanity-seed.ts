@@ -2,7 +2,7 @@
 /**
  * Zet alle inhoud uit src/data over naar Sanity, zodat de klant in Studio de complete
  * site ziet en kan bewerken: homepage, alle pagina's (src/data/pages), alle cases
- * (src/data/cases.ts + case-pages), teamleden, testimonials en klantlogo's.
+ * (src/data/cases.ts + case-pages), teamleden, testimonials, klantlogo's en menu & footer.
  * Leest de TypeScript-data rechtstreeks (via scripts/sanity/register.mjs) — dezelfde
  * bron als de site zonder Sanity, dus nooit dubbel bijhouden.
  *
@@ -31,8 +31,9 @@ import { cases } from '../src/data/cases';
 import { testimonials } from '../src/data/testimonials';
 import { team, teamOrder, type TeamMemberId } from '../src/data/team';
 import { artistLogos, businessLogos, clientLogos } from '../src/data/logos';
-import { targetingFields } from '../src/lib/sanity/taxonomy';
-import * as home from '../src/data/home';
+import { multiTargetingFields, targetingFields } from '../src/lib/sanity/taxonomy';
+import type { Audience, Category } from '../src/data/taxonomy';
+import { navigation, type NavGroup, type SiteNavigation } from '../src/data/navigation';
 
 const { PUBLIC_SANITY_PROJECT_ID, PUBLIC_SANITY_DATASET, SANITY_API_WRITE_TOKEN } = process.env;
 if (!PUBLIC_SANITY_PROJECT_ID || !SANITY_API_WRITE_TOKEN) {
@@ -147,20 +148,31 @@ const logoIdByPath = new Map<string, string>();
 const testimonialIdByQuote = new Map(Object.entries(testimonials).map(([id, t]) => [t.quote, `testimonial-${id}`]));
 const teamIdByName = new Map(teamOrder.map((id) => [team[id].name, id]));
 
+/** Eén document per logobestand; staat een logo in meerdere strips, dan alle soorten en doelgroepen samen */
 async function logoDocs(): Promise<Doc[]> {
   const all = [...clientLogos, ...artistLogos, ...businessLogos];
-  const docs: Doc[] = [];
+  const merged = new Map<string, { logo: (typeof all)[number]; categories: Set<Category>; audiences: Set<Audience> }>();
   for (const logo of all) {
     const fsPath = fsPathOf(logo.src);
-    if (logoIdByPath.has(fsPath)) continue;
+    const entry = merged.get(fsPath) ?? { logo, categories: new Set(), audiences: new Set() };
+    logo.categories.forEach((c) => entry.categories.add(c));
+    logo.audiences.forEach((a) => entry.audiences.add(a));
+    merged.set(fsPath, entry);
+  }
+  const docs: Doc[] = [];
+  for (const [fsPath, { logo, categories, audiences }] of merged) {
     const id = `clientLogo-${slugify(logo.alt)}`;
     logoIdByPath.set(fsPath, id);
-    docs.push({ _id: id, _type: 'clientLogo', name: logo.alt, image: await image({ src: logo.src }, false), ...targetingFields(logo) });
+    docs.push({
+      _id: id,
+      _type: 'clientLogo',
+      name: logo.alt,
+      image: await image({ src: logo.src }, false),
+      ...multiTargetingFields({ categories: [...categories], audiences: [...audiences] }),
+    });
   }
   return docs;
 }
-
-const logoRefs = (logos: { src: unknown }[]) => logos.map((l) => ref(logoIdByPath.get(fsPathOf(l.src))!));
 
 async function testimonialDocs(): Promise<Doc[]> {
   return Promise.all(
@@ -171,7 +183,8 @@ async function testimonialDocs(): Promise<Doc[]> {
       name: 'name' in t ? t.name : undefined,
       organisation: 'organisation' in t ? t.organisation : undefined,
       image: await image(t.image),
-      ...targetingFields(t),
+      // Alleen soort + doelgroep (geen diensten)
+      ...targetingFields({ category: t.category, audience: t.audience }),
     })),
   );
 }
@@ -235,7 +248,8 @@ async function toBlock(section: PageSection): Promise<Record<string, unknown> | 
     case 'breadcrumbs':
       return { _type: 'breadcrumbsSection' };
     case 'logoMarquee':
-      return { _type: 'logoMarqueeSection', title: section.props.title, logos: logoRefs(section.props.logos) };
+      // Geen vaste lijst: de site kiest de logo's van de soort/doelgroep van de pagina (max. 10 willekeurig)
+      return { _type: 'logoMarqueeSection', title: section.props.title };
     case 'introHighlight':
       return { _type: 'introHighlightSection', content: richToPortableText(section.props.content), anchorId: section.props.id };
     case 'richText':
@@ -303,10 +317,9 @@ async function toBlock(section: PageSection): Promise<Record<string, unknown> | 
         anchorId: p.id,
       };
     }
-    case 'caseSpotlight': {
-      const slug = section.props.item?.slug ?? section.props.caseSlug;
-      return { _type: 'caseSpotlightSection', title: section.props.title, gradient: section.props.gradient, case: ref(`caseStudy-${slug}`) };
-    }
+    case 'caseSpotlight':
+      // Geen vaste case: de site kiest elke keer een passende (soort, doelgroep, dienst van de pagina)
+      return { _type: 'caseSpotlightSection', title: section.props.title, gradient: section.props.gradient };
     case 'imageFeature': {
       const p = section.props;
       return { _type: 'imageFeatureSection', title: p.title, gradient: p.gradient, text: p.text, image: await image(p.image), cinemaCursor: p.id === 'cinema' || undefined };
@@ -415,11 +428,14 @@ function schemaFields(schema: PageData['meta']['schema']): Record<string, unknow
 
 /**
  * Document-id per URL-pad. Bestaat er al een pagina met dat pad (ook na een URL-wijziging,
- * scripts/sanity-migrate-urls.ts), dan dat document; anders page-<pad>. 'home' = page-home
- * (de homepage, vast item in Studio).
+ * scripts/sanity-migrate-urls.ts), dan dat document; anders page-<pad>. Vaste id's: 'home' =
+ * page-home, 'events' = page-events-home (page-events is van vóór oktober 2026 de pagina
+ * Organisatoren). De startpagina's krijgen listOrder: bovenaan in "Pagina's" in Studio.
  */
 const existingPageIds = new Map<string, string>();
-const pageId = (slug: string) => existingPageIds.get(slug) ?? `page-${slug.replace(/\//g, '--')}`;
+const FIXED_PAGE_IDS: Record<string, string> = { home: 'page-home', events: 'page-events-home' };
+const LIST_ORDER: Record<string, number> = { home: 1, events: 2, business: 3 };
+const pageId = (slug: string) => existingPageIds.get(slug) ?? FIXED_PAGE_IDS[slug] ?? `page-${slug.replace(/\//g, '--')}`;
 
 async function pageDoc(page: PageData): Promise<Doc> {
   return {
@@ -435,6 +451,7 @@ async function pageDoc(page: PageData): Promise<Doc> {
     ogImage: page.meta.ogImage && typeof page.meta.ogImage !== 'string' ? await image({ src: page.meta.ogImage }, false) : undefined,
     ...schemaFields(page.meta.schema),
     sections: await toBlocks(page.sections),
+    listOrder: LIST_ORDER[page.slug],
   };
 }
 
@@ -462,51 +479,33 @@ async function caseDocs(): Promise<Doc[]> {
   return docs;
 }
 
-async function homepageDoc(): Promise<Doc> {
-  const { hero, trustedBy, intro, timeline, testimonials: homeTestimonials, backstage, micDrop, meta } = home;
+// ─── Menu & footer (studio/schemaTypes/documents/siteNavigation.ts) ─────────────
+const navLink = (_type: string, { label, href, bold }: { label: string; href: string; bold?: boolean }) => ({
+  _type,
+  label,
+  href,
+  ...(bold ? { bold } : {}),
+});
+const menuGroups = (groups: NavGroup[]) =>
+  groups.map((g) => ({ ...navLink('menuGroup', g), inHeader: Boolean(g.inHeader), children: g.children.map((c) => navLink('menuLink', c)) }));
+const footerColumns = (groups: NavGroup[]) =>
+  groups.map((g) => ({ ...navLink('footerColumn', g), links: g.children.map((c) => navLink('footerLink', c)) }));
+const menuPart = (part: SiteNavigation) => ({
+  cta: part.cta ? { label: part.cta.label, href: part.cta.href } : undefined,
+  menu: menuGroups(part.nav),
+  footer: footerColumns(part.footer),
+});
+
+function navigationDoc(): Doc {
   return {
-    _id: 'homepage',
-    _type: 'homepage',
-    metaTitle: meta.title,
-    metaDescription: meta.description,
-    heroTitle: hero.title,
-    heroTitleAccent: hero.titleAccent,
-    heroEyebrow: hero.eyebrow,
-    heroPrimaryCta: hero.primaryCta ? { _type: 'ctaButton', ...hero.primaryCta } : undefined,
-    heroSecondaryCta: hero.secondaryCta ? { label: hero.secondaryCta.label, href: hero.secondaryCta.href, icon: hero.secondaryCta.icon } : undefined,
-    heroImage: await image(hero.image),
-    heroVideo: hero.video,
-    trustedByTitle: trustedBy.title,
-    trustedByLogos: logoRefs(trustedBy.logos),
-    introContent: richToPortableText(intro.content),
-    timelineTitle: timeline.title,
-    timelineGradient: timeline.gradient,
-    timelineIntro: richToPortableText(timeline.intro),
-    timelineSteps: await Promise.all(
-      timeline.steps.map(async (step) => ({
-        number: step.number,
-        title: step.title,
-        text: richToPortableText(step.text),
-        image: step.image ? await image(step.image) : undefined,
-        cta: step.cta ? { _type: 'ctaButton', ...step.cta } : undefined,
-      })),
-    ),
-    timelineCta: timeline.cta ? { _type: 'ctaButton', ...timeline.cta } : undefined,
-    testimonialsEyebrow: homeTestimonials.eyebrow,
-    testimonialsTitle: homeTestimonials.title,
-    testimonialsGradient: homeTestimonials.gradient,
-    testimonialsItems: homeTestimonials.items.map((t) => ref(testimonialIdByQuote.get(t.quote)!)),
-    backstageEyebrow: backstage.eyebrow,
-    backstageTitle: backstage.title,
-    backstageGradient: backstage.gradient,
-    backstagePhotos: await Promise.all(backstage.photos.map((p) => image(p))),
-    micDropTitle: micDrop.title,
-    micDropGradient: micDrop.gradient,
-    micDropBody: richToPortableText(micDrop.body),
-    micDropCta: micDrop.cta ? { _type: 'ctaButton', ...micDrop.cta } : undefined,
-    micDropMediaType: micDrop.media.type,
-    micDropVideo: micDrop.media.type === 'vimeo' ? vimeo(micDrop.media) : undefined,
-    micDropTriangles: micDrop.triangles,
+    _id: 'siteNavigation',
+    _type: 'siteNavigation',
+    events: menuPart(navigation.events),
+    business: menuPart(navigation.business),
+    neutral: {
+      buttons: (navigation.neutral.buttons ?? []).map((b) => ({ ...navLink('navButton', b), shortLabel: b.shortLabel, accent: b.accent })),
+      footer: footerColumns(navigation.neutral.footer),
+    },
   };
 }
 
@@ -547,7 +546,7 @@ async function main() {
   const pageDocs: Doc[] = [];
   for (const page of pages) pageDocs.push(await pageDoc(page));
   await write(pageDocs, "Pagina's");
-  await write([await homepageDoc()], 'Homepage');
+  await write([navigationDoc()], 'Menu & footer');
 
   console.log(`\n✓ Klaar${dryRun ? ' (dry-run: er is niets geschreven)' : force ? '' : ' (bestaande documenten alleen aangevuld; --force om te vervangen)'}.`);
 }

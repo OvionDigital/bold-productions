@@ -3,6 +3,8 @@
  * Logostrip "Vertrouwd door": kop tussen twee lijnen en een eindeloos
  * doorlopende rij logo-tegels (pure CSS-marquee, Webflow-IX: 14 s lineair).
  * De lijst staat er twee keer in; de kopie is aria-hidden.
+ * Meer logo's dan `max` (standaard 10): alle kandidaten staan in de HTML, de browser kiest er
+ * bij elk bezoek `max` willekeurig uit (scripts/random-pick.ts; zonder JS de eerste `max`).
  */
 import type { ImageMetadata } from 'astro';
 import Container from '../ui/Container.astro';
@@ -19,12 +21,15 @@ export interface Logo {
 export interface LogoMarqueeProps {
   title: string;
   logos: Logo[];
+  /** Maximaal zoveel logo's tegelijk (willekeurig gekozen) */
+  max?: number;
 }
 
 type Props = LogoMarqueeProps;
 
-const { title, logos } = Astro.props;
+const { title, logos, max = 10 } = Astro.props;
 const copies = [false, true];
+const pick = logos.length > max ? max : undefined;
 ---
 
 <section class="logo-marquee" data-animate-stagger>
@@ -37,12 +42,12 @@ const copies = [false, true];
   </Container>
 
   <Container width="plain">
-    <div class="logo-marquee__viewport">
+    <div class="logo-marquee__viewport" data-random-pick={pick}>
       {
         copies.map((isCopy) => (
-          <ul class="logo-marquee__list" role="list" aria-hidden={isCopy ? 'true' : undefined}>
-            {logos.map((logo) => (
-              <li class="logo-marquee__item">
+          <ul class="logo-marquee__list" role="list" aria-hidden={isCopy ? 'true' : undefined} data-random-list={pick ? '' : undefined}>
+            {logos.map((logo, index) => (
+              <li class="logo-marquee__item" hidden={pick !== undefined && index >= pick}>
                 {'format' in logo.src && logo.src.format === 'svg' ? (
                   <img
                     src={logo.src.src}
@@ -126,6 +131,10 @@ const copies = [false, true];
     padding: var(--space-24) var(--space-32);
     border: var(--border-width) solid var(--color-logo-border);
     background-color: var(--color-logo-bg);
+  }
+
+  .logo-marquee__item[hidden] {
+    display: none;
   }
 
   .logo-marquee__item :global(.logo-marquee__img) {

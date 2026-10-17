@@ -41,6 +41,8 @@ export interface SiteNavigation {
   cta?: NavLink;
   /** Knoppen rechtsboven i.p.v. een menu (neutraal: de keuze Events/Business) */
   buttons?: NavButton[];
+  /** Knop onderaan het menupaneel naar het andere deel van de site (Events ↔ Business) */
+  switchTo?: NavButton;
   footer: NavGroup[];
 }
 
@@ -73,7 +75,7 @@ const audienceGroup = (category: Category, audience: (typeof audiences)[Category
   children: services[audience.value].map((service) => ({ label: service.title, href: serviceUrl(category, audience.value, service) })),
 });
 
-/** Cases, Over Bold, Contact en Offerte aanvragen: in beide delen, eigen pad */
+/** Cases, Over Bold en Contact (met Offerte aanvragen eronder): in beide delen, eigen pad */
 function generalGroups(category: Category): NavGroup[] {
   return [
     {
@@ -82,10 +84,15 @@ function generalGroups(category: Category): NavGroup[] {
       children: audiences[category].map((a) => ({ label: a.title, href: `/${category}/cases?filter=${a.value}` })),
     },
     { label: 'Over Bold', href: `/${category}/over-bold`, children: [{ label: 'Mike Ampting', href: `/${category}/over-bold/mike` }] },
-    { label: 'Contact', href: `/${category}/contact`, children: [] },
-    { label: 'Offerte aanvragen', href: `/${category}/offerte-aanvragen`, children: [] },
+    { label: 'Contact', href: `/${category}/contact`, children: [{ label: 'Offerte aanvragen', href: `/${category}/offerte-aanvragen` }] },
   ];
 }
+
+/** Wissel onderaan het menupaneel (kleuren als in de split-hero) */
+const switchButtons: Record<Category, NavButton> = {
+  events: { label: 'Naar Bold Business', href: '/business', accent: 'yellow' },
+  business: { label: 'Naar Bold Events', href: '/events', accent: 'green' },
+};
 
 /** Footerkolom "Bold Productions" */
 const boldProductionsColumn = (category: Category): NavGroup => ({
@@ -115,6 +122,7 @@ export const navigation: Record<SiteSection, SiteNavigation> = {
   events: {
     home: '/events',
     cta: ctaFor('events'),
+    switchTo: switchButtons.events,
     nav: [...audiences.events.map((a) => audienceGroup('events', a)), ...generalGroups('events')],
     footer: [
       ...audiences.events.map((a) => ({ ...audienceGroup('events', a, eventsFooterLabels[a.value]), inHeader: undefined })),
@@ -124,6 +132,7 @@ export const navigation: Record<SiteSection, SiteNavigation> = {
   business: {
     home: '/business',
     cta: ctaFor('business'),
+    switchTo: switchButtons.business,
     nav: [
       ...audiences.business.map((a) => audienceGroup('business', a)),
       // Losse ingang in het menupaneel (sitemap), dezelfde pagina als Content › AI

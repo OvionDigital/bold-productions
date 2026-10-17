@@ -10,6 +10,7 @@ import { casePage } from './cases';
 import { buildBreadcrumbs, type PageData, type PageSection } from './sections';
 import { getCmsPages } from './sanity/pages';
 import { isRemoteImage, sanityImageUrl } from './sanity/image';
+import { isPreview } from './preview';
 import type { Crumb } from '../components/layout/Breadcrumbs.astro';
 import type { Accent } from '../components/ui/Button.astro';
 import type { PageSchema } from './structured-data';
@@ -42,36 +43,42 @@ async function ogImageFor(page: PageData): Promise<string | undefined> {
 
 /** Slug van de homepage (/): src/pages/index.astro, niet /home */
 export const HOME_SLUG = 'home';
+/** De Events-homepage (/events): een gewone pagina, maar altijd aanwezig (terugval src/data) */
+export const EVENTS_SLUG = 'events';
 
 let cache: Promise<BuiltPage[]> | undefined;
 
+/** Eén keer per build; in de preview per verzoek (concepten moeten meteen zichtbaar zijn). */
 export function getAllPages(): Promise<BuiltPage[]> {
-  cache ??= (async () => {
-    const cms = await getCmsPages();
-    const source: PageData[] = cms?.length ? cms : [...localPages, ...localCases.map(casePage)];
-    // Homepage nog niet in Sanity: die uit src/data
-    if (!source.some((p) => p.slug === HOME_SLUG)) source.push(localPages.find((p) => p.slug === HOME_SLUG)!);
-    const bySlug = new Map<string, Pick<PageData, 'title' | 'breadcrumbTitle'>>(source.map((p) => [p.slug, p]));
-    // /events is een vaste pagina (src/pages/events.astro), geen PageData
-    bySlug.set('events', { title: 'Events' });
-    return Promise.all(
-      source.map(async (page) => ({
-        slug: page.slug,
-        updatedAt: page.updatedAt,
-        meta: {
-          title: page.meta.title,
-          description: page.meta.description,
-          ogImage: await ogImageFor(page),
-          noindex: Boolean(page.meta.noindex),
-          schema: page.meta.schema,
-        },
-        accent: page.accent ?? 'orange',
-        breadcrumbs: buildBreadcrumbs(page, bySlug),
-        sections: page.sections,
-      })),
-    );
-  })();
+  if (isPreview) return buildAllPages();
+  cache ??= buildAllPages();
   return cache;
+}
+
+async function buildAllPages(): Promise<BuiltPage[]> {
+  const cms = await getCmsPages();
+  const source: PageData[] = cms?.length ? cms : [...localPages, ...localCases.map(casePage)];
+  // Homepage of /events nog niet in Sanity: die uit src/data
+  for (const slug of [HOME_SLUG, EVENTS_SLUG]) {
+    if (!source.some((p) => p.slug === slug)) source.push(localPages.find((p) => p.slug === slug)!);
+  }
+  const bySlug = new Map<string, Pick<PageData, 'title' | 'breadcrumbTitle'>>(source.map((p) => [p.slug, p]));
+  return Promise.all(
+    source.map(async (page) => ({
+      slug: page.slug,
+      updatedAt: page.updatedAt,
+      meta: {
+        title: page.meta.title,
+        description: page.meta.description,
+        ogImage: await ogImageFor(page),
+        noindex: Boolean(page.meta.noindex),
+        schema: page.meta.schema,
+      },
+      accent: page.accent ?? 'orange',
+      breadcrumbs: buildBreadcrumbs(page, bySlug),
+      sections: page.sections,
+    })),
+  );
 }
 
 /** Alle pagina's van src/pages/[...slug].astro (zonder de homepage) */

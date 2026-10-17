@@ -12,14 +12,13 @@ on:
     branches: [main, feature/sanity-cms]
   workflow_dispatch:
 
-# Snel achter elkaar publiceren: alleen de nieuwste build afmaken (die bevat alles).
-concurrency:
-  group: deploy
-  cancel-in-progress: true
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    # Snel achter elkaar publiceren: alleen de nieuwste build afmaken (die bevat alles).
+    concurrency:
+      group: deploy
+      cancel-in-progress: true
     # Bij een push alleen de branch uit DEPLOY_REF deployen; Sanity en handmatig altijd.
     if: github.event_name != 'push' || github.ref_name == (vars.DEPLOY_REF || 'main')
     steps:
@@ -46,5 +45,37 @@ jobs:
       - name: Deploy naar Cloudflare Pages
         run: npx wrangler pages deploy dist --project-name bold-productions --branch "${{ vars.CF_PAGES_BRANCH || 'preview' }}" --commit-dirty=true
         env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+  # Live voorbeeld voor Sanity (Presentation): Cloudflare Worker die concepten per verzoek rendert
+  # (astro.preview.config.mjs). Leest Sanity live, dus alleen opnieuw bij nieuwe code, niet na publiceren.
+  # Alleen als de variabele PREVIEW_WORKER op 'true' staat (zie docs/sanity.md → Live voorbeeld).
+  preview-worker:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: preview-worker
+      cancel-in-progress: true
+    if: vars.PREVIEW_WORKER == 'true' && github.event_name != 'repository_dispatch' && (github.event_name != 'push' || github.ref_name == (vars.DEPLOY_REF || 'main'))
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ vars.DEPLOY_REF || github.event.repository.default_branch }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Build en deploy (Worker bold-productions-preview)
+        run: npm run preview:deploy
+        env:
+          PUBLIC_SANITY_PROJECT_ID: ${{ vars.PUBLIC_SANITY_PROJECT_ID }}
+          PUBLIC_SANITY_DATASET: ${{ vars.PUBLIC_SANITY_DATASET || 'production' }}
+          PUBLIC_SANITY_STUDIO_URL: ${{ vars.PUBLIC_SANITY_STUDIO_URL }}
+          PUBLIC_CONTACT_ENDPOINT: ${{ vars.PUBLIC_CONTACT_ENDPOINT }}
+          SANITY_API_READ_TOKEN: ${{ secrets.SANITY_API_READ_TOKEN }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}

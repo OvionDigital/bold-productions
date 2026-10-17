@@ -1,14 +1,18 @@
 ---
 /**
- * Alle pagina's behalve de homepage en /events: dienst-, doelgroep-, case- en overige pagina's.
+ * Alle pagina's behalve de homepage: /events, dienst-, doelgroep-, case- en overige pagina's.
  * Inhoud uit Sanity (pagina's en cases die de klant beheert) of, zonder Sanity, uit
  * src/data — zie src/lib/pages.ts. Header, menu, footer en WhatsApp-knop komen uit
  * BaseLayout; de inhoud is een lijst secties (PageSections).
+ * Preview-build (lib/preview.ts): geen getStaticPaths, de pagina wordt per verzoek opgezocht.
  */
 import type { GetStaticPaths } from 'astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageSections from '../components/sections/PageSections.astro';
-import { getRoutedPages, type BuiltPage } from '../lib/pages';
+import { EVENTS_SLUG, getRoutedPages, type BuiltPage } from '../lib/pages';
+import { homepageReviews } from '../data/seo';
+import { testimonials } from '../data/testimonials';
+import type { Review } from '../lib/structured-data';
 
 export const getStaticPaths = (async () => {
   const pages = await getRoutedPages();
@@ -16,10 +20,27 @@ export const getStaticPaths = (async () => {
 }) satisfies GetStaticPaths;
 
 interface Props {
-  page: BuiltPage;
+  page?: BuiltPage;
 }
 
-const { page } = Astro.props;
+let page = Astro.props.page;
+if (!page) {
+  const pages = await getRoutedPages();
+  page = pages.find((p) => p.slug === Astro.params.slug);
+  if (!page) {
+    Astro.response.status = 404;
+    page = pages.find((p) => p.slug === '404')!;
+  }
+}
+
+/** /events (de vroegere homepage): reviews in de structured data, selectie van live (data/seo.ts) */
+const reviews: Review[] | undefined =
+  page.slug === EVENTS_SLUG
+    ? homepageReviews.map((id) => {
+        const t: { quote: string; name?: string; organisation?: string } = testimonials[id];
+        return { body: t.quote, author: t.name ?? t.organisation ?? '', authorType: t.name ? 'Person' : 'Organization' };
+      })
+    : undefined;
 ---
 
 <BaseLayout
@@ -28,7 +49,7 @@ const { page } = Astro.props;
   ogImage={page.meta.ogImage}
   accent={page.accent}
   noindex={page.meta.noindex}
-  structuredData={{ schema: page.meta.schema, breadcrumbs: page.breadcrumbs }}
+  structuredData={{ schema: page.meta.schema, breadcrumbs: page.breadcrumbs, reviews }}
 >
   <PageSections sections={page.sections} breadcrumbs={page.breadcrumbs} />
 </BaseLayout>

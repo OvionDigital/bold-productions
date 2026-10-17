@@ -1,7 +1,8 @@
 /**
  * Casepagina uit casegegevens (src/data/cases.ts of Sanity 'caseStudy'): vaste kop
- * (hero met titel, intro en foto + kruimelpad + introtekst + feitenbalk) en daarna de
- * vrije secties van de case. Zelfde opbouw als live (Webflow-CMS-template).
+ * (hero met titel, intro en foto + kruimelpad + feitenbalk + introtekst) en daarna de
+ * vrije secties van de case. Opbouw als live (Webflow-CMS-template), behalve de feitenbalk:
+ * die staat sinds oktober 2026 (feedback klant) direct onder het kruimelpad.
  */
 import { caseLabels, caseUrl, type Case } from '../data/cases';
 import { audienceTitle } from '../data/taxonomy';
@@ -9,6 +10,7 @@ import type { PageData, PageSection } from './sections';
 
 export function caseFacts(item: Case) {
   return {
+    id: 'first-section',
     items: [
       { label: caseLabels.client, values: item.client ? [item.client] : [] },
       { label: caseLabels.date, values: item.date ? [item.date] : [] },
@@ -34,9 +36,10 @@ export function casePage(item: Case): PageData {
       },
     },
     { type: 'breadcrumbs' },
+    // Feitenbalk als eerste onder het kruimelpad: klant, datum, doelgroep en dienst in één oogopslag
+    { type: 'caseFacts', props: caseFacts(item) },
   ];
-  if (item.introText?.length) sections.push({ type: 'introHighlight', props: { id: 'first-section', content: item.introText } });
-  sections.push({ type: 'caseFacts', props: caseFacts(item) });
+  if (item.introText?.length) sections.push({ type: 'introHighlight', props: { content: item.introText } });
   sections.push(...(item.sections ?? []));
 
   return {

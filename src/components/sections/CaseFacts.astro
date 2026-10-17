@@ -11,15 +11,17 @@ export interface CaseFact {
 }
 
 export interface CaseFactsProps {
+  /** Anker (casepagina: 'first-section', doel van "Lees meer" in de hero) */
+  id?: string;
   items: CaseFact[];
 }
 
 type Props = CaseFactsProps;
 
-const { items } = Astro.props;
+const { id, items } = Astro.props;
 ---
 
-<section class="case-facts" data-animate>
+<section class="case-facts" id={id} data-animate>
   <div class="case-facts__container">
     <dl class="case-facts__box">
       {

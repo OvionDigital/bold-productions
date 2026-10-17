@@ -1,7 +1,7 @@
 /**
  * Alle pagina's uit src/data/pages (lokale bron als Sanity niet geconfigureerd is,
  * en de inhoud voor scripts/sanity-seed.ts). Nieuwe pagina? Bestand toevoegen en hier opnemen.
- * 'home' = de homepage (index.astro); /events is src/pages/events.astro (geen PageData).
+ * 'home' = de homepage (index.astro); 'events' = de Events-homepage (/events).
  */
 import type { PageData } from '../../lib/sections';
 import { page as p0 } from './events/organisatoren';
@@ -36,10 +36,12 @@ import { page as p28 } from './cookiebeleid';
 import { page as p29 } from './algemene-voorwaarden';
 import { page as p30 } from './404';
 import { page as home } from './home';
+import { page as eventsHome } from './events-home';
 import { businessPages } from './business';
 
 export const pages: PageData[] = [
   home,
+  eventsHome,
   p0,
   p1,
   p2,

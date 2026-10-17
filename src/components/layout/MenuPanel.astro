@@ -1,12 +1,13 @@
 ---
 /**
  * Volledig menupaneel (rechts, schermhoogte) met accordeongroepen en overlay.
+ * Onderaan (`switchTo`) een knop naar het andere deel van de site (Events ↔ Business).
  * Gedrag (openen, sluiten, accordeon, focus, scroll-lock) in scripts/menu.ts.
  */
 import { getImage } from 'astro:assets';
 import Button from '../ui/Button.astro';
 import Icon from '../ui/Icon.astro';
-import type { NavGroup, NavLink } from '../../data/navigation';
+import type { NavButton, NavGroup, NavLink } from '../../data/navigation';
 import smoke from '../../assets/decor/smoke.png';
 import boldBGreen from '../../assets/decor/bold-b-green.svg';
 
@@ -14,10 +15,11 @@ interface Props {
   id: string;
   groups: NavGroup[];
   cta?: NavLink;
+  switchTo?: NavButton;
   currentPath: string;
 }
 
-const { id, groups, cta, currentPath } = Astro.props;
+const { id, groups, cta, switchTo, currentPath } = Astro.props;
 const isCurrent = (href: string) => (href === currentPath ? 'page' : undefined);
 
 const smokeImage = await getImage({ src: smoke, format: 'webp', width: 828 });
@@ -80,6 +82,13 @@ const boldBBg = `url("${boldBGreen.src}")`;
         </div>
       );
     })
+  }
+  {
+    switchTo && (
+      <div class="menu-panel__switch">
+        <Button label={switchTo.label} href={switchTo.href} variant="outline" accent={switchTo.accent} size="small" icon="arrow-right" />
+      </div>
+    )
   }
 </div>
 
@@ -210,17 +219,34 @@ const boldBBg = `url("${boldBGreen.src}")`;
     color: var(--color-orange);
   }
 
+  /* Wissel Events ↔ Business: onderaan als er ruimte is, anders direct na de laatste groep */
+  .menu-panel__switch {
+    margin-top: auto;
+    padding-top: var(--space-24);
+  }
+
   @media (max-width: 767px) {
     .menu-panel {
       width: 100vw;
       min-width: auto;
       padding-inline: var(--space-16);
+      gap: var(--space-4);
+    }
+
+    /* Compacter, zodat de wisselknop onderaan ook in beeld komt */
+    .menu-panel__parent-link {
+      padding-block: var(--space-10);
+    }
+
+    .menu-panel__child-link {
+      padding-block: var(--space-8);
     }
   }
 
   @media (max-width: 479px) {
     .menu-panel :global(.menu-panel__cta) {
       display: inline-flex;
+      margin-bottom: var(--space-12);
     }
 
     .menu-panel__parent-link,

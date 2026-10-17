@@ -5,7 +5,7 @@
 Herbouw van de website van **Bold Productions** (videoproductie voor events, artiesten en zakelijke events) in Astro. De huidige site draait op Webflow en is traag. Het doel is een **pixel-getrouwe, veel snellere** versie.
 
 - Fase 1 (homepage) en fase 2 (alle overige pagina's van de live site, inclusief 13 cases en de juridische pagina's) zijn gebouwd. Elke pagina is een lijst herbruikbare secties; nieuwe pagina's bouw je uit dezelfde secties.
-- **Herstructurering oktober 2026:** de site is gesplitst in **Events** (`/events/…`, alles wat er was; "Events" als doelgroep heet nu **Organisatoren**) en **Business** (`/business/…`, nog placeholders, noindex). De homepage (`/`, Webflow `home-new`) kiest tussen de twee; de vorige homepage staat op `/events`. Oude URL's: 301 in `public/_redirects`, mapping in `src/lib/url-migration.ts`.
+- **Herstructurering oktober 2026:** de site is gesplitst in **Events** (`/events/…`, alles wat er was; "Events" als doelgroep heet nu **Organisatoren**) en **Business** (`/business/…`, nog placeholders, noindex). De homepage (`/`, Webflow `home-new`) kiest tussen de twee; de vorige homepage staat op `/events` (sinds 17 oktober 2026 een gewone pagina uit secties, `data/pages/events-home.ts` / Sanity `page-events-home`). Oude URL's: 301 in `public/_redirects`, mapping in `src/lib/url-migration.ts`.
 - Referentie: https://www.weareboldproductions.com/ (live) en https://boldproductions.webflow.io/ (staging, identiek).
 - Webflow-HTML wordt **niet** geëxporteerd of gekopieerd. Bouw schone, semantische componenten.
 - Bronnen in `reference/`: `webflow-custom-head.html` (custom CSS), `webflow-custom-footer.html` (custom JS), `rook-web.mp4` (rookvideo, in gebruik als `public/video/rook.mp4`).
@@ -23,6 +23,9 @@ npm run compare         # screenshots live vs. lokaal (375/768/1440) → compare
                         #   opties: -- --path=/events --widths=375,1440 --no-build
                         #   --against=/events: lokaal tegen lokaal (bijv. Sanity-pagina vs. handgebouwd)
 npm run deploy:preview  # build + wrangler pages deploy (branch preview)
+npm run preview:dev     # live voorbeeld voor Sanity (SSR, concepten), http://localhost:4322
+npm run preview:deploy  # idem als Cloudflare Worker bold-productions-preview
+npm run sanity:section-previews  # plaatjes per sectie voor "Sectie toevoegen" in Studio
 ```
 
 `?static=1` achter een URL zet Lenis en alle animaties uit (gebruikt door compare).
@@ -44,7 +47,8 @@ npm run deploy:preview  # build + wrangler pages deploy (branch preview)
    - Rookvideo: `muted loop playsinline preload="none"` + poster, pas laden/afspelen via IntersectionObserver.
    - Geen render-blocking third-party CSS/JS in `<head>`. Geen jQuery, geen reCAPTCHA, geen Font Awesome.
    - **Eén JS-bundel per pagina**: alle interacties via `src/scripts/main.ts`. Modules initialiseren alleen als hun elementen bestaan (`data-*`-hooks). Geen losse `<script>`-blokken in componenten.
-   - Respecteer `prefers-reduced-motion` en `?static=1` (`src/scripts/env.ts` → `motionEnabled`).
+   - Respecteer `prefers-reduced-motion` en `?static=1` (`src/scripts/env.ts`). `?static=1` = alles uit. Reduced motion = **minder beweging, niet geen** (iPhones met "Beweging beperken"): `motionEnabled` (smooth scroll, video's, drift, hover-video's) gaat uit, `fadeEnabled` (fade-ins, scroll-highlight, B-lijnen) blijft; in CSS wordt alles wat verschuift of schaalt een fade (global.css "Minder beweging"), de paginaovergang een crossfade. Nieuwe animatie? Bedenk wat er bij reduced motion van overblijft.
+   - Elke module in `main.ts` start in een eigen try/catch: één fout stopt de andere animaties niet.
    - Bestanden in `public/fonts/` en `public/video/` worden een jaar immutable gecachet. Vervang je zo'n bestand, **geef het dan een nieuwe naam**.
 8. **Na elke sectie:** `npm run build` moet slagen en `npm run compare` draaien. Benoem wat nog afwijkt.
 9. **Geen nieuwe dependencies** zonder toestemming.
@@ -68,11 +72,14 @@ h1's, alt-teksten en alle structured data zijn gelijk. Opbouw:
 - **Accentkleur per doelgroep** via `data-accent="orange|yellow|green"` op een voorouder (body via `BaseLayout accent`). Componenten gebruiken `--accent`, `--accent-light`, `--accent-gradient`. Dit vervangt de Webflow-`w-variant-*`-klassen.
 - **Breakpoints** (Webflow, desktop-first): `max-width: 991px`, `767px`, `479px` en `min-width: 1280px`, `1440px`, `1920px`. Letterlijk in media queries (custom properties werken daar niet).
 - **Scoped styles** per component. Wil je een child-component stylen (bijv. `<Icon>` in `<Button>`)? Gebruik `.parent :global(.child-class)`.
-- **Sectie-afstand: 192px tussen secties, ≤767px 64px.** Secties zonder eigen achtergrond krijgen `margin-block: var(--section-space)` (marges vallen samen, dus precies 192/64 ertussen, niet 2×); secties mét eigen achtergrond (Testimonials) krijgen `padding-block: var(--section-padding)` zodat de achtergrond 192/64 boven/onder de inhoud doorloopt. Uitzonderingen: LogoMarquee 96 boven (direct onder de hero, ook op mobiel), Footer 96 padding (≤767 48).
+- **Sectie-afstand: 192px tussen secties, ≤767px 64px.** Secties zonder eigen achtergrond krijgen `margin-block: var(--section-space)` (marges vallen samen, dus precies 192/64 ertussen, niet 2×); secties mét eigen achtergrond (Testimonials) krijgen `padding-block: var(--section-padding)` zodat de achtergrond 192/64 boven/onder de inhoud doorloopt. Uitzonderingen: LogoMarquee 96 boven (direct onder de hero, ook op mobiel), Footer 96 padding (≤767 48), en `--section-space-tight` (96, ≤767 48; regels in global.css): de eerste sectie onder het kruimelpad (boven, en bij een intro — tekst, introtekst, feitenbalk — ook eronder) en bij elkaar horende inhoud na elkaar (tekst, foto, video, introtekst, feitenbalk; casepagina's).
 - **Scroll-in-animatie**: zet `data-animate` op een element (Webflow: `.animate-on-scroll`). `data-animate-stagger` op een groep laat de directe kinderen één voor één binnenkomen (`--stagger-step`); `data-animate-skip` sluit een kind uit (bijv. achtergrondlaag). `Container` geeft `data-*`-attributen door.
-- **Paginaovergang**: diagonale veeg (linksonder → rechtsboven) met een oranje band tussen oude en nieuwe pagina, via native cross-document View Transitions (`@view-transition` in global.css, tokens `--duration-page-sweep`/`--page-sweep-lag`/`--ease-curtain`). Geen JS, geen dependency; uit bij prefers-reduced-motion.
+- **Paginaovergang**: diagonale veeg (linksonder → rechtsboven) met een oranje band tussen oude en nieuwe pagina, via native cross-document View Transitions (`@view-transition` in global.css, tokens `--duration-page-sweep`/`--page-sweep-lag`/`--ease-curtain`). Geen JS, geen dependency; bij prefers-reduced-motion een crossfade.
 - **Cursor**: driehoekje via tokens `--cursor-default`/`--cursor-pointer` (alleen `hover: hover` + `pointer: fine`). Zelf `cursor:` zetten? Gebruik die tokens. Cookiepanelen en `[data-native-cursor]` krijgen de systeemcursor.
 - Regeleinden in titels: `\n` in de data. `Heading` zet dat om naar `<br>`.
+- **Koppen**: kapitalen met merkgradient (`gradient`, ook h2–h4 en rich text; h3 zonder gradient wit, h5–h6 grijs). h3/h4 met gradient zijn `fit-content`, zodat de gradient over de tekst loopt.
+- **Willekeurige keuze per bezoek** (`scripts/random-pick.ts`, `[data-random-pick="N"]`): alle kandidaten in de HTML, de eerste N zichtbaar (zonder JS en bij `?static=1`), de browser kiest er N. Logostrip: max. 10 logo's (`max`); uitgelichte case: één uit `spotlightCandidates()`.
+- **Automatisch op indeling** (`targetingOfPath(pad)` in `data/taxonomy.ts`): logostrip zonder vaste lijst = logo's van soort + doelgroep van de pagina (`logosForPath`, `data/logos.ts`; klantlogo's hebben meerdere soorten en doelgroepen); uitgelichte case zonder vaste case = cases met soort + doelgroep + dienst van de pagina, anders doelgroep, anders soort (`spotlightCandidates`, `data/cases.ts`).
 - **Gedeelde inhoud** staat in eigen databestanden en wordt op id gekozen: `src/data/testimonials.ts` (`pickTestimonials`), `src/data/logos.ts`, `src/data/cases.ts`. Nooit kopiëren per pagina.
 - **Indeling** (`src/data/taxonomy.ts`): Events óf Business → één doelgroep → diensten per doelgroep (één lijst per doelgroep, met URL-slug). Bron voor menu, menupaneel, footer, casesfilter en het CMS (cases en testimonials: soort + doelgroep + diensten; klantlogo's: soort + doelgroep). Studio-velden in `studio/schemaTypes/taxonomy.ts`, omzetting in `src/lib/sanity/taxonomy.ts` (houd de drie gelijk).
 - **Drie delen van de site**, elk met eigen menu, CTA en footer (`navigation[sectionOf(pad)]` in `data/navigation.ts`, gekozen door `BaseLayout`): `events` (/events…), `business` (/business…) en `neutral` (homepage, juridische pagina's, sitemap, 404, landingspagina's; geen menu, alleen knoppen Bold Events/Bold Business; op de homepage pas na de split-hero). Het logo linkt naar de homepage van dat deel.
@@ -98,25 +105,25 @@ src/
   scripts/                      main.ts (entry) + modules
   styles/tokens.css, global.css
   pages/index.astro             homepage = pagina 'home' (Sanity of data/pages/home.ts)
-  pages/events.astro            Events-homepage (Sanity-singleton 'homepage' of data/home.ts)
   pages/styleguide.astro
-  pages/[...slug].astro         alle overige pagina's en cases (Sanity, anders src/data)
+  pages/[...slug].astro         alle overige pagina's (ook /events, met de reviews in de JSON-LD) en cases (Sanity, anders src/data)
   pages/sitemap.xml.ts, robots.txt.ts   sitemap (indexeerbare pagina's, lastmod uit Sanity) en robots
 public/fonts, public/video, public/favicons, public/_headers
 scripts/compare.mjs             visuele vergelijking
 scripts/sanity-seed.ts          npm run sanity:seed: src/data naar Sanity (vult alleen aan; --force overschrijft,
                                 --dry-run controleert zonder te schrijven; bestaande pagina's op URL-pad herkend). Loader: scripts/sanity/
-scripts/sanity-migrate-*.ts     eenmalige migraties (taxonomy, urls; oktober 2026, al gedraaid)
-studio/                         Sanity Studio (losse app, eigen package.json)
+scripts/sanity-migrate-*       eenmalige migraties (taxonomy, urls, 2026-10-17: /events als pagina, logo's, alt-teksten; al gedraaid)
+scripts/section-previews.mjs    npm run sanity:section-previews: screenshot per sectie → studio/static/sections/
+astro.preview.config.mjs        live voorbeeld voor Sanity (SSR, Worker; wrangler.preview.jsonc)
+studio/                         Sanity Studio (losse app, eigen package.json; presentation.ts, actions.ts)
 .github/workflows/deploy.yml    build + Cloudflare Pages-deploy (na Sanity-publicatie, push of handmatig)
 docs/homepage-secties.md        inventaris homepage
 docs/sanity.md                  Sanity-opzet, pagina's bouwen, online zetten — branch feature/sanity-cms
 ```
 
-**CMS (branch `feature/sanity-cms`):** `events.astro` haalt de Events-homepage-inhoud
-op uit Sanity via `src/lib/sanity/homepage.ts` en valt terug op `src/data/home.ts`
-als `PUBLIC_SANITY_PROJECT_ID` niet gezet is (de homepage `/` is een gewone pagina met URL-pad `home`) — lokaal werken zonder Sanity blijft dus
-gewoon werken (`PUBLIC_SANITY_PROJECT_ID= npx astro build` bouwt bewust uit src/data).
+**CMS (branch `feature/sanity-cms`):** Sanity Studio v6 (React 19). Lokaal werken zonder Sanity blijft
+gewoon werken (`PUBLIC_SANITY_PROJECT_ID= npx astro build` bouwt bewust uit src/data). De homepage (`/`, URL-pad
+`home`) en `/events` (URL-pad `events`) zijn gewone pagina's; ontbreken ze in Sanity, dan komen ze uit src/data.
 Alle andere pagina's (`page`) en cases (`caseStudy`) komen via `src/lib/pages.ts` uit
 Sanity, of uit `src/data/pages` + `src/data/cases.ts` als Sanity niet geconfigureerd of
 leeg is. Beide bronnen leveren `PageData` (`src/lib/sections.ts`). Inhoud gewijzigd in
@@ -127,7 +134,15 @@ een mapper in `src/lib/sanity/sections.ts`; `[...slug].astro` rendert ze via
 schema + mapper bijwerken. Rich text uit Sanity (Portable Text) wordt omgezet naar het
 bestaande Rich-model (`src/lib/rich.ts`), dus componenten hoeven niet te weten waar
 tekst vandaan komt. Beelden uit Sanity: gebruik `CmsPicture` (niet `<Picture>`), zet de
-breedte in de CSS van de sectie en geef bij een vaste uitsnede `aspectRatio` mee.
+breedte in de CSS van de sectie en geef bij een vaste uitsnede `aspectRatio` mee. **Alt-tekst** staat op de
+afbeelding zelf (Studio-tool Media, `sanity-plugin-media`, `sanity.imageAsset.altText`, geldt overal); het veld
+op de plek is een optionele afwijking (`imageProjection`: `coalesce(alt, asset->altText)`).
+Menu en footer komen uit de singleton `siteNavigation` (`src/lib/sanity/navigation.ts`, terugval
+per deel op `src/data/navigation.ts`). **Live voorbeeld** (Presentation Tool in Studio): aparte
+build `astro.preview.config.mjs` (SSR op een Cloudflare Worker, concepten, stega, overlays uit
+`scripts/visual-editing.ts`); `isPreview` (`src/lib/preview.ts`) schakelt caches en animaties uit.
+De gewone build blijft statisch en bevat niets van de preview. Een veld dat door code als waarde
+wordt gebruikt mag geen stega krijgen: alleen de tekstvelden in `STEGA_FIELDS` (`client.ts`).
 Zie `docs/sanity.md` voor opzetstappen.
 
 ## Componentenoverzicht
@@ -166,7 +181,7 @@ Houd dit bij bij elk nieuw component.
 | `Header.astro`     | Vaste navigatiebalk: logo (`home`), MegaMenu, CTA (optioneel) en menuknop (+ MenuPanel); menu per deel van de site (`navigation.ts`). Leeg `nav` + `buttons` = neutraal: alleen de knoppen Bold Events/Bold Business (≤479 korte labels), geen menu. `revealAfter`: verborgen tot dat element voorbij is (homepage: split-hero). Verbergt bij scrollen omlaag, verschijnt bij scrollen omhoog (gedrag: `navbar-autohide.ts`). |
 | `Breadcrumbs.astro` | Kruimelpad onder de hero (home-icoon, stappen, huidige pagina).          |
 | `MegaMenu.astro`   | Desktop-dropdowns (≥1280px), CSS hover/focus-within; groep zonder kinderen = gewone link. |
-| `MenuPanel.astro`  | Volledig menupaneel met overlay en accordeongroepen (gedrag: `menu.ts`); groep zonder kinderen = losse link. |
+| `MenuPanel.astro`  | Volledig menupaneel met overlay en accordeongroepen (gedrag: `menu.ts`); groep zonder kinderen = losse link. Onderaan `switchTo`: knop naar het andere deel (Events ↔ Business, vast in `data/navigation.ts`). |
 | `Footer.astro`     | Footer: linkkolommen (data), contact, logo + socials, juridische links, copyright. |
 | `PageBackground.astro` | Textuur (AVIF, na window.load) + grote B-outlines (inline SVG met masker) achter de pagina; `shapes` instelbaar. De B-laag is zo hoog als de B's zelf (niet als de pagina, `contain: layout paint`), zodat hij niet meeverandert als de pagina langer/korter wordt; `.page-bg` knipt af met `overflow: clip`. B's worden getekend bij in beeld (`draw-shapes.ts`). |
 | `WhatsAppButton.astro` | Zwevende WhatsApp-knop rechtsonder.                                           |
@@ -178,13 +193,13 @@ Houd dit bij bij elk nieuw component.
 | ------------ | --------------------------------------------------------------------------------------------------- |
 | `SplitHero.astro` | Homepage: twee schermhoge helften (Events/Business) als link met foto, titel, tekst, knop en driehoekjes; logo = h1. ≥1280 groeit de helft onder de muis, gloeit de naad en speelt Vimeo (`split-hero.ts`). |
 | `Hero.astro` | Schermvullende hero: titel + italic accentregel, eyebrow, 2 knoppen, poster-afbeelding (LCP) en optionele Vimeo-video. |
-| `LogoMarquee.astro` | Logostrip met kop tussen lijnen en eindeloze CSS-marquee van logo-tegels. |
+| `LogoMarquee.astro` | Logostrip met kop tussen lijnen en eindeloze CSS-marquee van logo-tegels; meer dan `max` (10) logo's: elke keer `max` willekeurig (`random-pick.ts`). |
 | `IntroHighlight.astro` | Gecentreerde Gate-introtekst met groene accenten en scroll-highlight per letter. |
 | `Timeline.astro` | Kop (titel + rich text) met genummerde stappen: foto + tekstblok met rookvideo (knop per stap optioneel), CTA; `gradient`. Stappen wisselen af (oneven foto links, even rechts); `reverse` begint rechts. |
 | `Testimonials.astro` | Kop + carousel met TestimonialCards over de volle breedte, rook- en B-achtergrond. |
-| `PolaroidStack.astro` | Sticky kop + polaroids die bij scrollen over elkaar schuiven (pure CSS), gelijk aan live. |
+| `PolaroidStack.astro` | Sticky kop (hoog: de navbar is dan weg) + polaroids die bij scrollen over elkaar schuiven (pure CSS); een polaroid is nooit hoger dan het scherm toelaat (max-breedte uit de schermhoogte). |
 | `TextMedia.astro` | Tekst naast beeld (2:3) of Vimeo (1:1); `links` (ContactLinks) onder de tekst; `reverse`, `triangles`, `spacing` (margin/section), `intro` erboven, slot `content` voor bv. een formulier; `id="cinema"` = popcorn-cursor. |
-| `CaseSpotlight.astro` | Kop + één grote CaseCard; case op slug uit `src/data/cases.ts`. |
+| `CaseSpotlight.astro` | Kop + één grote CaseCard: vaste case (`item`/`caseSlug`) of kandidaten (`items`, standaard `spotlightCandidates` op het pad) waaruit de browser er elke keer één kiest. |
 | `ImageFeature.astro` | Brede foto met gecentreerde titel + intro erover (mobiel eronder); `id="cinema"` = popcorn-cursor. |
 | `ServiceTiles.astro` | Kop + tekst en staande beeldtegels (2:3) naar dienstpagina's; hover groeit, titel oranje. `variant="team"`: teamleden met rol en hover-video (`teamTiles()` uit `data/team.ts`). |
 | `Faq.astro` | Veelgestelde vragen: accordeon (h3 + button, hoogte-animatie in CSS) met FAQPage-structured data. |
@@ -195,7 +210,7 @@ Houd dit bij bij elk nieuw component.
 | `MapSection.astro` | Kop + tekst en Google Maps-iframe (lazy). |
 | `CaseGrid.astro` | Casesoverzicht: filterknoppen (doelgroep, dienst) + raster CaseCards; props via `caseGridProps(cases, soort)` (alleen cases van die soort) (gedrag: `case-filter.ts`). |
 | `LinkGroups.astro` | Kop + raster glazen kaarten met links per groep (sitemap); groep met `auto: 'cases'` = alle cases automatisch. |
-| `CaseFacts.astro` | Feitenbalk op een casepagina (klant, datum, doelgroep, diensten); props via `caseFacts()` in `lib/cases.ts`. |
+| `CaseFacts.astro` | Feitenbalk op een casepagina (klant, datum, doelgroep, diensten), direct onder het kruimelpad (`#first-section`); props via `caseFacts()` in `lib/cases.ts`. |
 | `PageSections.astro` | Geen eigen opmaak: rendert een lijst `PageSection`s (`lib/sections.ts`, uit src/data of Sanity) met de componenten hierboven; TextMedia/ContactSection + `form` = met ContactForm. |
 
 ### Scripts (`src/scripts/`)
@@ -203,7 +218,8 @@ Houd dit bij bij elk nieuw component.
 | Module                 | Uitleg                                                                     |
 | ---------------------- | -------------------------------------------------------------------------- |
 | `main.ts`              | Enige entry. Registreert GSAP-plugins en start alle modules.              |
-| `env.ts`               | `isStatic`, `prefersReducedMotion`, `motionEnabled`.                       |
+| `env.ts`               | `isStatic`, `prefersReducedMotion`, `motionEnabled` (beweging), `fadeEnabled` (fades, ook bij reduced motion). |
+| `random-pick.ts`       | `[data-random-pick="N"]`: elke keer N willekeurige kandidaten (logostrip, uitgelichte case); lijsten met `[data-random-list]` krijgen dezelfde keuze. |
 | `lenis.ts`             | Lenis smooth scroll gekoppeld aan GSAP ticker/ScrollTrigger; `scrollToTarget`. |
 | `scroll-animations.ts` | `[data-animate]` fade-in-up (top 70%, eenmalig), `[data-animate-stagger]` kinderen na elkaar (top 80%) en anchor-links met offset. |
 | `split-hero.ts`        | Split-hero: .is-hovered bij hover/focus (≥1280, muis), Vimeo laden bij eerste hover (na window.load), daarna vanaf 0 afspelen, pauze bij verlaten. |
@@ -220,4 +236,5 @@ Houd dit bij bij elk nieuw component.
 | `vimeo-facade.ts`       | Vimeo-gevel: bij klik de thumbnail vervangen door de speler (autoplay) en focus erop. |
 | `hover-video.ts`       | Teamtegels: video laadt bij eerste hover en speelt, pauzeert bij verlaten (alleen muis, motion aan). |
 | `menu.ts`              | Menupaneel openen/sluiten (GSAP), overlay, Escape, focus-trap, scroll-lock zonder de scrollbalk te verbergen (wiel/touch/toetsen blokkeren), accordeon. |
+| `visual-editing.ts`    | Alleen in de preview-build (via astro.preview.config.mjs, niet in main.ts): Sanity-overlays, herladen na een wijziging, navigatie gekoppeld aan Presentation. |
 | `navbar-autohide.ts`   | Navbar verbergen/tonen op scrollrichting; blijft staan bovenaan, met open menu of bij focus erin. `data-reveal-after`: verborgen tot dat element voorbij is (ook zonder beweging). |

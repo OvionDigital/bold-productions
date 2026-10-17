@@ -1,8 +1,9 @@
 import { defineField, defineArrayMember, type FieldsetDefinition } from 'sanity';
 
 /**
- * Indeling van cases, testimonials en klantlogo's: eerst Events óf Business, dan één
- * doelgroep binnen die soort, en (cases, testimonials) de diensten van die doelgroep.
+ * Indeling van cases en testimonials: eerst Events óf Business, dan één doelgroep binnen die
+ * soort, en (alleen cases) de diensten van die doelgroep. Klantlogo's: Events en/of Business
+ * en per soort meerdere doelgroepen (multiTargetingFields).
  * Gelijk houden met src/data/taxonomy.ts (waarden) en src/lib/sanity/taxonomy.ts (veldnamen).
  */
 type Option = { value: string; title: string };
@@ -116,7 +117,7 @@ const titleOf = (list: Option[], value?: string) => list.find((o) => o.value ===
 
 export const targetingFieldset: FieldsetDefinition = { name: 'targeting', title: 'Events of Business, doelgroep en diensten' };
 
-/** Velden van de indeling. `services: false` = alleen soort + doelgroep (klantlogo's). */
+/** Velden van de indeling. `services: false` = alleen soort + doelgroep (testimonials). */
 export function targetingFields({ services: withServices = true, group }: { services?: boolean; group?: string } = {}) {
   const audienceField = (category: 'events' | 'business') =>
     defineField({
@@ -168,4 +169,54 @@ export function targetingLabel(doc: Doc): string | undefined {
   if (!doc?.category) return undefined;
   const category = doc.category === 'business' ? 'business' : 'events';
   return [titleOf(categories, doc.category), titleOf(audiences[category], audienceOf(doc))].filter(Boolean).join(' · ');
+}
+
+type MultiDoc = { categories?: string[]; eventsAudiences?: string[]; businessAudiences?: string[] } | undefined;
+
+/**
+ * Klantlogo's: Events en/of Business (vinkjes), en onder elke aangevinkte soort haar
+ * doelgroepen (Events drie, Business vier; allebei aangevinkt = alle zeven). Een logostrip
+ * toont de logo's van de doelgroep van de pagina.
+ */
+export function multiTargetingFields() {
+  return [
+    defineField({
+      name: 'categories',
+      title: 'Events en/of Business',
+      type: 'array',
+      fieldset: 'targeting',
+      of: [defineArrayMember({ type: 'string' })],
+      options: { list: categories, layout: 'grid' },
+      validation: (r) => r.required().min(1).error('Kies Events, Business of allebei.'),
+    }),
+    ...(['events', 'business'] as const).map((category) =>
+      defineField({
+        name: `${category}Audiences`,
+        title: `Doelgroepen ${titleOf(categories, category)}`,
+        description: 'Meerdere mogelijk.',
+        type: 'array',
+        fieldset: 'targeting',
+        of: [defineArrayMember({ type: 'string' })],
+        options: { list: audiences[category] },
+        hidden: ({ parent }) => !((parent as MultiDoc)?.categories ?? []).includes(category),
+        validation: (r) =>
+          r.custom((value, context) =>
+            ((context.parent as MultiDoc)?.categories ?? []).includes(category) && !(value as string[] | undefined)?.length
+              ? 'Kies minstens één doelgroep.'
+              : true,
+          ),
+      }),
+    ),
+  ];
+}
+
+/** "Events: Organisatoren, Artiesten · Business: Content" voor previews in lijsten. */
+export function multiTargetingLabel(doc: MultiDoc): string | undefined {
+  const parts = (doc?.categories ?? []).map((category) => {
+    const list = audiences[category === 'business' ? 'business' : 'events'];
+    const chosen = (category === 'business' ? doc?.businessAudiences : doc?.eventsAudiences) ?? [];
+    const names = chosen.map((value) => titleOf(list, value)).filter(Boolean);
+    return [titleOf(categories, category), names.join(', ')].filter(Boolean).join(': ');
+  });
+  return parts.length ? parts.join(' · ') : undefined;
 }

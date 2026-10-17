@@ -9,13 +9,14 @@ export const testimonial = defineType({
   name: 'testimonial',
   title: 'Testimonial',
   type: 'document',
-  fieldsets: [targetingFieldset],
+  fieldsets: [{ ...targetingFieldset, title: 'Events of Business en doelgroep' }],
   fields: [
     defineField({ name: 'quote', title: 'Quote', type: 'text', rows: 4, validation: (r) => r.required() }),
     defineField({ name: 'name', title: 'Naam', type: 'string', description: 'Leeg laten als alleen de organisatienaam getoond wordt.' }),
     defineField({ name: 'organisation', title: 'Organisatie', type: 'string' }),
     defineField({ name: 'image', title: 'Foto', type: 'imageWithAlt', validation: (r) => r.required() }),
-    ...targetingFields(),
+    // Alleen soort + doelgroep: een testimonial hoort niet bij een dienst
+    ...targetingFields({ services: false }),
   ],
   preview: {
     select: { title: 'name', organisation: 'organisation', media: 'image', category: 'category', eventsAudience: 'eventsAudience', businessAudience: 'businessAudience' },

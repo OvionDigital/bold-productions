@@ -4,8 +4,10 @@
  * twee schermhoge helften (Events links, Business rechts), elk één grote link met foto
  * (grijs en vaag), titel, tekst, knop en zwevende driehoekjes; in het midden een gloeiende
  * naad en het logo (de h1).
- * - ≥1280: de helft onder de muis wordt breder (60/40), de naad gloeit in haar accentkleur
+ * - ≥1280: de helft onder de muis wordt breder (55/45), de naad gloeit in haar accentkleur
  *   en haar Vimeo-video start vanaf het begin (scripts/split-hero.ts; pas na window.load).
+ *   Het tekstblok heeft een vaste breedte (verspringt niet bij hover) en staat in het midden
+ *   van de vrije ruimte naast het logo (de helft min het halve logo aan de kant van de naad).
  * - ≤1279: onder elkaar, elk een halve schermhoogte, geen video en geen naad.
  * - Accent per helft (`accent`): kleur van titel, knop en gloed.
  * Driehoekposities zijn vaste decoratiegeometrie uit Webflow (bewuste uitzondering op de
@@ -97,7 +99,7 @@ const halfParticles = (mirror: boolean) =>
             src={half.image.src}
             alt=""
             widths={[480, 768, 1024, 1440, 1920]}
-            sizes="(max-width: 1279px) 100vw, 60vw"
+            sizes="(max-width: 1279px) 100vw, 55vw"
             loading="eager"
             fetchpriority={i === 0 ? 'high' : 'auto'}
             class="split-hero__image"
@@ -187,6 +189,15 @@ const halfParticles = (mirror: boolean) =>
     animation-delay: var(--stagger-step);
   }
 
+  /* Optisch midden: het halve logo aan de kant van de naad telt niet mee als ruimte */
+  .split-hero__half--left {
+    padding-right: calc(var(--split-hero-gutter) + var(--split-hero-logo) / 2);
+  }
+
+  .split-hero__half--right {
+    padding-left: calc(var(--split-hero-gutter) + var(--split-hero-logo) / 2);
+  }
+
   .split-hero__media {
     position: absolute;
     inset: 0;
@@ -254,9 +265,10 @@ const halfParticles = (mirror: boolean) =>
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: var(--space-24);
-    width: var(--split-hero-content);
-    max-width: 70%;
+    flex: none;
+    gap: var(--split-hero-content-gap);
+    /* Vaste breedte (t.o.v. het scherm, niet de helft): de tekst loopt niet anders bij hover */
+    width: min(var(--split-hero-content), var(--split-hero-content-fluid));
     animation: split-hero-rise var(--duration-intro) var(--ease-reveal) 0.22s backwards;
   }
 
@@ -268,6 +280,12 @@ const halfParticles = (mirror: boolean) =>
     font-size: var(--fs-intro);
     font-weight: var(--fw-light);
     color: var(--color-white-a80);
+    text-wrap: balance;
+  }
+
+  /* Iets meer lucht tussen tekst en knop dan tussen titel en tekst */
+  .split-hero__content :global(.button) {
+    margin-top: var(--split-hero-button-offset);
   }
 
   .split-hero__seam {
@@ -414,7 +432,17 @@ const halfParticles = (mirror: boolean) =>
       padding: var(--space-56) var(--split-hero-gutter-tablet);
     }
 
+    /* Logo staat op de grens tussen de helften: het halve logo vrijhouden */
+    .split-hero__half--left {
+      padding-bottom: calc(var(--space-56) + var(--split-hero-logo) / 2);
+    }
+
+    .split-hero__half--right {
+      padding-top: calc(var(--space-56) + var(--split-hero-logo) / 2);
+    }
+
     .split-hero__content {
+      width: 100%;
       max-width: var(--split-hero-content-tablet);
     }
 
@@ -434,9 +462,17 @@ const halfParticles = (mirror: boolean) =>
       padding: var(--space-48) var(--split-hero-gutter);
     }
 
+    .split-hero__half--left {
+      padding-bottom: calc(var(--space-48) + var(--split-hero-logo-mobile) / 2);
+    }
+
+    .split-hero__half--right {
+      padding-top: calc(var(--space-48) + var(--split-hero-logo-mobile) / 2);
+    }
+
     .split-hero__content {
       max-width: 100%;
-      gap: var(--space-16);
+      gap: var(--space-20);
     }
 
     .split-hero :global(.split-hero__text) {
@@ -456,8 +492,16 @@ const halfParticles = (mirror: boolean) =>
       padding: var(--space-32) var(--split-hero-gutter);
     }
 
+    .split-hero__half--left {
+      padding-bottom: calc(var(--space-32) + var(--split-hero-logo-mobile) * 0.4);
+    }
+
+    .split-hero__half--right {
+      padding-top: calc(var(--space-32) + var(--split-hero-logo-mobile) * 0.4);
+    }
+
     .split-hero__content {
-      gap: var(--space-12);
+      gap: var(--space-16);
     }
 
     .split-hero :global(.split-hero__text) {
@@ -471,9 +515,26 @@ const halfParticles = (mirror: boolean) =>
     }
   }
 
+  /* Minder beweging: alleen fades, geen drift, rijzen, ploppen of ademen */
   @media (prefers-reduced-motion: reduce) {
     .split-hero__tri {
       display: none;
+    }
+
+    .split-hero__content,
+    .split-hero__logo {
+      animation-name: split-hero-fade;
+    }
+
+    .split-hero :global(.split-hero__logo-img) {
+      animation: none;
+    }
+
+    .split-hero__half,
+    .split-hero__seam,
+    .split-hero__logo,
+    .split-hero__logo-particles {
+      transition: none;
     }
   }
 </style>

@@ -260,6 +260,7 @@
   /* Semantisch (responsive, zie media queries onderaan) */
   --section-padding: 192px; /* vaste ruimte boven/onder secties (ook met eigen achtergrond) */
   --section-space: 192px; /* vaste marge tussen secties zonder eigen achtergrond */
+  --section-space-tight: 96px; /* intro onder het kruimelpad en bij elkaar horende inhoud (global.css) */
   --timeline-step-gap: 96px; /* interne ruimte tussen kop/rijen/cta binnen Timeline, los van section-padding */
   --column-gap: 12px; /* halve goot tussen kolommen */
   --row-margin: -12px;
@@ -313,21 +314,26 @@
   --quote-icon-max: 42px;
   --testimonial-line-width: 200px;
   --testimonials-heading-max: 900px;
-  --polaroids-header-top: 144px; /* sticky kop polaroidgalerij */
-  --polaroids-item-top: 290px; /* sticky polaroids, per breakpoint */
+  --polaroids-header-top: 48px; /* sticky kop polaroidgalerij (de navbar is dan verborgen) */
+  --polaroids-item-top: 194px; /* sticky polaroids = kop-top + kophoogte + lucht, per breakpoint */
+  --polaroids-bottom-gap: 48px; /* minimale ruimte onder een polaroid in beeld */
   --navbar-side-width: 350px; /* logo- en actieblok ≥1440 */
   --dropdown-min-width: 250px;
+  --mega-menu-link-padding-x: 16px; /* 32px vanaf 1920 */
   --menu-panel-min-width: 500px;
   --menu-panel-padding-top: 110px;
   --split-hero-logo: 192px; /* logo midden in de split-hero */
   --split-hero-logo-mobile: 144px; /* ≤767 */
-  --split-hero-content: 768px; /* tekstblok per helft */
+  --split-hero-content: 640px; /* tekstblok per helft (maximum) */
+  --split-hero-content-fluid: 30vw; /* vaste breedte t.o.v. het scherm (≥1280), past ook in de smalle helft */
+  --split-hero-content-gap: 32px; /* titel ↔ tekst ↔ knop */
+  --split-hero-button-offset: 8px; /* extra boven de knop */
   --split-hero-content-tablet: 448px; /* ≤1279 */
   --split-hero-gutter: 6vw; /* zijpadding per helft; ≤1279 8vw, ≤767 6vw */
   --split-hero-gutter-tablet: 8vw;
   --split-hero-seam: 2px;
-  --split-hero-grow: 60%; /* breedte van de helft onder de muis (≥1280) */
-  --split-hero-shrink: 40%;
+  --split-hero-grow: 55%; /* breedte van de helft onder de muis (≥1280) */
+  --split-hero-shrink: 45%;
   --split-hero-image-blur: 6px;
   --split-hero-image-scale: 1.06;
 
@@ -439,7 +445,7 @@
 
 @media (min-width: 1440px) {
   :root {
-    --polaroids-item-top: 293px;
+    --polaroids-item-top: 197px;
     --testimonial-height: 624px;
     --container-max: 1320px;
     --container-max-plain: 1320px;
@@ -448,7 +454,8 @@
 
 @media (min-width: 1920px) {
   :root {
-    --polaroids-item-top: 301px;
+    --mega-menu-link-padding-x: 32px;
+    --polaroids-item-top: 205px;
     --testimonial-height: 804px;
     --container-max: 1680px;
     --container-max-plain: 1680px;
@@ -471,6 +478,7 @@
     --video-play-size: 56px;
     --section-padding: 64px;
     --section-space: 64px;
+    --section-space-tight: 48px;
     --polaroids-header-top: 120px;
     --polaroids-item-top: 306px;
     --testimonial-height: 736.5px;

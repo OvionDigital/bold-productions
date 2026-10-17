@@ -5,6 +5,7 @@
  * Verbergt bij scrollen naar beneden, verschijnt weer bij scrollen naar boven
  * (scripts/navbar-autohide.ts). Blijft staan bovenaan de pagina, met open menu,
  * of bij focus erin (toetsenbord); uit bij ?static=1 en reduced motion.
+ * Onderaan het menupaneel: `switchTo` (naar het andere deel van de site, Events ↔ Business).
  * Neutrale pagina's: geen menu, alleen `buttons` (Bold Events / Bold Business). `revealAfter`:
  * verborgen tot dat element voorbij is (homepage: de split-hero heeft zelf het logo en de keuze).
  */
@@ -23,6 +24,8 @@ interface Props {
   home?: string;
   /** Knoppen i.p.v. een menu (neutrale pagina's); met een leeg `nav` geen megamenu en geen menuknop */
   buttons?: NavButton[];
+  /** Knop onderaan het menupaneel naar het andere deel van de site */
+  switchTo?: NavButton;
   /** CSS-selector: navbar pas tonen als dit element voorbij is (homepage: de split-hero) */
   revealAfter?: string;
   menuLabel: string;
@@ -31,7 +34,7 @@ interface Props {
   currentPath: string;
 }
 
-const { nav, cta, home = '/', buttons = [], revealAfter, menuLabel, logoAlt, homeTitle, currentPath } = Astro.props;
+const { nav, cta, home = '/', buttons = [], switchTo, revealAfter, menuLabel, logoAlt, homeTitle, currentPath } = Astro.props;
 const hasMenu = nav.length > 0;
 const isHome = currentPath === home;
 ---
@@ -79,7 +82,7 @@ const isHome = currentPath === home;
               class="navbar__toggle"
               attrs={{ 'aria-expanded': 'false', 'aria-controls': 'menu-panel', 'data-menu-toggle': '' }}
             />
-            <MenuPanel id="menu-panel" groups={nav} cta={cta} currentPath={currentPath} />
+            <MenuPanel id="menu-panel" groups={nav} cta={cta} switchTo={switchTo} currentPath={currentPath} />
           </div>
         )
       }

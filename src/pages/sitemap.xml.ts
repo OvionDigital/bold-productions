@@ -1,5 +1,5 @@
 /**
- * /sitemap.xml — alle indexeerbare pagina's (homepage, /events + src/pages/[...slug] behalve noindex,
+ * /sitemap.xml — alle indexeerbare pagina's (homepage + src/pages/[...slug] behalve noindex,
  * de 404 en de styleguide). Zelfde opzet als de Webflow-sitemap; lastmod uit Sanity
  * (laatste wijziging van de pagina) als die bekend is. Wordt bij elke build opnieuw gemaakt.
  */
@@ -14,8 +14,6 @@ export const GET: APIRoute = async ({ site }) => {
   const home = await getHomePage();
   const urls: { loc: string; lastmod?: string }[] = [
     { loc: origin, lastmod: home.updatedAt },
-    // Events-homepage (src/pages/events.astro)
-    { loc: `${origin}/events` },
     ...pages.map((page) => ({ loc: `${origin}/${page.slug}`, lastmod: page.updatedAt })),
   ];
   const body = `<?xml version="1.0" encoding="UTF-8"?>

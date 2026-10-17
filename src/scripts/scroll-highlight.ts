@@ -2,14 +2,15 @@
  * Scroll-highlight ([data-scroll-highlight]): SplitType in woorden + letters;
  * letters starten op 15% dekking en lichten bij scrollen op met een korte witte gloed.
  * Overgenomen uit de Webflow-footercode (start top 80%, eind bottom 30%, scrub).
- * Uit bij ?static=1 en prefers-reduced-motion: tekst blijft volledig zichtbaar.
+ * Ook bij prefers-reduced-motion (alleen dekking en gloed, geen beweging); uit bij ?static=1:
+ * dan blijft de tekst volledig zichtbaar.
  */
 import { gsap } from 'gsap';
 import SplitType from 'split-type';
-import { motionEnabled } from './env';
+import { fadeEnabled } from './env';
 
 export function initScrollHighlight(): void {
-  if (!motionEnabled) return;
+  if (!fadeEnabled) return;
   document.querySelectorAll<HTMLElement>('[data-scroll-highlight]').forEach((el) => {
     const text = new SplitType(el, { types: 'words,chars' });
     if (!text.chars?.length) return;

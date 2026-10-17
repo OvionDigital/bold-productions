@@ -3,7 +3,7 @@
  * veld dat alleen verschijnt als het van toepassing is (doelgroep per soort, diensten
  * per doelgroep); zie studio/schemaTypes/taxonomy.ts.
  */
-import type { Audience, Category, Targeting } from '../../data/taxonomy';
+import { audiences, type Audience, type Category, type MultiTargeting, type Targeting } from '../../data/taxonomy';
 
 export const servicesField: Record<Audience, string> = {
   organisatoren: 'servicesOrganisatoren',
@@ -36,4 +36,27 @@ export function targetingFields({ category, audience, services }: Targeting): Re
   const fields: Record<string, unknown> = { category, [category === 'business' ? 'businessAudience' : 'eventsAudience']: audience };
   if (services?.length) fields[servicesField[audience]] = services;
   return fields;
+}
+
+/** Klantlogo's: Events en/of Business met per soort meerdere doelgroepen. */
+export const multiTargetingProjection = 'categories, eventsAudiences, businessAudiences';
+
+export type RawMultiTargeting = { categories?: string[] | null; eventsAudiences?: string[] | null; businessAudiences?: string[] | null };
+
+/** Alleen geldige waarden; een doelgroep telt alleen als haar soort is aangevinkt. */
+export function toMultiTargeting(raw: RawMultiTargeting): MultiTargeting {
+  const categories = (raw.categories ?? []).filter((c): c is Category => c === 'events' || c === 'business');
+  const of = (category: Category, values: string[] | null | undefined) =>
+    categories.includes(category) ? (values ?? []).filter((v): v is Audience => audiences[category].some((a) => a.value === v)) : [];
+  return { categories, audiences: [...of('events', raw.eventsAudiences), ...of('business', raw.businessAudiences)] };
+}
+
+/** MultiTargeting → Sanity-velden (seed). */
+export function multiTargetingFields({ categories, audiences: chosen }: MultiTargeting): Record<string, unknown> {
+  const pick = (category: Category) => chosen.filter((a) => audiences[category].some((x) => x.value === a));
+  return {
+    categories,
+    ...(categories.includes('events') ? { eventsAudiences: pick('events') } : {}),
+    ...(categories.includes('business') ? { businessAudiences: pick('business') } : {}),
+  };
 }

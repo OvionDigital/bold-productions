@@ -1,7 +1,7 @@
 /**
  * Homepage (/) — keuze tussen Bold Events en Bold Business. Teksten letterlijk van
  * boldproductions.webflow.io/home-new. Slug 'home' = de homepage (src/pages/index.astro),
- * niet /home. De vorige homepage staat nu op /events (src/pages/events.astro).
+ * niet /home. De vorige homepage staat nu op /events (src/data/pages/events-home.ts).
  */
 import type { PageData } from '../../lib/sections';
 import { teamTiles } from '../team';

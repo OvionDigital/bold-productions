@@ -20,6 +20,7 @@ import { initCaseFilters } from './case-filter';
 import { initHoverVideos } from './hover-video';
 import { initDrawShapes } from './draw-shapes';
 import { initVimeoFacades } from './vimeo-facade';
+import { initRandomPicks } from './random-pick';
 import { initAnchorLinks, initScrollAnimations } from './scroll-animations';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -29,22 +30,37 @@ const markLoaded = () => document.documentElement.classList.add('is-loaded');
 if (document.readyState === 'complete') markLoaded();
 else window.addEventListener('load', markLoaded, { once: true });
 
-initLenis();
-initScrollAnimations();
-initAnchorLinks();
-initMenu();
-initNavbarAutoHide();
-initHeroVideo();
-initSplitHero();
-initScrollHighlight();
-initBackgroundVideos();
-initCarousels();
-initCinemaCursor();
-initAccordions();
-initContactForms();
-initMultiselects();
-initCaseFilters();
-initHoverVideos();
-initDrawShapes();
-initVimeoFacades();
+/**
+ * Elke module apart starten: een fout in één module (bijv. een browser-API die op een oudere
+ * iPhone ontbreekt) mag de andere animaties niet tegenhouden.
+ */
+const modules: [string, () => unknown][] = [
+  // Eerst: bepaalt welke logo's/case er staan, vóór animaties en carousels meten
+  ['random-pick', initRandomPicks],
+  ['lenis', initLenis],
+  ['scroll-animations', initScrollAnimations],
+  ['anchor-links', initAnchorLinks],
+  ['menu', initMenu],
+  ['navbar-autohide', initNavbarAutoHide],
+  ['hero-video', initHeroVideo],
+  ['split-hero', initSplitHero],
+  ['scroll-highlight', initScrollHighlight],
+  ['background-video', initBackgroundVideos],
+  ['carousel', initCarousels],
+  ['cinema-cursor', initCinemaCursor],
+  ['accordion', initAccordions],
+  ['contact-form', initContactForms],
+  ['multiselect', initMultiselects],
+  ['case-filter', initCaseFilters],
+  ['hover-video', initHoverVideos],
+  ['draw-shapes', initDrawShapes],
+  ['vimeo-facade', initVimeoFacades],
+];
 
+for (const [name, init] of modules) {
+  try {
+    init();
+  } catch (error) {
+    console.error(`[bold] ${name} niet gestart`, error);
+  }
+}

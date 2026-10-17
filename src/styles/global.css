@@ -214,34 +214,49 @@ figure {
   font-size: var(--fs-lead);
 }
 
-/* Koppen in rich text: h1 met oranje gradient; h2–h6 rustig & effen (gelijk aan Heading.astro):
-   h2 effen accentkleur, h3 wit, h4 accentkleur, h5–h6 lichtgrijs */
-.rich-text h1 {
-  background-image: var(--gradient-orange);
+/* Koppen in rich text met gradient (Webflow .content-container h1–h4): h1 oranje,
+   h2–h4 het accent; h5–h6 lichtgrijs (gelijk aan Heading.astro) */
+.rich-text :is(h1, h2, h3, h4) {
+  background-image: var(--accent-gradient);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
   color: transparent;
 }
 
+.rich-text h1 {
+  background-image: var(--gradient-orange);
+}
+
 .rich-text :is(h1, h2, h3) {
   display: inline-block;
 }
 
-.rich-text :is(h2, h4) {
-  color: var(--accent);
+/* Gradient over de tekst, niet over de kolombreedte */
+.rich-text h4 {
+  width: fit-content;
+  max-width: 100%;
 }
 
 .rich-text :is(h5, h6) {
   color: var(--color-gray-light);
 }
 
-/* Vimeo-video in de tekst (Webflow .w-richtext-figure-type-video, gecentreerd) */
+/* Vimeo-video in de tekst (Webflow .w-richtext-figure-type-video, gecentreerd), met lucht
+   boven en onder zodat hij niet tegen de tekst staat */
 .rich-text__video {
   clear: both;
   width: var(--video-width, 100%);
   max-width: 100%;
-  margin: 0 auto var(--space-10);
+  margin: var(--space-32) auto;
+}
+
+.rich-text__video:first-child {
+  margin-top: 0;
+}
+
+.rich-text__video:last-child {
+  margin-bottom: 0;
 }
 
 /* ─── Utilities ─────────────────────────────────────────────────────── */
@@ -296,6 +311,36 @@ figure {
   --text-gradient: var(--gradient-green);
 }
 
+/* ─── Sectie-afstand: uitzonderingen op 192/64 ───────────────────────── */
+/*
+ * Secties regelen hun eigen marge (--section-space). Twee situaties krijgen minder ruimte
+ * (--section-space-tight, 96/48). #main geeft deze regels voorrang op de scoped stijl.
+ * 1. De eerste sectie onder het kruimelpad (behalve de logostrip, die heeft 96 vast);
+ *    is dat een intro (tekst, introtekst, feitenbalk), dan ook eronder.
+ * 2. Bij elkaar horende inhoud na elkaar (tekst, foto, video, introtekst, feitenbalk),
+ *    zoals op de casepagina's: één verhaal, geen losse blokken.
+ * Marges vallen samen, dus beide kanten van een overgang gaan omlaag.
+ */
+#main > .breadcrumbs + section:not(.logo-marquee) {
+  margin-top: var(--section-space-tight);
+}
+
+#main > .breadcrumbs + :is(.rich-section, .intro, .case-facts) {
+  margin-bottom: var(--section-space-tight);
+}
+
+#main > .breadcrumbs + :is(.rich-section, .intro, .case-facts) + section {
+  margin-top: var(--section-space-tight);
+}
+
+#main > :is(.rich-section, .full-image, .video-feature, .intro, .case-facts):has(+ :is(.rich-section, .full-image, .video-feature, .intro, .case-facts)) {
+  margin-bottom: var(--section-space-tight);
+}
+
+#main > :is(.rich-section, .full-image, .video-feature, .intro, .case-facts) + :is(.rich-section, .full-image, .video-feature, .intro, .case-facts) {
+  margin-top: var(--section-space-tight);
+}
+
 /* ─── Scroll-animaties ──────────────────────────────────────────────── */
 /* Alleen verbergen als JS draait (html.js), anders blijft alles zichtbaar. */
 .js [data-animate] {
@@ -340,7 +385,7 @@ figure {
  * gevolgd door een band in Bold-oranje (de achtergrond van de overgang), waarna de nieuwe
  * pagina in dezelfde beweging verschijnt. De breedte van de band = de vertraging van de
  * nieuwe pagina (--page-sweep-lag). Browsers zonder support (Firefox) laden gewoon de
- * pagina. Uit bij prefers-reduced-motion.
+ * pagina. Bij prefers-reduced-motion een rustige crossfade (zie "Minder beweging").
  *
  * clip-path: halfvlak achter/voor de lijn x + (100% − y) = d, met d van 0% (linksonder)
  * tot 200% (rechtsboven); de punten liggen ruim buiten beeld zodat de lijn altijd doorloopt.
@@ -415,22 +460,46 @@ figure {
   }
 }
 
-/* ─── Beweging uit: prefers-reduced-motion of ?static=1 ─────────────── */
+/* ─── Minder beweging: prefers-reduced-motion ───────────────────────── */
+/*
+ * "Beweging beperken" (iOS/macOS) e.d. betekent minder beweging, niet geen animatie: alles
+ * wat verschuift of schaalt wordt een fade (zoals iOS zelf doet), de paginaovergang een
+ * crossfade. Drift, smooth scroll en video's regelen de componenten en scripts zelf
+ * (scripts/env.ts → motionEnabled / fadeEnabled).
+ */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
   *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
 
   .js [data-animate] {
-    opacity: 1;
     transform: none;
   }
+
+  @keyframes reveal-up {
+    from {
+      opacity: 0;
+    }
+  }
+
+  @keyframes fade-in-up {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+
+  @view-transition {
+    navigation: auto;
+  }
 }
+
+/* ─── Beweging uit: ?static=1 (screenshots, Sanity-preview) ──────────── */
 
 .is-static *,
 .is-static *::before,

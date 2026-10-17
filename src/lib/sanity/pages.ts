@@ -16,7 +16,7 @@ import type { PageSchema } from '../structured-data';
  * Paden die een vaste pagina in src/pages/ hebben; een Sanity-pagina met zo'n pad wordt
  * niet gebouwd (Studio weigert ze ook, zie RESERVED_SLUGS in page.ts — gelijk houden).
  */
-const STATIC_PAGES = ['styleguide', 'events'];
+const STATIC_PAGES = ['styleguide'];
 
 const QUERY = `{
   "pages": *[_type == "page" && defined(slug.current)] | order(slug.current asc) {

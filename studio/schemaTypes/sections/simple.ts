@@ -19,7 +19,7 @@ export const breadcrumbsSection = defineType({
   preview: { prepare: () => ({ title: 'Kruimelpad (automatisch)' }) },
 });
 
-/** LogoMarquee.astro — "Vertrouwd door" met doorlopende logostrip. */
+/** LogoMarquee.astro — "Vertrouwd door" met doorlopende logostrip (max. 10, willekeurig). */
 export const logoMarqueeSection = defineType({
   name: 'logoMarqueeSection',
   title: "Logostrip (Vertrouwd door)",
@@ -30,14 +30,15 @@ export const logoMarqueeSection = defineType({
       name: 'logos',
       title: "Logo's",
       type: 'array',
-      description: "Leeg laten = alle klantlogo's. Volgorde = weergavevolgorde.",
+      description:
+        "Leeg laten = automatisch: de klantlogo's met de soort en doelgroep van deze pagina (bijv. Events › Organisatoren; zonder doelgroep die van de soort). Of kies zelf. Zijn het er meer dan 10, dan toont de site er elke keer 10 willekeurig.",
       of: [defineArrayMember({ type: 'reference', to: [{ type: 'clientLogo' }] })],
       validation: (r) => r.unique(),
     }),
   ],
   preview: {
     select: { title: 'title', count: 'logos.length' },
-    prepare: ({ title, count }) => ({ title: `Logostrip — ${title ?? ''}`, subtitle: count ? `${count} logo's` : "Alle logo's" }),
+    prepare: ({ title, count }) => ({ title: `Logostrip — ${title ?? ''}`, subtitle: count ? `${count} logo's (zelf gekozen)` : 'Automatisch (doelgroep van deze pagina)' }),
   },
 });
 
@@ -110,7 +111,7 @@ export const testimonialsSection = defineType({
   },
 });
 
-/** CaseSpotlight.astro — kop met één grote casekaart. */
+/** CaseSpotlight.astro — kop met één grote casekaart (vast of elke keer een willekeurige passende). */
 export const caseSpotlightSection = defineType({
   name: 'caseSpotlightSection',
   title: 'Uitgelichte case',
@@ -120,15 +121,16 @@ export const caseSpotlightSection = defineType({
     gradientField('green'),
     defineField({
       name: 'case',
-      title: 'Case',
+      title: 'Vaste case (optioneel)',
       type: 'reference',
       to: [{ type: 'caseStudy' }],
-      validation: (r) => r.required(),
+      description:
+        'Leeg laten = elke keer een willekeurige case die past bij deze pagina: dezelfde soort, doelgroep en dienst (bijv. Events › Organisatoren › Promovideo). Is er geen, dan een case van de doelgroep, dan van de soort.',
     }),
   ],
   preview: {
     select: { title: 'title', caseTitle: 'case.title', media: 'case.image' },
-    prepare: ({ title, caseTitle, media }) => ({ title: `Uitgelichte case — ${title ?? ''}`, subtitle: caseTitle, media }),
+    prepare: ({ title, caseTitle, media }) => ({ title: `Uitgelichte case — ${title ?? ''}`, subtitle: caseTitle ?? 'Willekeurig (past bij deze pagina)', media }),
   },
 });
 

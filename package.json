@@ -7,12 +7,17 @@
     "dev": "astro dev",
     "build": "astro check && astro build",
     "preview": "astro preview",
+    "preview:dev": "astro dev --config astro.preview.config.mjs",
+    "preview:build": "astro build --config astro.preview.config.mjs",
+    "preview:deploy": "astro build --config astro.preview.config.mjs && wrangler deploy --config dist-preview/server/wrangler.json",
     "astro": "astro",
     "compare": "node scripts/compare.mjs",
     "sanity:seed": "node --env-file=.env --no-warnings=ExperimentalWarning --import ./scripts/sanity/register.mjs scripts/sanity-seed.ts",
     "sanity:migrate-taxonomy": "node --env-file=.env --no-warnings=ExperimentalWarning --import ./scripts/sanity/register.mjs scripts/sanity-migrate-taxonomy.ts",
     "sanity:migrate-urls": "node --env-file=.env --no-warnings=ExperimentalWarning --import ./scripts/sanity/register.mjs scripts/sanity-migrate-urls.ts",
-    "deploy:preview": "astro build && wrangler pages deploy dist --project-name bold-productions --branch preview"
+    "sanity:section-previews": "node scripts/section-previews.mjs",
+    "deploy:preview": "astro build && wrangler pages deploy dist --project-name bold-productions --branch preview",
+    "sanity:migrate-2026-10-17": "node --env-file=.env scripts/sanity-migrate-2026-10-17.mjs"
   },
   "dependencies": {
     "@sanity/client": "^8.7.0",
@@ -23,8 +28,19 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
+    "@astrojs/cloudflare": "~14.3.4",
+    "@sanity/visual-editing": "~6.1.3",
     "playwright": "^1.63.0",
+    "react": "^19.2.2",
+    "react-dom": "^19.2.2",
+    "react-is": "^19.2.0",
+    "styled-components": "^6.6.0",
     "typescript": "^6.0.3",
     "wrangler": "^4.140.0"
+  },
+  "overrides": {
+    "@sanity/visual-editing": {
+      "@sanity/client": "$@sanity/client"
+    }
   }
 }

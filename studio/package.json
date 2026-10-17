@@ -11,15 +11,16 @@
     "seed": "cd .. && npm run sanity:seed"
   },
   "dependencies": {
-    "@sanity/vision": "^3.68.0",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "sanity": "^3.68.0",
-    "styled-components": "^6.1.13"
+    "@sanity/locale-nl-nl": "^1.1.40",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "sanity": "^6.19.0",
+    "sanity-plugin-media": "^6.3.5",
+    "styled-components": "^6.6.0"
   },
   "devDependencies": {
     "@sanity/eslint-config-studio": "^5.0.0",
-    "@types/react": "^18.3.12",
-    "typescript": "^5.6.3"
+    "@types/react": "^19.3.0",
+    "typescript": "^5.9.3"
   }
 }

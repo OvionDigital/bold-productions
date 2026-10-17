@@ -2,6 +2,8 @@
 /**
  * Polaroidgalerij "Bold backstage": sticky kop en polaroids die bij het scrollen
  * als een stapel over elkaar schuiven (pure CSS, position: sticky).
+ * Een polaroid is nooit hoger dan wat er onder de kop in beeld past (foto's 3:2): de
+ * maximale breedte volgt de schermhoogte, zodat hij ook op lage laptopschermen heel blijft.
  */
 import Container from '../ui/Container.astro';
 import SectionHeading from '../ui/SectionHeading.astro';
@@ -90,6 +92,14 @@ const rotations = ['-1.5deg', '1.2deg', '-0.8deg', '2deg', '-1.8deg', '0.6deg', 
   .polaroids__col {
     width: 83.3333%;
     padding-inline: var(--column-gap);
+  }
+
+  /* Hoogte in beeld = schermhoogte − sticky top − lucht; breedte = 1,5 × de fotohoogte
+     plus de witte rand (12px opzij, 12 + 24px boven/onder) */
+  .polaroids__col :global(.polaroid) {
+    max-width: calc((100vh - var(--polaroids-item-top) - var(--polaroids-bottom-gap)) * 1.5 - var(--space-30));
+    max-width: calc((100svh - var(--polaroids-item-top) - var(--polaroids-bottom-gap)) * 1.5 - var(--space-30));
+    margin-inline: auto;
   }
 
   @media (min-width: 1440px) {

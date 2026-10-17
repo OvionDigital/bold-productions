@@ -143,7 +143,7 @@ Geen sectie, maar hoort bij de layout (Webflow `.main` en `.bold-b-background`).
 ## 8. Tekst + video "Mike's mic drop"
 
 - **Component**: `TextMedia.astro` (tekst + beeld/video, met `reverse` en `accent`) + `ui/VimeoEmbed.astro` + `ui/DecoTriangles.astro`.
-- **Props**: `title` ("Mike's mic drop", gele gradient), `body` (rich text: italic quote met `<strong><em>voelen</em></strong>`, afsluiting "- Mike Ampting" vet en "(Creative Director - Bold Productions)"), `cta` { "Mail Mike", `mailto:mike@mikeampting.nl`, geel }, `media` { type `vimeo`, id `1180112439`, hash `5399f03c15`, ratio `1/1` } of { type `image` }, `reverse?`, `accent`, `triangles?: boolean`, `cinemaCursor?: boolean`.
+- **Props**: `title` ("Mike's mic drop", gele gradient), `body` (rich text: italic quote met `<strong><em>voelen</em></strong>`, afsluiting "- Mike Ampting" vet en "(Creative Director - Bold Productions)"), `cta` { "Mail Mike", `mailto:mike@weareboldproductions.com`, geel }, `media` { type `vimeo`, id `1180112439`, hash `5399f03c15`, ratio `1/1` } of { type `image` }, `reverse?`, `accent`, `triangles?: boolean`, `cinemaCursor?: boolean`.
 - **Opbouw**: twee kolommen van 50% (41,67% op ≥1920), verticaal gecentreerd. Tekstkolom met gap 48px (32px op ≤991), titel en tekst gap 24px. Mediakolom: vierkant, `calc(100% - 32px)` met 32px marge links (max. 550px op ≥1920). Op ≤991 onder elkaar (media boven, 50% breed, 75% op ≤479). Zes oranje 3D-driehoekjes rond het beeld (vaste posities en rotaties, schaal .75 op ≤991, .5 op ≤479).
 - **Media**: Vimeo 1180112439 (`background=1`, autoplay, muted, loop) met `loading="lazy"`. Zes inline SVG-driehoeken.
 - **Gedrag**:

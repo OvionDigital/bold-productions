@@ -1,0 +1,7 @@
+// Cloudflare Worker voor het live voorbeeld in Sanity (astro.preview.config.mjs).
+// De gewone site gaat via `wrangler pages deploy dist` en gebruikt dit bestand niet.
+{
+  "name": "bold-productions-preview",
+  "compatibility_date": "2026-09-01",
+  "compatibility_flags": ["nodejs_compat"]
+}

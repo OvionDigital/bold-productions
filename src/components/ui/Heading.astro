@@ -31,8 +31,8 @@ const {
   class: className,
 } = Astro.props;
 const lines = toLines(text);
-/** hero en h1 houden de kapitalen met gradient */
-const isDisplay = size === 'hero' || size === 'h1';
+/** h2 en h4 altijd in kleur: zonder keuze de accentgradient */
+const tone: HeadingGradient = gradient === 'none' && (size === 'h2' || size === 'h4') ? 'accent' : gradient;
 ---
 
 <Tag
@@ -40,9 +40,8 @@ const isDisplay = size === 'hero' || size === 'h1';
     'heading',
     `heading--${size}`,
     `heading--${align}`,
-    { 'heading--flush': flush, 'text-gradient': gradient !== 'none' },
-    gradient !== 'none' && gradient !== 'accent' && `text-gradient--${gradient}`,
-    !isDisplay && `heading--tone-${gradient}`,
+    { 'heading--flush': flush, 'text-gradient': tone !== 'none' },
+    tone !== 'none' && tone !== 'accent' && `text-gradient--${tone}`,
     className,
   ]}
 >
@@ -72,38 +71,15 @@ const isDisplay = size === 'hero' || size === 'h1';
     line-height: var(--lh-display);
   }
 
-  /*
-   * h2–h6 "rustig & effen": kapitalen met lucht (regelafstand 100%), effen kleur i.p.v.
-   * gradient. h2 in de kleur van `gradient` (none/accent = accentkleur), h3 wit,
-   * h4–h6 kleine gespatieerde labels: h4 in de kleur, h5–h6 lichtgrijs.
-   */
+  /* h2–h6: kapitalen met lucht (regelafstand 100%); h4–h6 kleine gespatieerde labels */
   .heading--h2,
-  .heading--h3,
-  .heading--h4,
-  .heading--h5,
-  .heading--h6 {
-    --heading-tone: var(--accent);
+  .heading--h3 {
     line-height: var(--lh-none);
-    background-image: none;
-    -webkit-text-fill-color: currentColor;
-  }
-
-  .heading--tone-orange {
-    --heading-tone: var(--color-orange);
-  }
-
-  .heading--tone-yellow {
-    --heading-tone: var(--color-yellow);
-  }
-
-  .heading--tone-green {
-    --heading-tone: var(--color-green);
   }
 
   .heading--h2 {
     font-size: var(--fs-h2);
     display: inline-block;
-    color: var(--heading-tone);
   }
 
   .heading--h3 {
@@ -119,17 +95,25 @@ const isDisplay = size === 'hero' || size === 'h1';
     letter-spacing: var(--ls-label);
   }
 
-  .heading--h4 {
-    color: var(--heading-tone);
-  }
-
   .heading--h5,
   .heading--h6 {
     color: var(--color-gray-light);
   }
 
+  /* Gradient over de tekst zelf, niet over de hele kolombreedte (h2 is al inline-block) */
+  .heading--h3.text-gradient,
+  .heading--h4.text-gradient {
+    width: fit-content;
+    max-width: 100%;
+  }
+
   .heading--center {
     text-align: center;
+  }
+
+  .heading--center.heading--h3,
+  .heading--center.heading--h4 {
+    margin-inline: auto;
   }
 
   .heading--flush {

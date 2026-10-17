@@ -4,13 +4,14 @@
  * Ook: vloeiende anchor-links (#…) met 80px offset voor de vaste header.
  */
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { motionEnabled } from './env';
+import { fadeEnabled } from './env';
 import { scrollToTarget } from './lenis';
 
 export function initScrollAnimations(): void {
   const elements = document.querySelectorAll<HTMLElement>('[data-animate]');
   const groups = document.querySelectorAll<HTMLElement>('[data-animate-stagger]');
-  if (!motionEnabled) {
+  // Ook bij minder beweging (dan alleen een fade, zie global.css)
+  if (!fadeEnabled) {
     [...elements, ...groups].forEach((el) => el.classList.add('is-visible'));
     return;
   }

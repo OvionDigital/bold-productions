@@ -1,7 +1,7 @@
 /**
  * Indeling van de site én van cases, testimonials en klantlogo's: eerst de soort
  * (Events óf Business), dan één doelgroep binnen die soort, dan de diensten van die
- * doelgroep (meerdere; alleen cases en testimonials). Eén lijst per doelgroep: het menu,
+ * doelgroep (meerdere; alleen cases). Klantlogo's: meerdere soorten en doelgroepen. Eén lijst per doelgroep: het menu,
  * het menupaneel, de footer (data/navigation.ts) en het CMS gebruiken allemaal deze.
  * URL's: /<soort>/<doelgroep>/<dienst>. Dienstwaarde = zoals op de site getoond
  * (feitenbalk, casesfilter), titel = zoals in het menu.
@@ -17,6 +17,12 @@ export interface Targeting {
   audience: Audience;
   /** Uit services[audience] (waarden) */
   services?: string[];
+}
+
+/** Klantlogo's: bij meerdere soorten en doelgroepen tegelijk */
+export interface MultiTargeting {
+  categories: Category[];
+  audiences: Audience[];
 }
 
 export interface Service {
@@ -96,4 +102,16 @@ export const audienceTitle = (audience: Audience) =>
   [...audiences.events, ...audiences.business].find((a) => a.value === audience)?.title ?? audience;
 
 export const audienceUrl = (category: Category, audience: Audience) => `/${category}/${audience}`;
+
+/**
+ * Soort, doelgroep en dienst van een pagina uit haar URL-pad (/<soort>/<doelgroep>/<dienst>).
+ * Wat niet uit het pad volgt ontbreekt: /events/cases → alleen de soort, /trouwfilm → niets.
+ */
+export function targetingOfPath(path: string): { category?: Category; audience?: Audience; service?: string } {
+  const [first, second, third] = path.replace(/.html$/, '').split('/').filter(Boolean);
+  if (first !== 'events' && first !== 'business') return {};
+  const audience = audiences[first].find((a) => a.value === second)?.value;
+  if (!audience) return { category: first };
+  return { category: first, audience, service: services[audience].find((s) => s.slug === third)?.value };
+}
 export const serviceUrl = (category: Category, audience: Audience, service: Service) => `/${category}/${audience}/${service.slug}`;

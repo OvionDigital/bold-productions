@@ -1,11 +1,16 @@
 import { defineType, defineField } from 'sanity';
-import { targetingFields, targetingFieldset, targetingLabel } from '../taxonomy';
+import { multiTargetingFields, multiTargetingLabel, targetingFieldset } from '../taxonomy';
 
+/**
+ * Klantlogo voor de logostrips ("Vertrouwd door"). Events en/of Business en daaronder de
+ * doelgroepen: een strip toont de logo's van de doelgroep van de pagina (max. 10, elke keer
+ * een willekeurige keuze).
+ */
 export const clientLogo = defineType({
   name: 'clientLogo',
   title: 'Klantlogo',
   type: 'document',
-  fieldsets: [{ ...targetingFieldset, title: 'Events of Business en doelgroep' }],
+  fieldsets: [{ ...targetingFieldset, title: 'Events en/of Business en doelgroepen' }],
   fields: [
     defineField({ name: 'name', title: 'Organisatienaam', type: 'string', validation: (r) => r.required() }),
     defineField({
@@ -15,11 +20,10 @@ export const clientLogo = defineType({
       options: { hotspot: false },
       validation: (r) => r.required(),
     }),
-    // Logo's: alleen soort + doelgroep, geen diensten
-    ...targetingFields({ services: false }),
+    ...multiTargetingFields(),
   ],
   preview: {
-    select: { title: 'name', media: 'image', category: 'category', eventsAudience: 'eventsAudience', businessAudience: 'businessAudience' },
-    prepare: ({ title, media, ...doc }) => ({ title, subtitle: targetingLabel(doc), media }),
+    select: { title: 'name', media: 'image', categories: 'categories', eventsAudiences: 'eventsAudiences', businessAudiences: 'businessAudiences' },
+    prepare: ({ title, media, ...doc }) => ({ title, subtitle: multiTargetingLabel(doc), media }),
   },
 });

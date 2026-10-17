@@ -9,12 +9,16 @@
  */
 import type { ImageMetadata } from 'astro';
 
-/** In elke GROQ-query achter een image-veld te plakken, bijv. `heroImage${imageProjection}`. */
+/**
+ * In elke GROQ-query achter een image-veld te plakken, bijv. `heroImage${imageProjection}`.
+ * Alt-tekst: die op deze plek (veld "Afwijkende alt-tekst"), anders die van de afbeelding zelf
+ * (Media in Studio, sanity.imageAsset.altText). Een lege tekst ("") blijft leeg (decoratief).
+ */
 export const imageProjection = `{
   "src": asset->url,
   "width": asset->metadata.dimensions.width,
   "height": asset->metadata.dimensions.height,
-  alt
+  "alt": coalesce(alt, asset->altText)
 }`;
 
 export interface SanityImageRef {

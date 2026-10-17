@@ -19,7 +19,7 @@ import {
 
 export const page: PageData = {
   slug: 'events/organisatoren',
-  title: 'Events',
+  title: 'Organisatoren',
   meta,
   sections: [
     { type: 'hero', props: hero },

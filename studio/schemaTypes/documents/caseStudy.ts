@@ -1,5 +1,5 @@
 import { defineType, defineField, defineArrayMember } from 'sanity';
-import { caseSectionTypes } from '../sections';
+import { caseSectionTypes, sectionInsertMenu } from '../sections';
 import { targetingFields, targetingFieldset } from '../taxonomy';
 
 /**
@@ -70,7 +70,7 @@ export const caseStudy = defineType({
       type: 'array',
       group: 'content',
       of: caseSectionTypes.map((t) => defineArrayMember({ type: t.name })),
-      options: { insertMenu: { filter: true, views: [{ name: 'list' }] } },
+      options: { insertMenu: sectionInsertMenu },
     }),
     defineField({ name: 'metaTitle', title: 'Paginatitel (Google)', type: 'string', group: 'seo', description: 'Leeg = de titel.' }),
     defineField({ name: 'metaDescription', title: 'Metabeschrijving (Google)', type: 'text', rows: 3, group: 'seo', description: 'Leeg = de intro.' }),

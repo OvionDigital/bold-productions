@@ -12,7 +12,9 @@ import PageBackground from '../components/layout/PageBackground.astro';
 import WhatsAppButton from '../components/layout/WhatsAppButton.astro';
 import type { Accent } from '../components/ui/Button.astro';
 import { buildStructuredData, type PageSchema, type Review } from '../lib/structured-data';
-import { breadcrumbLabels, navigation, sectionOf, skipLinkLabel } from '../data/navigation';
+import { breadcrumbLabels, sectionOf, skipLinkLabel } from '../data/navigation';
+import { getNavigation } from '../lib/sanity/navigation';
+import { isPreview } from '../lib/preview';
 import ogDefault from '../assets/seo/og-default.jpg';
 import logo from '../assets/brand/bold-productions-logo.png';
 import { contact, copyright, footerLogoAlt, header, legalLinks, socials } from '../data/navigation';
@@ -54,9 +56,11 @@ const {
 
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const currentPath = Astro.url.pathname.replace(/\.html$/, '').replace(/\/$/, '') || '/';
+// Menu, CTA en footer van dit deel van de site (events, business of neutraal), uit Sanity of src/data
+const siteNav = (await getNavigation())[sectionOf(currentPath)];
+// Preview (Sanity Presentation): noindex en zonder animaties (is-static), zodat alle inhoud direct
+// zichtbaar en aanklikbaar is en na elke wijziging op dezelfde plek terugkomt.
 // Zonder eigen keuze: de vaste Bold-deelafbeelding (zoals live)
-// Menu, CTA en footer van dit deel van de site (events, business of neutraal)
-const siteNav = navigation[sectionOf(currentPath)];
 const ogImageUrl = new URL(ogImage ?? ogDefault.src, Astro.site).href;
 const jsonLd =
   structuredData && !noindex
@@ -75,14 +79,14 @@ const jsonLdHtml = jsonLd ? JSON.stringify(jsonLd).replaceAll('<', String.fromCh
 ---
 
 <!doctype html>
-<html lang="nl-NL">
+<html lang="nl-NL" class:list={[isPreview && 'is-static']}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
-    {noindex && <meta name="robots" content="noindex" />}
+    {(noindex || isPreview) && <meta name="robots" content="noindex" />}
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Bold Productions" />
@@ -139,6 +143,7 @@ const jsonLdHtml = jsonLd ? JSON.stringify(jsonLd).replaceAll('<', String.fromCh
           cta={siteNav.cta}
           home={siteNav.home}
           buttons={siteNav.buttons}
+          switchTo={siteNav.switchTo}
           revealAfter={headerRevealAfter}
           menuLabel={header.menuLabel}
           logoAlt={header.logoAlt}

@@ -184,7 +184,7 @@ export const micDrop: TextMediaProps = {
       ],
     },
   ],
-  cta: { label: 'Mail Mike', href: 'mailto:mike@mikeampting.nl', accent: 'yellow' },
+  cta: { label: 'Mail Mike', href: 'mailto:mike@weareboldproductions.com', accent: 'yellow' },
   media: { type: 'vimeo', id: '1180112439', hash: '5399f03c15', title: 'Video Mike Ampting, Bold Productions' },
   triangles: true,
 };

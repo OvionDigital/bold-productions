@@ -12,9 +12,10 @@
  */
 import { imageProjection, toRemoteImage, type SanityImageRef } from './image';
 import { portableTextToRich } from './portableText';
-import { caseGridProps, caseUrl, type Case } from '../../data/cases';
+import { caseGridProps, caseUrl, spotlightCandidates, type Case } from '../../data/cases';
+import { logosForPath } from '../../data/logos';
 import type { Targeting } from '../../data/taxonomy';
-import { targetingProjection, toTargeting, type RawTargeting } from './taxonomy';
+import { multiTargetingProjection, targetingProjection, toMultiTargeting, toTargeting, type RawMultiTargeting, type RawTargeting } from './taxonomy';
 import type { FormChoice, PageSection } from '../sections';
 import type { TextMediaProps } from '../../components/sections/TextMedia.astro';
 import type { LinkGroup } from '../../components/sections/LinkGroups.astro';
@@ -56,9 +57,10 @@ export const sectionsProjection = `{
   },
   _type == "logoMarqueeSection" => {
     title,
+    "picked": count(logos) > 0,
     "logos": select(
-      count(logos) > 0 => logos[]->{ "image": image${imageProjection}, name },
-      *[_type == "clientLogo"] | order(_createdAt asc) { "image": image${imageProjection}, name }
+      count(logos) > 0 => logos[]->{ "image": image${imageProjection}, name, ${multiTargetingProjection} },
+      *[_type == "clientLogo"] | order(_createdAt asc) { "image": image${imageProjection}, name, ${multiTargetingProjection} }
     )
   },
   _type == "introHighlightSection" => { content, anchorId },
@@ -83,7 +85,8 @@ export const sectionsProjection = `{
   },
   _type == "caseSpotlightSection" => {
     title, gradient,
-    "case": case->${caseCardProjection}
+    "case": case->${caseCardProjection},
+    "cases": select(!defined(case->_id) => ${allCasesQuery})
   },
   _type == "imageFeatureSection" => {
     title, gradient, text, cinemaCursor,
@@ -224,19 +227,18 @@ const mappers: Record<string, (s: RawSection, path: string) => PageSection> = {
 
   breadcrumbsSection: (s) => ({ type: 'breadcrumbs', key: s._key }),
 
-  logoMarqueeSection: (s) => ({
-    type: 'logoMarquee',
-    key: s._key,
-    props: {
-      title: s.title ?? '',
-      logos: need(
-        ((s.logos ?? []) as { image: Img; name?: string }[])
-          .filter((l) => hasImage(l?.image))
-          .map((l) => ({ src: toRemoteImage(l.image as SanityImageRef), alt: l.name ?? l.image!.alt ?? '' })),
-        "geen logo's",
-      ),
-    },
-  }),
+  // Zelf gekozen logo's, of automatisch die van de soort/doelgroep van de pagina (max. 10 willekeurig: LogoMarquee)
+  logoMarqueeSection: (s, path) => {
+    const all = ((s.logos ?? []) as ({ image: Img; name?: string } & RawMultiTargeting)[])
+      .filter((l) => hasImage(l?.image))
+      .map((l) => ({ src: toRemoteImage(l.image as SanityImageRef), alt: l.name ?? l.image!.alt ?? '', ...toMultiTargeting(l) }));
+    const logos = s.picked ? all : logosForPath(all, path);
+    return {
+      type: 'logoMarquee',
+      key: s._key,
+      props: { title: s.title ?? '', logos: need(logos.map(({ src, alt }) => ({ src, alt })), "geen logo's") },
+    };
+  },
 
   introHighlightSection: (s) => ({
     type: 'introHighlight',
@@ -334,11 +336,16 @@ const mappers: Record<string, (s: RawSection, path: string) => PageSection> = {
     };
   },
 
-  caseSpotlightSection: (s) => ({
-    type: 'caseSpotlight',
-    key: s._key,
-    props: { title: s.title ?? '', gradient: gradient(s.gradient), item: need(toCase(s.case), 'case ontbreekt of is onvolledig') },
-  }),
+  // Vaste case, of elke keer een willekeurige die past bij de pagina (soort, doelgroep, dienst)
+  caseSpotlightSection: (s, path) => {
+    const fixed = toCase(s.case);
+    const all = ((s.cases ?? []) as RawCase[]).map(toCase).filter((c): c is Case => c !== null);
+    return {
+      type: 'caseSpotlight',
+      key: s._key,
+      props: { title: s.title ?? '', gradient: gradient(s.gradient), items: need(fixed ? [fixed] : spotlightCandidates(all, path), 'geen (volledige) case') },
+    };
+  },
 
   imageFeatureSection: (s) => ({
     type: 'imageFeature',

@@ -1,12 +1,15 @@
 ---
 /**
  * Uitgelichte case (Webflow .case-spotlight): kop en één grote casekaart.
- * De case komt uit src/data/cases.ts (op slug) of wordt zelf meegegeven (Sanity).
+ * Vaste case (`item`, of `caseSlug` uit src/data/cases.ts), of kandidaten (`items`): dan
+ * kiest de browser er bij elk bezoek één willekeurig uit (scripts/random-pick.ts; zonder JS
+ * de eerste). Zonder iets: de cases die passen bij deze pagina (soort, doelgroep, dienst uit
+ * het URL-pad, zie spotlightCandidates in data/cases.ts).
  */
 import SectionHeading from '../ui/SectionHeading.astro';
 import CaseCard from '../ui/CaseCard.astro';
 import type { HeadingGradient } from '../ui/Heading.astro';
-import { getCase, type Case } from '../../data/cases';
+import { cases, getCase, spotlightCandidates, type Case } from '../../data/cases';
 
 export interface CaseSpotlightProps {
   title: string;
@@ -15,18 +18,29 @@ export interface CaseSpotlightProps {
   caseSlug?: string;
   /** De case zelf (bijv. uit Sanity); gaat voor `caseSlug` */
   item?: Case;
+  /** Kandidaten: elke keer één willekeurig (gaat voor `item` en `caseSlug`) */
+  items?: Case[];
 }
 
 type Props = CaseSpotlightProps;
 
-const { title, gradient = 'green', caseSlug, item: caseItem } = Astro.props;
-const item = caseItem ?? getCase(caseSlug ?? '');
+const { title, gradient = 'green', caseSlug, item: caseItem, items } = Astro.props;
+const fixed = caseItem ?? (caseSlug ? getCase(caseSlug) : undefined);
+const candidates = items?.length ? items : fixed ? [fixed] : spotlightCandidates(cases, Astro.url.pathname);
 ---
 
 <section class="case-spotlight">
   <div class="case-spotlight__inner" data-animate-stagger>
     <SectionHeading title={title} gradient={gradient} spacing="compact" />
-    <CaseCard item={item} class="case-spotlight__card" />
+    <div class="case-spotlight__cards" data-random-pick={candidates.length > 1 ? 1 : undefined}>
+      {
+        candidates.map((item, index) => (
+          <div class="case-spotlight__card" hidden={index > 0}>
+            <CaseCard item={item} />
+          </div>
+        ))
+      }
+    </div>
   </div>
 </section>
 
@@ -45,18 +59,28 @@ const item = caseItem ?? getCase(caseSlug ?? '');
     margin-block: var(--section-space);
   }
 
-  .case-spotlight__inner :global(.case-spotlight__card) {
+  .case-spotlight__cards {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .case-spotlight__card {
     width: 66.6667%;
   }
 
+  .case-spotlight__card[hidden] {
+    display: none;
+  }
+
   @media (min-width: 1440px) {
-    .case-spotlight__inner :global(.case-spotlight__card) {
+    .case-spotlight__card {
       width: 50%;
     }
   }
 
   @media (max-width: 991px) {
-    .case-spotlight__inner :global(.case-spotlight__card) {
+    .case-spotlight__card {
       width: 100%;
     }
   }

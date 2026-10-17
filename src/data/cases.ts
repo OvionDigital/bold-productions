@@ -12,7 +12,7 @@ import type { RemoteImage } from '../lib/sanity/image';
 import type { Rich } from '../lib/rich';
 import type { PageSection } from '../lib/sections';
 import type { CaseGridProps } from '../components/sections/CaseGrid.astro';
-import { audiences, audienceTitle, type Category, type Targeting } from './taxonomy';
+import { audiences, audienceTitle, targetingOfPath, type Category, type Targeting } from './taxonomy';
 import {
   introText as pluggerzXZwarteCross2026Intro,
   sections as pluggerzXZwarteCross2026Sections,
@@ -376,3 +376,23 @@ export function caseGridProps(items: Case[], category: Category): CaseGridProps 
 }
 
 export const eventsCaseGrid = caseGridProps(cases, 'events');
+
+/**
+ * Kandidaten voor "Uitgelichte case" op een pagina (de browser kiest er elke keer één): de cases
+ * met de soort, doelgroep én dienst van het pad (bijv. /events/organisatoren/promovideos);
+ * zijn die er niet, dan die met de doelgroep, dan de soort, en anders alle cases.
+ */
+export function spotlightCandidates(all: Case[], path: string): Case[] {
+  const { category, audience, service } = targetingOfPath(path);
+  const levels: ((item: Case) => boolean)[] = [
+    (item) => Boolean(service) && item.category === category && item.audience === audience && (item.services ?? []).includes(service!),
+    (item) => Boolean(audience) && item.category === category && item.audience === audience,
+    (item) => Boolean(category) && item.category === category,
+    () => true,
+  ];
+  for (const matches of levels) {
+    const found = all.filter(matches);
+    if (found.length) return found;
+  }
+  return [];
+}

@@ -1,13 +1,13 @@
 import { defineType, defineField, defineArrayMember } from 'sanity';
 import { accentOptions } from '../fields';
-import { sectionTypes } from '../sections';
+import { sectionInsertMenu, sectionTypes } from '../sections';
 
 /**
  * URL-paden die al door een vaste Astro-pagina in src/pages/ gebruikt worden.
- * Moet gelijk blijven aan STATIC_PAGES in src/lib/sanity/pages.ts. /events = de Events-homepage
- * (document "Events-homepage").
+ * Moet gelijk blijven aan STATIC_PAGES in src/lib/sanity/pages.ts. /events (URL-pad "events") is
+ * sinds oktober 2026 een gewone pagina.
  */
-const RESERVED_SLUGS = ['styleguide', 'events'];
+const RESERVED_SLUGS = ['styleguide'];
 
 const slugify = (input: string) =>
   input
@@ -69,7 +69,7 @@ export const page = defineType({
       description: 'Bouw de pagina op met blokken. Sleep om de volgorde te wijzigen. Begin normaal met een Hero.',
       of: sectionTypes.map((t) => defineArrayMember({ type: t.name })),
       options: {
-        insertMenu: { filter: true, views: [{ name: 'list' }] },
+        insertMenu: sectionInsertMenu,
       },
       validation: (r) => [
         r.required().min(1).error('Voeg minimaal één sectie toe.'),
@@ -204,10 +204,15 @@ export const page = defineType({
       description: 'Aan = de pagina is wel bereikbaar, maar wordt niet in zoekmachines opgenomen.',
       initialValue: false,
     }),
+    // Alleen voor de volgorde in de lijst "Pagina's": de startpagina's (/, /events, /business) bovenaan
+    defineField({ name: 'listOrder', title: 'Volgorde in de lijst', type: 'number', hidden: true }),
   ],
-  orderings: [{ title: 'URL-pad', name: 'slugAsc', by: [{ field: 'slug.current', direction: 'asc' }] }],
+  orderings: [
+    { title: 'Startpagina’s eerst, dan URL-pad', name: 'listOrder', by: [{ field: 'listOrder', direction: 'asc' }, { field: 'slug.current', direction: 'asc' }] },
+    { title: 'URL-pad', name: 'slugAsc', by: [{ field: 'slug.current', direction: 'asc' }] },
+  ],
   preview: {
     select: { title: 'title', slug: 'slug.current', media: 'sections.0.image' },
-    prepare: ({ title, slug, media }) => ({ title, subtitle: slug ? `/${slug}` : '(nog geen URL-pad)', media }),
+    prepare: ({ title, slug, media }) => ({ title, subtitle: slug === 'home' ? '/ (homepage)' : slug ? `/${slug}` : '(nog geen URL-pad)', media }),
   },
 });

@@ -2,13 +2,14 @@
  * B-outlines op de achtergrond ([data-draw-shape], PageBackground.astro): worden één keer
  * in hun geheel getekend zodra ze voor een deel in beeld zijn (niet mee met de scroll).
  * Eerst onzichtbaar maken (zonder transitie), bij in beeld de transitie aanzetten en de
- * lijn laten lopen. Zonder beweging (?static=1, reduced motion) blijven ze gewoon staan.
+ * lijn laten lopen. Ook bij prefers-reduced-motion (de lijn tekent zich, er verschuift niets);
+ * bij ?static=1 blijven ze gewoon staan.
  */
-import { motionEnabled } from './env';
+import { fadeEnabled } from './env';
 
 export function initDrawShapes(): void {
   const shapes = [...document.querySelectorAll<SVGSVGElement>('[data-draw-shape]')];
-  if (!shapes.length || !motionEnabled || !('IntersectionObserver' in window)) return;
+  if (!shapes.length || !fadeEnabled || !('IntersectionObserver' in window)) return;
 
   const observer = new IntersectionObserver(
     (entries) => {
