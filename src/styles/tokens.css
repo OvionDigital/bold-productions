@@ -376,7 +376,9 @@
     0.36,
     1
   ); /* zachte uitloop voor inkomende onderdelen */
-  --duration-page-blinds: 1s; /* paginaovergang: lamellen dicht en weer open (global.css) */
+  --duration-page-curtain: 1.1s; /* paginaovergang: gordijn omhoog, even dicht, verder omhoog (global.css) */
+  --ease-curtain: cubic-bezier(0.76, 0, 0.24, 1); /* snel in het midden, zacht aan begin en eind */
+  --page-curtain-shift: 8%; /* parallax: oude pagina schuift zoveel mee omhoog, nieuwe komt zoveel lager binnen */
   --duration-draw: 2.4s; /* B-outlines op de achtergrond worden getekend (draw-shapes.ts) */
   --ease-draw: cubic-bezier(0.65, 0, 0.35, 1);
   --marquee-duration: 14s;

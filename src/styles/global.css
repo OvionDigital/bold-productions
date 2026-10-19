@@ -380,223 +380,99 @@ figure {
 }
 
 /*
- * Paginaovergang: lamellen (native cross-document View Transitions, geen JS).
- * 6 horizontale stroken, elk 75% zwart en 25% oranje (de achtergrond van de overgang),
- * vallen kort na elkaar dicht over de oude pagina (van boven naar beneden per strook) en
- * gaan in dezelfde volgorde weer open op de nieuwe pagina. Per strook een maskerlaag met een
- * eigen geanimeerde rand (@property --blind-*). Browsers zonder support (Firefox) laden
- * gewoon de pagina; bij prefers-reduced-motion een crossfade (zie "Minder beweging").
- * Duur: --duration-page-blinds.
+ * Paginaovergang: gordijn van onder naar boven (native cross-document View Transitions, geen JS).
+ * Een schermhoog gordijn (bovenste 25% oranje, de rest zwart) schuift van onder het scherm
+ * omhoog over de oude pagina, blijft heel even staan en schuift dan verder omhoog weg; de nieuwe
+ * pagina staat eronder. Zoals de knoppen die bij hover vullen.
+ * - Het gordijn is de achtergrond van ::view-transition-group(root); background-position-y
+ *   is de bovenrand (T): 100% → 0 (dicht) → −100% (weg).
+ * - Oude pagina: alleen boven het gordijn zichtbaar en schuift iets mee omhoog (parallax).
+ * - Nieuwe pagina: alleen onder het gordijn zichtbaar en komt van iets lager binnen.
+ *   Clip en verschuiving lopen in dezelfde keyframes, dus de rand sluit precies aan.
+ * Browsers zonder support (Firefox) laden gewoon de pagina; bij prefers-reduced-motion een
+ * crossfade (zie "Minder beweging"). Tokens: --duration-page-curtain, --ease-curtain,
+ * --page-curtain-shift.
  */
-@property --blind-close-1 {
-  syntax: '<percentage>';
-  inherits: false;
-  initial-value: 0%;
-}
-
-@property --blind-open-1 {
-  syntax: '<percentage>';
-  inherits: false;
-  initial-value: 0%;
-}
-
-@property --blind-close-2 {
-  syntax: '<percentage>';
-  inherits: false;
-  initial-value: 0%;
-}
-
-@property --blind-open-2 {
-  syntax: '<percentage>';
-  inherits: false;
-  initial-value: 0%;
-}
-
-@property --blind-close-3 {
-  syntax: '<percentage>';
-  inherits: false;
-  initial-value: 0%;
-}
-
-@property --blind-open-3 {
-  syntax: '<percentage>';
-  inherits: false;
-  initial-value: 0%;
-}
-
-@property --blind-close-4 {
-  syntax: '<percentage>';
-  inherits: false;
-  initial-value: 0%;
-}
-
-@property --blind-open-4 {
-  syntax: '<percentage>';
-  inherits: false;
-  initial-value: 0%;
-}
-
-@property --blind-close-5 {
-  syntax: '<percentage>';
-  inherits: false;
-  initial-value: 0%;
-}
-
-@property --blind-open-5 {
-  syntax: '<percentage>';
-  inherits: false;
-  initial-value: 0%;
-}
-
-@property --blind-close-6 {
-  syntax: '<percentage>';
-  inherits: false;
-  initial-value: 0%;
-}
-
-@property --blind-open-6 {
-  syntax: '<percentage>';
-  inherits: false;
-  initial-value: 0%;
-}
-
 @media (prefers-reduced-motion: no-preference) {
   @view-transition {
     navigation: auto;
   }
 
+  /* Waar oude, nieuwe pagina en gordijn even niets tonen: zwart, zoals het gordijn */
+  ::view-transition {
+    background-color: var(--color-black);
+  }
+
   ::view-transition-group(root) {
-    animation: none;
-    background-image: repeating-linear-gradient(
-      to bottom,
-      var(--color-black) 0 calc(16.6667% * 0.75),
-      var(--color-orange) calc(16.6667% * 0.75) 16.6667%
-    );
+    animation: page-curtain var(--duration-page-curtain) both;
+    background-image: linear-gradient(to bottom, var(--color-orange) 0 25%, var(--color-black) 25% 100%);
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
   }
 
   ::view-transition-old(root),
   ::view-transition-new(root) {
     mix-blend-mode: normal;
-    animation-duration: var(--duration-page-blinds);
-    animation-timing-function: linear;
+    animation-duration: var(--duration-page-curtain);
     animation-fill-mode: both;
-    mask-size: 100% 16.6667%;
-    mask-position: 0 0.0000%, 0 20.0000%, 0 40.0000%, 0 60.0000%, 0 80.0000%, 0 100.0000%;
-    mask-repeat: no-repeat;
   }
 
-  /* Oude pagina: per strook verdwijnt het bovenste stuk (de lamel valt dicht) */
   ::view-transition-old(root) {
-    animation-name: page-blinds-close;
-    mask-image:
-    linear-gradient(to bottom, transparent var(--blind-close-1), #000 var(--blind-close-1)),
-    linear-gradient(to bottom, transparent var(--blind-close-2), #000 var(--blind-close-2)),
-    linear-gradient(to bottom, transparent var(--blind-close-3), #000 var(--blind-close-3)),
-    linear-gradient(to bottom, transparent var(--blind-close-4), #000 var(--blind-close-4)),
-    linear-gradient(to bottom, transparent var(--blind-close-5), #000 var(--blind-close-5)),
-    linear-gradient(to bottom, transparent var(--blind-close-6), #000 var(--blind-close-6));
+    animation-name: page-curtain-old;
   }
 
-  /* Nieuwe pagina: per strook komt hij van boven tevoorschijn (de lamel gaat open) */
   ::view-transition-new(root) {
-    animation-name: page-blinds-open;
-    mask-image:
-    linear-gradient(to bottom, #000 var(--blind-open-1), transparent var(--blind-open-1)),
-    linear-gradient(to bottom, #000 var(--blind-open-2), transparent var(--blind-open-2)),
-    linear-gradient(to bottom, #000 var(--blind-open-3), transparent var(--blind-open-3)),
-    linear-gradient(to bottom, #000 var(--blind-open-4), transparent var(--blind-open-4)),
-    linear-gradient(to bottom, #000 var(--blind-open-5), transparent var(--blind-open-5)),
-    linear-gradient(to bottom, #000 var(--blind-open-6), transparent var(--blind-open-6));
+    animation-name: page-curtain-new;
   }
 }
 
-@keyframes page-blinds-close {
+/* Gordijn: omhoog (dicht), even staan, verder omhoog (weg) */
+@keyframes page-curtain {
   0% {
-    --blind-close-1: 0%; --blind-close-2: 0%; --blind-close-3: 0%; --blind-close-4: 0%; --blind-close-5: 0%; --blind-close-6: 0%;
+    background-position: 0 100vh;
+    animation-timing-function: var(--ease-curtain);
   }
-  0% {
-    --blind-close-1: 0%;
+
+  45%,
+  55% {
+    background-position: 0 0;
+    animation-timing-function: var(--ease-curtain);
   }
-  4% {
-    --blind-close-2: 0%;
-  }
-  8% {
-    --blind-close-3: 0%;
-  }
-  12% {
-    --blind-close-4: 0%;
-  }
-  16% {
-    --blind-close-5: 0%;
-  }
-  20% {
-    --blind-close-6: 0%;
-  }
-  28% {
-    --blind-close-1: 100%;
-  }
-  32% {
-    --blind-close-2: 100%;
-  }
-  36% {
-    --blind-close-3: 100%;
-  }
-  40% {
-    --blind-close-4: 100%;
-  }
-  44% {
-    --blind-close-5: 100%;
-  }
-  48% {
-    --blind-close-6: 100%;
-  }
+
   100% {
-    --blind-close-1: 100%; --blind-close-2: 100%; --blind-close-3: 100%; --blind-close-4: 100%; --blind-close-5: 100%; --blind-close-6: 100%;
+    background-position: 0 -100vh;
   }
 }
 
-@keyframes page-blinds-open {
+/* Oude pagina: zichtbaar boven het gordijn, schuift --page-curtain-shift mee omhoog.
+   Zichtbare onderrand in beeld = T, dus inset onder = 100% − T − verschuiving. */
+@keyframes page-curtain-old {
   0% {
-    --blind-open-1: 0%; --blind-open-2: 0%; --blind-open-3: 0%; --blind-open-4: 0%; --blind-open-5: 0%; --blind-open-6: 0%;
+    clip-path: inset(0 0 0 0);
+    transform: translateY(0);
+    animation-timing-function: var(--ease-curtain);
   }
-  52% {
-    --blind-open-1: 0%;
-  }
-  56% {
-    --blind-open-2: 0%;
-  }
-  60% {
-    --blind-open-3: 0%;
-  }
-  64% {
-    --blind-open-4: 0%;
-  }
-  68% {
-    --blind-open-5: 0%;
-  }
-  72% {
-    --blind-open-6: 0%;
-  }
-  80% {
-    --blind-open-1: 100%;
-  }
-  84% {
-    --blind-open-2: 100%;
-  }
-  88% {
-    --blind-open-3: 100%;
-  }
-  92% {
-    --blind-open-4: 100%;
-  }
-  96% {
-    --blind-open-5: 100%;
-  }
+
+  45%,
   100% {
-    --blind-open-6: 100%;
+    clip-path: inset(0 0 calc(100% - var(--page-curtain-shift)) 0);
+    transform: translateY(calc(var(--page-curtain-shift) * -1));
   }
+}
+
+/* Nieuwe pagina: zichtbaar onder het gordijn (onderrand B = T + 100%), komt van
+   --page-curtain-shift lager binnen. Zichtbare bovenrand in beeld = B, dus inset boven = B − verschuiving. */
+@keyframes page-curtain-new {
+  0%,
+  55% {
+    clip-path: inset(calc(100% - var(--page-curtain-shift)) 0 0 0);
+    transform: translateY(var(--page-curtain-shift));
+    animation-timing-function: var(--ease-curtain);
+  }
+
   100% {
-    --blind-open-1: 100%; --blind-open-2: 100%; --blind-open-3: 100%; --blind-open-4: 100%; --blind-open-5: 100%; --blind-open-6: 100%;
+    clip-path: inset(0 0 0 0);
+    transform: translateY(0);
   }
 }
 
