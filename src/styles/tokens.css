@@ -376,7 +376,9 @@
     0.36,
     1
   ); /* zachte uitloop voor inkomende onderdelen */
-  --duration-page-shutter: 1.4s; /* paginaovergang: shutter dicht en weer open (global.css) */
+  --duration-page-sweep: 0.8s; /* paginaovergang: diagonale veeg (global.css) */
+  --page-sweep-lag: 0.16s; /* vertraging nieuwe pagina = breedte van de oranje band */
+  --ease-curtain: cubic-bezier(0.76, 0, 0.24, 1);
   --duration-draw: 2.4s; /* B-outlines op de achtergrond worden getekend (draw-shapes.ts) */
   --ease-draw: cubic-bezier(0.65, 0, 0.35, 1);
   --marquee-duration: 14s;

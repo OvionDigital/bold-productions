@@ -384,7 +384,10 @@ const nav = [
           laat het buiten de reeks.
         </p>
         <p class="sg-note sg-note--spaced">
-          Paginaovergang: shutter. Tien zwarte stroken: per strook groeit een balk van boven naar beneden, onderste eerst, tot het scherm dicht is; daarna krimpen ze in dezelfde volgorde terug en staat de nieuwe pagina eronder (<code>--duration-page-shutter</code>). Native View Transitions, alleen CSS; Firefox laadt gewoon de pagina, reduced motion krijgt een crossfade. Probeer: <a href="/">naar de homepage</a>.
+          Paginaovergang: diagonale veeg van linksonder naar rechtsboven met een band in Bold-oranje tussen oude en
+          nieuwe pagina (<code>--duration-page-sweep</code>, <code>--page-sweep-lag</code> = breedte van de band,
+          <code>--ease-curtain</code>). Native View Transitions,
+          alleen CSS; Firefox en reduced motion laden gewoon de pagina. Probeer: <a href="/">naar de homepage</a>.
         </p>
         <div class="sg-row" data-animate-stagger>
           <span class="sg-label">Eén</span>
