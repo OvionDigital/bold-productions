@@ -4,7 +4,10 @@
  * Het iframe krijgt pas een src na window.load (scripts/hero-video.ts) en fadet in
  * zodra Vimeo 'play' meldt. Tot die tijd blijft de poster (bijv. hero-afbeelding) zichtbaar.
  * `playOnHover`: pas laden en afspelen als de muis op het blok komt (split-hero, scripts/split-hero.ts).
+ * De verhouding komt uit Vimeo-oEmbed (breedbeeld, bijv. 2.2:1, vult anders niet de hoogte); terugval 16:9.
  */
+import { getVimeoMeta } from '../../lib/vimeo';
+
 interface Props {
   id: string;
   hash?: string;
@@ -28,9 +31,11 @@ const params = new URLSearchParams({
   dnt: '1',
 });
 const src = `https://player.vimeo.com/video/${id}?${params.toString()}`;
+const meta = await getVimeoMeta(id, hash);
+const ratio = meta && meta.width > 0 && meta.height > 0 ? meta.width / meta.height : 16 / 9;
 ---
 
-<div class:list={['vimeo-bg', className]} data-vimeo-bg data-load-on-mobile={loadOnMobile ? 'true' : 'false'} data-play-on-hover={playOnHover ? '' : undefined} aria-hidden="true">
+<div class:list={['vimeo-bg', className]} style={`--vimeo-ratio: ${ratio.toFixed(4)}`} data-vimeo-bg data-load-on-mobile={loadOnMobile ? 'true' : 'false'} data-play-on-hover={playOnHover ? '' : undefined} aria-hidden="true">
   <iframe
     class="vimeo-bg__iframe"
     data-src={src}
@@ -41,15 +46,12 @@ const src = `https://player.vimeo.com/video/${id}?${params.toString()}`;
 </div>
 
 <style>
+  /* Vult de container (met --vimeo-bleed extra boven en onder); het iframe dekt dat vlak
+     af op de echte verhouding van de video (cover), via container-eenheden. */
   .vimeo-bg {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 177.78vh;
-    min-width: 100%;
-    height: calc(56.25vw + var(--vimeo-bleed));
-    min-height: calc(100% + var(--vimeo-bleed));
-    transform: translate(-50%, -50%);
+    inset: calc(var(--vimeo-bleed, 0px) / -2) 0;
+    container-type: size;
     pointer-events: none;
     opacity: 0;
     transition: opacity var(--duration-slow) var(--ease-out);
@@ -63,10 +65,10 @@ const src = `https://player.vimeo.com/video/${id}?${params.toString()}`;
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 177.78vh;
-    min-width: 100%;
-    height: 56.25vw;
-    min-height: 100%;
+    width: max(100cqw, 100cqh * var(--vimeo-ratio));
+    height: max(100cqh, 100cqw / var(--vimeo-ratio));
+    /* Breder dan de container is juist de bedoeling (global.css: iframe max-width 100%) */
+    max-width: none;
     border: 0;
     transform: translate(-50%, -50%);
     pointer-events: none;
