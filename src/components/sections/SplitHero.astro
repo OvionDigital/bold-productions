@@ -283,6 +283,16 @@ const halfParticles = (mirror: boolean) =>
     text-wrap: balance;
   }
 
+  /* De hele helft is de link: hover/focus erop laat de knop meteen zijn hover-veeg doen */
+  .split-hero__half:is(:hover, :focus-visible) :global(.button) {
+    background-size: 100% 100%;
+    color: var(--accent);
+  }
+
+  .split-hero__half:is(:hover, :focus-visible) :global(.button__icon--right) {
+    transform: translateX(2px);
+  }
+
   /* Iets meer lucht tussen tekst en knop dan tussen titel en tekst */
   .split-hero__content :global(.button) {
     margin-top: var(--split-hero-button-offset);

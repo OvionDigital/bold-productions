@@ -17,7 +17,7 @@ import { getNavigation } from '../lib/sanity/navigation';
 import { isPreview } from '../lib/preview';
 import ogDefault from '../assets/seo/og-default.jpg';
 import logo from '../assets/brand/bold-productions-logo.png';
-import { contact, copyright, footerLogoAlt, header, legalLinks, socials } from '../data/navigation';
+import { contact, copyright, credit, footerLogoAlt, header, legalLinks, socials } from '../data/navigation';
 
 interface Props {
   title: string;
@@ -167,6 +167,7 @@ const jsonLdHtml = jsonLd ? JSON.stringify(jsonLd).replaceAll('<', String.fromCh
             socials={socials}
             legalLinks={legalLinks}
             copyright={copyright}
+            credit={credit}
             logoAlt={footerLogoAlt}
           />
         )

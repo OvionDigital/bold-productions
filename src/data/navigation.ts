@@ -190,4 +190,7 @@ export const legalLinks: NavLink[] = [
 
 export const copyright = '© Bold Productions 2026';
 
+/** Onderin de footer, opent in een nieuw tabblad */
+export const credit = { label: 'Gebouwd door Ovion Digital', href: 'https://oviondigital.nl' };
+
 export const footerLogoAlt = 'Bold Productions logo zwart.';

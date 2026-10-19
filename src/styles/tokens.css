@@ -277,11 +277,11 @@
   --container-large: 80rem;
 
   /* ─── Afmetingen ────────────────────────────────────────────────── */
-  --button-height: 64px;
+  --button-height: 64px; /* 56px op mobiel */
   --button-height-large: 64px; /* 56px op mobiel */
   --button-padding-x-large: 32px; /* 24px op mobiel */
   --button-height-small: 48px;
-  --button-padding-x: 32px;
+  --button-padding-x: 32px; /* 24px op mobiel */
   --button-padding-x-small: 24px;
   --border-width-thick: 2px;
   --ls-button: 0.08em; /* kapitalen in knoppen */
@@ -486,6 +486,8 @@
     --container-max-plain: none;
     --container-padding: 24px;
     --container-padding-wide: 24px;
+    --button-height: 56px;
+    --button-padding-x: 24px;
     --button-height-large: 56px;
     --button-padding-x-large: 24px;
   }

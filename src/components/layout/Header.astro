@@ -58,7 +58,7 @@ const isHome = currentPath === home;
     {hasMenu && <MegaMenu groups={nav.filter((group) => group.inHeader)} currentPath={currentPath} />}
 
     <div class="navbar__actions">
-      {cta && <Button label={cta.label} href={cta.href} size="small" class="navbar__cta" />}
+      {cta && <Button label={cta.label} href={cta.href} size="small" accent="orange" class="navbar__cta" />}
       {
         buttons.map((button) => (
           <a href={button.href} class="navbar__choice-link" data-accent={button.accent}>

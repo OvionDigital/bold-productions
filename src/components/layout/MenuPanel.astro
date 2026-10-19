@@ -38,7 +38,7 @@ const boldBBg = `url("${boldBGreen.src}")`;
   aria-label="Menu"
   hidden
 >
-  {cta && <Button label={cta.label} href={cta.href} size="small" class="menu-panel__cta" />}
+  {cta && <Button label={cta.label} href={cta.href} size="small" accent="orange" class="menu-panel__cta" />}
   {
     groups.map((group, index) => {
       const childrenId = `${id}-group-${index}`;
