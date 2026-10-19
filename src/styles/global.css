@@ -380,99 +380,782 @@ figure {
 }
 
 /*
- * Paginaovergang: gordijn van onder naar boven (native cross-document View Transitions, geen JS).
- * Een schermhoog gordijn (bovenste 25% oranje, de rest zwart) schuift van onder het scherm
- * omhoog over de oude pagina, blijft heel even staan en schuift dan verder omhoog weg; de nieuwe
- * pagina staat eronder. Zoals de knoppen die bij hover vullen.
- * - Het gordijn is de achtergrond van ::view-transition-group(root); background-position-y
- *   is de bovenrand (T): 100% → 0 (dicht) → −100% (weg).
- * - Oude pagina: alleen boven het gordijn zichtbaar en schuift iets mee omhoog (parallax).
- * - Nieuwe pagina: alleen onder het gordijn zichtbaar en komt van iets lager binnen.
- *   Clip en verschuiving lopen in dezelfde keyframes, dus de rand sluit precies aan.
+ * Paginaovergang: shutter (native cross-document View Transitions, geen JS).
+ * 20 lijnen over de hele breedte worden van onder naar boven kort na elkaar dikker tot ze het
+ * scherm dichtmaken (zwart, 2 oranje = 10%), staan heel even dicht en worden dan in dezelfde
+ * volgorde weer dun, met de nieuwe pagina eronder.
+ * - De kleuren zijn de achtergrond van ::view-transition-group(root) (per strook zwart of oranje).
+ * - Oude/nieuwe pagina: per strook een maskerlaag met een balk in het midden; de dikte is een
+ *   eigen geanimeerde waarde (@property --shutter-close-N en --shutter-open-N), zacht in en uit.
  * Browsers zonder support (Firefox) laden gewoon de pagina; bij prefers-reduced-motion een
- * crossfade (zie "Minder beweging"). Tokens: --duration-page-curtain, --ease-curtain,
- * --page-curtain-shift.
+ * crossfade (zie "Minder beweging"). Duur: --duration-page-shutter.
  */
+@property --shutter-close-0 {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 0%;
+}
+
+@property --shutter-open-0 {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 0%;
+}
+
+@property --shutter-close-1 {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 0%;
+}
+
+@property --shutter-open-1 {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 0%;
+}
+
+@property --shutter-close-2 {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 0%;
+}
+
+@property --shutter-open-2 {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 0%;
+}
+
+@property --shutter-close-3 {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 0%;
+}
+
+@property --shutter-open-3 {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 0%;
+}
+
+@property --shutter-close-4 {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 0%;
+}
+
+@property --shutter-open-4 {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 0%;
+}
+
+@property --shutter-close-5 {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 0%;
+}
+
+@property --shutter-open-5 {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 0%;
+}
+
+@property --shutter-close-6 {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 0%;
+}
+
+@property --shutter-open-6 {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 0%;
+}
+
+@property --shutter-close-7 {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 0%;
+}
+
+@property --shutter-open-7 {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 0%;
+}
+
+@property --shutter-close-8 {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 0%;
+}
+
+@property --shutter-open-8 {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 0%;
+}
+
+@property --shutter-close-9 {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 0%;
+}
+
+@property --shutter-open-9 {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 0%;
+}
+
+@property --shutter-close-10 {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 0%;
+}
+
+@property --shutter-open-10 {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 0%;
+}
+
+@property --shutter-close-11 {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 0%;
+}
+
+@property --shutter-open-11 {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 0%;
+}
+
+@property --shutter-close-12 {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 0%;
+}
+
+@property --shutter-open-12 {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 0%;
+}
+
+@property --shutter-close-13 {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 0%;
+}
+
+@property --shutter-open-13 {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 0%;
+}
+
+@property --shutter-close-14 {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 0%;
+}
+
+@property --shutter-open-14 {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 0%;
+}
+
+@property --shutter-close-15 {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 0%;
+}
+
+@property --shutter-open-15 {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 0%;
+}
+
+@property --shutter-close-16 {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 0%;
+}
+
+@property --shutter-open-16 {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 0%;
+}
+
+@property --shutter-close-17 {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 0%;
+}
+
+@property --shutter-open-17 {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 0%;
+}
+
+@property --shutter-close-18 {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 0%;
+}
+
+@property --shutter-open-18 {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 0%;
+}
+
+@property --shutter-close-19 {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 0%;
+}
+
+@property --shutter-open-19 {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 0%;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   @view-transition {
     navigation: auto;
   }
 
-  /* Waar oude, nieuwe pagina en gordijn even niets tonen: zwart, zoals het gordijn */
-  ::view-transition {
-    background-color: var(--color-black);
-  }
-
   ::view-transition-group(root) {
-    animation: page-curtain var(--duration-page-curtain) both;
-    background-image: linear-gradient(to bottom, var(--color-orange) 0 25%, var(--color-black) 25% 100%);
-    background-repeat: no-repeat;
-    background-size: 100% 100%;
+    animation: none;
+    background-image: linear-gradient(
+      to bottom,
+      var(--color-black) 0.000% 5.000%,
+      var(--color-black) 5.000% 10.000%,
+      var(--color-black) 10.000% 15.000%,
+      var(--color-black) 15.000% 20.000%,
+      var(--color-black) 20.000% 25.000%,
+      var(--color-orange) 25.000% 30.000%,
+      var(--color-black) 30.000% 35.000%,
+      var(--color-black) 35.000% 40.000%,
+      var(--color-black) 40.000% 45.000%,
+      var(--color-black) 45.000% 50.000%,
+      var(--color-black) 50.000% 55.000%,
+      var(--color-black) 55.000% 60.000%,
+      var(--color-black) 60.000% 65.000%,
+      var(--color-black) 65.000% 70.000%,
+      var(--color-orange) 70.000% 75.000%,
+      var(--color-black) 75.000% 80.000%,
+      var(--color-black) 80.000% 85.000%,
+      var(--color-black) 85.000% 90.000%,
+      var(--color-black) 90.000% 95.000%,
+      var(--color-black) 95.000% 100.000%
+    );
   }
 
   ::view-transition-old(root),
   ::view-transition-new(root) {
     mix-blend-mode: normal;
-    animation-duration: var(--duration-page-curtain);
+    animation-duration: var(--duration-page-shutter);
+    animation-timing-function: linear;
     animation-fill-mode: both;
+    mask-size: 100% 5.0000%;
+    mask-position: 0 0.000%, 0 5.263%, 0 10.526%, 0 15.789%, 0 21.053%, 0 26.316%, 0 31.579%, 0 36.842%, 0 42.105%, 0 47.368%, 0 52.632%, 0 57.895%, 0 63.158%, 0 68.421%, 0 73.684%, 0 78.947%, 0 84.211%, 0 89.474%, 0 94.737%, 0 100.000%;
+    mask-repeat: no-repeat;
   }
 
   ::view-transition-old(root) {
-    animation-name: page-curtain-old;
+    animation-name: page-shutter-close;
+    mask-image:
+      linear-gradient(to bottom, #000 calc(50% - var(--shutter-close-0) / 2), transparent calc(50% - var(--shutter-close-0) / 2) calc(50% + var(--shutter-close-0) / 2), #000 calc(50% + var(--shutter-close-0) / 2)),
+      linear-gradient(to bottom, #000 calc(50% - var(--shutter-close-1) / 2), transparent calc(50% - var(--shutter-close-1) / 2) calc(50% + var(--shutter-close-1) / 2), #000 calc(50% + var(--shutter-close-1) / 2)),
+      linear-gradient(to bottom, #000 calc(50% - var(--shutter-close-2) / 2), transparent calc(50% - var(--shutter-close-2) / 2) calc(50% + var(--shutter-close-2) / 2), #000 calc(50% + var(--shutter-close-2) / 2)),
+      linear-gradient(to bottom, #000 calc(50% - var(--shutter-close-3) / 2), transparent calc(50% - var(--shutter-close-3) / 2) calc(50% + var(--shutter-close-3) / 2), #000 calc(50% + var(--shutter-close-3) / 2)),
+      linear-gradient(to bottom, #000 calc(50% - var(--shutter-close-4) / 2), transparent calc(50% - var(--shutter-close-4) / 2) calc(50% + var(--shutter-close-4) / 2), #000 calc(50% + var(--shutter-close-4) / 2)),
+      linear-gradient(to bottom, #000 calc(50% - var(--shutter-close-5) / 2), transparent calc(50% - var(--shutter-close-5) / 2) calc(50% + var(--shutter-close-5) / 2), #000 calc(50% + var(--shutter-close-5) / 2)),
+      linear-gradient(to bottom, #000 calc(50% - var(--shutter-close-6) / 2), transparent calc(50% - var(--shutter-close-6) / 2) calc(50% + var(--shutter-close-6) / 2), #000 calc(50% + var(--shutter-close-6) / 2)),
+      linear-gradient(to bottom, #000 calc(50% - var(--shutter-close-7) / 2), transparent calc(50% - var(--shutter-close-7) / 2) calc(50% + var(--shutter-close-7) / 2), #000 calc(50% + var(--shutter-close-7) / 2)),
+      linear-gradient(to bottom, #000 calc(50% - var(--shutter-close-8) / 2), transparent calc(50% - var(--shutter-close-8) / 2) calc(50% + var(--shutter-close-8) / 2), #000 calc(50% + var(--shutter-close-8) / 2)),
+      linear-gradient(to bottom, #000 calc(50% - var(--shutter-close-9) / 2), transparent calc(50% - var(--shutter-close-9) / 2) calc(50% + var(--shutter-close-9) / 2), #000 calc(50% + var(--shutter-close-9) / 2)),
+      linear-gradient(to bottom, #000 calc(50% - var(--shutter-close-10) / 2), transparent calc(50% - var(--shutter-close-10) / 2) calc(50% + var(--shutter-close-10) / 2), #000 calc(50% + var(--shutter-close-10) / 2)),
+      linear-gradient(to bottom, #000 calc(50% - var(--shutter-close-11) / 2), transparent calc(50% - var(--shutter-close-11) / 2) calc(50% + var(--shutter-close-11) / 2), #000 calc(50% + var(--shutter-close-11) / 2)),
+      linear-gradient(to bottom, #000 calc(50% - var(--shutter-close-12) / 2), transparent calc(50% - var(--shutter-close-12) / 2) calc(50% + var(--shutter-close-12) / 2), #000 calc(50% + var(--shutter-close-12) / 2)),
+      linear-gradient(to bottom, #000 calc(50% - var(--shutter-close-13) / 2), transparent calc(50% - var(--shutter-close-13) / 2) calc(50% + var(--shutter-close-13) / 2), #000 calc(50% + var(--shutter-close-13) / 2)),
+      linear-gradient(to bottom, #000 calc(50% - var(--shutter-close-14) / 2), transparent calc(50% - var(--shutter-close-14) / 2) calc(50% + var(--shutter-close-14) / 2), #000 calc(50% + var(--shutter-close-14) / 2)),
+      linear-gradient(to bottom, #000 calc(50% - var(--shutter-close-15) / 2), transparent calc(50% - var(--shutter-close-15) / 2) calc(50% + var(--shutter-close-15) / 2), #000 calc(50% + var(--shutter-close-15) / 2)),
+      linear-gradient(to bottom, #000 calc(50% - var(--shutter-close-16) / 2), transparent calc(50% - var(--shutter-close-16) / 2) calc(50% + var(--shutter-close-16) / 2), #000 calc(50% + var(--shutter-close-16) / 2)),
+      linear-gradient(to bottom, #000 calc(50% - var(--shutter-close-17) / 2), transparent calc(50% - var(--shutter-close-17) / 2) calc(50% + var(--shutter-close-17) / 2), #000 calc(50% + var(--shutter-close-17) / 2)),
+      linear-gradient(to bottom, #000 calc(50% - var(--shutter-close-18) / 2), transparent calc(50% - var(--shutter-close-18) / 2) calc(50% + var(--shutter-close-18) / 2), #000 calc(50% + var(--shutter-close-18) / 2)),
+      linear-gradient(to bottom, #000 calc(50% - var(--shutter-close-19) / 2), transparent calc(50% - var(--shutter-close-19) / 2) calc(50% + var(--shutter-close-19) / 2), #000 calc(50% + var(--shutter-close-19) / 2));
   }
 
   ::view-transition-new(root) {
-    animation-name: page-curtain-new;
+    animation-name: page-shutter-open;
+    mask-image:
+      linear-gradient(to bottom, #000 calc(50% - var(--shutter-open-0) / 2), transparent calc(50% - var(--shutter-open-0) / 2) calc(50% + var(--shutter-open-0) / 2), #000 calc(50% + var(--shutter-open-0) / 2)),
+      linear-gradient(to bottom, #000 calc(50% - var(--shutter-open-1) / 2), transparent calc(50% - var(--shutter-open-1) / 2) calc(50% + var(--shutter-open-1) / 2), #000 calc(50% + var(--shutter-open-1) / 2)),
+      linear-gradient(to bottom, #000 calc(50% - var(--shutter-open-2) / 2), transparent calc(50% - var(--shutter-open-2) / 2) calc(50% + var(--shutter-open-2) / 2), #000 calc(50% + var(--shutter-open-2) / 2)),
+      linear-gradient(to bottom, #000 calc(50% - var(--shutter-open-3) / 2), transparent calc(50% - var(--shutter-open-3) / 2) calc(50% + var(--shutter-open-3) / 2), #000 calc(50% + var(--shutter-open-3) / 2)),
+      linear-gradient(to bottom, #000 calc(50% - var(--shutter-open-4) / 2), transparent calc(50% - var(--shutter-open-4) / 2) calc(50% + var(--shutter-open-4) / 2), #000 calc(50% + var(--shutter-open-4) / 2)),
+      linear-gradient(to bottom, #000 calc(50% - var(--shutter-open-5) / 2), transparent calc(50% - var(--shutter-open-5) / 2) calc(50% + var(--shutter-open-5) / 2), #000 calc(50% + var(--shutter-open-5) / 2)),
+      linear-gradient(to bottom, #000 calc(50% - var(--shutter-open-6) / 2), transparent calc(50% - var(--shutter-open-6) / 2) calc(50% + var(--shutter-open-6) / 2), #000 calc(50% + var(--shutter-open-6) / 2)),
+      linear-gradient(to bottom, #000 calc(50% - var(--shutter-open-7) / 2), transparent calc(50% - var(--shutter-open-7) / 2) calc(50% + var(--shutter-open-7) / 2), #000 calc(50% + var(--shutter-open-7) / 2)),
+      linear-gradient(to bottom, #000 calc(50% - var(--shutter-open-8) / 2), transparent calc(50% - var(--shutter-open-8) / 2) calc(50% + var(--shutter-open-8) / 2), #000 calc(50% + var(--shutter-open-8) / 2)),
+      linear-gradient(to bottom, #000 calc(50% - var(--shutter-open-9) / 2), transparent calc(50% - var(--shutter-open-9) / 2) calc(50% + var(--shutter-open-9) / 2), #000 calc(50% + var(--shutter-open-9) / 2)),
+      linear-gradient(to bottom, #000 calc(50% - var(--shutter-open-10) / 2), transparent calc(50% - var(--shutter-open-10) / 2) calc(50% + var(--shutter-open-10) / 2), #000 calc(50% + var(--shutter-open-10) / 2)),
+      linear-gradient(to bottom, #000 calc(50% - var(--shutter-open-11) / 2), transparent calc(50% - var(--shutter-open-11) / 2) calc(50% + var(--shutter-open-11) / 2), #000 calc(50% + var(--shutter-open-11) / 2)),
+      linear-gradient(to bottom, #000 calc(50% - var(--shutter-open-12) / 2), transparent calc(50% - var(--shutter-open-12) / 2) calc(50% + var(--shutter-open-12) / 2), #000 calc(50% + var(--shutter-open-12) / 2)),
+      linear-gradient(to bottom, #000 calc(50% - var(--shutter-open-13) / 2), transparent calc(50% - var(--shutter-open-13) / 2) calc(50% + var(--shutter-open-13) / 2), #000 calc(50% + var(--shutter-open-13) / 2)),
+      linear-gradient(to bottom, #000 calc(50% - var(--shutter-open-14) / 2), transparent calc(50% - var(--shutter-open-14) / 2) calc(50% + var(--shutter-open-14) / 2), #000 calc(50% + var(--shutter-open-14) / 2)),
+      linear-gradient(to bottom, #000 calc(50% - var(--shutter-open-15) / 2), transparent calc(50% - var(--shutter-open-15) / 2) calc(50% + var(--shutter-open-15) / 2), #000 calc(50% + var(--shutter-open-15) / 2)),
+      linear-gradient(to bottom, #000 calc(50% - var(--shutter-open-16) / 2), transparent calc(50% - var(--shutter-open-16) / 2) calc(50% + var(--shutter-open-16) / 2), #000 calc(50% + var(--shutter-open-16) / 2)),
+      linear-gradient(to bottom, #000 calc(50% - var(--shutter-open-17) / 2), transparent calc(50% - var(--shutter-open-17) / 2) calc(50% + var(--shutter-open-17) / 2), #000 calc(50% + var(--shutter-open-17) / 2)),
+      linear-gradient(to bottom, #000 calc(50% - var(--shutter-open-18) / 2), transparent calc(50% - var(--shutter-open-18) / 2) calc(50% + var(--shutter-open-18) / 2), #000 calc(50% + var(--shutter-open-18) / 2)),
+      linear-gradient(to bottom, #000 calc(50% - var(--shutter-open-19) / 2), transparent calc(50% - var(--shutter-open-19) / 2) calc(50% + var(--shutter-open-19) / 2), #000 calc(50% + var(--shutter-open-19) / 2));
   }
 }
 
-/* Gordijn: omhoog (dicht), even staan, verder omhoog (weg) */
-@keyframes page-curtain {
+@keyframes page-shutter-close {
   0% {
-    background-position: 0 100vh;
-    animation-timing-function: var(--ease-curtain);
+    --shutter-close-0: 0%; --shutter-close-1: 0%; --shutter-close-2: 0%; --shutter-close-3: 0%; --shutter-close-4: 0%; --shutter-close-5: 0%; --shutter-close-6: 0%; --shutter-close-7: 0%; --shutter-close-8: 0%; --shutter-close-9: 0%; --shutter-close-10: 0%; --shutter-close-11: 0%; --shutter-close-12: 0%; --shutter-close-13: 0%; --shutter-close-14: 0%; --shutter-close-15: 0%; --shutter-close-16: 0%; --shutter-close-17: 0%; --shutter-close-18: 0%; --shutter-close-19: 0%;
   }
-
-  45%,
-  55% {
-    background-position: 0 0;
-    animation-timing-function: var(--ease-curtain);
+  1.2% {
+    --shutter-close-18: 0%;
   }
-
+  2.4% {
+    --shutter-close-17: 0%;
+  }
+  3.6% {
+    --shutter-close-16: 0%;
+  }
+  4.8% {
+    --shutter-close-15: 0%;
+  }
+  6% {
+    --shutter-close-14: 0%; --shutter-close-19: 10%;
+  }
+  7.2% {
+    --shutter-close-13: 0%; --shutter-close-18: 10%;
+  }
+  8.4% {
+    --shutter-close-12: 0%; --shutter-close-17: 10%;
+  }
+  9.6% {
+    --shutter-close-11: 0%; --shutter-close-16: 10%;
+  }
+  10.8% {
+    --shutter-close-10: 0%; --shutter-close-15: 10%;
+  }
+  12% {
+    --shutter-close-9: 0%; --shutter-close-14: 10%; --shutter-close-19: 50%;
+  }
+  13.2% {
+    --shutter-close-8: 0%; --shutter-close-13: 10%; --shutter-close-18: 50%;
+  }
+  14.4% {
+    --shutter-close-7: 0%; --shutter-close-12: 10%; --shutter-close-17: 50%;
+  }
+  15.6% {
+    --shutter-close-6: 0%; --shutter-close-11: 10%; --shutter-close-16: 50%;
+  }
+  16.8% {
+    --shutter-close-5: 0%; --shutter-close-10: 10%; --shutter-close-15: 50%;
+  }
+  18% {
+    --shutter-close-4: 0%; --shutter-close-9: 10%; --shutter-close-14: 50%; --shutter-close-19: 90%;
+  }
+  19.2% {
+    --shutter-close-3: 0%; --shutter-close-8: 10%; --shutter-close-13: 50%; --shutter-close-18: 90%;
+  }
+  20.4% {
+    --shutter-close-2: 0%; --shutter-close-7: 10%; --shutter-close-12: 50%; --shutter-close-17: 90%;
+  }
+  21.6% {
+    --shutter-close-1: 0%; --shutter-close-6: 10%; --shutter-close-11: 50%; --shutter-close-16: 90%;
+  }
+  22.8% {
+    --shutter-close-0: 0%; --shutter-close-5: 10%; --shutter-close-10: 50%; --shutter-close-15: 90%;
+  }
+  24% {
+    --shutter-close-4: 10%; --shutter-close-9: 50%; --shutter-close-14: 90%; --shutter-close-19: 100%;
+  }
+  25.2% {
+    --shutter-close-3: 10%; --shutter-close-8: 50%; --shutter-close-13: 90%; --shutter-close-18: 100%;
+  }
+  26.4% {
+    --shutter-close-2: 10%; --shutter-close-7: 50%; --shutter-close-12: 90%; --shutter-close-17: 100%;
+  }
+  27.6% {
+    --shutter-close-1: 10%; --shutter-close-6: 50%; --shutter-close-11: 90%; --shutter-close-16: 100%;
+  }
+  28.8% {
+    --shutter-close-0: 10%; --shutter-close-5: 50%; --shutter-close-10: 90%; --shutter-close-15: 100%;
+  }
+  30% {
+    --shutter-close-4: 50%; --shutter-close-9: 90%; --shutter-close-14: 100%;
+  }
+  31.2% {
+    --shutter-close-3: 50%; --shutter-close-8: 90%; --shutter-close-13: 100%;
+  }
+  32.4% {
+    --shutter-close-2: 50%; --shutter-close-7: 90%; --shutter-close-12: 100%;
+  }
+  33.6% {
+    --shutter-close-1: 50%; --shutter-close-6: 90%; --shutter-close-11: 100%;
+  }
+  34.8% {
+    --shutter-close-0: 50%; --shutter-close-5: 90%; --shutter-close-10: 100%;
+  }
+  36% {
+    --shutter-close-4: 90%; --shutter-close-9: 100%;
+  }
+  37.2% {
+    --shutter-close-3: 90%; --shutter-close-8: 100%;
+  }
+  38.4% {
+    --shutter-close-2: 90%; --shutter-close-7: 100%;
+  }
+  39.6% {
+    --shutter-close-1: 90%; --shutter-close-6: 100%;
+  }
+  40.8% {
+    --shutter-close-0: 90%; --shutter-close-5: 100%;
+  }
+  42% {
+    --shutter-close-4: 100%;
+  }
+  43.2% {
+    --shutter-close-3: 100%;
+  }
+  44.4% {
+    --shutter-close-2: 100%;
+  }
+  45.6% {
+    --shutter-close-1: 100%;
+  }
+  46.8% {
+    --shutter-close-0: 100%;
+  }
   100% {
-    background-position: 0 -100vh;
+    --shutter-close-0: 100%; --shutter-close-1: 100%; --shutter-close-2: 100%; --shutter-close-3: 100%; --shutter-close-4: 100%; --shutter-close-5: 100%; --shutter-close-6: 100%; --shutter-close-7: 100%; --shutter-close-8: 100%; --shutter-close-9: 100%; --shutter-close-10: 100%; --shutter-close-11: 100%; --shutter-close-12: 100%; --shutter-close-13: 100%; --shutter-close-14: 100%; --shutter-close-15: 100%; --shutter-close-16: 100%; --shutter-close-17: 100%; --shutter-close-18: 100%; --shutter-close-19: 100%;
   }
 }
 
-/* Oude pagina: zichtbaar boven het gordijn, schuift --page-curtain-shift mee omhoog.
-   Zichtbare onderrand in beeld = T, dus inset onder = 100% − T − verschuiving. */
-@keyframes page-curtain-old {
+@keyframes page-shutter-open {
   0% {
-    clip-path: inset(0 0 0 0);
-    transform: translateY(0);
-    animation-timing-function: var(--ease-curtain);
+    --shutter-open-0: 100%; --shutter-open-1: 100%; --shutter-open-2: 100%; --shutter-open-3: 100%; --shutter-open-4: 100%; --shutter-open-5: 100%; --shutter-open-6: 100%; --shutter-open-7: 100%; --shutter-open-8: 100%; --shutter-open-9: 100%; --shutter-open-10: 100%; --shutter-open-11: 100%; --shutter-open-12: 100%; --shutter-open-13: 100%; --shutter-open-14: 100%; --shutter-open-15: 100%; --shutter-open-16: 100%; --shutter-open-17: 100%; --shutter-open-18: 100%; --shutter-open-19: 100%;
   }
-
-  45%,
+  54% {
+    --shutter-open-19: 100%;
+  }
+  55.2% {
+    --shutter-open-18: 100%;
+  }
+  56.4% {
+    --shutter-open-17: 100%;
+  }
+  57.6% {
+    --shutter-open-16: 100%;
+  }
+  58.8% {
+    --shutter-open-15: 100%;
+  }
+  59.75% {
+    --shutter-open-19: 90%;
+  }
+  60% {
+    --shutter-open-14: 100%;
+  }
+  60.95% {
+    --shutter-open-18: 90%;
+  }
+  61.2% {
+    --shutter-open-13: 100%;
+  }
+  62.15% {
+    --shutter-open-17: 90%;
+  }
+  62.4% {
+    --shutter-open-12: 100%;
+  }
+  63.35% {
+    --shutter-open-16: 90%;
+  }
+  63.6% {
+    --shutter-open-11: 100%;
+  }
+  64.55% {
+    --shutter-open-15: 90%;
+  }
+  64.8% {
+    --shutter-open-10: 100%;
+  }
+  65.5% {
+    --shutter-open-19: 50%;
+  }
+  65.75% {
+    --shutter-open-14: 90%;
+  }
+  66% {
+    --shutter-open-9: 100%;
+  }
+  66.7% {
+    --shutter-open-18: 50%;
+  }
+  66.95% {
+    --shutter-open-13: 90%;
+  }
+  67.2% {
+    --shutter-open-8: 100%;
+  }
+  67.9% {
+    --shutter-open-17: 50%;
+  }
+  68.15% {
+    --shutter-open-12: 90%;
+  }
+  68.4% {
+    --shutter-open-7: 100%;
+  }
+  69.1% {
+    --shutter-open-16: 50%;
+  }
+  69.35% {
+    --shutter-open-11: 90%;
+  }
+  69.6% {
+    --shutter-open-6: 100%;
+  }
+  70.3% {
+    --shutter-open-15: 50%;
+  }
+  70.55% {
+    --shutter-open-10: 90%;
+  }
+  70.8% {
+    --shutter-open-5: 100%;
+  }
+  71.25% {
+    --shutter-open-19: 10%;
+  }
+  71.5% {
+    --shutter-open-14: 50%;
+  }
+  71.75% {
+    --shutter-open-9: 90%;
+  }
+  72% {
+    --shutter-open-4: 100%;
+  }
+  72.45% {
+    --shutter-open-18: 10%;
+  }
+  72.7% {
+    --shutter-open-13: 50%;
+  }
+  72.95% {
+    --shutter-open-8: 90%;
+  }
+  73.2% {
+    --shutter-open-3: 100%;
+  }
+  73.65% {
+    --shutter-open-17: 10%;
+  }
+  73.9% {
+    --shutter-open-12: 50%;
+  }
+  74.15% {
+    --shutter-open-7: 90%;
+  }
+  74.4% {
+    --shutter-open-2: 100%;
+  }
+  74.85% {
+    --shutter-open-16: 10%;
+  }
+  75.1% {
+    --shutter-open-11: 50%;
+  }
+  75.35% {
+    --shutter-open-6: 90%;
+  }
+  75.6% {
+    --shutter-open-1: 100%;
+  }
+  76.05% {
+    --shutter-open-15: 10%;
+  }
+  76.3% {
+    --shutter-open-10: 50%;
+  }
+  76.55% {
+    --shutter-open-5: 90%;
+  }
+  76.8% {
+    --shutter-open-0: 100%;
+  }
+  77% {
+    --shutter-open-19: 0%;
+  }
+  77.25% {
+    --shutter-open-14: 10%;
+  }
+  77.5% {
+    --shutter-open-9: 50%;
+  }
+  77.75% {
+    --shutter-open-4: 90%;
+  }
+  78.2% {
+    --shutter-open-18: 0%;
+  }
+  78.45% {
+    --shutter-open-13: 10%;
+  }
+  78.7% {
+    --shutter-open-8: 50%;
+  }
+  78.95% {
+    --shutter-open-3: 90%;
+  }
+  79.4% {
+    --shutter-open-17: 0%;
+  }
+  79.65% {
+    --shutter-open-12: 10%;
+  }
+  79.9% {
+    --shutter-open-7: 50%;
+  }
+  80.15% {
+    --shutter-open-2: 90%;
+  }
+  80.6% {
+    --shutter-open-16: 0%;
+  }
+  80.85% {
+    --shutter-open-11: 10%;
+  }
+  81.1% {
+    --shutter-open-6: 50%;
+  }
+  81.35% {
+    --shutter-open-1: 90%;
+  }
+  81.8% {
+    --shutter-open-15: 0%;
+  }
+  82.05% {
+    --shutter-open-10: 10%;
+  }
+  82.3% {
+    --shutter-open-5: 50%;
+  }
+  82.55% {
+    --shutter-open-0: 90%;
+  }
+  83% {
+    --shutter-open-14: 0%;
+  }
+  83.25% {
+    --shutter-open-9: 10%;
+  }
+  83.5% {
+    --shutter-open-4: 50%;
+  }
+  84.2% {
+    --shutter-open-13: 0%;
+  }
+  84.45% {
+    --shutter-open-8: 10%;
+  }
+  84.7% {
+    --shutter-open-3: 50%;
+  }
+  85.4% {
+    --shutter-open-12: 0%;
+  }
+  85.65% {
+    --shutter-open-7: 10%;
+  }
+  85.9% {
+    --shutter-open-2: 50%;
+  }
+  86.6% {
+    --shutter-open-11: 0%;
+  }
+  86.85% {
+    --shutter-open-6: 10%;
+  }
+  87.1% {
+    --shutter-open-1: 50%;
+  }
+  87.8% {
+    --shutter-open-10: 0%;
+  }
+  88.05% {
+    --shutter-open-5: 10%;
+  }
+  88.3% {
+    --shutter-open-0: 50%;
+  }
+  89% {
+    --shutter-open-9: 0%;
+  }
+  89.25% {
+    --shutter-open-4: 10%;
+  }
+  90.2% {
+    --shutter-open-8: 0%;
+  }
+  90.45% {
+    --shutter-open-3: 10%;
+  }
+  91.4% {
+    --shutter-open-7: 0%;
+  }
+  91.65% {
+    --shutter-open-2: 10%;
+  }
+  92.6% {
+    --shutter-open-6: 0%;
+  }
+  92.85% {
+    --shutter-open-1: 10%;
+  }
+  93.8% {
+    --shutter-open-5: 0%;
+  }
+  94.05% {
+    --shutter-open-0: 10%;
+  }
+  95% {
+    --shutter-open-4: 0%;
+  }
+  96.2% {
+    --shutter-open-3: 0%;
+  }
+  97.4% {
+    --shutter-open-2: 0%;
+  }
+  98.6% {
+    --shutter-open-1: 0%;
+  }
+  99.8% {
+    --shutter-open-0: 0%;
+  }
   100% {
-    clip-path: inset(0 0 calc(100% - var(--page-curtain-shift)) 0);
-    transform: translateY(calc(var(--page-curtain-shift) * -1));
-  }
-}
-
-/* Nieuwe pagina: zichtbaar onder het gordijn (onderrand B = T + 100%), komt van
-   --page-curtain-shift lager binnen. Zichtbare bovenrand in beeld = B, dus inset boven = B − verschuiving. */
-@keyframes page-curtain-new {
-  0%,
-  55% {
-    clip-path: inset(calc(100% - var(--page-curtain-shift)) 0 0 0);
-    transform: translateY(var(--page-curtain-shift));
-    animation-timing-function: var(--ease-curtain);
-  }
-
-  100% {
-    clip-path: inset(0 0 0 0);
-    transform: translateY(0);
+    --shutter-open-0: 0%; --shutter-open-1: 0%; --shutter-open-2: 0%; --shutter-open-3: 0%; --shutter-open-4: 0%; --shutter-open-5: 0%; --shutter-open-6: 0%; --shutter-open-7: 0%; --shutter-open-8: 0%; --shutter-open-9: 0%; --shutter-open-10: 0%; --shutter-open-11: 0%; --shutter-open-12: 0%; --shutter-open-13: 0%; --shutter-open-14: 0%; --shutter-open-15: 0%; --shutter-open-16: 0%; --shutter-open-17: 0%; --shutter-open-18: 0%; --shutter-open-19: 0%;
   }
 }
 
