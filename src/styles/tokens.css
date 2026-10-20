@@ -190,6 +190,7 @@
   --fs-h1: clamp(2.625rem, 1.2188rem + 3.75vw, 4.5rem); /* 42 → 72 */
   --fs-h2: clamp(2.25rem, 1.9615rem + 1.2821vw, 3.5rem); /* 36 → 56 */
   --fs-h3: clamp(28px, 2.4vw, 36px);
+  --fs-h2-text: clamp(28px, 1.25rem + 1.6vw, 44px); /* h2 in lopende tekst (juridische pagina's e.d.) */
   --fs-h4: clamp(22px, 1.8vw, 28px);
   --fs-h5: clamp(18px, 1.2vw, 20px);
   --fs-h6: clamp(14px, 0.9vw, 16px);
@@ -199,7 +200,7 @@
   --fs-subtitle: clamp(1.125rem, 1.0385rem + 0.3846vw, 1.5rem); /* 18 → 24 */
   --fs-quote: clamp(1.125rem, 1.0313rem + 0.25vw, 1.25rem); /* 18 → 20 */
   --fs-blockquote: 18px; /* citaat in rich text (Webflow blockquote) */
-  --fs-lead: clamp(16px, 14px + 0.42vw, 20px); /* rich text .fs-20 */
+  --fs-lead: clamp(16px, 14px + 0.42vw, 18px); /* rich text .fs-20 (Webflow 20, bij ons max. 18) */
   --fs-xl: 36px;
   --fs-lg: 24px;
   --fs-md: 20px;
@@ -213,13 +214,14 @@
   /* ─── Typografie: regelhoogtes ──────────────────────────────────── */
   --lh-display-tight: 84%; /* h3 */
   --lh-display: 88%; /* h1, h2, hero */
-  --lh-heading-sm: 24px; /* h4 */
-  --lh-heading-xs: 20px; /* h5 */
-  --lh-heading-xxs: 18px; /* h6 */
+  --lh-heading-sm: 110%; /* h4 */
+  --lh-heading-xs: 120%; /* h5 */
+  --lh-heading-xxs: 140%; /* h6 */
   --lh-snug: 120%;
   --lh-normal: 140%;
   --lh-relaxed: 150%;
-  --lh-body: 24px;
+  --lh-body: 1.5; /* lopende tekst (150%, zonder eenheid zodat het meeschaalt met de lettergrootte) */
+  --lh-ui: 24px; /* knoppen, labels, kaarten: vaste regelhoogte */
   --lh-compact: 22px; /* menulinks op mobiel */
   --lh-paragraph: 175%;
   --lh-none: 1;

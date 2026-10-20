@@ -19,7 +19,8 @@ export const richText = defineType({
         { title: 'Kop 2', value: 'h2' },
         { title: 'Kop 3', value: 'h3' },
         { title: 'Kop 4', value: 'h4' },
-        { title: 'Kop 6 (klein)', value: 'h6' },
+        { title: 'Kop 5 (grijs)', value: 'h5' },
+        { title: 'Kop 6 (klein label)', value: 'h6' },
         { title: 'Citaat', value: 'blockquote' },
       ],
       lists: [

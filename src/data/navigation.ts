@@ -115,9 +115,6 @@ const eventsFooterLabels: Record<string, string> = {
   'zakelijke-events': 'Voor zakelijke events',
 };
 
-const contentGroup = audiences.business.find((a) => a.value === 'content')!;
-const aiService = services.content.find((s) => s.slug === 'ai')!;
-
 export const navigation: Record<SiteSection, SiteNavigation> = {
   events: {
     home: '/events',
@@ -133,12 +130,7 @@ export const navigation: Record<SiteSection, SiteNavigation> = {
     home: '/business',
     cta: ctaFor('business'),
     switchTo: switchButtons.business,
-    nav: [
-      ...audiences.business.map((a) => audienceGroup('business', a)),
-      // Losse ingang in het menupaneel (sitemap), dezelfde pagina als Content › AI
-      { label: aiService.title, href: serviceUrl('business', contentGroup.value, aiService), children: [] },
-      ...generalGroups('business'),
-    ],
+    nav: [...audiences.business.map((a) => audienceGroup('business', a)), ...generalGroups('business')],
     footer: [...audiences.business.map((a) => ({ ...audienceGroup('business', a), inHeader: undefined })), boldProductionsColumn('business')],
   },
   neutral: {

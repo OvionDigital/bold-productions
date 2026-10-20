@@ -6,8 +6,9 @@
  * automatisch in kolommen (min. kaartbreedte --link-groups-min, max. 4) die als
  * metselwerk aansluiten: 3–4 naast elkaar op desktop, 2 op tablet, 1 op mobiel.
  *
- * `auto: 'cases'` op een groep = gevuld met alle cases (src/data/cases.ts of Sanity),
- * zodat de sitemap nooit een case mist; voor het component zelf maakt het niet uit.
+ * `auto: 'site'` op de sectie = alle groepen automatisch uit alle pagina's (lib/sitemap.ts,
+ * ingevuld in lib/pages.ts); `auto: 'cases'` op een groep = gevuld met alle cases. Voor het
+ * component zelf maakt het niet uit.
  */
 import Container from '../ui/Container.astro';
 import SectionHeading from '../ui/SectionHeading.astro';
@@ -29,6 +30,8 @@ export interface LinkGroupsProps {
   titleAs?: 'h1' | 'h2';
   gradient?: HeadingGradient;
   groups: LinkGroup[];
+  /** 'site' = groepen automatisch uit alle pagina's (de sitemap); `groups` wordt dan overschreven */
+  auto?: 'site';
 }
 
 type Props = LinkGroupsProps;
@@ -92,7 +95,7 @@ const GroupHeading = titleAs === 'h1' ? 'h2' : 'h3';
     font-family: var(--font-display);
     font-size: var(--fs-lg);
     font-weight: var(--fw-display);
-    line-height: var(--lh-body);
+    line-height: var(--lh-ui);
     letter-spacing: var(--ls-caption);
     text-transform: uppercase;
   }

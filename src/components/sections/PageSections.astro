@@ -47,9 +47,8 @@ const { sections, breadcrumbs } = Astro.props;
       case 'splitHero':
         return <SplitHero {...section.props} />;
       case 'breadcrumbs':
-        return (
-          <Breadcrumbs items={breadcrumbs} homeLabel={breadcrumbLabels.home} label={breadcrumbLabels.nav} standalone={index === 0} />
-        );
+        // /events en /business: geen kruimelpad (zou alleen het home-icoon zijn)
+        return breadcrumbs.length > 1 && <Breadcrumbs items={breadcrumbs} label={breadcrumbLabels.nav} standalone={index === 0} />;
       case 'logoMarquee':
         return <LogoMarquee {...section.props} />;
       case 'introHighlight':

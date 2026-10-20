@@ -107,7 +107,7 @@ export const sectionsProjection = `{
   _type == "mapSection" => { title, gradient, text, src, label },
   _type == "caseGridSection" => { anchorId, "cases": ${allCasesQuery} },
   _type == "linkGroupsSection" => {
-    eyebrow, title, isPageTitle, gradient, anchorId, casesGroupTitle, casesGroupIndex,
+    eyebrow, title, isPageTitle, gradient, anchorId, allPages, casesGroupTitle, casesGroupIndex,
     groups[]{ title, links[]{ label, href } },
     "cases": select(defined(casesGroupTitle) => ${allCasesQuery})
   }
@@ -472,7 +472,7 @@ const mappers: Record<string, (s: RawSection, path: string) => PageSection> = {
         title: opt(s.title),
         titleAs: s.isPageTitle ? ('h1' as const) : ('h2' as const),
         gradient: gradient(s.gradient),
-        groups: need(groups, 'geen groepen'),
+        ...(s.allPages ? { auto: 'site' as const, groups } : { groups: need(groups, 'geen groepen') }),
       },
     };
   },

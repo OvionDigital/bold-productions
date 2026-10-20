@@ -159,7 +159,7 @@ function richToPortableText(rich: Rich | undefined): Record<string, unknown>[] |
     if ('p' in block) return [inlineToBlock(block.p, {})];
     if ('ul' in block) return block.ul.map((item) => inlineToBlock(item, { listItem: block.spaced ? 'spaced' : 'bullet', level: 1 }));
     if ('ol' in block) return block.ol.map((item) => inlineToBlock(item, { listItem: 'number', level: 1 }));
-    if ('h' in block) return [inlineToBlock(block.h, { style: `h${block.level === 5 ? 4 : block.level}` })];
+    if ('h' in block) return [inlineToBlock(block.h, { style: `h${block.level}` })];
     if ('quote' in block) return [inlineToBlock(block.quote, { style: 'blockquote' })];
     const { id, hash, title, ratio, width } = block.video;
     return [{ _type: 'richVideo', _key: key(), video: { _type: 'vimeoVideo', id, hash, title }, ratio, width }];
@@ -412,10 +412,11 @@ async function toBlock(section: PageSection): Promise<Record<string, unknown> | 
         isPageTitle: p.titleAs === 'h1' || undefined,
         gradient: p.gradient,
         anchorId: p.id,
-        groups: p.groups
+        allPages: p.auto === 'site' || undefined,
+        groups: p.auto === 'site' ? undefined : p.groups
           .filter((g) => g.auto !== 'cases')
           .map((g) => ({ _type: 'linkGroup', title: g.title, links: g.links.map((l) => ({ _type: 'linkItem', ...l })) })),
-        casesGroupTitle: casesIndex >= 0 ? p.groups[casesIndex]!.title : undefined,
+        casesGroupTitle: p.auto !== 'site' && casesIndex >= 0 ? p.groups[casesIndex]!.title : undefined,
         casesGroupIndex: casesIndex >= 0 ? casesIndex : undefined,
       };
     }

@@ -12,7 +12,7 @@ import PageBackground from '../components/layout/PageBackground.astro';
 import WhatsAppButton from '../components/layout/WhatsAppButton.astro';
 import type { Accent } from '../components/ui/Button.astro';
 import { buildStructuredData, type PageSchema, type Review } from '../lib/structured-data';
-import { breadcrumbLabels, sectionOf, skipLinkLabel } from '../data/navigation';
+import { sectionOf, skipLinkLabel } from '../data/navigation';
 import { getNavigation } from '../lib/sanity/navigation';
 import { isPreview } from '../lib/preview';
 import ogDefault from '../assets/seo/og-default.jpg';
@@ -73,7 +73,6 @@ const jsonLd =
         title,
         description,
         logoUrl: new URL(logo.src, Astro.site).href,
-        homeLabel: breadcrumbLabels.home,
         ...structuredData,
       })
     : undefined;

@@ -11,12 +11,14 @@ import { buildBreadcrumbs, type PageData, type PageSection } from './sections';
 import { getCmsPages } from './sanity/pages';
 import { isRemoteImage, sanityImageUrl } from './sanity/image';
 import { isPreview } from './preview';
+import { sitemapGroups } from './sitemap';
 import type { Crumb } from '../components/layout/Breadcrumbs.astro';
 import type { Accent } from '../components/ui/Button.astro';
 import type { PageSchema } from './structured-data';
 
 export interface BuiltPage {
   slug: string;
+  title: string;
   updatedAt?: string;
   meta: { title: string; description: string; ogImage?: string; noindex: boolean; schema?: PageSchema };
   accent: Accent;
@@ -63,9 +65,10 @@ async function buildAllPages(): Promise<BuiltPage[]> {
     if (!source.some((p) => p.slug === slug)) source.push(localPages.find((p) => p.slug === slug)!);
   }
   const bySlug = new Map<string, Pick<PageData, 'title' | 'breadcrumbTitle'>>(source.map((p) => [p.slug, p]));
-  return Promise.all(
+  const built: BuiltPage[] = await Promise.all(
     source.map(async (page) => ({
       slug: page.slug,
+      title: page.breadcrumbTitle || page.title,
       updatedAt: page.updatedAt,
       meta: {
         title: page.meta.title,
@@ -79,6 +82,14 @@ async function buildAllPages(): Promise<BuiltPage[]> {
       sections: page.sections,
     })),
   );
+  // Sitemap-pagina: linkoverzicht met `auto: 'site'` krijgt alle pagina's (altijd actueel)
+  const groups = sitemapGroups(built.map((page) => ({ slug: page.slug, title: page.title, noindex: page.meta.noindex })));
+  for (const page of built) {
+    page.sections = page.sections.map((section) =>
+      section.type === 'linkGroups' && section.props.auto === 'site' ? { ...section, props: { ...section.props, groups } } : section,
+    );
+  }
+  return built;
 }
 
 /** Alle pagina's van src/pages/[...slug].astro (zonder de homepage) */

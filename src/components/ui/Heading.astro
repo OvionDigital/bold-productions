@@ -2,7 +2,8 @@
 /**
  * Displaykop in Gate. Semantisch niveau (`as`) staat los van de visuele grootte (`size`).
  * hero en h1: kapitalen met merkgradient (`gradient`). h2–h6: kapitalen in effen kleur
- * (rustig & effen): h2 in de kleur van `gradient`, h3 wit, h4–h6 kleine labels.
+ * (rustig & effen): h2 in de kleur van `gradient`, h3 wit, h4 kleiner in kleur, h5 grijs,
+ * h6 klein gespatieerd label.
  * Regeleinden: gebruik '\n' in `text`.
  */
 import { toLines } from '../../lib/text';
@@ -71,7 +72,7 @@ const tone: HeadingGradient = gradient === 'none' && (size === 'h2' || size === 
     line-height: var(--lh-display);
   }
 
-  /* h2–h6: kapitalen met lucht (regelafstand 100%); h4–h6 kleine gespatieerde labels */
+  /* h2–h6: kapitalen; h4–h5 kleiner (h4 in kleur, h5 grijs), h6 klein gespatieerd label */
   .heading--h2,
   .heading--h3 {
     line-height: var(--lh-none);
@@ -87,11 +88,19 @@ const tone: HeadingGradient = gradient === 'none' && (size === 'h2' || size === 
     color: var(--color-white);
   }
 
-  .heading--h4,
-  .heading--h5,
+  .heading--h4 {
+    font-size: var(--fs-h4);
+    line-height: var(--lh-heading-sm);
+  }
+
+  .heading--h5 {
+    font-size: var(--fs-h5);
+    line-height: var(--lh-heading-xs);
+  }
+
   .heading--h6 {
-    font-size: var(--fs-sm);
-    line-height: var(--lh-body);
+    font-size: var(--fs-h6);
+    line-height: var(--lh-heading-xxs);
     letter-spacing: var(--ls-label);
   }
 

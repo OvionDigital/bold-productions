@@ -9,6 +9,8 @@
  * 2. De twee placeholderpagina's op de oude URL's verwijderen (de nieuwe pagina's komen uit
  *    npm run sanity:seed). Alleen als de klant ze niet heeft aangepast (geen concept, nog de
  *    placeholdertekst); anders blijven ze staan en meldt het script dat.
+ * 3. Het losse menu-item "AI" (Business) weg; AI staat onder Content.
+ * 4. Introteksten: spatie na een groen woord (was in Webflow een marge), ook in concepten.
  * Daarna: npm run sanity:seed -- --force --only=<de Business-doelgroep- en dienstpagina's>.
  */
 import { createClient } from '@sanity/client';
@@ -56,10 +58,12 @@ for (const id of ['siteNavigation', 'drafts.siteNavigation']) {
   const doc = await client.getDocument(id);
   if (!doc) continue;
   const next = rewrite(doc);
+  // 3. Geen los menu-item "AI" meer (staat al onder Content)
+  if (next.business?.menu) next.business.menu = next.business.menu.filter((g) => !(g.href === '/business/content/ai' && !g.children?.length));
   if (JSON.stringify(next) === JSON.stringify(doc)) continue;
   const { _id, _type, _rev, _createdAt, _updatedAt, ...fields } = next;
   tx.patch(id, (p) => p.set(fields));
-  log.push(`${id}: links/labels Contentcreatie en zakelijk-portret`);
+  log.push(`${id}: menu/footer bijgewerkt`);
 }
 
 // 2. Placeholders op de oude URL's
@@ -72,6 +76,32 @@ for (const id of obsolete) {
   }
   tx.delete(id);
   log.push(`${id}: verwijderd`);
+}
+
+// 4. Introteksten: spatie na een groen (vet) woord stond in Webflow als marge; nu in de tekst
+const intros = await client.fetch('*[_type == "page" && count(sections[_type == "introHighlightSection"]) > 0]');
+for (const doc of intros) {
+  let changed = false;
+  const sections = doc.sections.map((section) => {
+    if (section._type !== 'introHighlightSection') return section;
+    const content = (section.content ?? []).map((block) => {
+      const children = (block.children ?? []).map((child, i, all) => {
+        const prev = all[i - 1];
+        const prevStrong = prev?.marks?.includes('strong');
+        const strong = child.marks?.includes('strong');
+        if (prevStrong && !strong && /^[\p{L}\p{N}]/u.test(child.text ?? '')) {
+          changed = true;
+          return { ...child, text: ` ${child.text}` };
+        }
+        return child;
+      });
+      return { ...block, children };
+    });
+    return { ...section, content };
+  });
+  if (!changed) continue;
+  tx.patch(doc._id, (p) => p.set({ sections }));
+  log.push(`${doc._id}: spaties na groene woorden in de introtekst`);
 }
 
 log.forEach((l) => console.log('-', l));

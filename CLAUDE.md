@@ -77,7 +77,8 @@ h1's, alt-teksten en alle structured data zijn gelijk. Opbouw:
 - **Paginaovergang**: diagonale veeg (linksonder → rechtsboven) met een oranje band tussen oude en nieuwe pagina, via native cross-document View Transitions (`@view-transition` in global.css, tokens `--duration-page-sweep`/`--page-sweep-lag`/`--ease-curtain`). Geen JS, geen dependency; bij prefers-reduced-motion een crossfade.
 - **Cursor**: driehoekje via tokens `--cursor-default`/`--cursor-pointer` (alleen `hover: hover` + `pointer: fine`). Zelf `cursor:` zetten? Gebruik die tokens. Cookiepanelen en `[data-native-cursor]` krijgen de systeemcursor.
 - Regeleinden in titels: `\n` in de data. `Heading` zet dat om naar `<br>`.
-- **Koppen**: kapitalen met merkgradient (`gradient`, ook h2–h4 en rich text; h3 zonder gradient wit, h5–h6 grijs). h3/h4 met gradient zijn `fit-content`, zodat de gradient over de tekst loopt.
+- **Koppen**: kapitalen met merkgradient (`gradient`, ook h2–h4 en rich text; h3 zonder gradient wit, h5–h6 grijs). h3/h4 met gradient zijn `fit-content`, zodat de gradient over de tekst loopt. Schaal h4 `--fs-h4`, h5 `--fs-h5`, h6 klein gespatieerd label. In lopende tekst (`.rich-text`) is h2 kleiner (`--fs-h2-text`) en hebben koppen vaste ruimte erboven/eronder; lege Webflow-witregels naast een kop vallen weg.
+- **Regelhoogte**: `--lh-body` (1.5) voor lopende tekst; `--lh-ui` (24px) voor knoppen, labels en kaarten.
 - **Willekeurige keuze per bezoek** (`scripts/random-pick.ts`, `[data-random-pick="N"]`): alle kandidaten in de HTML, de eerste N zichtbaar (zonder JS en bij `?static=1`), de browser kiest er N. Logostrip: max. 10 logo's (`max`); uitgelichte case: één uit `spotlightCandidates()`.
 - **Automatisch op indeling** (`targetingOfPath(pad)` in `data/taxonomy.ts`): logostrip zonder vaste lijst = logo's van soort + doelgroep van de pagina (`logosForPath`, `data/logos.ts`; klantlogo's hebben meerdere soorten en doelgroepen); uitgelichte case zonder vaste case = cases met soort + doelgroep + dienst van de pagina, anders doelgroep, anders soort (`spotlightCandidates`, `data/cases.ts`).
 - **Gedeelde inhoud** staat in eigen databestanden en wordt op id gekozen: `src/data/testimonials.ts` (`pickTestimonials`), `src/data/logos.ts`, `src/data/cases.ts`. Nooit kopiëren per pagina.
@@ -179,7 +180,7 @@ Houd dit bij bij elk nieuw component.
 | Component          | Uitleg                                                                      |
 | ------------------ | --------------------------------------------------------------------------- |
 | `Header.astro`     | Vaste navigatiebalk: logo (`home`), MegaMenu, CTA (optioneel) en menuknop (+ MenuPanel); menu per deel van de site (`navigation.ts`). Leeg `nav` + `buttons` = neutraal: alleen de knoppen Bold Events/Bold Business (≤479 korte labels), geen menu. `revealAfter`: verborgen tot dat element voorbij is (homepage: split-hero). Verbergt bij scrollen omlaag, verschijnt bij scrollen omhoog (gedrag: `navbar-autohide.ts`). |
-| `Breadcrumbs.astro` | Kruimelpad onder de hero (home-icoon, stappen, huidige pagina).          |
+| `Breadcrumbs.astro` | Kruimelpad onder de hero: home-icoon = home van het deel (/events, /business, anders /), stappen, huidige pagina (`buildBreadcrumbs` in `lib/sections.ts`). Niet op /events en /business zelf. |
 | `MegaMenu.astro`   | Desktop-dropdowns (≥1280px), CSS hover/focus-within; groep zonder kinderen = gewone link. |
 | `MenuPanel.astro`  | Volledig menupaneel met overlay en accordeongroepen (gedrag: `menu.ts`); groep zonder kinderen = losse link. Onderaan `switchTo`: knop naar het andere deel (Events ↔ Business, vast in `data/navigation.ts`). |
 | `Footer.astro`     | Footer: linkkolommen (data), contact, logo + socials, juridische links, copyright. |
@@ -209,7 +210,7 @@ Houd dit bij bij elk nieuw component.
 | `ContactSection.astro` | Tekst met bel/mail/WhatsApp-links naast een formulier (slot `form`); `formWidth`. ≥1440 scrolt de tekstkolom mee (sticky). Contact, offerte. |
 | `MapSection.astro` | Kop + tekst en Google Maps-iframe (lazy). |
 | `CaseGrid.astro` | Casesoverzicht: filterknoppen (doelgroep, dienst) + raster CaseCards; props via `caseGridProps(cases, soort)` (alleen cases van die soort) (gedrag: `case-filter.ts`). |
-| `LinkGroups.astro` | Kop + raster glazen kaarten met links per groep (sitemap); groep met `auto: 'cases'` = alle cases automatisch. |
+| `LinkGroups.astro` | Kop + raster glazen kaarten met links per groep. `auto: 'site'` (de /sitemap; Studio: "Automatisch alle pagina's") = alle groepen automatisch uit alle indexeerbare pagina's (`lib/sitemap.ts`, ingevuld in `lib/pages.ts`); groep met `auto: 'cases'` = alle cases. |
 | `CaseFacts.astro` | Feitenbalk op een casepagina (klant, datum, doelgroep, diensten), direct onder het kruimelpad (`#first-section`); props via `caseFacts()` in `lib/cases.ts`. |
 | `PageSections.astro` | Geen eigen opmaak: rendert een lijst `PageSection`s (`lib/sections.ts`, uit src/data of Sanity) met de componenten hierboven; TextMedia/ContactSection + `form` = met ContactForm. |
 

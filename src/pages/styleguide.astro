@@ -51,6 +51,7 @@ import { getForm } from '../data/forms';
 import { pages } from '../data/pages';
 import { cases, caseGridProps } from '../data/cases';
 import { caseFacts } from '../lib/cases';
+import { sitemapGroups } from '../lib/sitemap';
 import type { PageSection } from '../lib/sections';
 
 /** Voorbeeldprops uit de homepage (src/data/pages/home.ts) */
@@ -87,6 +88,8 @@ const videoFeatureExample = example('videoFeature');
 const contactSectionExample = example('contactSection');
 const mapExample = example('map');
 const linkGroupsExample = example('linkGroups');
+// Op de sitemap automatisch (auto: 'site'); hier dezelfde opbouw uit src/data
+const linkGroupsExampleGroups = sitemapGroups(pages.map((p) => ({ slug: p.slug, title: p.breadcrumbTitle || p.title, noindex: Boolean(p.meta.noindex) })));
 const teamExample = allSections.find((s) => s.type === 'serviceTiles' && s.props.variant === 'team') as Extract<PageSection, { type: 'serviceTiles' }>;
 
 const accents = ['orange', 'yellow', 'green'] as const;
@@ -464,7 +467,7 @@ const nav = [
           <Eyebrow text="Ervoor. Tijdens. Erna" />
         </div>
         <div class="sg-demo sg-stack">
-          <p class="sg-label">Heading — groottes (as/size los van elkaar). hero en h1: kapitalen met gradient; h2–h6: gewone hoofdletters, h2 met lijn, h3 in de kleur</p>
+          <p class="sg-label">Heading — groottes (as/size los van elkaar). hero en h1: kapitalen met gradient; h2–h6: kapitalen, h2 in de kleur, h3 wit, h4 kleiner in kleur, h5 grijs, h6 gespatieerd label</p>
           <Heading as="p" size="hero" text="Video's die je event" />
           <Heading as="p" size="h1" text="Heading h1" flush />
           <Heading as="p" size="h2" text="Heading h2" flush />
@@ -553,12 +556,11 @@ const nav = [
 
     <Container>
       <p class="sg-note sg-note--spaced">
-        <code>&lt;Breadcrumbs items homeLabel label /&gt;</code>: kruimelpad onder de hero; laatste item = huidige pagina.
+        <code>&lt;Breadcrumbs items label /&gt;</code>: kruimelpad onder de hero; eerste item = home van het deel (icoon), laatste = huidige pagina.
       </p>
     </Container>
     <Breadcrumbs
-      items={[{ label: 'Events', href: '/events/organisatoren' }, { label: 'Aftermovie' }]}
-      homeLabel={breadcrumbLabels.home}
+      items={[{ label: 'Events', href: '/events' }, { label: 'Organisatoren', href: '/events/organisatoren' }, { label: 'Aftermovie' }]}
       label={breadcrumbLabels.nav}
     />
 
@@ -759,6 +761,24 @@ const nav = [
       </p>
     </Container>
     <RichTextSection {...richTextExample.props} id="sg-richtext" />
+    <Container>
+      <p class="sg-note">Alle kopniveaus in lopende tekst (juridische pagina's, dienstpagina's):</p>
+    </Container>
+    <RichTextSection
+      content={[
+        { h: ['Kop 1 (paginatitel)'], level: 1 },
+        { h: ['Kop 2 in lopende tekst'], level: 2 },
+        { p: ['Een alinea onder een kop 2. De ruimte boven een kop is groter dan eronder, zodat de kop bij de tekst eronder hoort.'] },
+        { h: ['Kop 3'], level: 3 },
+        { p: ['Een alinea onder een kop 3.'] },
+        { h: ['Kop 4'], level: 4 },
+        { p: ['Een alinea onder een kop 4.'] },
+        { h: ['Kop 5'], level: 5 },
+        { p: ['Een alinea onder een kop 5.'] },
+        { h: ['Kop 6'], level: 6 },
+        { p: ['Een alinea onder een kop 6.'] },
+      ]}
+    />
 
     <Container>
       <h3 class="sg-subtitle">CaseFacts</h3>
@@ -816,10 +836,10 @@ const nav = [
       <h3 class="sg-subtitle">LinkGroups</h3>
       <p class="sg-note">
         <code>&lt;LinkGroups eyebrow title titleAs gradient groups /&gt;</code>: kaarten met links per groep (sitemap).
-        Een groep met <code>auto: 'cases'</code> wordt gevuld met alle cases. Hier drie groepen, kop als h2.
+        Met <code>auto: 'site'</code> (de sitemap) komen alle groepen automatisch uit alle pagina's (<code>lib/sitemap.ts</code>). Hier drie groepen, kop als h2.
       </p>
     </Container>
-    <LinkGroups {...linkGroupsExample.props} titleAs="h2" groups={linkGroupsExample.props.groups.slice(0, 3)} />
+    <LinkGroups {...linkGroupsExample.props} titleAs="h2" groups={linkGroupsExampleGroups.slice(0, 3)} />
   </div>
 </BaseLayout>
 

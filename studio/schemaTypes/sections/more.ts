@@ -201,8 +201,17 @@ export const linkGroupsSection = defineType({
     }),
     gradientField('orange'),
     defineField({
+      name: 'allPages',
+      title: "Automatisch alle pagina's (sitemap)",
+      type: 'boolean',
+      description:
+        "Aan: de groepen worden bij elke publicatie opgebouwd uit alle pagina's en cases (zonder pagina's die niet in Google mogen). Een nieuwe of verwijderde pagina staat er dan vanzelf goed in. De groepen hieronder worden dan niet gebruikt.",
+      initialValue: false,
+    }),
+    defineField({
       name: 'groups',
       title: 'Groepen',
+      hidden: ({ parent }) => Boolean((parent as { allPages?: boolean })?.allPages),
       type: 'array',
       of: [
         defineArrayMember({
@@ -237,12 +246,14 @@ export const linkGroupsSection = defineType({
     }),
     defineField({
       name: 'casesGroupTitle',
+      hidden: ({ parent }) => Boolean((parent as { allPages?: boolean })?.allPages),
       title: 'Groep met alle cases (optioneel)',
       type: 'string',
       description: 'Vul een kop in (bijv. "Cases") voor een extra groep die automatisch alle cases toont. Leeg = geen casegroep.',
     }),
     defineField({
       name: 'casesGroupIndex',
+      hidden: ({ parent }) => Boolean((parent as { allPages?: boolean })?.allPages),
       title: 'Positie van de casegroep',
       type: 'number',
       description: 'Na hoeveel groepen de casegroep komt (0 = als eerste). Leeg = als laatste.',
@@ -250,7 +261,7 @@ export const linkGroupsSection = defineType({
     anchorIdField(),
   ],
   preview: {
-    select: { title: 'title', count: 'groups.length' },
-    prepare: ({ title, count }) => ({ title: `Linkoverzicht — ${title ?? ''}`, subtitle: `${count ?? 0} groepen` }),
+    select: { title: 'title', count: 'groups.length', allPages: 'allPages' },
+    prepare: ({ title, count, allPages }) => ({ title: `Linkoverzicht — ${title ?? ''}`, subtitle: allPages ? "automatisch alle pagina's" : `${count ?? 0} groepen` }),
   },
 });

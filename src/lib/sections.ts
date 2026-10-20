@@ -28,6 +28,7 @@ import type { CaseGridProps } from '../components/sections/CaseGrid.astro';
 import type { CaseFactsProps } from '../components/sections/CaseFacts.astro';
 import type { LinkGroupsProps } from '../components/sections/LinkGroups.astro';
 import type { Crumb } from '../components/layout/Breadcrumbs.astro';
+import { breadcrumbLabels } from '../data/navigation';
 import type { Accent } from '../components/ui/Button.astro';
 import type { ImageMetadata } from 'astro';
 import type { PageSchema } from './structured-data';
@@ -90,9 +91,18 @@ export interface PageData {
   sections: PageSection[];
 }
 
-/** Home › tussenliggende pagina's (met link als ze bestaan) › deze pagina. */
+/**
+ * Kruimelpad: home › tussenliggende pagina's (met link als ze bestaan) › deze pagina.
+ * De eerste stap is de home van dit deel van de site (het home-icoon): /events of /business,
+ * anders de homepage. Zo leidt het kruimelpad niet terug naar de keuze Events/Business.
+ * Op /events en /business zelf: geen kruimelpad (leeg).
+ */
 export function buildBreadcrumbs(page: Pick<PageData, 'slug' | 'title' | 'breadcrumbTitle'>, all: Map<string, Pick<PageData, 'title' | 'breadcrumbTitle'>>): Crumb[] {
   const segments = page.slug.split('/');
+  const root = segments[0] === 'events' || segments[0] === 'business' ? segments[0] : undefined;
+  if (root && segments.length === 1) return [];
+  const rootPage = root ? all.get(root) : undefined;
+  const home: Crumb = root ? { label: rootPage?.breadcrumbTitle || rootPage?.title || root, href: `/${root}` } : { label: breadcrumbLabels.home, href: '/' };
   const parents = segments.slice(0, -1).map((segment, i) => {
     const path = segments.slice(0, i + 1).join('/');
     const parent = all.get(path);
@@ -100,5 +110,5 @@ export function buildBreadcrumbs(page: Pick<PageData, 'slug' | 'title' | 'breadc
     const words = segment.replace(/-/g, ' ');
     return { label: words.charAt(0).toUpperCase() + words.slice(1) };
   });
-  return [...parents, { label: page.breadcrumbTitle || page.title }];
+  return [home, ...parents.slice(root ? 1 : 0), { label: page.breadcrumbTitle || page.title }];
 }

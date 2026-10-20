@@ -33,9 +33,8 @@ interface Context {
   description: string;
   logoUrl: string;
   schema?: PageSchema;
-  /** Kruimelpad zonder Home (zoals Breadcrumbs.astro); laatste = huidige pagina */
+  /** Kruimelpad zoals Breadcrumbs.astro: eerste = home van dit deel, laatste = huidige pagina */
   breadcrumbs?: { label: string; href?: string }[];
-  homeLabel?: string;
   /** Alleen op de homepage */
   website?: boolean;
   /** /events (de vroegere homepage): reviews + gemiddelde score op de organisatie */
@@ -163,8 +162,8 @@ export function buildStructuredData(ctx: Context): Node {
     });
   }
 
-  if (ctx.breadcrumbs?.length) {
-    const items = [{ label: ctx.homeLabel ?? 'Home', href: '/' }, ...ctx.breadcrumbs];
+  if (ctx.breadcrumbs && ctx.breadcrumbs.length > 1) {
+    const items = ctx.breadcrumbs;
     graph.push({
       '@type': 'BreadcrumbList',
       itemListElement: items.map((item, index) => ({

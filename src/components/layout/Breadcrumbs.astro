@@ -1,7 +1,8 @@
 ---
 /**
  * Kruimelpad onder de hero (Webflow .breadcrumbs): home-icoon, tussenstappen en de
- * huidige pagina. Het laatste item is de huidige pagina (zonder link).
+ * huidige pagina. Het eerste item is "home" (icoon; /events, /business of /), het laatste
+ * de huidige pagina (zonder link). Opbouw: buildBreadcrumbs in lib/sections.ts.
  */
 import Icon from '../ui/Icon.astro';
 
@@ -11,27 +12,27 @@ export interface Crumb {
 }
 
 interface Props {
-  /** Stappen na 'home'; het laatste item is de huidige pagina */
+  /** Eerste item = home (icoon), laatste = de huidige pagina */
   items: Crumb[];
-  homeLabel: string;
   label: string;
   /** Bovenaan de pagina zonder hero: ruimte voor de vaste navbar (Webflow .breadcrumbs) */
   standalone?: boolean;
 }
 
-const { items, homeLabel, label, standalone = false } = Astro.props;
+const { items, label, standalone = false } = Astro.props;
+const [home, ...steps] = items;
 ---
 
 <nav class:list={['breadcrumbs', { 'breadcrumbs--standalone': standalone }]} aria-label={label}>
   <ol class="breadcrumbs__list" role="list">
     <li class="breadcrumbs__item">
-      <a href="/" class="breadcrumbs__link" aria-label={homeLabel}>
+      <a href={home?.href ?? '/'} class="breadcrumbs__link" aria-label={home?.label}>
         <Icon name="home" size="var(--icon-lg)" />
       </a>
     </li>
     {
-      items.map((item, index) => {
-        const isCurrent = index === items.length - 1;
+      steps.map((item, index) => {
+        const isCurrent = index === steps.length - 1;
         return (
           <li class="breadcrumbs__item">
             <Icon name="chevron-right" size="var(--icon-sm)" class="breadcrumbs__sep" />

@@ -3,7 +3,7 @@
  * Rendert het rich-text-model uit lib/rich.ts: paragrafen, (ruime) opsommingen,
  * genummerde lijsten, tussenkoppen, citaten en Vimeo-video's.
  * Standaard met de globale .rich-text-stijl (lijsticoon, marges); `plain` laat die weg.
- * Een lege paragraaf is een witregel (Webflow <p>‍</p>).
+ * Een lege paragraaf is een witregel (Webflow <p>‍</p>); naast een kop vervalt hij (global.css).
  */
 import type { HTMLTag } from 'astro/types';
 import type { Rich } from '../../lib/rich';
@@ -33,7 +33,7 @@ const headingTag = (level: number) => `h${level}` as 'h1';
             <RichInline segments={block.p} />
           </p>
         ) : (
-          <p>&zwj;</p>
+          <p class="rich-text__blank">&zwj;</p>
         );
       }
       if ('ul' in block) {
