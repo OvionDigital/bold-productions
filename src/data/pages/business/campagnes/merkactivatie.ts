@@ -118,7 +118,7 @@ export const page: PageData = {
             h: [
               'En daarna?',
             ],
-            level: 5,
+            level: 4,
           },
           {
             p: [

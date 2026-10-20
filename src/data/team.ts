@@ -2,7 +2,7 @@
  * Het team ("De mensen achter Bold"): één bron voor /cases, /over en /contact.
  * Elke pagina kiest de volgorde en mag de functieomschrijving overschrijven (live
  * verschilt die per pagina). Video's in public/video/ spelen af bij hover.
- * Teksten letterlijk van de live site (ook "Ralph buisman" en "Vidoegraaf").
+ * Teksten letterlijk van de live site (ook "Ralph buisman"; "Vidoegraaf" in oktober 2026 verbeterd).
  */
 import type { ServiceTile } from '../components/sections/ServiceTiles.astro';
 import rik from '../assets/images/team/rik-hendriks.jpg';
@@ -21,7 +21,7 @@ export const team = {
   'tom-van-heteren': {
     name: 'Tom van Heteren',
     role: 'Onze eigen Tarzan',
-    image: { src: tom, alt: 'Tom van Heteren. Vidoegraaf en Fotograaf voor Bold Productions, contentspecialist voor Events & Artiesten.' },
+    image: { src: tom, alt: 'Tom van Heteren. Videograaf en Fotograaf voor Bold Productions, contentspecialist voor Events & Artiesten.' },
     video: '/video/team-tom-van-heteren.webm',
   },
   'ralph-buisman': {

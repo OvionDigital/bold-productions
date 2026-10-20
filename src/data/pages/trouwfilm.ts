@@ -111,7 +111,7 @@ export const page: PageData = {
           },
           {
             h: ['Een dag in de Achterhoek'],
-            level: 4,
+            level: 3,
           },
           {
             video: {

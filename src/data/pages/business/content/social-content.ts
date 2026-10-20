@@ -73,7 +73,7 @@ export const page: PageData = {
             h: [
               'Wat wij maken',
             ],
-            level: 4,
+            level: 3,
           },
           {
             p: [

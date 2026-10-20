@@ -11,6 +11,8 @@
  *    placeholdertekst); anders blijven ze staan en meldt het script dat.
  * 3. Het losse menu-item "AI" (Business) weg; AI staat onder Content.
  * 4. Introteksten: spatie na een groen woord (was in Webflow een marge), ook in concepten.
+ * 5. Typfouten in alle inhoud en alt-teksten; samengeplakte woorden in de algemene voorwaarden.
+ * 6. Kopstructuur zonder sprongen; socials op de Mike-pagina als lijst met links i.p.v. h6.
  * Daarna: npm run sanity:seed -- --force --only=<de Business-doelgroep- en dienstpagina's>.
  */
 import { createClient } from '@sanity/client';
@@ -102,6 +104,83 @@ for (const doc of intros) {
   if (!changed) continue;
   tx.patch(doc._id, (p) => p.set({ sections }));
   log.push(`${doc._id}: spaties na groene woorden in de introtekst`);
+}
+
+// 5. Typfouten (akkoord gebruiker 20 okt) in alle inhoud en alt-teksten; samengeplakte woorden
+//    in de algemene voorwaarden (scripts/av-fixes.mjs)
+const typos = [
+  ['Meer over zakeijke portretten', 'Meer over zakelijke portretten'],
+  ['verteld door jouw klants', 'verteld door jouw klanten'],
+  ['beweegt en een verhaal verteld.', 'beweegt en een verhaal vertelt.'],
+  ['emplyer branding', 'employer branding'],
+  ['Rijn Ijssel', 'Rijn IJssel'],
+  ['Vidoegraaf', 'Videograaf'],
+];
+const { fixMergedWords } = await import('./av-fixes.mjs');
+const fixStrings = (value, fix) => {
+  if (typeof value === 'string') return fix(value);
+  if (Array.isArray(value)) return value.map((v) => fixStrings(v, fix));
+  if (value && typeof value === 'object') return Object.fromEntries(Object.entries(value).map(([k, v]) => [k, k.startsWith('_') || k === 'slug' ? v : fixStrings(v, fix)]));
+  return value;
+};
+const fixTypos = (s) => typos.reduce((acc, [from, to]) => acc.split(from).join(to), s);
+const textDocs = await client.fetch('*[_type in ["page", "caseStudy", "teamMember", "testimonial", "siteNavigation", "sanity.imageAsset"]]');
+for (const doc of textDocs) {
+  const isAv = doc._id.replace(/^drafts\./, '') === 'page-algemene-voorwaarden';
+  const next = fixStrings(doc, (s) => (isAv ? fixMergedWords(fixTypos(s)) : fixTypos(s)));
+  const { _id, _type, _rev, _createdAt, _updatedAt, ...fields } = next;
+  const changedKeys = Object.keys(fields).filter((k) => JSON.stringify(fields[k]) !== JSON.stringify(doc[k]));
+  if (!changedKeys.length) continue;
+  tx.patch(doc._id, (p) => p.set(Object.fromEntries(changedKeys.map((k) => [k, fields[k]]))));
+  log.push(`${doc._id}: tekstcorrecties (${changedKeys.join(', ')})`);
+}
+
+// 6. Kopstructuur zonder sprongen (h3 → h5 e.d.); de socials op de Mike-pagina zijn links in een
+//    lijst, geen h6-koppen (en "mijn Linkedin" linkt in zijn geheel naar LinkedIn)
+const headingFixes = {
+  'Waarom de meeste reclamefilms niet werken': 'h4',
+  'Waarom zoveel bedrijfsfilms niet werken': 'h4',
+  'Waarom afschrikken goed is': 'h4',
+  'En daarna?': 'h4',
+  'Wat wij maken': 'h3',
+  'Een dag in de Achterhoek': 'h3',
+};
+const blockText = (b) => (b.children ?? []).map((c) => c.text ?? '').join('').trim();
+const fixBlocks = (value, onChange) => {
+  if (Array.isArray(value)) return value.map((v) => fixBlocks(v, onChange));
+  if (!value || typeof value !== 'object') return value;
+  if (value._type === 'block') {
+    const text = blockText(value);
+    const target = headingFixes[text];
+    if (target && /^h[3-6]$/.test(value.style ?? '') && value.style !== target) {
+      onChange();
+      return { ...value, style: target };
+    }
+    if (value.style === 'h6' && /^mijn (instagram|linkedin)$/i.test(text)) {
+      onChange();
+      const linkedin = /linkedin/i.test(text);
+      const href = linkedin ? 'https://www.linkedin.com/in/mikeampting/' : 'https://www.instagram.com/mikeampting/';
+      const markKey = value.markDefs?.find((d) => d.href === href)?._key ?? value.markDefs?.[0]?._key ?? 'link';
+      return {
+        ...value,
+        style: 'normal',
+        listItem: 'bullet',
+        level: 1,
+        markDefs: [{ _key: markKey, _type: 'link', href }],
+        children: [{ _key: value.children[0]._key, _type: 'span', marks: [markKey], text }],
+      };
+    }
+    return value;
+  }
+  return Object.fromEntries(Object.entries(value).map(([k, v]) => [k, fixBlocks(v, onChange)]));
+};
+const allPages = await client.fetch('*[_type == "page"]');
+for (const doc of allPages) {
+  let changed = false;
+  const sections = fixBlocks(doc.sections, () => (changed = true));
+  if (!changed) continue;
+  tx.patch(doc._id, (p) => p.set({ sections }));
+  log.push(`${doc._id}: kopniveaus`);
 }
 
 log.forEach((l) => console.log('-', l));

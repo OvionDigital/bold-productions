@@ -278,7 +278,7 @@ export const cases: Case[] = [
   },
   {
     slug: 'waterschap-rijn-ijssel',
-    title: 'Waterschap Rijn Ijssel',
+    title: 'Waterschap Rijn IJssel',
     intro: 'Een bedrijfsfeest voor honderden mensen.',
     image: {
       src: mikeWaterschapHuisfeestje194,
@@ -287,10 +287,10 @@ export const cases: Case[] = [
     category: 'events',
     audience: 'zakelijke-events',
     services: ['Aftermovie', 'Fotografie'],
-    client: 'Waterschap Rijn Ijssel',
+    client: 'Waterschap Rijn IJssel',
     date: '09-11-2025',
     meta: {
-      title: 'Waterschap Rijn Ijssel',
+      title: 'Waterschap Rijn IJssel',
       description: 'Een bedrijfsfeest voor honderden mensen.',
     },
     introText: waterschapRijnIjsselIntro,

@@ -139,7 +139,7 @@ export const page: PageData = {
             text: [
               {
                 p: [
-                  'Jouw verhaal, verteld door jouw klants. Beter bewijs is er niet',
+                  'Jouw verhaal, verteld door jouw klanten. Beter bewijs is er niet',
                 ],
               },
             ],
@@ -244,7 +244,7 @@ export const page: PageData = {
         intro: [
           {
             p: [
-              'Een product dat nog in productie zit. Een foto uit 1963 die beweegt en een verhaal verteld.',
+              'Een product dat nog in productie zit. Een foto uit 1963 die beweegt en een verhaal vertelt.',
             ],
           },
         ],

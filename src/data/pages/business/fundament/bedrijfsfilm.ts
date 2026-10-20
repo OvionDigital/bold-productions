@@ -106,7 +106,7 @@ export const page: PageData = {
             h: [
               'Waarom zoveel bedrijfsfilms niet werken',
             ],
-            level: 5,
+            level: 4,
           },
           {
             p: [

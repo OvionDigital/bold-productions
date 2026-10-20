@@ -101,26 +101,11 @@ export const page: PageData = {
             p: ['Lijkt het je leuk om te connecten?'],
           },
           {
-            h: [
-              {
-                text: 'Mijn instagram ',
-                href: 'https://www.instagram.com/mikeampting/',
-              },
+            // Links naar socials (op Webflow als h6 opgemaakt; het zijn geen koppen)
+            ul: [
+              [{ text: 'Mijn instagram', href: 'https://www.instagram.com/mikeampting/' }],
+              [{ text: 'mijn Linkedin', href: 'https://www.linkedin.com/in/mikeampting/' }],
             ],
-            level: 6,
-          },
-          {
-            h: [
-              {
-                text: 'mijn ',
-                href: 'https://www.instagram.com/mikeampting/',
-              },
-              {
-                text: 'Linkedin',
-                href: 'https://www.linkedin.com/in/mikeampting/',
-              },
-            ],
-            level: 6,
           },
           {
             p: [],

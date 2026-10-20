@@ -145,7 +145,7 @@ export const page: PageData = {
               alt: 'Lachende vrouw aan het water, still uit een video van Bold Productions.',
             },
             cta: {
-              label: 'Meer over zakeijke portretten',
+              label: 'Meer over zakelijke portretten',
               href: '/business/fotografie/zakelijk-portret',
             },
           },

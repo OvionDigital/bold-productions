@@ -38,7 +38,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: 'Bold Productions, gevestigd teDoetinchem, ingeschreven bij de Kamer van Koophandel onder nummer 80117686,hanteert de navolgende algemene voorwaarden.',
+                text: 'Bold Productions, gevestigd te Doetinchem, ingeschreven bij de Kamer van Koophandel onder nummer 80117686, hanteert de navolgende algemene voorwaarden.',
                 strong: true,
               },
             ],
@@ -54,7 +54,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: 'In deze algemene voorwaarden worden denavolgende termen gebruikt, tenzij uitdrukkelijk anders is aangegeven:',
+                text: 'In deze algemene voorwaarden worden de navolgende termen gebruikt, tenzij uitdrukkelijk anders is aangegeven:',
                 strong: true,
               },
             ],
@@ -62,7 +62,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: '1.     Aanbod: iedereaanbieding of offerte aan Opdrachtgever tot het verrichten van Diensten doorBold Productions.',
+                text: '1.     Aanbod: iedere aanbieding of offerte aan Opdrachtgever tot het verrichten van Diensten door Bold Productions.',
                 strong: true,
               },
             ],
@@ -70,7 +70,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: '2.     Audiovisueleproductie (AV): een langs cinematografische, mechanische of elektronische wegtot stand gekomen werk in auteursrechtelijke zin, vastgelegd op dragers vanbeeld en/of geluid of digitale bestanden (zoals maar niet beperkt tot film,video, DCP, ProRes, broadcast files, memorycards, hard disks en servers).',
+                text: '2.     Audiovisuele productie (AV): een langs cinematografische, mechanische of elektronische weg tot stand gekomen werk in auteursrechtelijke zin, vastgelegd op dragers van beeld en/of geluid of digitale bestanden (zoals maar niet beperkt tot film, video, DCP, ProRes, broadcast files, memorycards, hard disks en servers).',
                 strong: true,
               },
             ],
@@ -78,7 +78,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: '3.     Bedrijf: denatuurlijke of rechtspersoon die handelt in de uitoefening van beroep ofbedrijf.',
+                text: '3.     Bedrijf: de natuurlijke of rechtspersoon die handelt in de uitoefening van beroep of bedrijf.',
                 strong: true,
               },
             ],
@@ -86,7 +86,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: '4.     Consument: denatuurlijke persoon die niet handelt in de uitoefening van beroep of bedrijf.',
+                text: '4.     Consument: de natuurlijke persoon die niet handelt in de uitoefening van beroep of bedrijf.',
                 strong: true,
               },
             ],
@@ -94,7 +94,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: '5.     Diensten: allewerkzaamheden van Bold Productions, waaronder begrepen maar niet beperkt tothet creëren, filmen, monteren, bewerken, verwerken en reproduceren vanaudiovisuele producties.',
+                text: '5.     Diensten: alle werkzaamheden van Bold Productions, waaronder begrepen maar niet beperkt tot het creëren, filmen, monteren, bewerken, verwerken en reproduceren van audiovisuele producties.',
                 strong: true,
               },
             ],
@@ -102,7 +102,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: '6.     Opdrachtgever: denatuurlijke of rechtspersoon die Bold Productions opdracht geeft tot hetverrichten van Diensten.',
+                text: '6.     Opdrachtgever: de natuurlijke of rechtspersoon die Bold Productions opdracht geeft tot het verrichten van Diensten.',
                 strong: true,
               },
             ],
@@ -110,7 +110,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: '7.     Overeenkomst: iedereovereenkomst tussen Opdrachtgever en Bold Productions, inclusief aanbiedingenen offertes die door Opdrachtgever zijn aanvaard.',
+                text: '7.     Overeenkomst: iedere overeenkomst tussen Opdrachtgever en Bold Productions, inclusief aanbiedingen en offertes die door Opdrachtgever zijn aanvaard.',
                 strong: true,
               },
             ],
@@ -118,7 +118,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: '8.     Bold Productions: deopdrachtnemer/dienstverlener.',
+                text: '8.     Bold Productions: de opdrachtnemer/dienstverlener.',
                 strong: true,
               },
             ],
@@ -126,7 +126,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: '9.     Dragers van beelden/of geluid: alle fysieke en digitale middelen waarop beeld en/of geluid kanworden vastgelegd.',
+                text: '9.     Dragers van beelden/of geluid: alle fysieke en digitale middelen waarop beeld en/of geluid kan worden vastgelegd.',
                 strong: true,
               },
             ],
@@ -142,7 +142,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: '1.     Deze algemenevoorwaarden zijn van toepassing op elk Aanbod, iedere Overeenkomst en alleDiensten van Bold Productions.',
+                text: '1.     Deze algemene voorwaarden zijn van toepassing op elk Aanbod, iedere Overeenkomst en alle Diensten van Bold Productions.',
                 strong: true,
               },
             ],
@@ -150,7 +150,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: '2.     Algemene voorwaardenvan Opdrachtgever zijn uitdrukkelijk uitgesloten, tenzij schriftelijk andersovereengekomen.',
+                text: '2.     Algemene voorwaarden van Opdrachtgever zijn uitdrukkelijk uitgesloten, tenzij schriftelijk anders overeengekomen.',
                 strong: true,
               },
             ],
@@ -158,7 +158,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: '3.     Afwijkingen van dezevoorwaarden zijn uitsluitend geldig indien schriftelijk overeengekomen.',
+                text: '3.     Afwijkingen van deze voorwaarden zijn uitsluitend geldig indien schriftelijk overeengekomen.',
                 strong: true,
               },
             ],
@@ -166,7 +166,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: '4.     Indien een bepalingnietig is of wordt vernietigd, blijven de overige bepalingen onverminderd vankracht. Partijen treden in dat geval in overleg om de nietige of vernietigdebepaling te vervangen door een geldige bepaling die de strekking daarvan zo veelmogelijk benadert.',
+                text: '4.     Indien een bepaling nietig is of wordt vernietigd, blijven de overige bepalingen onverminderd van kracht. Partijen treden in dat geval in overleg om de nietige of vernietigde bepaling te vervangen door een geldige bepaling die de strekking daarvan zo veel mogelijk benadert.',
                 strong: true,
               },
             ],
@@ -174,7 +174,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: '5.     Onduidelijkhedenworden uitgelegd naar de geest van deze algemene voorwaarden.',
+                text: '5.     Onduidelijkheden worden uitgelegd naar de geest van deze algemene voorwaarden.',
                 strong: true,
               },
             ],
@@ -182,7 +182,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: '6.     De toepasselijkheidvan de artikelen 7:404 BW en 7:407 lid 2 BW is uitgesloten.',
+                text: '6.     De toepasselijkheid van de artikelen 7:404 BW en 7:407 lid 2 BW is uitgesloten.',
                 strong: true,
               },
             ],
@@ -201,7 +201,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: '1.     Alle offertes enaanbiedingen van Bold Productions zijn vrijblijvend.',
+                text: '1.     Alle offertes en aanbiedingen van Bold Productions zijn vrijblijvend.',
                 strong: true,
               },
             ],
@@ -209,7 +209,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: '2.     Bold Productions isslechts aan een Aanbod gebonden indien dit schriftelijk door Opdrachtgever isaanvaard.',
+                text: '2.     Bold Productions is slechts aan een Aanbod gebonden indien dit schriftelijk door Opdrachtgever is aanvaard.',
                 strong: true,
               },
             ],
@@ -217,7 +217,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: '3.     Kennelijke fouten ofvergissingen in offertes binden Bold Productions niet.',
+                text: '3.     Kennelijke fouten of vergissingen in offertes binden Bold Productions niet.',
                 strong: true,
               },
             ],
@@ -225,7 +225,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: '4.     Prijzen zijnexclusief btw, tenzij anders overeengekomen.',
+                text: '4.     Prijzen zijn exclusief btw, tenzij anders overeengekomen.',
                 strong: true,
               },
             ],
@@ -233,7 +233,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: '5.     Offertes gelden nietautomatisch voor vervolgopdrachten.',
+                text: '5.     Offertes gelden niet automatisch voor vervolgopdrachten.',
                 strong: true,
               },
             ],
@@ -241,7 +241,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: 'Artikel 4 – Totstandkoming van deOvereenkomst',
+                text: 'Artikel 4 – Totstandkoming van de Overeenkomst',
                 strong: true,
               },
             ],
@@ -249,7 +249,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: '1.     De Overeenkomst komttot stand zodra Bold Productions in opdracht van Opdrachtgever werkzaamhedenverricht of zodra een Aanbod schriftelijk is aanvaard.',
+                text: '1.     De Overeenkomst komt tot stand zodra Bold Productions in opdracht van Opdrachtgever werkzaamheden verricht of zodra een Aanbod schriftelijk is aanvaard.',
                 strong: true,
               },
             ],
@@ -257,7 +257,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: '2.     Wijzigingen ofaanvullingen zijn slechts bindend na schriftelijke bevestiging door BoldProductions.',
+                text: '2.     Wijzigingen of aanvullingen zijn slechts bindend na schriftelijke bevestiging door Bold Productions.',
                 strong: true,
               },
             ],
@@ -265,7 +265,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: '3.     Iedere Overeenkomstwordt aangegaan met Bold Productions als bedrijf en niet met een specifiekepersoon.',
+                text: '3.     Iedere Overeenkomst wordt aangegaan met Bold Productions als bedrijf en niet met een specifieke persoon.',
                 strong: true,
               },
             ],
@@ -281,7 +281,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: '1.     De Overeenkomsteindigt bij voltooiing van de opdracht, tenzij anders overeengekomen.',
+                text: '1.     De Overeenkomst eindigt bij voltooiing van de opdracht, tenzij anders overeengekomen.',
                 strong: true,
               },
             ],
@@ -289,7 +289,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: '2.     Bij voortijdigebeëindiging of annulering door Opdrachtgever is Opdrachtgever de vergoedingverschuldigd zoals geregeld in artikel 10 (Verhindering en annulering doorOpdrachtgever).',
+                text: '2.     Bij voortijdige beëindiging of annulering door Opdrachtgever is Opdrachtgever de vergoeding verschuldigd zoals geregeld in artikel 10 (Verhindering en annulering door Opdrachtgever).',
                 strong: true,
               },
             ],
@@ -297,7 +297,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: '3.     Bold Productions isgerechtigd de Overeenkomst per direct te ontbinden bij faillissement, surseancevan betaling of liquidatie van Opdrachtgever.',
+                text: '3.     Bold Productions is gerechtigd de Overeenkomst per direct te ontbinden bij faillissement, surseance van betaling of liquidatie van Opdrachtgever.',
                 strong: true,
               },
             ],
@@ -305,7 +305,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: 'Artikel 6 – Uitvoering van dedienstverlening',
+                text: 'Artikel 6 – Uitvoering van de dienstverlening',
                 strong: true,
               },
             ],
@@ -313,7 +313,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: '1.     Bold Productions zalzich inspannen de Diensten zorgvuldig en professioneel uit te voeren.',
+                text: '1.     Bold Productions zal zich inspannen de Diensten zorgvuldig en professioneel uit te voeren.',
                 strong: true,
               },
             ],
@@ -321,7 +321,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: '2.     Alle Diensten wordenuitgevoerd op basis van een inspanningsverbintenis, tenzij uitdrukkelijk andersovereengekomen.',
+                text: '2.     Alle Diensten worden uitgevoerd op basis van een inspanningsverbintenis, tenzij uitdrukkelijk anders overeengekomen.',
                 strong: true,
               },
             ],
@@ -329,7 +329,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: '3.     Bold Productions isgerechtigd derden in te schakelen.',
+                text: '3.     Bold Productions is gerechtigd derden in te schakelen.',
                 strong: true,
               },
             ],
@@ -337,7 +337,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: '4.     Creatieve keuzes enstijl vallen onder het professionele inzicht van Bold Productions.',
+                text: '4.     Creatieve keuzes en stijl vallen onder het professionele inzicht van Bold Productions.',
                 strong: true,
               },
             ],
@@ -353,7 +353,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: '1.     Oplevertermijnen zijnindicatief en nimmer fatale termijnen.',
+                text: '1.     Oplevertermijnen zijn indicatief en nimmer fatale termijnen.',
                 strong: true,
               },
             ],
@@ -361,7 +361,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: '2.     Overschrijding vantermijnen geeft geen recht op schadevergoeding of ontbinding.',
+                text: '2.     Overschrijding van termijnen geeft geen recht op schadevergoeding of ontbinding.',
                 strong: true,
               },
             ],
@@ -369,7 +369,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: '3.     Opdrachtgever heeftrecht op één feedbackronde, tenzij anders overeengekomen.',
+                text: '3.     Opdrachtgever heeft recht op één feedbackronde, tenzij anders overeengekomen.',
                 strong: true,
               },
             ],
@@ -388,7 +388,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: '1.     Het honorarium kanworden vastgesteld per uur, dag, week of maand.',
+                text: '1.     Het honorarium kan worden vastgesteld per uur, dag, week of maand.',
                 strong: true,
               },
             ],
@@ -396,7 +396,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: '2.     Bij overschrijdingvan het overeengekomen aantal uren of dagen kan voor de meerdere uren eenopslag van 100% per extra uur in rekening worden gebracht.',
+                text: '2.     Bij overschrijding van het overeengekomen aantal uren of dagen kan voor de meerdere uren een opslag van 100% per extra uur in rekening worden gebracht.',
                 strong: true,
               },
             ],
@@ -404,7 +404,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: '3.     Bij gebreke van eenafgesproken prijs gelden de gebruikelijke branchetarieven.',
+                text: '3.     Bij gebreke van een afgesproken prijs gelden de gebruikelijke branchetarieven.',
                 strong: true,
               },
             ],
@@ -420,7 +420,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: '1.     Partijen kunnennadere afspraken maken omtrent werk- en rusttijden van Bold Productions,waarbij de dwingendrechtelijke bepalingen uit het arbeids- en civiele recht,voor zover analoog van toepassing, als richtsnoer gelden.',
+                text: '1.     Partijen kunnen nadere afspraken maken omtrent werk- en rusttijden van Bold Productions, waarbij de dwingendrechtelijke bepalingen uit het arbeids- en civiele recht, voor zover analoog van toepassing, als richtsnoer gelden.',
                 strong: true,
               },
             ],
@@ -428,7 +428,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: '2.     Indien sprake is vanwerkdagen van tien (10) uur of meer, worden lunch- en dinerpauzes aangemerktals werktijd.',
+                text: '2.     Indien sprake is van werkdagen van tien (10) uur of meer, worden lunch- en dinerpauzes aangemerkt als werktijd.',
                 strong: true,
               },
             ],
@@ -436,7 +436,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: '3.     Reistijd geldt alswerktijd, tenzij partijen uitdrukkelijk en schriftelijk anders zijnovereengekomen.',
+                text: '3.     Reistijd geldt als werktijd, tenzij partijen uitdrukkelijk en schriftelijk anders zijn overeengekomen.',
                 strong: true,
               },
             ],
@@ -444,7 +444,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: 'Artikel 10 – Verhindering enannulering door Opdrachtgever',
+                text: 'Artikel 10 – Verhindering en annulering door Opdrachtgever',
                 strong: true,
               },
             ],
@@ -452,14 +452,14 @@ export const page: PageData = {
           {
             p: [
               {
-                text: '1.     Zolang werkzaamhedenslechts in optie staan, kan Opdrachtgever de opdracht kosteloos annuleren. Nadefinitieve bevestiging is Opdrachtgever bij annulering eenannuleringsvergoeding verschuldigd als volgt:',
+                text: '1.     Zolang werkzaamheden slechts in optie staan, kan Opdrachtgever de opdracht kosteloos annuleren. Na definitieve bevestiging is Opdrachtgever bij annulering een annuleringsvergoeding verschuldigd als volgt:',
                 strong: true,
               },
               {
                 br: true,
               },
               {
-                text: 'a. 25% van het overeengekomen honorarium bij annulering tot zes (6) dagen vóóraanvang;',
+                text: 'a. 25% van het overeengekomen honorarium bij annulering tot zes (6) dagen vóór aanvang;',
                 strong: true,
               },
               {
@@ -481,7 +481,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: '2.     De reeds door BoldProductions gemaakte kosten worden naast de annuleringsvergoeding volledig aanOpdrachtgever in rekening gebracht.',
+                text: '2.     De reeds door Bold Productions gemaakte kosten worden naast de annuleringsvergoeding volledig aan Opdrachtgever in rekening gebracht.',
                 strong: true,
               },
             ],
@@ -489,7 +489,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: '3.     Indien de uitvoeringvan de Overeenkomst wordt beïnvloed door externe factoren, waaronderweersomstandigheden, vergunningen of handelen van derden, wordt Opdrachtgevergeacht zich hiertegen adequaat te hebben verzekerd. De financiële gevolgenhiervan komen volledig voor rekening van Opdrachtgever.',
+                text: '3.     Indien de uitvoering van de Overeenkomst wordt beïnvloed door externe factoren, waaronder weersomstandigheden, vergunningen of handelen van derden, wordt Opdrachtgever geacht zich hiertegen adequaat te hebben verzekerd. De financiële gevolgen hiervan komen volledig voor rekening van Opdrachtgever.',
                 strong: true,
               },
             ],
@@ -497,7 +497,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: '4.     Gedurendeniet-annuleerbare werkdagen houdt Bold Productions zich beschikbaar voorOpdrachtgever en kan zij, binnen redelijke grenzen, vervangende werkzaamhedenuitvoeren die naar aard en omvang vergelijkbaar zijn met de overeengekomenprestaties.',
+                text: '4.     Gedurende niet-annuleerbare werkdagen houdt Bold Productions zich beschikbaar voor Opdrachtgever en kan zij, binnen redelijke grenzen, vervangende werkzaamheden uitvoeren die naar aard en omvang vergelijkbaar zijn met de overeengekomen prestaties.',
                 strong: true,
               },
             ],
@@ -505,7 +505,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: 'Artikel 11 – Verhindering BoldProductions',
+                text: 'Artikel 11 – Verhindering Bold Productions',
                 strong: true,
               },
             ],
@@ -513,7 +513,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: '1.     Bold Productionsstelt zich beschikbaar overeenkomstig de overeengekomen perioden, behoudensexpliciet overeengekomen uitzonderingen.',
+                text: '1.     Bold Productions stelt zich beschikbaar overeenkomstig de overeengekomen perioden, behoudens expliciet overeengekomen uitzonderingen.',
                 strong: true,
               },
             ],
@@ -521,7 +521,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: '2.     Bold Productions isgerechtigd de werkzaamheden tijdelijk te onderbreken in geval van bijzondereomstandigheden, waaronder doch niet uitsluitend begrepen: overlijden, huwelijk,geboorte en (kortdurende) ziekte. Bold Productions stelt Opdrachtgever hiervanzo spoedig als redelijkerwijs mogelijk in kennis. De duur van de onderbrekingwordt in onderling overleg vastgesteld.',
+                text: '2.     Bold Productions is gerechtigd de werkzaamheden tijdelijk te onderbreken in geval van bijzondere omstandigheden, waaronder doch niet uitsluitend begrepen: overlijden, huwelijk, geboorte en (kortdurende) ziekte. Bold Productions stelt Opdrachtgever hiervan zo spoedig als redelijkerwijs mogelijk in kennis. De duur van de onderbreking wordt in onderling overleg vastgesteld.',
                 strong: true,
               },
             ],
@@ -529,7 +529,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: '3.     Een werkonderbrekingals bedoeld in dit artikel geschiedt volledig voor rekening en risico van BoldProductions en geeft Opdrachtgever geen recht op schadevergoeding. Tijdens eendergelijke werkonderbreking is Bold Productions niet gehouden tot beschikbaarheid.',
+                text: '3.     Een werkonderbreking als bedoeld in dit artikel geschiedt volledig voor rekening en risico van Bold Productions en geeft Opdrachtgever geen recht op schadevergoeding. Tijdens een dergelijke werkonderbreking is Bold Productions niet gehouden tot beschikbaarheid.',
                 strong: true,
               },
             ],
@@ -537,7 +537,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: '4.     Indien BoldProductions voornemens is zich gedurende niet-beschikbare perioden jegensderden te verbinden, zal hierover vooraf overleg plaatsvinden metOpdrachtgever.',
+                text: '4.     Indien Bold Productions voornemens is zich gedurende niet-beschikbare perioden jegens derden te verbinden, zal hierover vooraf overleg plaatsvinden met Opdrachtgever.',
                 strong: true,
               },
             ],
@@ -553,7 +553,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: '1.     Reis-, wachttijd- enonkosten worden vergoed door Opdrachtgever.',
+                text: '1.     Reis-, wachttijd- en onkosten worden vergoed door Opdrachtgever.',
                 strong: true,
               },
             ],
@@ -561,7 +561,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: '2.     Dekilometervergoeding bedraagt €0,35 per km exclusief btw, tenzij andersovereengekomen.',
+                text: '2.     De kilometervergoeding bedraagt €0,35 per km exclusief btw, tenzij anders overeengekomen.',
                 strong: true,
               },
             ],
@@ -569,7 +569,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: '3.     Facturen dienenbinnen twintig (20) dagen na factuurdatum te worden voldaan, zonder opschortingof verrekening.',
+                text: '3.     Facturen dienen binnen twintig (20) dagen na factuurdatum te worden voldaan, zonder opschorting of verrekening.',
                 strong: true,
               },
             ],
@@ -577,7 +577,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: '4.     Bij overschrijdingvan de betalingstermijn is Opdrachtgever van rechtswege in verzuim en dewettelijke handelsrente verschuldigd.',
+                text: '4.     Bij overschrijding van de betalingstermijn is Opdrachtgever van rechtswege in verzuim en de wettelijke handelsrente verschuldigd.',
                 strong: true,
               },
             ],
@@ -585,7 +585,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: '5.     Alle gerechtelijke enbuitengerechtelijke kosten, waaronder incassokosten en kosten vanrechtsbijstand, komen volledig voor rekening van Opdrachtgever.',
+                text: '5.     Alle gerechtelijke en buitengerechtelijke kosten, waaronder incassokosten en kosten van rechtsbijstand, komen volledig voor rekening van Opdrachtgever.',
                 strong: true,
               },
             ],
@@ -601,7 +601,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: '1.     Alle intellectueleeigendomsrechten en auteursrechten met betrekking tot alle door BoldProductions vervaardigde werken, waaronder in ieder geval begrepen maar nietbeperkt tot filmwerken, ontwerpen, concepten, formats, modellen, rapportages,adviezen, scripts, montages, templates en overige materialen, berustenuitsluitend bij Bold Productions en worden niet aan Opdrachtgever overgedragen,tenzij partijen uitdrukkelijk en schriftelijk anders zijn overeengekomen.',
+                text: '1.     Alle intellectuele eigendomsrechten en auteursrechten met betrekking tot alle door Bold Productions vervaardigde werken, waaronder in ieder geval begrepen maar niet beperkt tot filmwerken, ontwerpen, concepten, formats, modellen, rapportages, adviezen, scripts, montages, templates en overige materialen, berusten uitsluitend bij Bold Productions en worden niet aan Opdrachtgever overgedragen, tenzij partijen uitdrukkelijk en schriftelijk anders zijn overeengekomen.',
                 strong: true,
               },
             ],
@@ -609,7 +609,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: '2.     Indien isovereengekomen dat één of meerdere werken of rechten aan Opdrachtgever wordenovergedragen, is Bold Productions gerechtigd hiervoor een afzonderlijkeovereenkomst te sluiten en een daarvoor passende aanvullende vergoeding inrekening te brengen. Overdracht van intellectuele eigendomsrechten vindt eerstplaats nadat Opdrachtgever deze vergoeding volledig heeft voldaan.',
+                text: '2.     Indien is overeengekomen dat één of meerdere werken of rechten aan Opdrachtgever worden overgedragen, is Bold Productions gerechtigd hiervoor een afzonderlijke overeenkomst te sluiten en een daarvoor passende aanvullende vergoeding in rekening te brengen. Overdracht van intellectuele eigendomsrechten vindt eerst plaats nadat Opdrachtgever deze vergoeding volledig heeft voldaan.',
                 strong: true,
               },
             ],
@@ -617,7 +617,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: '3.     Het is Opdrachtgeverzonder voorafgaande schriftelijke toestemming van Bold Productions niettoegestaan de werken waarop intellectuele eigendomsrechten rusten te bewerken,te wijzigen, aan te passen, te verveelvoudigen, openbaar te maken of aan derdenter beschikking te stellen, daaronder begrepen gebruik voor commerciëledoeleinden. Bewerking, wijziging of aanpassing van door Bold Productions opgeleverde werken is uitsluitend toegestaan na voorafgaandeschriftelijke goedkeuring van Bold Productions.',
+                text: '3.     Het is Opdrachtgever zonder voorafgaande schriftelijke toestemming van Bold Productions niet toegestaan de werken waarop intellectuele eigendomsrechten rusten te bewerken, te wijzigen, aan te passen, te verveelvoudigen, openbaar te maken of aan derden ter beschikking te stellen, daaronder begrepen gebruik voor commerciële doeleinden. Bewerking, wijziging of aanpassing van door Bold Productions opgeleverde werken is uitsluitend toegestaan na voorafgaande schriftelijke goedkeuring van Bold Productions.',
                 strong: true,
               },
             ],
@@ -628,7 +628,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: '4.     Opdrachtgever zal dedoor Bold Productions geleverde werken en materialen uitsluitend gebruiken opde wijze en binnen de reikwijdte zoals overeengekomen in de Overeenkomst.',
+                text: '4.     Opdrachtgever zal de door Bold Productions geleverde werken en materialen uitsluitend gebruiken op de wijze en binnen de reikwijdte zoals overeengekomen in de Overeenkomst.',
                 strong: true,
               },
             ],
@@ -636,7 +636,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: '5.     Bold Productionsbehoudt te allen tijde het recht op naamsvermelding bij haar werken conformartikel 25 lid 1 sub a Auteurswet. Bold Productions kan zich op grond vanartikel 25 lid 1 sub c en sub d Auteurswet verzetten tegen elke wijziging,misvorming, verminking of andere aantasting van het werk. Het is Opdrachtgeverniet toegestaan aanduidingen omtrent auteursrechten, merken, handelsnamen ofoverige rechten van intellectuele eigendom te verwijderen of te wijzigen.',
+                text: '5.     Bold Productions behoudt te allen tijde het recht op naamsvermelding bij haar werken conform artikel 25 lid 1 sub a Auteurswet. Bold Productions kan zich op grond van artikel 25 lid 1 sub c en sub d Auteurswet verzetten tegen elke wijziging, misvorming, verminking of andere aantasting van het werk. Het is Opdrachtgever niet toegestaan aanduidingen omtrent auteursrechten, merken, handelsnamen of overige rechten van intellectuele eigendom te verwijderen of te wijzigen.',
                 strong: true,
               },
             ],
@@ -644,7 +644,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: '6.     Indien Opdrachtgevereigen content aanlevert, blijven de intellectuele eigendomsrechten daarop bijOpdrachtgever berusten, tenzij schriftelijk anders is overeengekomen.',
+                text: '6.     Indien Opdrachtgever eigen content aanlevert, blijven de intellectuele eigendomsrechten daarop bij Opdrachtgever berusten, tenzij schriftelijk anders is overeengekomen.',
                 strong: true,
               },
             ],
@@ -652,7 +652,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: '7.     Bold Productions isgerechtigd technische voorzieningen aan te brengen ter bescherming van haarwerken. Het is Opdrachtgever niet toegestaan deze technische voorzieningen teverwijderen, te omzeilen of anderszins te saboteren.',
+                text: '7.     Bold Productions is gerechtigd technische voorzieningen aan te brengen ter bescherming van haar werken. Het is Opdrachtgever niet toegestaan deze technische voorzieningen te verwijderen, te omzeilen of anderszins te saboteren.',
                 strong: true,
               },
             ],
@@ -660,7 +660,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: "8.     Bold Productions isgerechtigd korte fragmenten, stills of gedeelten van het opgeleverde werk tegebruiken en te publiceren op haar website, sociale mediakanalen en inshowreels of portfolio's ten behoeve van promotionele doeleinden.",
+                text: "8.     Bold Productions is gerechtigd korte fragmenten, stills of gedeelten van het opgeleverde werk te gebruiken en te publiceren op haar website, sociale mediakanalen en in showreels of portfolio's ten behoeve van promotionele doeleinden.",
                 strong: true,
               },
             ],
@@ -668,7 +668,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: '9.     Het is Opdrachtgeveruitdrukkelijk verboden de door Bold Productions vervaardigde werken tegebruiken, te delen of openbaar te maken zolang niet alle openstaande facturenvolledig zijn voldaan.',
+                text: '9.     Het is Opdrachtgever uitdrukkelijk verboden de door Bold Productions vervaardigde werken te gebruiken, te delen of openbaar te maken zolang niet alle openstaande facturen volledig zijn voldaan.',
                 strong: true,
               },
             ],
@@ -676,7 +676,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: '10.  Onverminderd hetbepaalde in de voorgaande leden geldt dat Opdrachtgever reeds vanaf het momentdat Bold Productions werkzaamheden aanvangt, concepten ontwikkelt, materiaaloplevert of (een deel van) het werk gereed is, niet gerechtigd is dit werk tebewerken, te wijzigen, aan te passen, te verveelvoudigen, te delen, openbaar temaken of anderszins te exploiteren, ook indien de (definitieve) AV-overeenkomstnog niet door partijen is ondertekend.',
+                text: '10.  Onverminderd het bepaalde in de voorgaande leden geldt dat Opdrachtgever reeds vanaf het moment dat Bold Productions werkzaamheden aanvangt, concepten ontwikkelt, materiaal oplevert of (een deel van) het werk gereed is, niet gerechtigd is dit werk te bewerken, te wijzigen, aan te passen, te verveelvoudigen, te delen, openbaar te maken of anderszins te exploiteren, ook indien de (definitieve) AV-overeenkomst nog niet door partijen is ondertekend.',
                 strong: true,
               },
             ],
@@ -684,7 +684,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: '11.  Bij overtreding vanenig in dit artikel bepaald verbod verbeurt Opdrachtgever aan Bold Productionseen direct opeisbare boete van € 2.500 per overtreding, te vermeerderen met €250 voor iedere dag dat de overtreding voortduurt, onverminderd het recht vanBold Productions om in plaats daarvan volledige schadevergoeding te vorderenindien de werkelijke schade hoger is. Deze boete is niet voor matiging vatbaar,behoudens voor zover de wet dwingend anders bepaalt.',
+                text: '11.  Bij overtreding van enig in dit artikel bepaald verbod verbeurt Opdrachtgever aan Bold Productions een direct opeisbare boete van € 2.500 per overtreding, te vermeerderen met €250 voor iedere dag dat de overtreding voortduurt, onverminderd het recht van Bold Productions om in plaats daarvan volledige schadevergoeding te vorderen indien de werkelijke schade hoger is. Deze boete is niet voor matiging vatbaar, behoudens voor zover de wet dwingend anders bepaalt.',
                 strong: true,
               },
             ],
@@ -692,7 +692,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: '12.  Indien zich een(vermeende) inbreuk op de intellectuele eigendomsrechten voordoet, zullenpartijen elkaar hierover onverwijld informeren en in redelijkheid samenwerkenteneinde passende maatregelen te treffen. ',
+                text: '12.  Indien zich een (vermeende) inbreuk op de intellectuele eigendomsrechten voordoet, zullen partijen elkaar hierover onverwijld informeren en in redelijkheid samenwerken teneinde passende maatregelen te treffen. ',
                 strong: true,
               },
             ],
@@ -711,7 +711,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: '1.     Indien BoldProductions door overmacht tijdelijk of blijvend verhinderd is haarverplichtingen na te komen, is zij gerechtigd deze verplichtingen op teschorten zonder tot enige schadevergoeding gehouden te zijn.',
+                text: '1.     Indien Bold Productions door overmacht tijdelijk of blijvend verhinderd is haar verplichtingen na te komen, is zij gerechtigd deze verplichtingen op teschorten zonder tot enige schadevergoeding gehouden te zijn.',
                 strong: true,
               },
             ],
@@ -719,7 +719,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: '2.     Onder overmacht wordtverstaan iedere van de wil van Bold Productions onafhankelijke omstandigheidwaardoor nakoming van de Overeenkomst redelijkerwijs niet kan worden verlangd,waaronder begrepen maar niet beperkt tot: oorlog, oproer, natuurrampen, brand,stakingen, bovenmatig ziekteverzuim, overheidsmaatregelen,transportbelemmeringen en storingen bij Bold Productions of door haaringeschakelde derden.',
+                text: '2.     Onder overmacht wordt verstaan iedere van de wil van Bold Productions onafhankelijke omstandigheid waardoor nakoming van de Overeenkomst redelijkerwijs niet kan worden verlangd, waaronder begrepen maar niet beperkt tot: oorlog, oproer, natuurrampen, brand, stakingen, bovenmatig ziekteverzuim, overheidsmaatregelen, transportbelemmeringen en storingen bij Bold Productions of door haar ingeschakelde derden.',
                 strong: true,
               },
             ],
@@ -727,7 +727,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: '3.     Reeds gemaakte kostenblijven in geval van overmacht verschuldigd.',
+                text: '3.     Reeds gemaakte kosten blijven in geval van overmacht verschuldigd.',
                 strong: true,
               },
             ],
@@ -735,7 +735,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: '4.     Indien deovermachtssituatie langer dan negentig (90) dagen voortduurt, zijn beidepartijen gerechtigd de Overeenkomst schriftelijk te ontbinden. Opdrachtgever isin dat geval gehouden tot betaling van het honorarium naar rato van de reedsverrichte werkzaamheden.',
+                text: '4.     Indien de overmachtssituatie langer dan negentig (90) dagen voortduurt, zijn beide partijen gerechtigd de Overeenkomst schriftelijk te ontbinden. Opdrachtgever is in dat geval gehouden tot betaling van het honorarium naar rato van de reeds verrichte werkzaamheden.',
                 strong: true,
               },
             ],
@@ -751,7 +751,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: '1.     Klachten metbetrekking tot de verrichte werkzaamheden dienen binnen veertien (14) dagen nalevering schriftelijk en gemotiveerd aan Bold Productions te worden kenbaargemaakt.',
+                text: '1.     Klachten met betrekking tot de verrichte werkzaamheden dienen binnen veertien (14) dagen na levering schriftelijk en gemotiveerd aan Bold Productions te worden kenbaar gemaakt.',
                 strong: true,
               },
             ],
@@ -759,7 +759,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: '2.     Na het verstrijkenvan deze termijn wordt Opdrachtgever geacht de werkzaamheden volledig enonvoorwaardelijk te hebben aanvaard.',
+                text: '2.     Na het verstrijken van deze termijn wordt Opdrachtgever geacht de werkzaamheden volledig en onvoorwaardelijk te hebben aanvaard.',
                 strong: true,
               },
             ],
@@ -767,7 +767,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: '3.     Het indienen van eenklacht schort de betalingsverplichtingen van Opdrachtgever niet op.',
+                text: '3.     Het indienen van een klacht schort de betalingsverplichtingen van Opdrachtgever niet op.',
                 strong: true,
               },
             ],
@@ -775,7 +775,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: '4.     Partijen zullen zichinspannen om in overleg tot een oplossing te komen.',
+                text: '4.     Partijen zullen zich inspannen om in overleg tot een oplossing te komen.',
                 strong: true,
               },
             ],
@@ -791,7 +791,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: '1.     Iedereaansprakelijkheid van Bold Productions is beperkt tot het bedrag van het voorde betreffende Overeenkomst overeengekomen honorarium, althans tot dat deel vande Overeenkomst waarop de aansprakelijkheid betrekking heeft.',
+                text: '1.     Iedere aansprakelijkheid van Bold Productions is beperkt tot het bedrag van het voor de betreffende Overeenkomst overeengekomen honorarium, althans tot dat deel van de Overeenkomst waarop de aansprakelijkheid betrekking heeft.',
                 strong: true,
               },
             ],
@@ -799,7 +799,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: '2.     Bold Productions isnimmer aansprakelijk voor indirecte schade, gevolgschade, gederfde winst ofverlies van data, beeld- en/of geluidsdragers.',
+                text: '2.     Bold Productions is nimmer aansprakelijk voor indirecte schade, gevolgschade, gederfde winst of verlies van data, beeld- en/of geluidsdragers.',
                 strong: true,
               },
             ],
@@ -807,7 +807,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: '3.     Opdrachtgevervrijwaart Bold Productions voor aanspraken van derden.',
+                text: '3.     Opdrachtgever vrijwaart Bold Productions voor aanspraken van derden.',
                 strong: true,
               },
             ],
@@ -823,7 +823,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: 'Beide partijen zijn verplicht totstrikte geheimhouding van alle vertrouwelijke informatie die zij in het kadervan de Overeenkomst verkrijgen, zowel gedurende als na beëindiging daarvan.',
+                text: 'Beide partijen zijn verplicht tot strikte geheimhouding van alle vertrouwelijke informatie die zij in het kader van de Overeenkomst verkrijgen, zowel gedurende als na beëindiging daarvan.',
                 strong: true,
               },
             ],
@@ -831,7 +831,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: '1.     Indien Opdrachtgevereen Consument is, blijven de wettelijke rechten van de Consument die niet bijovereenkomst kunnen worden uitgesloten onverkort van kracht.',
+                text: '1.     Indien Opdrachtgever een Consument is, blijven de wettelijke rechten van de Consument die niet bij overeenkomst kunnen worden uitgesloten onverkort van kracht.',
                 strong: true,
               },
             ],
@@ -839,7 +839,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: '2.     Voor zover eenbepaling in deze voorwaarden jegens een Consument onredelijk bezwarend zouzijn, geldt tussen partijen de wettelijke regeling die daarvoor in de plaatstreedt.',
+                text: '2.     Voor zover een bepaling in deze voorwaarden jegens een Consument onredelijk bezwarend zou zijn, geldt tussen partijen de wettelijke regeling die daarvoor in de plaats treedt.',
                 strong: true,
               },
             ],
@@ -847,7 +847,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: 'Artikel 19 – Toepasselijk recht engeschillen',
+                text: 'Artikel 19 – Toepasselijk recht en geschillen',
                 strong: true,
               },
             ],
@@ -855,7 +855,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: '1.     Op allerechtsverhoudingen tussen Bold Productions en Opdrachtgever is Nederlands rechtvan toepassing.',
+                text: '1.     Op alle rechtsverhoudingen tussen Bold Productions en Opdrachtgever is Nederlands recht van toepassing.',
                 strong: true,
               },
             ],
@@ -863,7 +863,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: '2.     Geschillen wordenvoorgelegd aan de bevoegde rechter van de rechtbank Gelderland.',
+                text: '2.     Geschillen worden voorgelegd aan de bevoegde rechter van de rechtbank Gelderland.',
                 strong: true,
               },
             ],
@@ -879,7 +879,7 @@ export const page: PageData = {
           {
             p: [
               {
-                text: 'Bepalingen die naar hun aard bestemdzijn om ook na beëindiging van de Overeenkomst hun werking te behouden, blijvenonverminderd van kracht.',
+                text: 'Bepalingen die naar hun aard bestemd zijn om ook na beëindiging van de Overeenkomst hun werking te behouden, blijven onverminderd van kracht.',
                 strong: true,
               },
             ],

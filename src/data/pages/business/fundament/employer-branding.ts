@@ -83,7 +83,7 @@ export const page: PageData = {
         content: [
           {
             h: [
-              'Wat een emplyer branding film is',
+              'Wat een employer branding film is',
             ],
             level: 3,
           },
@@ -101,7 +101,7 @@ export const page: PageData = {
             h: [
               'Waarom afschrikken goed is',
             ],
-            level: 5,
+            level: 4,
           },
           {
             p: [
