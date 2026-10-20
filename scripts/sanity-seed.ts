@@ -102,9 +102,34 @@ function uploadAsset(kind: 'image' | 'file', fsPath: string): Promise<string> {
   return uploads.get(cacheKey)!;
 }
 
+/**
+ * Alt-tekst staat op het beeld zelf (Media, sanity.imageAsset.altText). Heeft het beeld er nog
+ * geen, dan krijgt het deze; op de plek alleen een afwijkende alt (de site leest coalesce(alt, asset->altText)).
+ */
+const assetAlts = new Map<string, Promise<string>>();
+function assetAltText(ref: string, alt: string): Promise<string> {
+  if (!assetAlts.has(ref)) {
+    assetAlts.set(
+      ref,
+      (async () => {
+        if (dryRun) return alt;
+        const current = await client.fetch<string | null>('*[_id == $ref][0].altText', { ref });
+        if (current || !alt) return current ?? '';
+        await client.patch(ref).set({ altText: alt }).commit();
+        return alt;
+      })(),
+    );
+  }
+  return assetAlts.get(ref)!;
+}
+
 async function image(img: LocalImage, withAlt = true) {
   const ref = await uploadAsset('image', fsPathOf(img.src));
-  return { _type: 'image', asset: { _type: 'reference', _ref: ref }, ...(withAlt ? { alt: img.alt ?? '' } : {}) };
+  const asset = { _type: 'image', asset: { _type: 'reference', _ref: ref } };
+  if (!withAlt) return asset;
+  const alt = img.alt ?? '';
+  const assetAlt = await assetAltText(ref, alt);
+  return alt === assetAlt ? asset : { ...asset, alt };
 }
 
 const ref = (id: string) => ({ _type: 'reference', _ref: id });

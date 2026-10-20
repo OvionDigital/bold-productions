@@ -1,11 +1,21 @@
 /**
  * /sitemap — overzicht van alle pagina's, zonder hero: kruimelpad, kop en linkgroepen
  * (LinkGroups). Labels van de live sitemap; de casegroep wordt automatisch gevuld met
- * alle cases (ook in Sanity), juridische pagina's zijn toegevoegd.
+ * alle cases (ook in Sanity), juridische pagina's en de Business-groepen zijn toegevoegd.
  */
 import type { PageData } from '../../lib/sections';
 import type { LinkGroup } from '../../components/sections/LinkGroups.astro';
 import { cases, caseUrl } from '../cases';
+import { audiences, audienceUrl, services, serviceUrl } from '../taxonomy';
+
+/** Business: per doelgroep het overzicht en de diensten (uit de taxonomie; niet op de oude live sitemap) */
+const businessLinkGroups: LinkGroup[] = audiences.business.map((audience) => ({
+  title: `Business – ${audience.title}`,
+  links: [
+    { label: `${audience.title} Overzicht`, href: audienceUrl('business', audience.value) },
+    ...services[audience.value].map((service) => ({ label: service.title, href: serviceUrl('business', audience.value, service) })),
+  ],
+}));
 
 /** Alle cases, in de volgorde van het casesoverzicht */
 export const casesLinkGroup = (title: string): LinkGroup => ({
@@ -78,6 +88,7 @@ export const page: PageData = {
               { label: 'Fotografie', href: '/events/artiesten/fotografie' },
             ],
           },
+          ...businessLinkGroups,
           {
             title: "Diensten & Landingspagina's",
             links: [

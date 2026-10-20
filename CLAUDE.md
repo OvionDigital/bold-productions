@@ -5,7 +5,7 @@
 Herbouw van de website van **Bold Productions** (videoproductie voor events, artiesten en zakelijke events) in Astro. De huidige site draait op Webflow en is traag. Het doel is een **pixel-getrouwe, veel snellere** versie.
 
 - Fase 1 (homepage) en fase 2 (alle overige pagina's van de live site, inclusief 13 cases en de juridische pagina's) zijn gebouwd. Elke pagina is een lijst herbruikbare secties; nieuwe pagina's bouw je uit dezelfde secties.
-- **Herstructurering oktober 2026:** de site is gesplitst in **Events** (`/events/…`, alles wat er was; "Events" als doelgroep heet nu **Organisatoren**) en **Business** (`/business/…`, nog placeholders, noindex). De homepage (`/`, Webflow `home-new`) kiest tussen de twee; de vorige homepage staat op `/events` (sinds 17 oktober 2026 een gewone pagina uit secties, `data/pages/events-home.ts` / Sanity `page-events-home`). Oude URL's: 301 in `public/_redirects`, mapping in `src/lib/url-migration.ts`.
+- **Herstructurering oktober 2026:** de site is gesplitst in **Events** (`/events/…`, alles wat er was; "Events" als doelgroep heet nu **Organisatoren**) en **Business** (`/business/…`; doelgroep- en dienstpagina's sinds 20 oktober 2026 gevuld met de teksten van boldproductions.webflow.io/business, `data/pages/business/`, beelden zelf gekozen uit `src/assets`). De homepage (`/`, Webflow `home-new`) kiest tussen de twee; de vorige homepage staat op `/events` (sinds 17 oktober 2026 een gewone pagina uit secties, `data/pages/events-home.ts` / Sanity `page-events-home`). Oude URL's: 301 in `public/_redirects`, mapping in `src/lib/url-migration.ts`.
 - Referentie: https://www.weareboldproductions.com/ (live) en https://boldproductions.webflow.io/ (staging, identiek).
 - Webflow-HTML wordt **niet** geëxporteerd of gekopieerd. Bouw schone, semantische componenten.
 - Bronnen in `reference/`: `webflow-custom-head.html` (custom CSS), `webflow-custom-footer.html` (custom JS), `rook-web.mp4` (rookvideo, in gebruik als `public/video/rook.mp4`).
@@ -96,7 +96,7 @@ src/
   components/sections/          één component per sectie, alle inhoud via props
   data/                         home.ts, navigation.ts, cases.ts, team.ts, forms.ts, seo.ts (organisatie/Mike/reviews), …
   data/pages/                   één bestand per pagina (PageData), opgesomd in data/pages/index.ts; events/… per URL,
-                                business.ts (Business-pagina's, gegenereerd), home.ts (/)
+                                business.ts (Business: lijst van business/…, plus kopieën van Cases/Over/Contact), home.ts (/)
   data/taxonomy.ts              soorten, doelgroepen, diensten (+ URL's)
   data/case-pages/              inhoud (introtekst + secties) per case, gekoppeld in data/cases.ts
   lib/                          helpers (text.ts, tokens.ts, rich.ts, vimeo.ts), structured-data.ts (JSON-LD), sections.ts (PageData/PageSection),
@@ -112,7 +112,7 @@ public/fonts, public/video, public/favicons, public/_headers
 scripts/compare.mjs             visuele vergelijking
 scripts/sanity-seed.ts          npm run sanity:seed: src/data naar Sanity (vult alleen aan; --force overschrijft,
                                 --dry-run controleert zonder te schrijven; bestaande pagina's op URL-pad herkend). Loader: scripts/sanity/
-scripts/sanity-migrate-*       eenmalige migraties (taxonomy, urls, 2026-10-17: /events als pagina, logo's, alt-teksten; al gedraaid)
+scripts/sanity-migrate-*       eenmalige migraties (taxonomy, urls, 2026-10-17: /events als pagina, logo's, alt-teksten; 2026-10-20: Contentcreatie/zakelijk-portret; al gedraaid)
 scripts/section-previews.mjs    npm run sanity:section-previews: screenshot per sectie → studio/static/sections/
 astro.preview.config.mjs        live voorbeeld voor Sanity (SSR, Worker; wrangler.preview.jsonc)
 studio/                         Sanity Studio (losse app, eigen package.json; presentation.ts, actions.ts)

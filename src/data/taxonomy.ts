@@ -84,7 +84,7 @@ export const services: Record<Audience, Service[]> = {
   ],
   content: [
     { value: 'AI', title: 'AI', slug: 'ai' },
-    { value: 'Beeldenbank', title: 'Beeldenbank', slug: 'beeldenbank' },
+    { value: 'Contentcreatie', title: 'Contentcreatie', slug: 'contentcreatie' },
     { value: 'Referentievideo', title: 'Referentievideo', slug: 'referentievideo' },
     { value: 'Social content', title: 'Social content', slug: 'social-content' },
     { value: 'Productvideo', title: 'Productvideo', slug: 'productvideo' },
@@ -93,7 +93,7 @@ export const services: Record<Audience, Service[]> = {
   fotografie: [
     { value: 'Bedrijfsfotografie', title: 'Bedrijfsfotografie', slug: 'bedrijfsfotografie' },
     { value: 'Productfotografie', title: 'Productfotografie', slug: 'productfotografie' },
-    { value: "Portret- en teamfoto's", title: "Portret- en teamfoto's", slug: 'portret-en-teamfotos' },
+    { value: "Portret- en teamfoto's", title: "Portret- en teamfoto's", slug: 'zakelijk-portret' },
     { value: 'Projectfotografie', title: 'Projectfotografie', slug: 'projectfotografie' },
   ],
 };

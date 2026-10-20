@@ -90,7 +90,7 @@ const services: { category: 'events' | 'business'; audience: string; name: strin
     name: 'servicesContent',
     options: [
       { value: 'AI', title: 'AI' },
-      { value: 'Beeldenbank', title: 'Beeldenbank' },
+      { value: 'Contentcreatie', title: 'Contentcreatie' },
       { value: 'Referentievideo', title: 'Referentievideo' },
       { value: 'Social content', title: 'Social content' },
       { value: 'Productvideo', title: 'Productvideo' },

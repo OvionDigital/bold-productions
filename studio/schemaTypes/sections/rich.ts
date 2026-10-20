@@ -2,7 +2,7 @@ import { defineType, defineField, defineArrayMember } from 'sanity';
 import { anchorIdField, contactLinksField, gradientField, plainText, titleField } from '../fields';
 import { formOptions, messagePlaceholderField } from './more';
 
-/** Timeline.astro — kop + genummerde stappen (foto | tekst) + slotknop. */
+/** Timeline.astro — kop + genummerde stappen (foto | tekst) + slotknop; zonder stappen: kop + tekst in twee kolommen. */
 export const timelineSection = defineType({
   name: 'timelineSection',
   title: 'Tijdlijn (genummerde stappen)',
@@ -38,7 +38,7 @@ export const timelineSection = defineType({
           preview: { select: { title: 'title', subtitle: 'number', media: 'image' } },
         }),
       ],
-      validation: (r) => r.required().min(1),
+      description: 'Zonder stappen: alleen de titel en de intro-tekst in twee kolommen.',
     }),
     defineField({ name: 'cta', title: 'Slotknop (optioneel)', type: 'ctaButton' }),
     defineField({

@@ -1,14 +1,13 @@
 /**
- * Bold Business (/business/…). De inhoud volgt nog; tot die tijd:
+ * Bold Business (/business/…):
  * - /business: business-home.ts (Webflow /business).
- * - De vier doelgroepen en hun diensten (data/taxonomy.ts): placeholder
- *   (hero + korte tekst), noindex en dus buiten sitemap.xml. Menu en footer linken er al naar.
+ * - De vier doelgroepen en hun diensten (data/taxonomy.ts): business/<doelgroep>.ts en
+ *   business/<doelgroep>/<dienst>.ts, teksten van boldproductions.webflow.io (oktober 2026).
  * - Cases, Over Bold, Mike, Contact en Offerte aanvragen: dezelfde inhoud als onder /events,
  *   met links naar de Business-versies. /business/cases toont alleen Business-cases (nog geen:
  *   noindex zolang de lijst leeg is).
  */
 import type { PageData, PageSection } from '../../lib/sections';
-import { audiences, services, type Audience } from '../taxonomy';
 import { cases, caseGridProps } from '../cases';
 import { page as businessHome } from './business-home';
 import { page as eventsCases } from './events/cases';
@@ -16,23 +15,26 @@ import { page as eventsOver } from './events/over-bold';
 import { page as eventsMike } from './events/over-bold/mike';
 import { page as eventsContact } from './events/contact';
 import { page as eventsOfferte } from './events/offerte-aanvragen';
-import heroImage from '../../assets/images/cases/mikexdeliveformule-finis-100-jaar-4.jpg';
-
-const placeholderText = 'Deze pagina is in aanbouw. Binnenkort lees je hier meer over Bold Business.';
-
-function placeholder(slug: string, title: string, eyebrow: string): PageData {
-  return {
-    slug,
-    title,
-    accent: 'yellow',
-    meta: { title: `${title} | Bold Business`, description: placeholderText, noindex: true },
-    sections: [
-      { type: 'hero', props: { title, titleAccent: '', eyebrow, image: { src: heroImage, alt: '' }, accent: 'yellow' } },
-      { type: 'breadcrumbs' },
-      { type: 'richText', props: { id: 'first-section', content: [{ p: [placeholderText] }], align: 'center' } },
-    ],
-  };
-}
+import { page as fundament } from './business/fundament';
+import { page as brandfilm } from './business/fundament/brandfilm';
+import { page as bedrijfsfilm } from './business/fundament/bedrijfsfilm';
+import { page as employerBranding } from './business/fundament/employer-branding';
+import { page as campagnes } from './business/campagnes';
+import { page as commercial } from './business/campagnes/commercial';
+import { page as merkactivatie } from './business/campagnes/merkactivatie';
+import { page as werving } from './business/campagnes/werving';
+import { page as content } from './business/content';
+import { page as ai } from './business/content/ai';
+import { page as contentcreatie } from './business/content/contentcreatie';
+import { page as referentievideo } from './business/content/referentievideo';
+import { page as socialContent } from './business/content/social-content';
+import { page as productvideo } from './business/content/productvideo';
+import { page as projectvideo } from './business/content/projectvideo';
+import { page as fotografie } from './business/fotografie';
+import { page as bedrijfsfotografie } from './business/fotografie/bedrijfsfotografie';
+import { page as productfotografie } from './business/fotografie/productfotografie';
+import { page as zakelijkPortret } from './business/fotografie/zakelijk-portret';
+import { page as projectfotografie } from './business/fotografie/projectfotografie';
 
 /** Links naar de algemene Events-pagina's → de Business-versie (Cases, Over Bold, Contact, Offerte) */
 function toBusinessLinks<T>(value: T): T {
@@ -58,12 +60,26 @@ const businessCases = cases.filter((item) => item.category === 'business');
 
 export const businessPages: PageData[] = [
   businessHome,
-  ...audiences.business.flatMap((audience) => [
-    placeholder(`business/${audience.value}`, audience.title, 'Bold Business'),
-    ...services[audience.value as Audience].map((service) =>
-      placeholder(`business/${audience.value}/${service.slug}`, service.title, audience.title),
-    ),
-  ]),
+  fundament,
+  brandfilm,
+  bedrijfsfilm,
+  employerBranding,
+  campagnes,
+  commercial,
+  merkactivatie,
+  werving,
+  content,
+  ai,
+  contentcreatie,
+  referentievideo,
+  socialContent,
+  productvideo,
+  projectvideo,
+  fotografie,
+  bedrijfsfotografie,
+  productfotografie,
+  zakelijkPortret,
+  projectfotografie,
   {
     ...copy(
       eventsCases,
