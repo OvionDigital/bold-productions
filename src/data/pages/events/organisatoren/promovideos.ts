@@ -34,7 +34,7 @@ export const page: PageData = {
         eyebrow: 'die mensen doet besluiten.',
         primaryCta: {
           label: 'Boek Bold',
-          href: '#',
+          href: '/events/offerte-aanvragen',
         },
         secondaryCta: {
           label: 'Zo doen we dat',

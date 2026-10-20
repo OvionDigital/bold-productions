@@ -30,7 +30,7 @@ export const page: PageData = {
         eyebrow: 'als je het goed aanpakt.',
         primaryCta: {
           label: 'Boek Bold',
-          href: '#',
+          href: '/events/offerte-aanvragen',
         },
         secondaryCta: {
           label: 'Ben je daar klaar voor?',

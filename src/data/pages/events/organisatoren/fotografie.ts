@@ -34,7 +34,7 @@ export const page: PageData = {
         eyebrow: 'alleen als hij op het juiste moment is gemaakt.',
         primaryCta: {
           label: 'Boek Bold',
-          href: '#',
+          href: '/events/offerte-aanvragen',
         },
         secondaryCta: {
           label: 'Kunnen wij',

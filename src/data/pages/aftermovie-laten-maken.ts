@@ -183,7 +183,7 @@ export const page: PageData = {
         ],
         cta: {
           label: 'Bel Bold',
-          href: '#',
+          href: 'tel:+31623328655',
         },
         media: {
           type: 'image',

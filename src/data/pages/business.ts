@@ -4,7 +4,7 @@
  * - De vier doelgroepen en hun diensten (data/taxonomy.ts): business/<doelgroep>.ts en
  *   business/<doelgroep>/<dienst>.ts, teksten van boldproductions.webflow.io (oktober 2026).
  * - Cases, Over Bold, Mike, Contact en Offerte aanvragen: dezelfde inhoud als onder /events,
- *   met links naar de Business-versies. /business/cases toont alleen Business-cases (nog geen:
+ *   met links naar de Business-versies; noindex zolang ze gelijk zijn aan de Events-versies. /business/cases toont alleen Business-cases (nog geen:
  *   noindex zolang de lijst leeg is).
  */
 import type { PageData, PageSection } from '../../lib/sections';
@@ -50,9 +50,12 @@ function toBusinessLinks<T>(value: T): T {
   return value;
 }
 
+/** Kopie van een Events-pagina. Zelfde tekst en SEO als het origineel: noindex tot er eigen
+ * Business-teksten zijn (anders ziet Google dubbele inhoud). */
 const copy = (page: PageData, slug: string, sections: PageSection[] = page.sections): PageData => ({
   ...page,
   slug,
+  meta: { ...page.meta, noindex: true },
   sections: toBusinessLinks(sections),
 });
 

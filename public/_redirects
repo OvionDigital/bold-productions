@@ -23,3 +23,7 @@
 /over/* /events/over-bold/:splat 301
 /contact /events/contact 301
 /offerte-aanvragen /events/offerte-aanvragen 301
+
+# Webflow-paden van de nieuwe homepage en Business (oktober 2026)
+/home-new / 301
+/campagnes /business/campagnes 301
