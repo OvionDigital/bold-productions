@@ -1,7 +1,7 @@
 ---
 /**
  * Footer: vier linkkolommen, contactgegevens, logo + socials en een onderrij met
- * juridische links en copyright. Lichte textuur (pas na window.load, zie PageBackground).
+ * juridische links, copyright en KvK-nummer. Lichte textuur (pas na window.load, zie PageBackground).
  */
 import { getImage } from 'astro:assets';
 import Icon from '../ui/Icon.astro';
@@ -24,12 +24,14 @@ interface Props {
   socials: readonly { label: string; href: string; icon: IconName }[];
   legalLinks: NavLink[];
   copyright: string;
+  /** KvK-nummer, naast het copyright */
+  kvk?: string;
   /** "Gebouwd door …", opent in een nieuw tabblad */
   credit?: NavLink;
   logoAlt: string;
 }
 
-const { columns, contact, socials, legalLinks, copyright, credit, logoAlt } = Astro.props;
+const { columns, contact, socials, legalLinks, copyright, kvk, credit, logoAlt } = Astro.props;
 const isExternal = (href: string) => /^https?:\/\//.test(href);
 
 const [sm, lg] = await Promise.all(
@@ -120,6 +122,7 @@ const bgLg = `url("${lg.src}")`;
       </div>
       <div class="footer__bottom-col footer__bottom-col--shrink">
         <p class="footer__link footer__copyright">{copyright}</p>
+        {kvk && <p class="footer__link">{kvk}</p>}
         {
           credit && (
             <a href={credit.href} class="footer__link footer__credit" target="_blank" rel="noopener">

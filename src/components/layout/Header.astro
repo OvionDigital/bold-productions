@@ -46,8 +46,8 @@ const isHome = currentPath === home;
         <Picture
           src={logo}
           alt={logoAlt}
-          widths={[124, 154, 248, 308]}
-          sizes="(max-width: 767px) 124px, 154px"
+          widths={[96, 104, 154, 192, 208, 308]}
+          sizes="(max-width: 479px) 96px, (max-width: 767px) 104px, 154px"
           formats={['avif', 'webp']}
           loading="eager"
           class="navbar__logo-img"
@@ -131,6 +131,7 @@ const isHome = currentPath === home;
   .navbar__brand {
     position: relative;
     z-index: var(--z-menu-controls);
+    min-width: 0;
     margin-right: auto;
   }
 
@@ -141,6 +142,7 @@ const isHome = currentPath === home;
 
   .navbar__logo :global(img) {
     width: var(--logo-width);
+    max-width: 100%;
     height: auto;
     vertical-align: middle;
   }
@@ -188,25 +190,32 @@ const isHome = currentPath === home;
     .navbar__logo :global(img) {
       width: var(--logo-width-mobile);
     }
+
+    /* Keuzeknoppen (neutraal): korte labels en compacter, zodat ze naast het logo passen */
+    .navbar__actions:has(.navbar__choice-link) {
+      flex-shrink: 0;
+      gap: var(--space-8);
+      padding-left: var(--space-12);
+    }
+
+    .navbar__choice-link:has(:global(.navbar__choice--short)) :global(.navbar__choice--full) {
+      display: none;
+    }
+
+    .navbar__choice-link :global(.navbar__choice) {
+      height: var(--button-height-xs);
+      padding: 0 var(--button-padding-x-xs);
+      font-size: var(--fs-2xs);
+    }
+
+    .navbar__choice-link :global(.navbar__choice--short) {
+      display: inline-flex;
+    }
   }
 
   @media (max-width: 479px) {
     .navbar__actions :global(.navbar__cta) {
       display: none;
-    }
-
-    .navbar__actions:has(.navbar__choice-link) {
-      gap: var(--space-8);
-    }
-
-    /* Korte labels (Events / Business) passen naast het logo */
-    .navbar__choice-link:has(:global(.navbar__choice--short)) :global(.navbar__choice--full) {
-      display: none;
-    }
-
-    .navbar__choice-link :global(.navbar__choice--short) {
-      display: inline-flex;
-      padding-inline: var(--space-12);
     }
   }
 </style>

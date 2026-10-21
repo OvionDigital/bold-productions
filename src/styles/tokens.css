@@ -209,6 +209,7 @@
   --fs-base: 16px;
   --fs-sm: 14px;
   --fs-xs: 13px;
+  --fs-2xs: 12px; /* keuzeknoppen navbar op mobiel */
   --fs-cursor: 28px; /* popcorn-cursor */
 
   /* ─── Typografie: regelhoogtes ──────────────────────────────────── */
@@ -285,6 +286,8 @@
   --button-height-small: 48px;
   --button-padding-x: 32px; /* 24px op mobiel */
   --button-padding-x-small: 24px;
+  --button-height-xs: 36px; /* keuzeknoppen navbar op mobiel */
+  --button-padding-x-xs: 12px;
   --border-width-thick: 2px;
   --ls-button: 0.08em; /* kapitalen in knoppen */
   --icon-sm: 16px;
@@ -297,7 +300,7 @@
   --carousel-nav-size: 48px;
   --whatsapp-size: 56px;
   --logo-width: 154px;
-  --logo-width-mobile: 124px;
+  --logo-width-mobile: 104px; /* 96px ≤479 */
   --footer-logo-width: 160px;
   --hero-min-height: 550px;
   --map-height: 600px;
@@ -501,5 +504,6 @@
     --container-padding: 16px;
     --container-padding-wide: 16px;
     --polaroids-item-top: 264px;
+    --logo-width-mobile: 96px;
   }
 }

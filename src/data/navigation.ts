@@ -26,7 +26,7 @@ export interface NavGroup extends NavLink {
 
 export type SiteSection = Category | 'neutral';
 
-/** Knop in de navbar; `shortLabel` op schermen ≤479px (past naast het logo) */
+/** Knop in de navbar; `shortLabel` op schermen ≤767px (past naast het logo) */
 export interface NavButton extends NavLink {
   accent: Accent;
   shortLabel?: string;
@@ -181,6 +181,9 @@ export const legalLinks: NavLink[] = [
 ];
 
 export const copyright = '© Bold Productions 2026';
+
+/** Onderin de footer, naast het copyright (geen btw-nummer) */
+export const kvk = 'KvK 80117686';
 
 /** Onderin de footer, opent in een nieuw tabblad */
 export const credit = { label: 'Gebouwd door Ovion Digital', href: 'https://oviondigital.nl' };

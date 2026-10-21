@@ -179,11 +179,11 @@ Houd dit bij bij elk nieuw component.
 
 | Component          | Uitleg                                                                      |
 | ------------------ | --------------------------------------------------------------------------- |
-| `Header.astro`     | Vaste navigatiebalk: logo (`home`), MegaMenu, CTA (optioneel) en menuknop (+ MenuPanel); menu per deel van de site (`navigation.ts`). Leeg `nav` + `buttons` = neutraal: alleen de knoppen Bold Events/Bold Business (≤479 korte labels), geen menu. `revealAfter`: verborgen tot dat element voorbij is (homepage: split-hero). Verbergt bij scrollen omlaag, verschijnt bij scrollen omhoog (gedrag: `navbar-autohide.ts`). |
+| `Header.astro`     | Vaste navigatiebalk: logo (`home`), MegaMenu, CTA (optioneel) en menuknop (+ MenuPanel); menu per deel van de site (`navigation.ts`). Leeg `nav` + `buttons` = neutraal: alleen de knoppen Bold Events/Bold Business (≤767 korte labels, compacter), geen menu. `revealAfter`: verborgen tot dat element voorbij is (homepage: split-hero). Verbergt bij scrollen omlaag, verschijnt bij scrollen omhoog (gedrag: `navbar-autohide.ts`). |
 | `Breadcrumbs.astro` | Kruimelpad onder de hero: home-icoon = home van het deel (/events, /business, anders /), stappen, huidige pagina (`buildBreadcrumbs` in `lib/sections.ts`). Niet op /events en /business zelf. |
 | `MegaMenu.astro`   | Desktop-dropdowns (≥1280px), CSS hover/focus-within; groep zonder kinderen = gewone link. |
 | `MenuPanel.astro`  | Volledig menupaneel met overlay en accordeongroepen (gedrag: `menu.ts`); groep zonder kinderen = losse link. Onderaan `switchTo`: knop naar het andere deel (Events ↔ Business, vast in `data/navigation.ts`). |
-| `Footer.astro`     | Footer: linkkolommen (data), contact, logo + socials, juridische links, copyright. |
+| `Footer.astro`     | Footer: linkkolommen (data), contact, logo + socials, juridische links, copyright, KvK-nummer. |
 | `PageBackground.astro` | Textuur (AVIF, na window.load) + grote B-outlines (inline SVG met masker) achter de pagina; `shapes` instelbaar. De B-laag is zo hoog als de B's zelf (niet als de pagina, `contain: layout paint`), zodat hij niet meeverandert als de pagina langer/korter wordt; `.page-bg` knipt af met `overflow: clip`. B's worden getekend bij in beeld (`draw-shapes.ts`). |
 | `WhatsAppButton.astro` | Zwevende WhatsApp-knop rechtsonder.                                           |
 | `Analytics.astro`  | CookieFirst + GTM-KCTG3DST (async, `part="head"`/`"body"` voor de noscript), alleen bij `PUBLIC_ENABLE_TRACKING=true`. |
