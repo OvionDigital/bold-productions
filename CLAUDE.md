@@ -199,7 +199,7 @@ Houd dit bij bij elk nieuw component.
 | `IntroHighlight.astro` | Gecentreerde Gate-introtekst met groene accenten en scroll-highlight per letter. |
 | `Timeline.astro` | Kop (titel + rich text) met genummerde stappen: foto + tekstblok met rookvideo (knop per stap optioneel), CTA; `gradient`. Stappen wisselen af (oneven foto links, even rechts); `reverse` begint rechts. |
 | `Testimonials.astro` | Kop + carousel met TestimonialCards over de volle breedte, rook- en B-achtergrond. |
-| `PolaroidStack.astro` | Sticky kop (hoog: de navbar is dan weg) + polaroids die bij scrollen over elkaar schuiven (pure CSS); een polaroid is nooit hoger dan het scherm toelaat (max-breedte uit de schermhoogte). |
+| `PolaroidStack.astro` | Sticky kop (hoog: de navbar is dan weg) + polaroids die bij scrollen over elkaar schuiven (pure CSS); een polaroid is nooit hoger dan het scherm toelaat (max-breedte uit de schermhoogte). Achtergrond "donkere kamer" (`--color-darkroom*`): effen vlak met schermhoge rode gloed die blijft staan (sticky), loopt in de sectiemarges zacht over. |
 | `TextMedia.astro` | Tekst naast beeld (2:3) of Vimeo (1:1); `links` (ContactLinks) onder de tekst; `reverse`, `triangles`, `spacing` (margin/section), `intro` erboven, slot `content` voor bv. een formulier; `id="cinema"` = popcorn-cursor. |
 | `CaseSpotlight.astro` | Kop + één grote CaseCard: vaste case (`item`/`caseSlug`) of kandidaten (`items`, standaard `spotlightCandidates` op het pad) waaruit de browser er elke keer één kiest. |
 | `ImageFeature.astro` | Brede foto met gecentreerde titel + intro erover (mobiel eronder); `id="cinema"` = popcorn-cursor. |

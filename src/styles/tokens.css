@@ -106,6 +106,9 @@
   --color-white-a70: #ffffffb3;
   --color-white-a80: #ffffffcc;
   --color-page-a70: #130d0bb3;
+  --color-darkroom: #0a0605; /* polaroidgalerij: donkere kamer */
+  --color-darkroom-glow: #ff2a1452; /* rood doka-licht van boven */
+  --color-darkroom-glow-soft: #ff2a1414;
   --color-logo-bg: #2e2a2980; /* Webflow: --logo-transparent */
   --color-logo-border: #76767633;
   --color-orange-a6: #ff55000f;

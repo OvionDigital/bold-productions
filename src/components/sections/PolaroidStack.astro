@@ -4,6 +4,8 @@
  * als een stapel over elkaar schuiven (pure CSS, position: sticky).
  * Een polaroid is nooit hoger dan wat er onder de kop in beeld past (foto's 3:2): de
  * maximale breedte volgt de schermhoogte, zodat hij ook op lage laptopschermen heel blijft.
+ * Achtergrond "donkere kamer": effen donker vlak (dekt de meescrollende paginatextuur af)
+ * met een rode gloed die schermhoog blijft staan; loopt in de sectiemarges zacht over.
  */
 import Container from '../ui/Container.astro';
 import SectionHeading from '../ui/SectionHeading.astro';
@@ -25,6 +27,10 @@ const rotations = ['-1.5deg', '1.2deg', '-0.8deg', '2deg', '-1.8deg', '0.6deg', 
 ---
 
 <section class="polaroids">
+  <div class="polaroids__bg" aria-hidden="true">
+    <div class="polaroids__light"></div>
+  </div>
+
   <div class="polaroids__header" data-animate>
     <Container>
       <div class="polaroids__row">
@@ -55,7 +61,35 @@ const rotations = ['-1.5deg', '1.2deg', '-0.8deg', '2deg', '-1.8deg', '0.6deg', 
 <style>
   .polaroids {
     position: relative;
+    isolation: isolate;
     margin-block: var(--section-space);
+  }
+
+  /* Loopt door in de marges boven en onder (daar de overgang), zodat de afstand tot de
+     buursecties gelijk blijft. Geen overflow: hidden, anders werkt sticky niet. */
+  .polaroids__bg {
+    position: absolute;
+    inset: calc(-1 * var(--section-space)) 0;
+    z-index: var(--z-below);
+    background-color: var(--color-darkroom);
+    mask-image: linear-gradient(
+      var(--color-transparent),
+      var(--color-black) var(--section-space),
+      var(--color-black) calc(100% - var(--section-space)),
+      var(--color-transparent)
+    );
+    pointer-events: none;
+  }
+
+  .polaroids__light {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    height: 100svh;
+    background-image:
+      radial-gradient(ellipse 70% 55% at 50% 0%, var(--color-darkroom-glow), var(--color-transparent)),
+      radial-gradient(ellipse 120% 90% at 50% 10%, var(--color-darkroom-glow-soft), var(--color-transparent)),
+      radial-gradient(ellipse 100% 80% at 50% 45%, var(--color-transparent) 55%, var(--color-black-a50));
   }
 
   .polaroids__header {
