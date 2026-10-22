@@ -47,8 +47,13 @@ import zdhFedbal150 from '../assets/images/cases/zdh-fedbal-150.jpg';
 import spotSeq00273208Still012 from '../assets/images/cases/spot-seq-00-27-32-08-still012.jpg';
 
 
-/** category/audience/services: zie data/taxonomy.ts */
+/**
+ * category/audience/services (zie data/taxonomy.ts): de hoofdindeling, bepaalt het adres.
+ * `targets`: alle indelingen (Events en/of Business, per soort één of meer doelgroepen met hun
+ * diensten), de eerste = de hoofdindeling. Leeg = alleen de hoofdindeling.
+ */
 export interface Case extends Targeting {
+  targets?: Targeting[];
   slug: string;
   title: string;
   /** Korte vraag/intro onder de titel (kaart en hero) */
@@ -338,8 +343,25 @@ export const cases: Case[] = [
   },
 ];
 
-/** /events/cases/<slug> of /business/cases/<slug>, naar de soort van de case */
+/** /events/cases/<slug> of /business/cases/<slug>, naar de (hoofd)soort van de case; zie caseIn() */
 export const caseUrl = (item: Pick<Case, 'slug' | 'category'>) => `/${item.category}/cases/${item.slug}`;
+
+/** Alle indelingen van een case (minstens de hoofdindeling) */
+export const caseTargets = (item: Case): Targeting[] =>
+  item.targets?.length ? item.targets : [{ category: item.category, audience: item.audience, services: item.services }];
+
+/** Soorten van een case, de hoofdsoort eerst. Een case staat op /<soort>/cases/<slug> voor elke soort. */
+export const caseCategories = (item: Case): Category[] => [...new Set([item.category, ...caseTargets(item).map((t) => t.category)])];
+
+/**
+ * De case vanuit één soort: adres, doelgroep en diensten van de eerste indeling in die soort,
+ * zodat een kaart op een Business-pagina naar /business/cases/… linkt. Geen indeling in die
+ * soort = de case ongewijzigd.
+ */
+export function caseIn(item: Case, category: Category | undefined): Case {
+  const target = category && caseTargets(item).find((t) => t.category === category);
+  return target ? { ...item, ...target } : item;
+}
 
 export function getCase(slug: string): Case {
   const found = cases.find((c) => c.slug === slug);
@@ -365,13 +387,17 @@ export function caseGridProps(items: Case[], category: Category): CaseGridProps 
       // { name: 'service', label: 'Dienst', options: [{ label: 'Alle', value: 'alle' }, ...diensten] }
     ],
     items: items
-      .filter((item) => item.category === category)
-      .map((item) => ({
-        item,
-        tags: [audienceTitle(item.audience), ...(item.services ?? [])],
-        audiences: [item.audience],
-        services: item.services ?? [],
-      })),
+      .filter((item) => caseCategories(item).includes(category))
+      .map((item) => {
+        const targets = caseTargets(item).filter((t) => t.category === category);
+        const services = [...new Set(targets.flatMap((t) => t.services ?? []))];
+        return {
+          item: caseIn(item, category),
+          tags: [...targets.map((t) => audienceTitle(t.audience)), ...services],
+          audiences: targets.map((t) => t.audience),
+          services,
+        };
+      }),
   };
 }
 
@@ -380,19 +406,21 @@ export const eventsCaseGrid = caseGridProps(cases, 'events');
 /**
  * Kandidaten voor "Uitgelichte case" op een pagina (de browser kiest er elke keer één): de cases
  * met de soort, doelgroep én dienst van het pad (bijv. /events/organisatoren/promovideos);
- * zijn die er niet, dan die met de doelgroep, dan de soort, en anders alle cases.
+ * zijn die er niet, dan die met de doelgroep, dan de soort, en anders alle cases. Elke indeling
+ * van een case telt; de kaart linkt naar de case binnen de soort van de pagina (caseIn).
  */
 export function spotlightCandidates(all: Case[], path: string): Case[] {
   const { category, audience, service } = targetingOfPath(path);
+  const any = (item: Case, test: (t: Targeting) => boolean) => caseTargets(item).some(test);
   const levels: ((item: Case) => boolean)[] = [
-    (item) => Boolean(service) && item.category === category && item.audience === audience && (item.services ?? []).includes(service!),
-    (item) => Boolean(audience) && item.category === category && item.audience === audience,
-    (item) => Boolean(category) && item.category === category,
+    (item) => Boolean(service) && any(item, (t) => t.category === category && t.audience === audience && (t.services ?? []).includes(service!)),
+    (item) => Boolean(audience) && any(item, (t) => t.category === category && t.audience === audience),
+    (item) => Boolean(category) && any(item, (t) => t.category === category),
     () => true,
   ];
   for (const matches of levels) {
     const found = all.filter(matches);
-    if (found.length) return found;
+    if (found.length) return found.map((item) => caseIn(item, category));
   }
   return [];
 }

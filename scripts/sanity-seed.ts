@@ -27,11 +27,11 @@ import path from 'node:path';
 import type { Inline, Rich } from '../src/lib/rich';
 import type { PageSection, PageData } from '../src/lib/sections';
 import { pages } from '../src/data/pages';
-import { cases } from '../src/data/cases';
+import { cases, caseTargets } from '../src/data/cases';
 import { testimonials } from '../src/data/testimonials';
 import { team, teamOrder, type TeamMemberId } from '../src/data/team';
 import { artistLogos, businessLogos, clientLogos } from '../src/data/logos';
-import { multiTargetingFields, targetingFields } from '../src/lib/sanity/taxonomy';
+import { caseTargetingFields, multiTargetingFields, targetingFields } from '../src/lib/sanity/taxonomy';
 import type { Audience, Category } from '../src/data/taxonomy';
 import { navigation, type NavGroup, type SiteNavigation } from '../src/data/navigation';
 
@@ -492,7 +492,7 @@ async function caseDocs(): Promise<Doc[]> {
       intro: item.intro,
       image: await image(item.image, false),
       video: vimeo(item.video),
-      ...targetingFields(item),
+      ...caseTargetingFields(caseTargets(item)),
       client: item.client,
       date: item.date,
       sortOrder: (index + 1) * 10,

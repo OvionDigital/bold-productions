@@ -1,10 +1,10 @@
 import { defineType, defineField, defineArrayMember } from 'sanity';
 import { caseSectionTypes, sectionInsertMenu } from '../sections';
-import { targetingFields, targetingFieldset } from '../taxonomy';
+import { caseTargetingFields, multiTargetingLabel, targetingFieldset } from '../taxonomy';
 
 /**
  * Case: kaart (overzicht en "Uitgelichte case") én de detailpagina /events/cases/<slug> of
- * /business/cases/<slug> (naar "Events of Business").
+ * /business/cases/<slug> (naar de eerste aangevinkte soort; allebei = beide adressen).
  * De pagina begint altijd met hero (titel, intro, foto), kruimelpad, introtekst en de
  * feitenbalk (klant, datum, doelgroep, dienst); daaronder de vrije secties.
  * Zelfde velden als src/data/cases.ts.
@@ -18,7 +18,7 @@ export const caseStudy = defineType({
     { name: 'content', title: 'Inhoud' },
     { name: 'seo', title: 'SEO' },
   ],
-  fieldsets: [targetingFieldset],
+  fieldsets: [{ ...targetingFieldset, title: 'Events en/of Business, doelgroepen en diensten' }],
   fields: [
     defineField({ name: 'title', title: 'Titel', type: 'string', group: 'card', validation: (r) => r.required() }),
     defineField({
@@ -53,7 +53,7 @@ export const caseStudy = defineType({
       group: 'card',
       options: { collapsible: true, collapsed: true },
     }),
-    ...targetingFields({ group: 'card' }),
+    ...caseTargetingFields({ group: 'card' }),
     defineField({ name: 'client', title: 'Klant', type: 'string', group: 'card' }),
     defineField({ name: 'date', title: 'Datum (zoals getoond, bijv. 6-7-2025)', type: 'string', group: 'card' }),
     defineField({ name: 'sortOrder', title: 'Volgorde in het overzicht', type: 'number', group: 'card', description: 'Laag = eerst.' }),
@@ -76,5 +76,8 @@ export const caseStudy = defineType({
     defineField({ name: 'metaDescription', title: 'Metabeschrijving (Google)', type: 'text', rows: 3, group: 'seo', description: 'Leeg = de intro.' }),
   ],
   orderings: [{ title: 'Volgorde', name: 'sortOrderAsc', by: [{ field: 'sortOrder', direction: 'asc' }] }],
-  preview: { select: { title: 'title', subtitle: 'intro', media: 'image' } },
+  preview: {
+    select: { title: 'title', media: 'image', categories: 'categories', eventsAudiences: 'eventsAudiences', businessAudiences: 'businessAudiences' },
+    prepare: ({ title, media, ...targeting }) => ({ title, media, subtitle: multiTargetingLabel(targeting) }),
+  },
 });

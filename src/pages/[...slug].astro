@@ -54,6 +54,7 @@ const employees =
   ogImage={page.meta.ogImage}
   accent={page.accent}
   noindex={page.meta.noindex}
+  canonicalPath={page.meta.canonical}
   structuredData={{ schema: page.meta.schema, breadcrumbs: page.breadcrumbs, reviews, catalog: reviews ? eventsCatalog : undefined, customers: reviews ? eventsCustomers : undefined, employees }}
 >
   <PageSections sections={page.sections} breadcrumbs={page.breadcrumbs} />

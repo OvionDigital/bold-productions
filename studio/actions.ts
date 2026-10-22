@@ -1,13 +1,13 @@
 import type { DocumentActionComponent, DocumentActionsResolver } from 'sanity';
 import { casePath, pagePath, SITE_URL } from './presentation';
 
-type Doc = { slug?: { current?: string }; category?: string } | null;
+type Doc = { slug?: { current?: string }; categories?: string[]; category?: string } | null;
 
 /** URL-pad van de gepubliceerde versie; null = (nog) niet op de site */
 function publishedPath(type: string, doc: Doc): string | null {
   if (!doc) return null;
   if (!doc.slug?.current) return null;
-  return type === 'caseStudy' ? casePath(doc.category, doc.slug.current) : pagePath(doc.slug.current);
+  return type === 'caseStudy' ? casePath(doc.categories?.[0] ?? doc.category, doc.slug.current) : pagePath(doc.slug.current);
 }
 
 /** "Bekijk op de site": opent de gepubliceerde pagina in een nieuw tabblad (menu naast Publiceren) */

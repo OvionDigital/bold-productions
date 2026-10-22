@@ -220,3 +220,38 @@ export function multiTargetingLabel(doc: MultiDoc): string | undefined {
   });
   return parts.length ? parts.join(' · ') : undefined;
 }
+
+type CaseDoc = MultiDoc & { [field: string]: unknown };
+
+/**
+ * Cases: Events en/of Business, per soort meerdere doelgroepen en per gekozen doelgroep de
+ * diensten (vinkjes). De eerste aangevinkte soort is het adres (/events/cases/… of
+ * /business/cases/…); bij allebei staat de case op beide adressen en in beide overzichten.
+ * Site: toCaseTargets in src/lib/sanity/taxonomy.ts.
+ */
+export function caseTargetingFields({ group }: { group?: string } = {}) {
+  const chosen = (doc: CaseDoc | undefined, category: 'events' | 'business') =>
+    (doc?.categories ?? []).includes(category) ? ((category === 'business' ? doc?.businessAudiences : doc?.eventsAudiences) ?? []) : [];
+  return [
+    ...multiTargetingFields().map((field) => ({
+      ...field,
+      group,
+      ...(field.name === 'categories'
+        ? { description: 'Allebei kan: dan staat de case in beide overzichten. De eerste keuze bepaalt het adres.' }
+        : {}),
+    })),
+    ...services.map((s) =>
+      defineField({
+        name: s.name,
+        title: `Diensten (${titleOf(audiences[s.category], s.audience)})`,
+        description: 'Meerdere mogelijk.',
+        type: 'array',
+        fieldset: 'targeting',
+        group,
+        of: [defineArrayMember({ type: 'string' })],
+        options: { list: s.options },
+        hidden: ({ parent }) => !chosen(parent as CaseDoc, s.category).includes(s.audience),
+      }),
+    ),
+  ];
+}

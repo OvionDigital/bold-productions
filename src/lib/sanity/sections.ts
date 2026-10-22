@@ -12,10 +12,10 @@
  */
 import { imageProjection, toRemoteImage, type SanityImageRef } from './image';
 import { portableTextToRich } from './portableText';
-import { caseGridProps, caseUrl, spotlightCandidates, type Case } from '../../data/cases';
+import { caseGridProps, caseIn, caseUrl, spotlightCandidates, type Case } from '../../data/cases';
 import { logosForPath } from '../../data/logos';
-import type { Targeting } from '../../data/taxonomy';
-import { multiTargetingProjection, targetingProjection, toMultiTargeting, toTargeting, type RawMultiTargeting, type RawTargeting } from './taxonomy';
+import { targetingOfPath, type Targeting } from '../../data/taxonomy';
+import { multiTargetingProjection, targetingProjection, toCaseTargets, toMultiTargeting, type RawMultiTargeting, type RawTargeting } from './taxonomy';
 import type { FormChoice, PageSection } from '../sections';
 import type { TextMediaProps } from '../../components/sections/TextMedia.astro';
 import type { LinkGroup } from '../../components/sections/LinkGroups.astro';
@@ -33,6 +33,7 @@ export const caseCardProjection = `{
   intro,
   "image": image${imageProjection},
   ${targetingProjection},
+  ${multiTargetingProjection},
   audiences,
   services,
   client,
@@ -121,7 +122,7 @@ type Img = SanityImageRef | null | undefined;
 type RawSection = { _type: string; _key: string } & Record<string, any>;
 
 /** Ruwe case na `caseCardProjection` */
-export interface RawCase extends RawTargeting {
+export interface RawCase extends RawTargeting, Omit<RawMultiTargeting, 'audiences'> {
   title?: string;
   slug?: string;
   intro?: string;
@@ -169,13 +170,15 @@ function legacyTargeting(raw: RawCase): Targeting {
 /** Ruwe case → Case (zelfde vorm als src/data/cases.ts). `null` als titel, slug of foto ontbreekt. */
 export function toCase(raw: RawCase | null | undefined): Case | null {
   if (!raw?.title || !raw.slug || !hasImage(raw.image)) return null;
+  const targets = toCaseTargets(raw as RawMultiTargeting & RawTargeting);
   return {
     slug: raw.slug,
     title: raw.title,
     intro: raw.intro ?? '',
     // Decoratief: de titel staat al op de kaart en in de hero
     image: { src: toRemoteImage(raw.image), alt: '' },
-    ...(toTargeting(raw) ?? legacyTargeting(raw)),
+    ...(targets[0] ?? legacyTargeting(raw)),
+    targets,
     client: opt(raw.client),
     date: opt(raw.date),
     video: vimeo(raw.video, `${raw.title} – Bold Productions`),
@@ -343,7 +346,7 @@ const mappers: Record<string, (s: RawSection, path: string) => PageSection> = {
     return {
       type: 'caseSpotlight',
       key: s._key,
-      props: { title: s.title ?? '', gradient: gradient(s.gradient), items: need(fixed ? [fixed] : spotlightCandidates(all, path), 'geen (volledige) case') },
+      props: { title: s.title ?? '', gradient: gradient(s.gradient), items: need(fixed ? [caseIn(fixed, targetingOfPath(path).category)] : spotlightCandidates(all, path), 'geen (volledige) case') },
     };
   },
 

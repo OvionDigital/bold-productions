@@ -10,7 +10,7 @@ const EXCLUDE = new Set(['404']);
 
 export const GET: APIRoute = async ({ site }) => {
   const origin = site!.origin;
-  const pages = (await getRoutedPages()).filter((page) => !page.meta.noindex && !EXCLUDE.has(page.slug));
+  const pages = (await getRoutedPages()).filter((page) => !page.meta.noindex && !page.meta.canonical && !EXCLUDE.has(page.slug));
   const home = await getHomePage();
   const urls: { loc: string; lastmod?: string }[] = [
     { loc: origin, lastmod: home.updatedAt },

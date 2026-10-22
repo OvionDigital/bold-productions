@@ -85,6 +85,8 @@ export interface PageData {
     /** Deelafbeelding; leeg = vaste Bold-afbeelding (cases: de casefoto) */
     ogImage?: string | ImageMetadata;
     noindex?: boolean;
+    /** Pad van de hoofdversie als deze pagina een kopie is (case in een tweede soort): canonical, niet in de sitemap */
+    canonical?: string;
     /** Structured data van deze pagina (src/lib/structured-data.ts) */
     schema?: PageSchema;
   };

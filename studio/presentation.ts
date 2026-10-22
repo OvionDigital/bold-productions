@@ -20,7 +20,7 @@ const mainDocuments = defineDocuments([
   { route: '/', filter: '_type == "page" && slug.current == "home"' },
   {
     route: '/:category/cases/:slug',
-    filter: '_type == "caseStudy" && category == $category && slug.current == $slug',
+    filter: '_type == "caseStudy" && ($category in categories || category == $category) && slug.current == $slug',
   },
   {
     route: ['/:a', '/:a/:b', '/:a/:b/:c', '/:a/:b/:c/:d'],
@@ -36,13 +36,15 @@ const locations = {
     resolve: (doc) => (doc?.slug ? { locations: [{ title: doc.title || pagePath(doc.slug), href: pagePath(doc.slug) }] } : null),
   }),
   caseStudy: defineLocations({
-    select: { title: 'title', slug: 'slug.current', category: 'category' },
+    select: { title: 'title', slug: 'slug.current', categories: 'categories', category: 'category' },
     resolve: (doc) =>
       doc?.slug
         ? {
             locations: [
-              { title: doc.title || 'Case', href: casePath(doc.category, doc.slug) },
-              { title: 'Cases-overzicht', href: `/${doc.category ?? 'events'}/cases` },
+              ...((doc.categories?.length ? doc.categories : [doc.category ?? 'events']) as string[]).flatMap((category) => [
+                { title: `${doc.title || 'Case'} (${category === 'business' ? 'Business' : 'Events'})`, href: casePath(category, doc.slug) },
+                { title: `Cases-overzicht ${category === 'business' ? 'Business' : 'Events'}`, href: `/${category}/cases` },
+              ]),
             ],
           }
         : null,

@@ -28,7 +28,7 @@ async function checkInternalLink(href: string, getClient: (o: { apiVersion: stri
   const caseMatch = slug.match(/^(events|business)\/cases\/(.+)$/);
   const count = await getClient({ apiVersion: '2025-01-01' }).fetch<number>(
     caseMatch
-      ? 'count(*[_type == "caseStudy" && category == $category && slug.current == $slug])'
+      ? 'count(*[_type == "caseStudy" && ($category in categories || category == $category) && slug.current == $slug])'
       : 'count(*[_type == "page" && slug.current == $slug])',
     caseMatch ? { category: caseMatch[1], slug: caseMatch[2] } : { slug },
   );

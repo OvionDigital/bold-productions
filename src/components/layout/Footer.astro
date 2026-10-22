@@ -301,10 +301,18 @@ const bgLg = `url("${lg.src}")`;
     }
   }
 
+  /* Smal: alles links uitgelijnd onder elkaar (juridische links, dan copyright, KvK, credit) */
   @media (max-width: 991px) {
     .footer__bottom {
       flex-direction: column;
+      align-items: flex-start;
       gap: var(--space-48);
+    }
+
+    .footer__bottom-col--shrink {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--space-8);
     }
   }
 
@@ -312,6 +320,8 @@ const bgLg = `url("${lg.src}")`;
     .footer {
       --footer-bg-image: var(--bgSm);
       padding-block: var(--space-48);
+      /* Ruimte voor de zwevende WhatsApp-knop rechtsonder */
+      padding-bottom: calc(var(--whatsapp-size) + var(--space-48));
     }
 
     .footer__col {

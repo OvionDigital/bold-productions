@@ -27,6 +27,8 @@ interface Props {
   /** Accentkleur van de pagina (events oranje, artiesten geel, zakelijk groen) */
   accent?: Accent;
   noindex?: boolean;
+  /** Canonical naar een ander pad (kopie van een pagina, bijv. een case in een tweede soort) */
+  canonicalPath?: string;
   /** Header, footer en WhatsApp-knop tonen (uit voor bijv. de styleguide) */
   chrome?: boolean;
   /** CSS-selector: navbar pas tonen als dit element voorbij is (homepage: '[data-split-hero]') */
@@ -51,14 +53,16 @@ const {
   ogImage,
   accent = 'orange',
   noindex = false,
+  canonicalPath,
   chrome = true,
   headerRevealAfter,
   preloadImage,
   structuredData,
 } = Astro.props;
 
-const canonical = new URL(Astro.url.pathname, Astro.site);
-const currentPath = Astro.url.pathname.replace(/\.html$/, '').replace(/\/$/, '') || '/';
+const currentPath = Astro.url.pathname.replace(/\.html$/, '').replace(/(^|\/)index$/, '').replace(/\/$/, '') || '/';
+// Zonder .html: de build (format 'file') geeft /events.html, Cloudflare serveert /events
+const canonical = new URL(canonicalPath ?? currentPath, Astro.site);
 // Menu, CTA en footer van dit deel van de site (events, business of neutraal), uit Sanity of src/data
 const siteNav = (await getNavigation())[sectionOf(currentPath)];
 const socials = await getSocials();

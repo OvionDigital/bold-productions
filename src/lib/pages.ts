@@ -6,7 +6,7 @@
 import { getImage } from 'astro:assets';
 import { pages as localPages } from '../data/pages';
 import { cases as localCases } from '../data/cases';
-import { casePage } from './cases';
+import { casePages } from './cases';
 import { buildBreadcrumbs, type PageData, type PageSection } from './sections';
 import { getCmsPages } from './sanity/pages';
 import { isRemoteImage, sanityImageUrl } from './sanity/image';
@@ -20,7 +20,7 @@ export interface BuiltPage {
   slug: string;
   title: string;
   updatedAt?: string;
-  meta: { title: string; description: string; ogImage?: string; noindex: boolean; schema?: PageSchema };
+  meta: { title: string; description: string; ogImage?: string; noindex: boolean; canonical?: string; schema?: PageSchema };
   accent: Accent;
   breadcrumbs: Crumb[];
   sections: PageSection[];
@@ -59,7 +59,7 @@ export function getAllPages(): Promise<BuiltPage[]> {
 
 async function buildAllPages(): Promise<BuiltPage[]> {
   const cms = await getCmsPages();
-  const source: PageData[] = cms?.length ? cms : [...localPages, ...localCases.map(casePage)];
+  const source: PageData[] = cms?.length ? cms : [...localPages, ...localCases.flatMap(casePages)];
   // Homepage of /events nog niet in Sanity: die uit src/data
   for (const slug of [HOME_SLUG, EVENTS_SLUG]) {
     if (!source.some((p) => p.slug === slug)) source.push(localPages.find((p) => p.slug === slug)!);
@@ -75,6 +75,7 @@ async function buildAllPages(): Promise<BuiltPage[]> {
         description: page.meta.description,
         ogImage: await ogImageFor(page),
         noindex: Boolean(page.meta.noindex),
+        canonical: page.meta.canonical,
         schema: page.meta.schema,
       },
       accent: page.accent ?? 'orange',
@@ -83,7 +84,7 @@ async function buildAllPages(): Promise<BuiltPage[]> {
     })),
   );
   // Sitemap-pagina: linkoverzicht met `auto: 'site'` krijgt alle pagina's (altijd actueel)
-  const groups = sitemapGroups(built.map((page) => ({ slug: page.slug, title: page.title, noindex: page.meta.noindex })));
+  const groups = sitemapGroups(built.map((page) => ({ slug: page.slug, title: page.title, noindex: page.meta.noindex || Boolean(page.meta.canonical) })));
   for (const page of built) {
     page.sections = page.sections.map((section) =>
       section.type === 'linkGroups' && section.props.auto === 'site' ? { ...section, props: { ...section.props, groups } } : section,

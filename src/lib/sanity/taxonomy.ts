@@ -60,3 +60,34 @@ export function multiTargetingFields({ categories, audiences: chosen }: MultiTar
     ...(categories.includes('business') ? { businessAudiences: pick('business') } : {}),
   };
 }
+
+/**
+ * Cases: Events en/of Business, per soort één of meer doelgroepen, per doelgroep de diensten
+ * (Studio: caseTargetingFields). De eerste aangevinkte soort is de hoofdsoort (het adres).
+ * Nog niet gemigreerd (oude velden category/…Audience): die ene indeling.
+ */
+export function toCaseTargets(raw: RawMultiTargeting & RawTargeting): Targeting[] {
+  const { categories, audiences: chosen } = toMultiTargeting(raw);
+  if (!chosen.length) {
+    const single = toTargeting(raw);
+    return single ? [single] : [];
+  }
+  return categories.flatMap((category) =>
+    chosen
+      .filter((audience) => audiences[category].some((a) => a.value === audience))
+      .map((audience) => {
+        const services = raw[servicesField[audience]];
+        return { category, audience, services: Array.isArray(services) ? (services as string[]) : [] };
+      }),
+  );
+}
+
+/** Indelingen van een case → Sanity-velden (seed, migratie). */
+export function caseTargetingFields(targets: Targeting[]): Record<string, unknown> {
+  const fields = multiTargetingFields({
+    categories: [...new Set(targets.map((t) => t.category))],
+    audiences: targets.map((t) => t.audience),
+  });
+  for (const t of targets) if (t.services?.length) fields[servicesField[t.audience]] = t.services;
+  return fields;
+}

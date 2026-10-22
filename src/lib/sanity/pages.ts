@@ -7,7 +7,7 @@ import { sanityClient, isSanityConfigured } from './client';
 import { caseCardProjection, mapSections, sectionsProjection, toCase, type RawCase } from './sections';
 import { portableTextToRich } from './portableText';
 import { casePage } from '../cases';
-import { caseUrl } from '../../data/cases';
+import { caseCategories, caseIn, caseUrl } from '../../data/cases';
 import type { Accent } from '../../components/ui/Button.astro';
 import type { PageData } from '../sections';
 import type { PageSchema } from '../structured-data';
@@ -130,15 +130,21 @@ export async function getCmsPages(): Promise<PageData[] | null> {
       console.warn(`[sanity] Case '${doc.slug ?? doc.title}' overgeslagen: titel, URL-pad of foto ontbreekt.`);
       continue;
     }
-    result.push({
-      ...casePage({
-        ...item,
-        meta: { title: doc.metaTitle || item.title, description: doc.metaDescription || item.intro },
-        introText: portableTextToRich(doc.introText),
-        sections: mapSections(doc.sections, caseUrl(item)),
-      }),
-      updatedAt: doc._updatedAt,
-    });
+    // Eén pagina per soort (Events en/of Business); de tweede heeft een canonical naar de eerste
+    for (const category of caseCategories(item)) {
+      result.push({
+        ...casePage(
+          {
+            ...item,
+            meta: { title: doc.metaTitle || item.title, description: doc.metaDescription || item.intro },
+            introText: portableTextToRich(doc.introText),
+            sections: mapSections(doc.sections, caseUrl(caseIn(item, category))),
+          },
+          category,
+        ),
+        updatedAt: doc._updatedAt,
+      });
+    }
   }
   return result;
 }
