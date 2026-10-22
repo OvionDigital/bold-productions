@@ -22,7 +22,8 @@
     "sanity:migrate-2026-10-22": "node --env-file=.env scripts/sanity-migrate-2026-10-22.mjs",
     "sanity:migrate-2026-10-22b": "node --env-file=.env scripts/sanity-migrate-2026-10-22b.mjs",
     "sanity:migrate-2026-10-22c": "node --env-file=.env scripts/sanity-migrate-2026-10-22c.mjs",
-    "sanity:migrate-2026-10-22d": "node --env-file=.env scripts/sanity-migrate-2026-10-22d.mjs"
+    "sanity:migrate-2026-10-22d": "node --env-file=.env scripts/sanity-migrate-2026-10-22d.mjs",
+    "sanity:migrate-2026-10-22e": "node --env-file=.env scripts/sanity-migrate-2026-10-22e.mjs"
   },
   "dependencies": {
     "@sanity/client": "^8.9.0",

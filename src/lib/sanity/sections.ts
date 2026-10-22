@@ -14,7 +14,7 @@ import { imageProjection, toRemoteImage, type SanityImageRef } from './image';
 import { portableTextToRich } from './portableText';
 import { caseGridProps, caseIn, caseUrl, spotlightCandidates, type Case } from '../../data/cases';
 import { logosForPath } from '../../data/logos';
-import { targetingOfPath, type Targeting } from '../../data/taxonomy';
+import { matchingPath, targetingOfPath, type Targeting } from '../../data/taxonomy';
 import { multiTargetingProjection, targetingProjection, toCaseTargets, toMultiTargeting, type RawMultiTargeting, type RawTargeting } from './taxonomy';
 import type { FormChoice, PageSection } from '../sections';
 import type { TextMediaProps } from '../../components/sections/TextMedia.astro';
@@ -73,7 +73,11 @@ export const sectionsProjection = `{
   },
   _type == "testimonialsSection" => {
     eyebrow, title, gradient,
-    "items": items[]->{ quote, name, organisation, "image": image${imageProjection} }
+    "picked": count(items) > 0,
+    "items": select(
+      count(items) > 0 => items[]->{ quote, name, organisation, "image": image${imageProjection} },
+      *[_type == "testimonial"] | order(_createdAt asc) { quote, name, organisation, "image": image${imageProjection}, ${multiTargetingProjection} }
+    )
   },
   _type == "polaroidStackSection" => {
     eyebrow, title, gradient,
@@ -277,27 +281,31 @@ const mappers: Record<string, (s: RawSection, path: string) => PageSection> = {
     },
   }),
 
-  testimonialsSection: (s) => ({
-    type: 'testimonials',
-    key: s._key,
-    props: {
-      eyebrow: s.eyebrow ?? '',
-      title: s.title ?? '',
-      gradient: gradient(s.gradient),
-      carousel: testimonialCarousel,
-      items: need(
-        ((s.items ?? []) as ({ quote?: string; name?: string; organisation?: string; image: Img } | null)[])
-          .filter((t): t is NonNullable<typeof t> => Boolean(t?.quote) && hasImage(t?.image))
-          .map((t) => ({
+  // Zelf gekozen testimonials, of automatisch die van de doelgroep/soort van de pagina (matchingPath)
+  testimonialsSection: (s, path) => {
+    const all = ((s.items ?? []) as (({ quote?: string; name?: string; organisation?: string; image: Img } & RawMultiTargeting) | null)[])
+      .filter((t): t is NonNullable<typeof t> => Boolean(t?.quote) && hasImage(t?.image))
+      .map((t) => ({ ...t, ...toMultiTargeting(t) }));
+    return {
+      type: 'testimonials',
+      key: s._key,
+      props: {
+        eyebrow: s.eyebrow ?? '',
+        title: s.title ?? '',
+        gradient: gradient(s.gradient),
+        carousel: testimonialCarousel,
+        items: need(
+          (s.picked ? all : matchingPath(all, path)).map((t) => ({
             quote: t.quote ?? '',
             name: opt(t.name),
             organisation: opt(t.organisation),
             image: image(t.image as SanityImageRef),
           })),
-        'geen testimonials',
-      ),
-    },
-  }),
+          'geen testimonials',
+        ),
+      },
+    };
+  },
 
   polaroidStackSection: (s) => ({
     type: 'polaroidStack',

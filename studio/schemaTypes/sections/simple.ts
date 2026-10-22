@@ -100,14 +100,18 @@ export const testimonialsSection = defineType({
       name: 'items',
       title: 'Testimonials',
       type: 'array',
-      description: 'Kies bestaande testimonials (beheer ze onder "Testimonials"). Volgorde = weergavevolgorde.',
+      description:
+        'Leeg laten = automatisch: de testimonials met de doelgroep van deze pagina; zijn die er niet, dan die van de soort (Events of Business), anders alle. Of kies zelf (beheer ze onder "Testimonials"); volgorde = weergavevolgorde.',
       of: [defineArrayMember({ type: 'reference', to: [{ type: 'testimonial' }] })],
-      validation: (r) => r.required().min(1).unique(),
+      validation: (r) => r.unique(),
     }),
   ],
   preview: {
     select: { title: 'title', eyebrow: 'eyebrow', count: 'items.length' },
-    prepare: ({ title, eyebrow, count }) => ({ title: `Testimonials — ${eyebrow ?? ''} ${title ?? ''}`, subtitle: `${count ?? 0} testimonials` }),
+    prepare: ({ title, eyebrow, count }) => ({
+      title: `Testimonials — ${eyebrow ?? ''} ${title ?? ''}`,
+      subtitle: count ? `${count} testimonials (zelf gekozen)` : 'Automatisch (doelgroep van deze pagina)',
+    }),
   },
 });
 

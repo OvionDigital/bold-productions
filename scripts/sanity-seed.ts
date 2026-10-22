@@ -31,7 +31,7 @@ import { cases, caseTargets } from '../src/data/cases';
 import { testimonials } from '../src/data/testimonials';
 import { team, teamOrder, type TeamMemberId } from '../src/data/team';
 import { artistLogos, businessLogos, clientLogos } from '../src/data/logos';
-import { caseTargetingFields, multiTargetingFields, targetingFields } from '../src/lib/sanity/taxonomy';
+import { caseTargetingFields, multiTargetingFields } from '../src/lib/sanity/taxonomy';
 import type { Audience, Category } from '../src/data/taxonomy';
 import { navigation, type NavGroup, type SiteNavigation } from '../src/data/navigation';
 
@@ -208,8 +208,8 @@ async function testimonialDocs(): Promise<Doc[]> {
       name: 'name' in t ? t.name : undefined,
       organisation: 'organisation' in t ? t.organisation : undefined,
       image: await image(t.image),
-      // Alleen soort + doelgroep (geen diensten)
-      ...targetingFields({ category: t.category, audience: t.audience }),
+      // Soort + doelgroep (geen diensten)
+      ...multiTargetingFields({ categories: [t.category], audiences: [t.audience] }),
     })),
   );
 }

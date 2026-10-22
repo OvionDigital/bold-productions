@@ -173,6 +173,33 @@ const { title, gradient = 'yellow', text, items, variant = 'services' } = Astro.
     background-color: var(--color-black-a50);
   }
 
+  /* Teamleden met video: bij hover verdwijnen de donkere laag en de tekst zacht, zodat de
+     video helder speelt (wens klant; de laag is er alleen voor de leesbaarheid van de tekst) */
+  .service-tiles--team [data-hover-video] .service-tiles__overlay {
+    transition: opacity var(--duration-slow) var(--ease-reveal);
+  }
+
+  .service-tiles--team [data-hover-video]:hover .service-tiles__overlay {
+    opacity: 0;
+  }
+
+  .service-tiles--team [data-hover-video] :is(.service-tiles__title, .service-tiles__subtitle) {
+    transition:
+      opacity var(--duration-base) var(--ease-reveal),
+      translate var(--duration-slow) var(--ease-reveal);
+  }
+
+  .service-tiles--team [data-hover-video]:hover :is(.service-tiles__title, .service-tiles__subtitle) {
+    opacity: 0;
+    translate: 0 var(--space-12);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .service-tiles--team [data-hover-video]:hover :is(.service-tiles__title, .service-tiles__subtitle) {
+      translate: none;
+    }
+  }
+
   .service-tiles__title {
     position: relative;
     z-index: var(--z-media);

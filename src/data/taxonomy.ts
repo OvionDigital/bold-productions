@@ -115,3 +115,21 @@ export function targetingOfPath(path: string): { category?: Category; audience?:
   return { category: first, audience, service: services[audience].find((s) => s.slug === third)?.value };
 }
 export const serviceUrl = (category: Category, audience: Audience, service: Service) => `/${category}/${audience}/${service.slug}`;
+
+/**
+ * Automatisch kiezen voor een pagina (logostrip, testimonials): wat de soort én doelgroep van
+ * het pad heeft; is dat er niet, dan wat de soort heeft (op een Business-pagina dus Business),
+ * en anders alles.
+ */
+export function matchingPath<T extends MultiTargeting>(all: T[], path: string): T[] {
+  const { category, audience } = targetingOfPath(path);
+  const levels: ((item: T) => boolean)[] = [
+    (item) => Boolean(category && audience) && item.categories.includes(category!) && item.audiences.includes(audience!),
+    (item) => Boolean(category) && item.categories.includes(category!),
+  ];
+  for (const matches of levels) {
+    const found = all.filter(matches);
+    if (found.length) return found;
+  }
+  return all;
+}

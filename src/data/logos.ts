@@ -4,7 +4,7 @@
  * een strip toont de logo's van de doelgroep van de pagina (logosForPath), max. 10 willekeurig.
  */
 import type { Logo } from '../components/sections/LogoMarquee.astro';
-import { targetingOfPath, type MultiTargeting } from './taxonomy';
+import { matchingPath, type MultiTargeting } from './taxonomy';
 import vunzigeDeuntjes from '../assets/logos/vunzige-deuntjes.png';
 import proost from '../assets/logos/proost.png';
 import zinInDeZomer from '../assets/logos/zin-in-de-zomer.png';
@@ -82,15 +82,4 @@ export const trustedByTitle = 'Vertrouwd door';
  * Logo's voor een strip op deze pagina: met de soort én doelgroep van het pad; zijn die er
  * niet, dan met de soort, en anders alle logo's. De strip kiest er zelf max. 10 willekeurig uit.
  */
-export function logosForPath<T extends MultiTargeting>(all: T[], path: string): T[] {
-  const { category, audience } = targetingOfPath(path);
-  const levels: ((logo: T) => boolean)[] = [
-    (logo) => Boolean(category && audience) && logo.categories.includes(category!) && logo.audiences.includes(audience!),
-    (logo) => Boolean(category) && logo.categories.includes(category!),
-  ];
-  for (const matches of levels) {
-    const found = all.filter(matches);
-    if (found.length) return found;
-  }
-  return all;
-}
+export const logosForPath = matchingPath;
