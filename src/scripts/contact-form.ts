@@ -8,6 +8,8 @@
  * [data-multiselect-required] minstens één keuze laten hebben (eigen validatiemelding;
  * het paneel gaat open zodat de browser de melding kan tonen).
  */
+import { scrollToTarget } from './lenis';
+
 const REQUIRED_CHOICE_MESSAGE = 'Kies minstens één optie.';
 
 function initOtherFields(form: HTMLFormElement): void {
@@ -98,7 +100,9 @@ export function initContactForms(): void {
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         form.hidden = true;
         success.hidden = false;
-        success.focus?.();
+        success.focus({ preventScroll: true });
+        // Lang formulier: zonder het formulier staat de melding vaak boven beeld
+        if (success.getBoundingClientRect().top < 0) scrollToTarget(success, -160);
       } catch {
         error.hidden = false;
       } finally {

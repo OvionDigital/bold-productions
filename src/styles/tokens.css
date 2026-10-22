@@ -79,6 +79,7 @@
   --color-black: #000000;
   --color-white: #ffffff;
   --color-gray-dark: #2e2a29; /* Webflow: --bold-gray */
+  --color-input-hover: #3a3533; /* formulierveld bij hover/focus */
   --color-gray: #767676;
   --color-gray-light: #c6c6c6;
   --color-quote-border: #e2e2e2; /* Webflow blockquote-rand */
@@ -106,9 +107,6 @@
   --color-white-a70: #ffffffb3;
   --color-white-a80: #ffffffcc;
   --color-page-a70: #130d0bb3;
-  --color-darkroom: #0a0605; /* polaroidgalerij: donkere kamer */
-  --color-darkroom-glow: #ff2a1452; /* rood doka-licht van boven */
-  --color-darkroom-glow-soft: #ff2a1414;
   --color-logo-bg: #2e2a2980; /* Webflow: --logo-transparent */
   --color-logo-border: #76767633;
   --color-orange-a6: #ff55000f;
@@ -296,7 +294,7 @@
   --icon-sm: 16px;
   --icon-md: 18px;
   --icon-lg: 20px;
-  --video-play-size: 72px; /* afspeelknop op Vimeo-gevel; 56px op mobiel */
+  --video-play-size: 88px; /* afspeelknop op Vimeo-gevel; 64px op mobiel */
   --icon-xl: 24px;
   --icon-touch: 36px;
   --icon-whatsapp: 28px;
@@ -325,8 +323,8 @@
   --quote-icon-max: 42px;
   --testimonial-line-width: 200px;
   --testimonials-heading-max: 900px;
-  --polaroids-header-top: 48px; /* sticky kop polaroidgalerij (de navbar is dan verborgen) */
-  --polaroids-item-top: 194px; /* sticky polaroids = kop-top + kophoogte + lucht, per breakpoint */
+  --polaroids-header-top: 128px; /* sticky kop polaroidgalerij: onder de navbar (112px; ≤767 96px) */
+  --polaroids-item-top: 274px; /* sticky polaroids = kop-top + kophoogte + lucht, per breakpoint */
   --polaroids-bottom-gap: 48px; /* minimale ruimte onder een polaroid in beeld */
   --navbar-side-width: 350px; /* logo- en actieblok ≥1440 */
   --dropdown-min-width: 250px;
@@ -456,7 +454,7 @@
 
 @media (min-width: 1440px) {
   :root {
-    --polaroids-item-top: 197px;
+    --polaroids-item-top: 277px;
     --testimonial-height: 624px;
     --container-max: 1320px;
     --container-max-plain: 1320px;
@@ -466,7 +464,7 @@
 @media (min-width: 1920px) {
   :root {
     --mega-menu-link-padding-x: 32px;
-    --polaroids-item-top: 205px;
+    --polaroids-item-top: 285px;
     --testimonial-height: 804px;
     --container-max: 1680px;
     --container-max-plain: 1680px;
@@ -486,7 +484,7 @@
   :root {
     --breadcrumbs-offset: 124px;
     --page-top-offset: 144px;
-    --video-play-size: 56px;
+    --video-play-size: 64px;
     --section-padding: 64px;
     --section-space: 64px;
     --section-space-tight: 48px;

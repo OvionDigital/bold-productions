@@ -89,9 +89,14 @@ h6 {
   font-weight: var(--fw-display);
   text-transform: uppercase;
   overflow-wrap: break-word;
+  margin-top: 0;
+}
+
+/* Afbreekstreepjes alleen als een woord niet op een regel past (scripts/hyphenate-headings.ts);
+   zonder JS breekt zo'n woord zonder streepje af (overflow-wrap). */
+.is-hyphenated {
   -webkit-hyphens: auto;
   hyphens: auto;
-  margin-top: 0;
 }
 
 h1 {

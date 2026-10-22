@@ -1,16 +1,14 @@
 ---
 /**
  * Testimonials: gecentreerde kop en een carousel met testimonialkaarten over de
- * volle breedte. Achtergrond: rookvideo (50%) over zwart met twee grote B-vormen.
+ * volle breedte, op de paginatextuur (de rook- en B-achtergrond zit sinds oktober 2026 op
+ * de polaroidgalerij).
  */
 import Container from '../ui/Container.astro';
 import SectionHeading from '../ui/SectionHeading.astro';
 import Carousel from '../ui/Carousel.astro';
 import TestimonialCard, { type Testimonial } from '../ui/TestimonialCard.astro';
-import BackgroundVideo from '../ui/BackgroundVideo.astro';
 import type { HeadingGradient } from '../ui/Heading.astro';
-import boldBGreen from '../../assets/decor/bold-b-green.svg';
-import boldBYellow from '../../assets/decor/bold-b-yellow.svg';
 
 export interface TestimonialsProps {
   eyebrow: string;
@@ -23,8 +21,6 @@ export interface TestimonialsProps {
 type Props = TestimonialsProps;
 
 const { eyebrow, title, gradient = 'orange', items, carousel } = Astro.props;
-const bGreen = `url("${boldBGreen.src}")`;
-const bYellow = `url("${boldBYellow.src}")`;
 ---
 
 <section class="testimonials" data-animate-stagger>
@@ -42,17 +38,13 @@ const bYellow = `url("${boldBYellow.src}")`;
     }
   </Carousel>
 
-  <div class="testimonials__bg" aria-hidden="true" data-animate-skip>
-    <BackgroundVideo layer="overlay" opacity="half" />
-    <div class="testimonials__bg-image"></div>
-  </div>
 </section>
 
-<style define:vars={{ bGreen, bYellow }}>
+<style>
   .testimonials {
     position: relative;
     z-index: var(--z-base);
-    padding-block: var(--section-padding);
+    margin-block: var(--section-space);
     overflow: hidden;
   }
 
@@ -70,33 +62,6 @@ const bYellow = `url("${boldBYellow.src}")`;
   .testimonials__item {
     height: var(--testimonial-height);
     padding-inline: var(--column-gap);
-  }
-
-  .testimonials__bg {
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-    overflow: hidden;
-    pointer-events: none;
-  }
-
-  .testimonials__bg-image {
-    position: absolute;
-    inset: 0;
-    background-image:
-      linear-gradient(var(--color-black-a70), var(--color-black-a70)), var(--bGreen), var(--bYellow),
-      linear-gradient(var(--color-black), var(--color-black));
-    background-position:
-      0 0,
-      40% 40%,
-      50%,
-      0 0;
-    background-repeat: repeat, no-repeat, no-repeat, repeat;
-    background-size:
-      auto,
-      auto 200%,
-      auto 200%,
-      auto;
   }
 
   @media (max-width: 479px) {

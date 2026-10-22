@@ -3,6 +3,7 @@
  * schema: studio/schemaTypes/documents/siteNavigation.ts). Per deel van de site (events,
  * business, neutraal): ontbreekt dat deel in Sanity, dan geldt src/data/navigation.ts.
  * Het logo-doel (`home`) en de wisselknop Events ↔ Business (`switchTo`) blijven vast. BaseLayout haalt dit op via getNavigation().
+ * Social media (`socials`, één lijst voor de hele site): getSocials(); leeg in Sanity = src/data/navigation.ts.
  */
 import { sanityClient, isSanityConfigured } from './client';
 import { isPreview } from '../preview';
@@ -13,6 +14,9 @@ import {
   type NavLink,
   type SiteNavigation,
   type SiteSection,
+  socials as localSocials,
+  socialPlatforms,
+  type Social,
 } from '../../data/navigation';
 import type { Accent } from '../../components/ui/Button.astro';
 
@@ -99,4 +103,25 @@ export function getNavigation(): Promise<Record<SiteSection, SiteNavigation>> {
   if (isPreview) return fetchNavigation();
   cache ??= fetchNavigation();
   return cache;
+}
+
+const SOCIALS_QUERY = `*[_id == "siteNavigation"][0].socials[]{ platform, url }`;
+
+async function fetchSocials(): Promise<readonly Social[]> {
+  if (!isSanityConfigured || !sanityClient) return localSocials;
+  const raw = await sanityClient.fetch<{ platform?: string | null; url?: string | null }[] | null>(SOCIALS_QUERY);
+  const list = (raw ?? []).flatMap(({ platform, url }) => {
+    const known = socialPlatforms.find((p) => p.value === platform);
+    return known && url ? [{ label: known.label, href: url, icon: known.icon }] : [];
+  });
+  return list.length ? list : localSocials;
+}
+
+let socialsCache: Promise<readonly Social[]> | undefined;
+
+/** Social-medialinks (footer en sameAs in de structured data); één keer per build, in de preview per verzoek. */
+export function getSocials(): Promise<readonly Social[]> {
+  if (isPreview) return fetchSocials();
+  socialsCache ??= fetchSocials();
+  return socialsCache;
 }

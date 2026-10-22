@@ -31,10 +31,10 @@ export const contactForm: ContactFormProps = {
   submittingLabel: 'Verzenden...',
   fields: [
     { name: 'Naam', label: 'Naam', type: 'text', placeholder: 'Voor- en achternaam', required: true, maxlength: 256, autocomplete: 'name' },
-    { name: 'Bedrijfsnaam', label: 'Bedrijfsnaam', type: 'text', placeholder: 'Jouw bedrijfsnaam', maxlength: 256, autocomplete: 'organization' },
+    { name: 'Bedrijfsnaam', label: 'Bedrijfsnaam', type: 'text', placeholder: 'Jouw bedrijfsnaam', required: true, maxlength: 256, autocomplete: 'organization' },
     { name: 'E-mailadres', label: 'E-mailadres', type: 'email', placeholder: 'jouw@emailadres.nl', required: true, maxlength: 256, autocomplete: 'email' },
-    { name: 'Telefoonnummer', label: 'Telefoonnummer', type: 'tel', placeholder: '+31 6 12345678', maxlength: 256, autocomplete: 'tel' },
-    { name: 'Bericht', label: 'Bericht', type: 'textarea', placeholder: 'Vertel ons over je event, datum en wensen…', required: true, maxlength: 5000 },
+    { name: 'Telefoonnummer', label: 'Telefoonnummer', type: 'tel', placeholder: '+31 6 12345678', required: true, maxlength: 256, autocomplete: 'tel' },
+    { name: 'Bericht', label: 'Bericht', type: 'textarea', placeholder: 'Vertel ons over je idee, uitdaging en wensen.', required: true, maxlength: 5000 },
   ],
   success: success('Het is verzonden. We nemen binnen één werkdag contact met je op voor een kort gesprek.'),
   error,

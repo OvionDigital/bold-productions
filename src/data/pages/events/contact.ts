@@ -73,7 +73,6 @@ export const page: PageData = {
       },
       form: {
         name: 'contact',
-        messagePlaceholder: 'Jouw bericht/vraag aan Bold Productions',
       },
     },
     {

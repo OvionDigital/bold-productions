@@ -45,6 +45,8 @@ interface Context {
   employees?: string[];
   /** Klanten (customer) op de organisatie, zoals live op de homepage */
   customers?: string[];
+  /** Social-medialinks uit Sanity (getSocials); vervangen per platform de vaste sameAs uit seo.ts */
+  socials?: readonly { href: string }[];
 }
 
 /** "Ralph buisman" → "Ralph Buisman" (zichtbaar blijft de tekst letterlijk); tussenvoegsels klein */
@@ -56,6 +58,20 @@ const personName = (name: string) =>
     .join(' ');
 
 type Node = Record<string, unknown>;
+
+const host = (href: string) => {
+  try {
+    return new URL(href).hostname.replace(/^www\./, '');
+  } catch {
+    return href;
+  }
+};
+
+/** Links uit Sanity eerst; vaste sameAs-links van een ander platform (bijv. Facebook) blijven staan. */
+function mergeSameAs(fixed: readonly string[], socials: readonly { href: string }[] = []): string[] {
+  const hosts = new Set(socials.map((social) => host(social.href)));
+  return [...socials.map((social) => social.href), ...fixed.filter((href) => !hosts.has(host(href)))];
+}
 
 export function buildStructuredData(ctx: Context): Node {
   const base = ctx.site.origin;
@@ -89,7 +105,7 @@ export function buildStructuredData(ctx: Context): Node {
     priceRange: organization.priceRange,
     address: { '@type': 'PostalAddress', ...organization.address },
     geo: { '@type': 'GeoCoordinates', ...organization.geo },
-    sameAs: organization.sameAs,
+    sameAs: mergeSameAs(organization.sameAs, ctx.socials),
     ...(ctx.employees?.length ? { employee: ctx.employees.map((name) => ({ '@type': 'Person', name: personName(name) })) } : {}),
     ...(ctx.customers?.length ? { customer: ctx.customers.map((name) => ({ '@type': 'Organization', name })) } : {}),
     // Zoals live: gemiddelde score van de reviews op deze pagina (allemaal 5)

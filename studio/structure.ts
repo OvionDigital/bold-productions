@@ -22,7 +22,7 @@ export const structure: StructureResolver = (S) =>
             ]),
         ),
       S.listItem()
-        .title('Menu & footer')
+        .title('Menu, footer & social media')
         .id('siteNavigation')
         .child(S.document().schemaType('siteNavigation').documentId('siteNavigation')),
       S.divider(),

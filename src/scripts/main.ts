@@ -21,6 +21,7 @@ import { initHoverVideos } from './hover-video';
 import { initDrawShapes } from './draw-shapes';
 import { initVimeoFacades } from './vimeo-facade';
 import { initRandomPicks } from './random-pick';
+import { initHyphenateHeadings } from './hyphenate-headings';
 import { initAnchorLinks, initScrollAnimations } from './scroll-animations';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -37,6 +38,7 @@ else window.addEventListener('load', markLoaded, { once: true });
 const modules: [string, () => unknown][] = [
   // Eerst: bepaalt welke logo's/case er staan, vóór animaties en carousels meten
   ['random-pick', initRandomPicks],
+  ['hyphenate-headings', initHyphenateHeadings],
   ['lenis', initLenis],
   ['scroll-animations', initScrollAnimations],
   ['anchor-links', initAnchorLinks],

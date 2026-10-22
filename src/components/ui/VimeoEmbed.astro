@@ -9,7 +9,9 @@
  * src/lib/vimeo.ts), zodat Google de video kan indexeren.
  *
  * `background` (standaard): decoratief, automatisch, gedempt en herhalend (Vimeo
- * background=1), lazy iframe. Altijd met dnt=1: Vimeo plaatst geen tracking-cookies.
+ * background=1), lazy iframe, vullend bijgesneden op de eigen verhouding van de video (oEmbed),
+ * zodat er geen zwarte balken komen als die afwijkt van het kader. Altijd met dnt=1: Vimeo
+ * plaatst geen tracking-cookies.
  *
  * `ratio`: vaste verhouding of een getal (hoogte / breedte, bijv. 0.5625 = 16:9).
  */
@@ -32,12 +34,13 @@ const params = new URLSearchParams({
   ...(background ? { autoplay: '1', loop: '1', muted: '1', background: '1' } : { autoplay: '1' }),
 });
 const src = `https://player.vimeo.com/video/${id}?${params.toString()}`;
-const meta = background ? null : await getVimeoMeta(id, hash);
+const meta = await getVimeoMeta(id, hash);
+const videoRatio = meta?.width && meta.height ? meta.width / meta.height : undefined;
 const watchUrl = `https://vimeo.com/${id}${hash ? `/${hash}` : ''}`;
 const thumbWidths = [480, 640, 960, 1280];
 
 const videoObject =
-  meta?.uploadDate && meta.thumbnail
+  !background && meta?.uploadDate && meta.thumbnail
     ? {
         '@context': 'https://schema.org',
         '@type': 'VideoObject',
@@ -53,8 +56,8 @@ const videoObjectHtml = videoObject ? JSON.stringify(videoObject).replaceAll('<'
 ---
 
 <div
-  class:list={['vimeo-embed', typeof ratio === 'string' && `vimeo-embed--${ratio}`, className]}
-  style={typeof ratio === 'number' ? `aspect-ratio: 1 / ${ratio}` : undefined}
+  class:list={['vimeo-embed', typeof ratio === 'string' && `vimeo-embed--${ratio}`, background && videoRatio && 'vimeo-embed--cover', className]}
+  style={[typeof ratio === 'number' && `aspect-ratio: 1 / ${ratio}`, background && videoRatio && `--video-ratio: ${videoRatio}`].filter(Boolean).join('; ') || undefined}
 >
   {
     background ? (
@@ -146,26 +149,111 @@ const videoObjectHtml = videoObject ? JSON.stringify(videoObject).replaceAll('<'
     transform: scale(1.03);
   }
 
+  /* Lichte waas zodat de knop op elke thumbnail leesbaar is */
+  .vimeo-embed__facade::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center, var(--color-black-a40), var(--color-transparent) 60%);
+    pointer-events: none;
+  }
+
+  /* Afspeelknop: glazen ring met witte driehoek; bij hover vult de ring zich vanuit het
+     midden met de accentkleur en wordt de driehoek zwart. Een rustige puls trekt de aandacht. */
   .vimeo-embed__play {
     position: relative;
+    z-index: var(--z-base);
     display: flex;
     justify-content: center;
     align-items: center;
     width: var(--video-play-size);
     height: var(--video-play-size);
+    border: var(--border-width-thick) solid var(--color-white-a70);
     border-radius: var(--radius-round);
+    background-color: var(--color-black-a40);
+    -webkit-backdrop-filter: blur(var(--blur-md));
+    backdrop-filter: blur(var(--blur-md));
+    color: var(--color-white);
+    transition:
+      border-color var(--duration-base) var(--ease-reveal),
+      color var(--duration-base) var(--ease-reveal);
+  }
+
+  .vimeo-embed__play::before,
+  .vimeo-embed__play::after {
+    content: '';
+    position: absolute;
+    inset: calc(-1 * var(--border-width-thick));
+    border-radius: inherit;
+    pointer-events: none;
+  }
+
+  .vimeo-embed__play::before {
+    z-index: var(--z-below);
     background-color: var(--accent);
-    box-shadow: var(--shadow-card-hover);
-    transition: transform var(--duration-fast) var(--ease-out);
+    opacity: 0;
+    scale: 0.4;
+    transition:
+      opacity var(--duration-base) var(--ease-reveal),
+      scale var(--duration-base) var(--ease-reveal);
+  }
+
+  .vimeo-embed__play::after {
+    border: var(--border-width-thick) solid var(--accent);
+    opacity: 0;
   }
 
   .vimeo-embed__play :global(.icon) {
-    --icon-size: var(--icon-lg);
+    --icon-size: var(--icon-xl);
     margin-left: var(--space-4);
   }
 
   .vimeo-embed__facade:hover .vimeo-embed__play,
   .vimeo-embed__facade:focus-visible .vimeo-embed__play {
-    transform: scale(1.08);
+    border-color: var(--accent);
+    color: var(--color-black);
+  }
+
+  .vimeo-embed__facade:hover .vimeo-embed__play::before,
+  .vimeo-embed__facade:focus-visible .vimeo-embed__play::before {
+    opacity: 1;
+    scale: 1;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .vimeo-embed__play::after {
+      animation: play-pulse var(--duration-pulse) var(--ease-reveal) infinite;
+    }
+
+    .vimeo-embed__facade:hover .vimeo-embed__play::after {
+      animation: none;
+    }
+  }
+
+  @keyframes play-pulse {
+    0% {
+      opacity: 0.8;
+      scale: 1;
+    }
+
+    40%,
+    100% {
+      opacity: 0;
+      scale: 1.5;
+    }
+  }
+
+  /* Achtergrondvideo vullend (zoals object-fit: cover) op de eigen verhouding --video-ratio */
+  .vimeo-embed--cover {
+    container-type: size;
+  }
+
+  .vimeo-embed--cover :global(.vimeo-embed__iframe) {
+    top: 50%;
+    left: 50%;
+    width: max(100cqw, 100cqh * var(--video-ratio));
+    max-width: none;
+    height: max(100cqh, 100cqw / var(--video-ratio));
+    translate: -50% -50%;
   }
 </style>

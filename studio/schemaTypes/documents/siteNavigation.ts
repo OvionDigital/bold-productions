@@ -5,8 +5,17 @@ import { accentOptions } from '../fields';
  * Singleton "Menu & footer" (structure.ts, documentId 'siteNavigation'). Drie delen van de site,
  * elk met eigen menu en footer — gelijk aan src/data/navigation.ts (dat geldt zolang een deel hier
  * leeg is). Gelezen door src/lib/sanity/navigation.ts. Het logo linkt altijd naar de homepage van
- * dat deel; contactgegevens, socials en juridische links staan (nog) vast in de code.
+ * dat deel; contactgegevens en juridische links staan (nog) vast in de code. Social media
+ * (`socials`) is één lijst voor de hele site: footer-iconen en sameAs voor Google
+ * (src/lib/sanity/navigation.ts getSocials; platforms gelijk aan socialPlatforms in src/data/navigation.ts).
  */
+
+const socialPlatforms = [
+  { title: 'LinkedIn', value: 'linkedin' },
+  { title: 'Instagram', value: 'instagram' },
+  { title: 'Vimeo', value: 'vimeo' },
+  { title: 'TikTok', value: 'tiktok' },
+];
 
 /** Paden die geen Sanity-pagina zijn maar wel bestaan */
 const FIXED_PATHS = ['/', '/events', '/styleguide', '/sitemap.xml'];
@@ -144,6 +153,7 @@ export const siteNavigation = defineType({
     { name: 'events', title: 'Events', default: true },
     { name: 'business', title: 'Business' },
     { name: 'neutral', title: 'Homepage & algemeen' },
+    { name: 'socials', title: 'Social media' },
   ],
   fields: [
     defineField({
@@ -203,6 +213,49 @@ export const siteNavigation = defineType({
         defineField({ name: 'footer', title: 'Footerkolommen', type: 'array', of: [footerColumn] }),
       ],
     }),
+    defineField({
+      name: 'socials',
+      title: 'Social media',
+      type: 'array',
+      group: 'socials',
+      description:
+        'Geldt voor de hele site: de iconen in de footer (Events, Business en algemeen) en de profielen die Google bij Bold Productions toont. Volgorde = volgorde in de footer. Leeg = de vaste lijst.',
+      of: [
+        defineArrayMember({
+          name: 'socialLink',
+          title: 'Account',
+          type: 'object',
+          fields: [
+            defineField({
+              name: 'platform',
+              title: 'Platform',
+              type: 'string',
+              options: { list: socialPlatforms },
+              validation: (r) => r.required(),
+            }),
+            defineField({
+              name: 'url',
+              title: 'Link naar het profiel',
+              type: 'url',
+              description: 'Volledige link, bijv. https://www.tiktok.com/@bold.productions',
+              validation: (r) => r.required().uri({ scheme: ['https'] }),
+            }),
+          ],
+          preview: {
+            select: { platform: 'platform', url: 'url' },
+            prepare: ({ platform, url }) => ({
+              title: socialPlatforms.find((p) => p.value === platform)?.title ?? platform,
+              subtitle: url,
+            }),
+          },
+        }),
+      ],
+      validation: (r) =>
+        r.custom((items?: { platform?: string }[]) => {
+          const platforms = (items ?? []).map((item) => item.platform).filter(Boolean);
+          return new Set(platforms).size === platforms.length ? true : 'Elk platform maar één keer.';
+        }),
+    }),
   ],
-  preview: { prepare: () => ({ title: 'Menu & footer' }) },
+  preview: { prepare: () => ({ title: 'Menu, footer & social media' }) },
 });

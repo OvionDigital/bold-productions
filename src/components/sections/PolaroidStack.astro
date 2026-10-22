@@ -4,13 +4,17 @@
  * als een stapel over elkaar schuiven (pure CSS, position: sticky).
  * Een polaroid is nooit hoger dan wat er onder de kop in beeld past (foto's 3:2): de
  * maximale breedte volgt de schermhoogte, zodat hij ook op lage laptopschermen heel blijft.
- * Achtergrond "donkere kamer": effen donker vlak (dekt de meescrollende paginatextuur af)
- * met een rode gloed die schermhoog blijft staan; loopt in de sectiemarges zacht over.
+ * Achtergrond: rookvideo (50%) over zwart met twee grote B-vormen, in een schermhoge laag die
+ * blijft staan (sticky) terwijl de polaroids erover stapelen. De paginatextuur scrollt er niet
+ * meer achter langs.
  */
 import Container from '../ui/Container.astro';
 import SectionHeading from '../ui/SectionHeading.astro';
 import Polaroid, { type PolaroidPhoto } from '../ui/Polaroid.astro';
+import BackgroundVideo from '../ui/BackgroundVideo.astro';
 import type { HeadingGradient } from '../ui/Heading.astro';
+import boldBGreen from '../../assets/decor/bold-b-green.svg';
+import boldBYellow from '../../assets/decor/bold-b-yellow.svg';
 
 export interface PolaroidStackProps {
   eyebrow: string;
@@ -23,12 +27,17 @@ type Props = PolaroidStackProps;
 
 const { eyebrow, title, gradient = 'green', photos } = Astro.props;
 /** Kantelingen per positie (Webflow custom CSS), herhalend na 8 */
+const bGreen = `url("${boldBGreen.src}")`;
+const bYellow = `url("${boldBYellow.src}")`;
 const rotations = ['-1.5deg', '1.2deg', '-0.8deg', '2deg', '-1.8deg', '0.6deg', '-2.2deg', '1.5deg'];
 ---
 
 <section class="polaroids">
   <div class="polaroids__bg" aria-hidden="true">
-    <div class="polaroids__light"></div>
+    <div class="polaroids__bg-layer">
+      <BackgroundVideo layer="overlay" opacity="half" />
+      <div class="polaroids__bg-image"></div>
+    </div>
   </div>
 
   <div class="polaroids__header" data-animate>
@@ -58,38 +67,48 @@ const rotations = ['-1.5deg', '1.2deg', '-0.8deg', '2deg', '-1.8deg', '0.6deg', 
   </ul>
 </section>
 
-<style>
+<style define:vars={{ bGreen, bYellow }}>
   .polaroids {
     position: relative;
     isolation: isolate;
-    margin-block: var(--section-space);
+    padding-block: var(--section-padding);
   }
 
-  /* Loopt door in de marges boven en onder (daar de overgang), zodat de afstand tot de
-     buursecties gelijk blijft. Geen overflow: hidden, anders werkt sticky niet. */
+  /* Zwart over de hele sectie; video en B's in een schermhoge laag die blijft staan.
+     overflow: clip (niet hidden), anders werkt sticky niet. */
   .polaroids__bg {
     position: absolute;
-    inset: calc(-1 * var(--section-space)) 0;
+    inset: 0;
     z-index: var(--z-below);
-    background-color: var(--color-darkroom);
-    mask-image: linear-gradient(
-      var(--color-transparent),
-      var(--color-black) var(--section-space),
-      var(--color-black) calc(100% - var(--section-space)),
-      var(--color-transparent)
-    );
+    overflow: clip;
+    background-color: var(--color-black);
     pointer-events: none;
   }
 
-  .polaroids__light {
+  .polaroids__bg-layer {
     position: sticky;
     top: 0;
     height: 100vh;
     height: 100svh;
+  }
+
+  .polaroids__bg-image {
+    position: absolute;
+    inset: 0;
     background-image:
-      radial-gradient(ellipse 70% 55% at 50% 0%, var(--color-darkroom-glow), var(--color-transparent)),
-      radial-gradient(ellipse 120% 90% at 50% 10%, var(--color-darkroom-glow-soft), var(--color-transparent)),
-      radial-gradient(ellipse 100% 80% at 50% 45%, var(--color-transparent) 55%, var(--color-black-a50));
+      linear-gradient(var(--color-black-a70), var(--color-black-a70)), var(--bGreen), var(--bYellow),
+      linear-gradient(var(--color-black), var(--color-black));
+    background-position:
+      0 0,
+      40% 40%,
+      50%,
+      0 0;
+    background-repeat: repeat, no-repeat, no-repeat, repeat;
+    background-size:
+      auto,
+      auto 200%,
+      auto 200%,
+      auto;
   }
 
   .polaroids__header {

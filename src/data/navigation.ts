@@ -9,6 +9,7 @@
  */
 import { audiences, audienceUrl, services, serviceUrl, type Category } from './taxonomy';
 import type { Accent } from '../components/ui/Button.astro';
+import type { IconName } from '../components/ui/icons';
 
 export interface NavLink {
   label: string;
@@ -166,12 +167,28 @@ export const contact = {
   whatsapp: { href: 'https://wa.me/31623328655?text=', label: 'Chat via WhatsApp' },
 };
 
-export const socials = [
+export interface Social {
+  label: string;
+  href: string;
+  icon: IconName;
+}
+
+/** Platforms die in Sanity gekozen kunnen worden (één icoon per platform, icons.ts); houd gelijk aan
+ * studio/schemaTypes/documents/siteNavigation.ts */
+export const socialPlatforms = [
+  { value: 'linkedin', label: 'LinkedIn', icon: 'linkedin' },
+  { value: 'instagram', label: 'Instagram', icon: 'instagram' },
+  { value: 'vimeo', label: 'Vimeo', icon: 'vimeo' },
+  { value: 'tiktok', label: 'TikTok', icon: 'tiktok' },
+] as const satisfies readonly { value: string; label: string; icon: IconName }[];
+
+/** Footer-iconen en sameAs; in Sanity aan te passen (Menu & footer → Social media, getSocials()) */
+export const socials: readonly Social[] = [
   { label: 'LinkedIn', href: 'https://www.linkedin.com/company/weareboldproductions', icon: 'linkedin' },
   { label: 'Instagram', href: 'https://www.instagram.com/weareboldproductions/', icon: 'instagram' },
   { label: 'Vimeo', href: 'https://vimeo.com/user124034017', icon: 'vimeo' },
   { label: 'TikTok', href: 'https://www.tiktok.com/@bold.productions', icon: 'tiktok' },
-] as const;
+];
 
 export const legalLinks: NavLink[] = [
   { label: 'Privacyverklaring', href: '/privacyverklaring' },
