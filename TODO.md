@@ -19,8 +19,9 @@ betekent: geregeld.
 ## In de code
 
 - [x] Backend voor de formulieren: `functions/api/form.ts` (Resend), zie README
-- [ ] Bij de livegang: `FORM_TO_EMAIL` = mike@weareboldproductions.com; weareboldproductions.com
-      in Resend verifiëren en `FORM_FROM_EMAIL` op dat domein zetten (nu noreply@oviondigital.nl)
+- [x] `FORM_TO_EMAIL` = mike@weareboldproductions.com (Cloudflare, preview + production, 2026-10-22)
+- [ ] Bij de livegang: weareboldproductions.com in Resend verifiëren en `FORM_FROM_EMAIL` op dat
+      domein zetten (nu noreply@oviondigital.nl)
 - [ ] `formulier_verzonden` naar de `dataLayer` na een geslaagde verzending, in
       `src/scripts/contact-form.ts` na `response.ok` (niet op de klik op de knop: die telt
       ook fouten en dubbel klikken). Met het soort formulier (contact, offerte,

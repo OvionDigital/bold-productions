@@ -254,7 +254,6 @@ export const page: PageData = {
     {
       type: 'imageFeature',
       props: {
-        id: 'cinema',
         title: 'Meer posten is geen strategie',
         text: 'Dat is de valkuil waar vrijwel elk bedrijf in trapt. Het gaat niet goed op social, dus moet er vaker iets uit. Drie keer per week iets posten wat niemand boeit, levert alleen werk op. De vraag is niet hoeveel content je nodig hebt. De vraag is waarom iemand naar jou zou kijken.\nDaar beginnen we. Wat is er interessant aan wat jullie doen, voor wie, en hoe laat je dat zien in plaats van het te vertellen? Pas als dat scherp is, maken we een plan en pakken we de camera.\nEn ja, dat betekent soms dat we zeggen dat je niet meer content nodig hebt maar een betere reden om naar je te kijken.',
         image: {

@@ -172,7 +172,6 @@ export const page: PageData = {
     {
       type: 'imageFeature',
       props: {
-        id: 'cinema',
         title: 'Eerst de vraag achter de vraag.',
         text: 'Mooie beelden maken kan inmiddels iedereen. Daar win je het niet meer mee. Het verschil zit in de invalshoek, en die vind je niet achter een camera. Dus beginnen we met doorvragen. Wat moet deze campagne opleveren en bij wie? Wat gelooft jouw bedrijf dat je concurrent niet gelooft? Waar strandt het gesprek met een klant nu precies?\nDaarna werken we één concept helemaal uit, inclusief de redenering erachter. Geen rijtje opties waar jij maar uit moet kiezen, want dan wordt het altijd de veilige en die onthoudt niemand. Je ziet vooraf hoe het eruitgaat zien, zodat je het intern kunt verdedigen bij mensen die er niet bij waren.\nEn dan pas pakken we de camera.',
         image: {

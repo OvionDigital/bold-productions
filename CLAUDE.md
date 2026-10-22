@@ -52,7 +52,7 @@ npm run sanity:section-previews  # plaatjes per sectie voor "Sectie toevoegen" i
    - Bestanden in `public/fonts/` en `public/video/` worden een jaar immutable gecachet. Vervang je zo'n bestand, **geef het dan een nieuwe naam**.
 8. **Na elke sectie:** `npm run build` moet slagen en `npm run compare` draaien. Benoem wat nog afwijkt.
 9. **Geen nieuwe dependencies** zonder toestemming.
-10. Formulieren: alle posten naar `functions/api/form.ts` (Pages Function, mail via Resend; ontvanger `FORM_TO_EMAIL`, nu simon@, bij de livegang mike@), zie README. Tracking (GTM-KCTG3DST, CookieFirst) komt later via `components/layout/Analytics.astro`, alleen als `PUBLIC_ENABLE_TRACKING === 'true'`. Meten bij de livegang (events, telling aanvragen): `TODO.md`.
+10. Formulieren: alle posten naar `functions/api/form.ts` (Pages Function, mail via Resend; ontvanger `FORM_TO_EMAIL` in Cloudflare = mike@weareboldproductions.com, zonder variabele simon@), zie README. Tracking (GTM-KCTG3DST, CookieFirst) komt later via `components/layout/Analytics.astro`, alleen als `PUBLIC_ENABLE_TRACKING === 'true'`. Meten bij de livegang (events, telling aanvragen): `TODO.md`.
 11. `/styleguide` is `noindex` en hoort niet in een sitemap (als die er komt: uitsluiten).
 
 ## SEO

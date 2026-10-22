@@ -215,7 +215,6 @@ export const page: PageData = {
     {
       type: 'imageFeature',
       props: {
-        id: 'cinema',
         title: 'Meelopen in plaats van (te veel)\nregisseren.',
         text: 'De meeste zakelijke fotografie gaat mis op hetzelfde punt: er wordt te veel geregisseerd. Vier collega’s rond een laptop die ergens naar wijzen. Twee mensen die elkaar een hand schudden voor een glazen wand. Iemand die veel te hard lacht om iets op een scherm. Niemand gelooft het, en beeld dat nep voelt maakt alles eromheen ook ongeloofwaardig.\nWij werken andersom. We lopen mee terwijl het werk doorgaat, we vragen niemand om te poseren en we nemen de tijd die nodig is. Na een kwartier is iedereen ons meestal vergeten, en dan beginnen de goede foto’s. Dat klinkt passief. Het is het tegenovergestelde: je moet precies weten waar je moet staan en wanneer je af moet drukken.',
         image: {

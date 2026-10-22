@@ -383,7 +383,6 @@ export const page: PageData = {
     {
       type: 'imageFeature',
       props: {
-        id: 'cinema',
         title: 'Is het aftermovie of after movie?',
         gradient: 'green',
         text: 'Aftermovie. Eén woord.',
