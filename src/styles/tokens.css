@@ -187,27 +187,27 @@
   --fw-display: 400; /* Gate kent alleen 400 */
 
   /* ─── Typografie: groottes ──────────────────────────────────────── */
-  --fs-hero: clamp(2.625rem, 1.5865rem + 4.6154vw, 7.125rem); /* 42 → 114 */
-  --fs-h1: clamp(2.625rem, 1.2188rem + 3.75vw, 4.5rem); /* 42 → 72 */
-  --fs-h2: clamp(2.25rem, 1.9615rem + 1.2821vw, 3.5rem); /* 36 → 56 */
-  --fs-h3: clamp(28px, 2.4vw, 36px);
-  --fs-h2-text: clamp(28px, 1.25rem + 1.6vw, 44px); /* h2 in lopende tekst (juridische pagina's e.d.) */
-  --fs-h4: clamp(22px, 1.8vw, 28px);
+  --fs-hero: clamp(38px, min(max(2.625rem, 1.5865rem + 4.6154vw), 16.22px + 5.809vw), 7.125rem); /* 42 → 114; onder 768 vloeiend naar 38 (375) */
+  --fs-h1: clamp(36px, min(max(2.625rem, 1.2188rem + 3.75vw), 24.26px + 3.1298vw), 4.5rem); /* 42 → 72; onder 768 naar 36 */
+  --fs-h2: clamp(32px, min(max(2.25rem, 1.9615rem + 1.2821vw), 23.19px + 2.3486vw), 3.5rem); /* 36 → 56; onder 768 naar 32 */
+  --fs-h3: clamp(24px, min(max(28px, 2.4vw), 20.18px + 1.0178vw), 36px); /* onder 768 naar 24 */
+  --fs-h2-text: clamp(26px, 1.25rem + 1.6vw, 44px); /* h2 in lopende tekst (juridische pagina's e.d.) */
+  --fs-h4: clamp(20px, min(max(22px, 1.8vw), 18.09px + 0.5089vw), 28px); /* onder 768 naar 20 */
   --fs-h5: clamp(18px, 1.2vw, 20px);
   --fs-h6: clamp(14px, 0.9vw, 16px);
   --fs-number: clamp(28px, 18px + 1.25vw, 64px); /* tijdlijn 01/02/03 */
-  --fs-highlight: clamp(24px, 2.2vw, 36px); /* scroll-highlight */
+  --fs-highlight: clamp(22px, min(max(24px, 2.2vw), 20.09px + 0.5089vw), 36px); /* scroll-highlight; onder 768 naar 22 */
   --fs-nav-parent: clamp(22px, 2.2vw, 28px); /* menupaneel */
-  --fs-subtitle: clamp(1.125rem, 1.0385rem + 0.3846vw, 1.5rem); /* 18 → 24 */
-  --fs-quote: clamp(1.125rem, 1.0313rem + 0.25vw, 1.25rem); /* 18 → 20 */
-  --fs-blockquote: 18px; /* citaat in rich text (Webflow blockquote) */
-  --fs-lead: clamp(16px, 14px + 0.42vw, 18px); /* rich text .fs-20 (Webflow 20, bij ons max. 18) */
+  --fs-subtitle: clamp(16px, min(max(1.125rem, 1.0385rem + 0.3846vw), 12.59px + 0.9084vw), 1.5rem); /* 18 → 24; onder 768 naar 16 */
+  --fs-quote: clamp(16px, min(max(1.125rem, 1.0313rem + 0.25vw), 13.69px + 0.6158vw), 1.25rem); /* 18 → 20; onder 768 naar 16 */
+  --fs-blockquote: clamp(16px, 14.09px + 0.5089vw, 18px); /* citaat in rich text (Webflow blockquote) */
+  --fs-lead: clamp(15px, min(max(16px, 14px + 0.42vw), 12.87px + 0.5674vw), 18px); /* rich text .fs-20 (Webflow 20, bij ons max. 18); onder 768 naar 15 */
   --fs-xl: 36px;
-  --fs-lg: 24px;
-  --fs-md: 20px;
-  --fs-intro: 18px;
-  --fs-label: 17px;
-  --fs-base: 16px;
+  --fs-lg: clamp(21px, 18.14px + 0.7634vw, 24px);
+  --fs-md: clamp(18px, 16.09px + 0.5089vw, 20px);
+  --fs-intro: clamp(16px, 14.09px + 0.5089vw, 18px);
+  --fs-label: clamp(16px, 15.05px + 0.2545vw, 17px);
+  --fs-base: clamp(15px, 14.05px + 0.2545vw, 16px); /* 15 (375) → 16 (768); kleinere teksten vloeiend van 375 naar 768 */
   --fs-sm: 14px;
   --fs-xs: 13px;
   --fs-2xs: 12px; /* keuzeknoppen navbar op mobiel */
@@ -488,8 +488,8 @@
     --section-padding: 64px;
     --section-space: 64px;
     --section-space-tight: 48px;
-    --polaroids-header-top: 120px;
-    --polaroids-item-top: 306px;
+    --polaroids-header-top: 104px;
+    --polaroids-item-top: 240px;
     --testimonial-height: 736.5px;
     --container-max: none;
     --container-max-plain: none;
@@ -507,7 +507,7 @@
     --testimonial-height: 547.5px;
     --container-padding: 16px;
     --container-padding-wide: 16px;
-    --polaroids-item-top: 264px;
+    --polaroids-item-top: 248px;
     --logo-width-mobile: 96px;
   }
 }

@@ -67,4 +67,11 @@ const { src, alt, caption, sizes = '(max-width: 991px) 100vw, 900px', class: cla
     letter-spacing: var(--ls-caption);
     text-align: center;
   }
+
+  /* Op een telefoon een smallere witte rand */
+  @media (max-width: 767px) {
+    .polaroid :global(.polaroid__image) {
+      padding: var(--space-8) var(--space-8) var(--space-16);
+    }
+  }
 </style>

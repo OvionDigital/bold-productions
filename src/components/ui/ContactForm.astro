@@ -496,15 +496,12 @@ const page = Astro.url.pathname.replace(/\.html$/, '');
     color: var(--color-black);
   }
   /* ─── Beweging ─────────────────────────────────────────────────────────
-     Velden lichten op bij hover/focus met een accentlijn onderaan; keuzes, het "Anders"-veld,
+     Velden lichten op bij hover/focus (de focusrand komt uit global.css); keuzes, het "Anders"-veld,
      het meerkeuzepaneel en de meldingen komen zacht binnen (reveal-up, global.css: bij Minder
      beweging alleen een fade). */
   .contact-form__input,
   .contact-form__multi-trigger {
-    box-shadow: inset 0 0 0 var(--color-transparent);
-    transition:
-      background-color var(--duration-fast) var(--ease-out),
-      box-shadow var(--duration-base) var(--ease-reveal);
+    transition: background-color var(--duration-fast) var(--ease-out);
   }
 
   .contact-form__input:hover,
@@ -515,7 +512,6 @@ const page = Astro.url.pathname.replace(/\.html$/, '');
   .contact-form__input:focus,
   .contact-form__multi[open] .contact-form__multi-trigger {
     background-color: var(--color-input-hover);
-    box-shadow: inset 0 calc(-1 * var(--border-width-thick)) 0 var(--accent);
   }
 
   .contact-form__choice {
