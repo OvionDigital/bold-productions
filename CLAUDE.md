@@ -52,7 +52,7 @@ npm run sanity:section-previews  # plaatjes per sectie voor "Sectie toevoegen" i
    - Bestanden in `public/fonts/` en `public/video/` worden een jaar immutable gecachet. Vervang je zo'n bestand, **geef het dan een nieuwe naam**.
 8. **Na elke sectie:** `npm run build` moet slagen en `npm run compare` draaien. Benoem wat nog afwijkt.
 9. **Geen nieuwe dependencies** zonder toestemming.
-10. Contactformulier: backend nog niet gekozen (TODO), zie README. Tracking (GTM-KCTG3DST, CookieFirst) komt later via `components/layout/Analytics.astro`, alleen als `PUBLIC_ENABLE_TRACKING === 'true'`.
+10. Formulieren: alle posten naar `functions/api/form.ts` (Pages Function, mail via Resend; ontvanger `FORM_TO_EMAIL`, nu simon@, bij de livegang mike@), zie README. Tracking (GTM-KCTG3DST, CookieFirst) komt later via `components/layout/Analytics.astro`, alleen als `PUBLIC_ENABLE_TRACKING === 'true'`. Meten bij de livegang (events, telling aanvragen): `TODO.md`.
 11. `/styleguide` is `noindex` en hoort niet in een sitemap (als die er komt: uitsluiten).
 
 ## SEO
@@ -113,7 +113,8 @@ public/fonts, public/video, public/favicons, public/_headers
 scripts/compare.mjs             visuele vergelijking
 scripts/sanity-seed.ts          npm run sanity:seed: src/data naar Sanity (vult alleen aan; --force overschrijft,
                                 --dry-run controleert zonder te schrijven; bestaande pagina's op URL-pad herkend). Loader: scripts/sanity/
-scripts/sanity-migrate-*       eenmalige migraties (taxonomy, urls, 2026-10-17: /events als pagina, logo's, alt-teksten; 2026-10-20: Contentcreatie/zakelijk-portret; al gedraaid)
+scripts/sanity-migrate-*       eenmalige migraties (taxonomy, urls, 2026-10-17: /events als pagina, logo's, alt-teksten; 2026-10-20: Contentcreatie/zakelijk-portret; 2026-10-22: Business-offerteformulier; al gedraaid)
+functions/api/form.ts           Pages Function: alle formulieren → mail via Resend (zie README)
 scripts/section-previews.mjs    npm run sanity:section-previews: screenshot per sectie → studio/static/sections/
 astro.preview.config.mjs        live voorbeeld voor Sanity (SSR, Worker; wrangler.preview.jsonc)
 studio/                         Sanity Studio (losse app, eigen package.json; presentation.ts, actions.ts)
@@ -171,7 +172,7 @@ Houd dit bij bij elk nieuw component.
 | `CmsPicture.astro`     | Drop-in i.p.v. astro:assets `<Picture>`: lokaal (`ImageMetadata`) ongewijzigd gedrag; Sanity (`RemoteImage`) srcset via Sanity's CDN (`?auto=format`), zonder `width`/`height`-attributen (Chromium-flexbug, zie image.ts) — `aspect-ratio` reserveert de ruimte. `aspectRatio`-prop om te croppen. |
 | `DecoTriangles.astro`  | Zes oranje driehoekjes rond een beeld (structuur exact als Webflow).                                    |
 | `CaseCard.astro`       | Casekaart: foto, diagonale gradient, titel + intro, link naar /<soort>/cases/[slug].                              |
-| `ContactForm.astro`    | Formulier (velden uit `data/forms.ts`: contact, offerte, trouwfilm; tekst, keuzerondjes, meerkeuze-dropdown), honeypot, succes/fout; verzenden via `contact-form.ts` naar `PUBLIC_CONTACT_ENDPOINT`. |
+| `ContactForm.astro`    | Formulier (velden uit `data/forms.ts`: contact, offerte, offerte-business, trouwfilm; tekst met `hint`, keuzerondjes, keuzelijst, meerkeuze-dropdown met groepen en `required`, "Anders"-veld via `other`), honeypot, verborgen `_formulier`/`_pagina`/`_kop` voor de mail, succes/fout; verzenden via `contact-form.ts` naar `/api/form`. |
 | `VimeoBackground.astro`| Vimeo-achtergrondvideo (cover). Laadt na window.load, fadet in bij 'play' (gedrag: `hero-video.ts`). `playOnHover`: laden/afspelen bij hover (split-hero, `split-hero.ts`). |
 | `ContactLinks.astro`   | Lijst bel/mail/WhatsApp-links met icoon (volgt tel:/mailto:/anders WhatsApp). ContactSection en TextMedia `links`. |
 
@@ -230,7 +231,7 @@ Houd dit bij bij elk nieuw component.
 | `carousel.ts`          | `.is-scrollable` als niet alles past (alleen dan knoppen en slepen); pijlknoppen scrollen één item, disabled aan begin/eind; slepen met de muis (snap bij loslaten). |
 | `cinema-cursor.ts`     | Popcorn-cursor + spoor, alleen bij een sectie met id="cinema" en een muis.  |
 | `accordion.ts`         | Generiek accordeon: `[data-accordion-trigger]` + aria-controls; zet aria-expanded en `data-open` (animatie in CSS: grid-rows 0fr ↔ 1fr). Houdt de aangeklikte vraag exact op dezelfde plek (scrollcorrectie, ook onder Lenis); `html { overflow-anchor: none }`. |
-| `contact-form.ts`      | Formulier via fetch versturen, knop "Verzenden...", succes- of foutmelding.  |
+| `contact-form.ts`      | Formulier via fetch versturen, knop "Verzenden...", succes- of foutmelding; "Anders"-velden tonen/verplichten, meerkeuze minstens één (paneel opent bij de melding). |
 | `multiselect.ts`       | Meerkeuze-dropdown in formulieren (`[data-multiselect]`, `<details>` met checkboxes): samenvatting, sluiten bij klik buiten/Escape. |
 | `case-filter.ts`       | Casesoverzicht filteren (`[data-case-grid]`) per doelgroep en dienst; `?filter=` kiest vooraf; melding bij geen resultaat. |
 | `draw-shapes.ts`       | B-outlines op de achtergrond één keer tekenen zodra ze in beeld komen (masker + stroke-dashoffset, `--duration-draw`). |

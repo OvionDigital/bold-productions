@@ -144,7 +144,7 @@ const contactLinks = (links: { label?: string; href?: string }[] | null | undefi
 };
 const vimeo = (v: Vimeo | null | undefined, fallbackTitle: string) => (v?.id ? { id: v.id, hash: opt(v.hash) || undefined, title: v.title || fallbackTitle } : undefined);
 const formChoice = (name: unknown, messagePlaceholder: unknown): FormChoice => ({
-  name: name === 'offerte' || name === 'trouwfilm' ? name : 'contact',
+  name: name === 'offerte' || name === 'offerte-business' || name === 'trouwfilm' ? name : 'contact',
   messagePlaceholder: typeof messagePlaceholder === 'string' && messagePlaceholder ? messagePlaceholder : undefined,
 });
 
@@ -432,7 +432,7 @@ const mappers: Record<string, (s: RawSection, path: string) => PageSection> = {
       id: opt(s.anchorId),
       content: portableTextToRich(s.content),
       links: ((s.links ?? []) as { label?: string; href?: string }[]).filter((l) => l.label && l.href).map((l) => ({ label: l.label!, href: l.href! })),
-      formWidth: s.form === 'offerte' ? 'narrow' : undefined,
+      formWidth: s.form === 'offerte' || s.form === 'offerte-business' ? 'narrow' : undefined,
     },
   }),
 

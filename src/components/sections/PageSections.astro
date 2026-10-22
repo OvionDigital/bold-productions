@@ -62,7 +62,7 @@ const { sections, breadcrumbs } = Astro.props;
       case 'textMedia':
         return section.form ? (
           <TextMedia {...section.props}>
-            <ContactForm slot="content" {...getForm(section.form)} />
+            <ContactForm slot="content" {...getForm(section.form, Astro.url.pathname)} />
           </TextMedia>
         ) : (
           <TextMedia {...section.props} />
@@ -84,7 +84,7 @@ const { sections, breadcrumbs } = Astro.props;
       case 'contactSection':
         return (
           <ContactSection {...section.props}>
-            <ContactForm slot="form" {...getForm(section.form)} />
+            <ContactForm slot="form" {...getForm(section.form, Astro.url.pathname)} />
           </ContactSection>
         );
       case 'map':

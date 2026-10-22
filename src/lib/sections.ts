@@ -35,7 +35,7 @@ import type { PageSchema } from './structured-data';
 
 /** Welk formulier (src/data/forms.ts) en eventueel een andere placeholder voor het berichtveld */
 export interface FormChoice {
-  name: 'contact' | 'offerte' | 'trouwfilm';
+  name: 'contact' | 'offerte' | 'offerte-business' | 'trouwfilm';
   messagePlaceholder?: string;
 }
 

@@ -94,5 +94,16 @@ export const businessPages: PageData[] = [
   copy(eventsOver, 'business/over-bold'),
   copy(eventsMike, 'business/over-bold/mike'),
   copy(eventsContact, 'business/contact'),
-  copy(eventsOfferte, 'business/offerte-aanvragen'),
+  // Eigen hero-titel en het Business-offerteformulier; de rest zoals Events
+  copy(
+    eventsOfferte,
+    'business/offerte-aanvragen',
+    eventsOfferte.sections.map((s) =>
+      s.type === 'hero'
+        ? { ...s, props: { ...s.props, titleAccent: 'wat je wilt bereiken' } }
+        : s.type === 'contactSection'
+          ? { ...s, form: { ...s.form, name: 'offerte-business' } }
+          : s,
+    ),
+  ),
 ];

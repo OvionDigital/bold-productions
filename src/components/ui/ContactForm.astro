@@ -4,12 +4,16 @@
  * succes- en foutmelding. Verzenden via fetch (scripts/contact-form.ts) naar `action`.
  * Honeypot-veld tegen spam (geen reCAPTCHA). Veldnamen gelijk aan het Webflow-formulier.
  *
- * Veldtypes: tekstvelden, `heading` (tussenkop), `radio` (keuzerondjes) en `checkboxes`
- * (meerkeuze-dropdown; <details>, tekst bijgewerkt door scripts/multiselect.ts).
+ * Veldtypes: tekstvelden (optioneel met `hint`), `heading` (tussenkop), `radio` (keuzerondjes),
+ * `select` (keuzelijst, één keuze) en `checkboxes` (meerkeuze-dropdown; <details>, tekst
+ * bijgewerkt door scripts/multiselect.ts; opties eventueel in groepen, `required` = minstens één).
+ * `other` bij radio/select/checkboxes: tekstveld dat verschijnt bij de keuze "Anders"
+ * (gedrag: scripts/contact-form.ts).
  * `labelSpacing: 'all'` = elk label 12px ruimte (Webflow .form-label), anders alleen
  * het eerste (zoals het contactformulier live).
  *
- * TODO(formulier): backend kiezen en `action` vullen (zie README / data).
+ * Verborgen velden `_formulier` (naam), `_pagina` (pad) en `_kop` (per tussenkop) gaan mee
+ * naar de backend (functions/api/form.ts) voor het onderwerp en de indeling van de mail.
  */
 import Button from './Button.astro';
 import RichText from './RichText.astro';
@@ -23,12 +27,26 @@ export interface ContactFormInput {
   required?: boolean;
   maxlength?: number;
   autocomplete?: string;
+  /** Hulptekst onder het label */
+  hint?: string;
 }
+
+/** Tekstveld dat verschijnt bij de keuze `value` (standaard "Anders") */
+export interface ContactFormOther {
+  name: string;
+  label: string;
+  placeholder: string;
+  value?: string;
+}
+
+/** Optie, of een groep opties onder een kopje (niet zelf aan te vinken) */
+export type ContactFormOption = string | { group: string; options: string[] };
 
 export type ContactFormField =
   | ContactFormInput
   | { type: 'heading'; label: string }
-  | { type: 'radio'; name: string; label: string; options: string[]; required?: boolean }
+  | { type: 'radio'; name: string; label: string; options: string[]; required?: boolean; other?: ContactFormOther }
+  | { type: 'select'; name: string; label: string; placeholder: string; options: string[]; required?: boolean; other?: ContactFormOther }
   | {
       type: 'checkboxes';
       name: string;
@@ -36,7 +54,10 @@ export type ContactFormField =
       placeholder: string;
       /** Tekst bij meerdere keuzes, {n} = aantal (bijv. '{n} diensten geselecteerd') */
       countLabel: string;
-      options: string[];
+      options: ContactFormOption[];
+      /** Minstens één keuze */
+      required?: boolean;
+      other?: ContactFormOther;
     };
 
 export interface ContactFormProps {
@@ -57,6 +78,7 @@ type Props = ContactFormProps;
 const { name, action, fields, optionalLabel, submitLabel, submittingLabel, success, error, labelSpacing = 'first' } = Astro.props;
 const slug = (value: string) => value.toLowerCase().replace(/[^a-z0-9]+/g, '-');
 const formId = `form-${slug(name)}`;
+const page = Astro.url.pathname.replace(/\.html$/, '');
 ---
 
 <div class:list={['contact-form', `contact-form--labels-${labelSpacing}`]} data-contact-form>
@@ -72,52 +94,115 @@ const formId = `form-${slug(name)}`;
     {
       fields.map((field, index) => {
         if (field.type === 'heading') {
-          return <h3 class:list={['contact-form__heading', { 'contact-form__heading--first': index === 0 }]}>{field.label}</h3>;
+          // `_kop`: dezelfde tussenkop in de mail
+          return (
+            <>
+              <h3 class:list={['contact-form__heading', { 'contact-form__heading--first': index === 0 }]}>{field.label}</h3>
+              <input type="hidden" name="_kop" value={field.label} />
+            </>
+          );
         }
         const fieldId = `${formId}-${slug(field.name)}`;
+        const optional = !field.required && optionalLabel && <span class="contact-form__optional"> {optionalLabel}</span>;
+        const other = 'other' in field && field.other && (
+          <div class="contact-form__field" hidden data-form-other={field.name} data-form-other-value={field.other.value ?? 'Anders'}>
+            <label for={`${fieldId}-other`} class="contact-form__label">
+              {field.other.label}
+            </label>
+            <input id={`${fieldId}-other`} name={field.other.name} type="text" placeholder={field.other.placeholder} maxlength="256" disabled class="contact-form__input" />
+          </div>
+        );
         if (field.type === 'radio') {
           return (
-            <fieldset class="contact-form__field contact-form__field--radio">
-              <legend class="contact-form__label contact-form__label--radio">{field.label}</legend>
-              {field.options.map((option) => (
-                <label class="contact-form__choice">
-                  <input type="radio" name={field.name} value={option} required={field.required} class="contact-form__choice-input" />
-                  <span class="contact-form__choice-box contact-form__choice-box--radio" aria-hidden="true" />
-                  <span>{option}</span>
+            <>
+              <fieldset class="contact-form__field contact-form__field--radio">
+                <legend class="contact-form__label contact-form__label--radio">
+                  {field.label}
+                  {optional}
+                </legend>
+                {field.options.map((option) => (
+                  <label class="contact-form__choice">
+                    <input type="radio" name={field.name} value={option} required={field.required} class="contact-form__choice-input" />
+                    <span class="contact-form__choice-box contact-form__choice-box--radio" aria-hidden="true" />
+                    <span>{option}</span>
+                  </label>
+                ))}
+              </fieldset>
+              {other}
+            </>
+          );
+        }
+        if (field.type === 'select') {
+          return (
+            <>
+              <div class="contact-form__field">
+                <label for={fieldId} class="contact-form__label">
+                  {field.label}
+                  {optional}
                 </label>
-              ))}
-            </fieldset>
+                <select id={fieldId} name={field.name} required={field.required} class="contact-form__input contact-form__input--select">
+                  <option value="" disabled selected>
+                    {field.placeholder}
+                  </option>
+                  {field.options.map((option) => (
+                    <option value={option}>{option}</option>
+                  ))}
+                </select>
+              </div>
+              {other}
+            </>
           );
         }
         if (field.type === 'checkboxes') {
+          const checkbox = (option: string) => (
+            <label class="contact-form__choice contact-form__choice--option">
+              <input type="checkbox" name={field.name} value={option} class="contact-form__choice-input" />
+              <span class="contact-form__choice-box" aria-hidden="true" />
+              <span>{option}</span>
+            </label>
+          );
           return (
-            <div class="contact-form__field">
-              <span class="contact-form__label" id={`${fieldId}-label`}>
-                {field.label}
-              </span>
-              <details class="contact-form__multi" data-multiselect>
-                <summary class="contact-form__multi-trigger" aria-describedby={`${fieldId}-label`} data-multiselect-summary data-placeholder={field.placeholder} data-count-label={field.countLabel}>
-                  {field.placeholder}
-                </summary>
-                <div class="contact-form__multi-panel" role="group" aria-labelledby={`${fieldId}-label`}>
-                  {field.options.map((option) => (
-                    <label class="contact-form__choice contact-form__choice--option">
-                      <input type="checkbox" name={field.name} value={option} class="contact-form__choice-input" />
-                      <span class="contact-form__choice-box" aria-hidden="true" />
-                      <span>{option}</span>
-                    </label>
-                  ))}
-                </div>
-              </details>
-            </div>
+            <>
+              <div class="contact-form__field">
+                <span class="contact-form__label" id={`${fieldId}-label`}>
+                  {field.label}
+                </span>
+                <details class="contact-form__multi" data-multiselect data-multiselect-required={field.required ? '' : undefined}>
+                  <summary class="contact-form__multi-trigger" aria-describedby={`${fieldId}-label`} data-multiselect-summary data-placeholder={field.placeholder} data-count-label={field.countLabel}>
+                    {field.placeholder}
+                  </summary>
+                  <div class="contact-form__multi-panel" role="group" aria-labelledby={`${fieldId}-label`} data-lenis-prevent>
+                    {field.options.map((option, groupIndex) =>
+                      typeof option === 'string' ? (
+                        checkbox(option)
+                      ) : (
+                        <div class="contact-form__multi-group" role="group" aria-labelledby={`${fieldId}-group-${groupIndex}`}>
+                          <span class="contact-form__multi-group-label" id={`${fieldId}-group-${groupIndex}`}>
+                            {option.group}
+                          </span>
+                          {option.options.map(checkbox)}
+                        </div>
+                      ),
+                    )}
+                  </div>
+                </details>
+              </div>
+              {other}
+            </>
           );
         }
+        const hintId = field.hint ? `${fieldId}-hint` : undefined;
         return (
           <div class="contact-form__field">
             <label for={fieldId} class="contact-form__label">
               {field.label}
-              {!field.required && optionalLabel && <span class="contact-form__optional"> {optionalLabel}</span>}
+              {optional}
             </label>
+            {field.hint && (
+              <p class="contact-form__hint" id={hintId}>
+                {field.hint}
+              </p>
+            )}
             {field.type === 'textarea' ? (
               <textarea
                 id={fieldId}
@@ -125,6 +210,7 @@ const formId = `form-${slug(name)}`;
                 placeholder={field.placeholder}
                 required={field.required}
                 maxlength={field.maxlength}
+                aria-describedby={hintId}
                 rows="2"
                 class="contact-form__input contact-form__input--textarea"
               />
@@ -137,6 +223,7 @@ const formId = `form-${slug(name)}`;
                 required={field.required}
                 maxlength={field.maxlength}
                 autocomplete={field.autocomplete}
+                aria-describedby={hintId}
                 class="contact-form__input"
               />
             )}
@@ -144,6 +231,8 @@ const formId = `form-${slug(name)}`;
         );
       })
     }
+    <input type="hidden" name="_formulier" value={name} />
+    <input type="hidden" name="_pagina" value={page} />
     <div class="contact-form__honeypot" aria-hidden="true">
       <label for={`${formId}-website`}>Website</label>
       <input id={`${formId}-website`} type="text" name="website" tabindex="-1" autocomplete="off" />
@@ -185,7 +274,8 @@ const formId = `form-${slug(name)}`;
   }
 
   /* Webflow .form-label.extra-margin: label direct na een groep keuzerondjes */
-  .contact-form__field--radio + .contact-form__field .contact-form__label {
+  .contact-form__field--radio + .contact-form__field .contact-form__label,
+  .contact-form__field--radio + [hidden] + .contact-form__field .contact-form__label {
     margin-top: var(--space-24);
   }
 
@@ -298,6 +388,36 @@ const formId = `form-${slug(name)}`;
     backdrop-filter: blur(var(--blur-md));
   }
 
+  /* Lange lijsten: het paneel scrollt zelf (data-lenis-prevent) */
+  .contact-form__multi-panel {
+    max-height: var(--multiselect-max-height);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .contact-form__multi-group + .contact-form__multi-group,
+  .contact-form__multi-group + .contact-form__choice {
+    margin-top: var(--space-12);
+  }
+
+  /* Groepskop zoals in het menupaneel: Gate, kapitalen, accentkleur */
+  .contact-form__multi-group-label {
+    display: block;
+    padding: var(--space-8) var(--space-15) var(--space-4);
+    color: var(--accent);
+    font-family: var(--font-display);
+    font-size: var(--fs-md);
+    line-height: var(--lh-ui);
+    text-transform: uppercase;
+  }
+
+  .contact-form__hint {
+    margin: calc(var(--space-4) - var(--space-12)) 0 var(--space-12);
+    color: var(--color-gray-light);
+    font-size: var(--fs-sm);
+    line-height: var(--lh-normal);
+  }
+
   .contact-form__optional {
     color: var(--color-gray-light);
     font-style: italic;
@@ -319,6 +439,26 @@ const formId = `form-${slug(name)}`;
 
   .contact-form__input::placeholder {
     color: var(--color-placeholder);
+  }
+
+  .contact-form__input--select {
+    padding-right: var(--space-48);
+    background-image: var(--select-arrow);
+    background-position: right var(--space-24) center;
+    background-repeat: no-repeat;
+    background-size: var(--space-10);
+    font-family: inherit;
+    appearance: none;
+  }
+
+  /* Nog niets gekozen: kleur van een placeholder */
+  .contact-form__input--select:invalid {
+    color: var(--color-placeholder);
+  }
+
+  .contact-form__input--select option {
+    background-color: var(--color-gray-dark);
+    color: var(--color-white);
   }
 
   .contact-form__input--textarea {

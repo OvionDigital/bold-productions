@@ -18,7 +18,8 @@
     "sanity:section-previews": "node scripts/section-previews.mjs",
     "deploy:preview": "astro build && wrangler pages deploy dist --project-name bold-productions --branch preview",
     "sanity:migrate-2026-10-17": "node --env-file=.env scripts/sanity-migrate-2026-10-17.mjs",
-    "sanity:migrate-2026-10-20": "node --env-file=.env scripts/sanity-migrate-2026-10-20.mjs"
+    "sanity:migrate-2026-10-20": "node --env-file=.env scripts/sanity-migrate-2026-10-20.mjs",
+    "sanity:migrate-2026-10-22": "node --env-file=.env scripts/sanity-migrate-2026-10-22.mjs"
   },
   "dependencies": {
     "@sanity/client": "^8.9.0",

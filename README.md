@@ -66,8 +66,16 @@ Op de branch `feature/sanity-cms` bouwt en deployt `.github/workflows/deploy.yml
 | Variabele                | Standaard | Betekenis                                                      |
 | ------------------------ | --------- | -------------------------------------------------------------- |
 | `PUBLIC_ENABLE_TRACKING` | `false`   | Laadt GTM en CookieFirst (nog niet geïmplementeerd, zie TODO) |
-| `PUBLIC_CONTACT_ENDPOINT` | leeg     | POST-endpoint voor het contactformulier (FormData). Leeg = formulier toont een foutmelding. |
+| `PUBLIC_CONTACT_ENDPOINT` | `/api/form` | POST-endpoint voor de formulieren (FormData). Leeg = de eigen Pages Function. |
 
-**TODO contactformulier:** er is nog geen backend. Opties: een Cloudflare Pages Function (`functions/api/contact.ts`) die mailt via bijv. Resend, of een formulierdienst (Formspree e.d.). Veldnamen zijn gelijk aan het Webflow-formulier.
+**Formulieren:** alle formulieren posten naar de Cloudflare Pages Function `functions/api/form.ts` (`/api/form`), die een mail stuurt via [Resend](https://resend.com) met reply-to op de afzender. `wrangler pages deploy dist` neemt `functions/` vanzelf mee. Instellen in Cloudflare Pages → Settings → Variables and Secrets (Production én Preview):
+
+| Variabele | Standaard | Betekenis |
+| --- | --- | --- |
+| `RESEND_API_KEY` (secret) | — | Verplicht. Zonder: formulier toont de foutmelding. |
+| `FORM_TO_EMAIL` | `simon@oviondigital.nl` | Ontvanger(s), komma-gescheiden. Bij de livegang: `mike@weareboldproductions.com`. |
+| `FORM_FROM_EMAIL` | `Bold Productions <noreply@oviondigital.nl>` | Afzender; het domein moet in Resend geverifieerd zijn. |
+
+Lokaal testen: `npm run build`, `RESEND_API_KEY=…` in `.dev.vars` en `npx wrangler pages dev dist` (vanuit een map zonder `.wrangler/deploy`, anders pakt wrangler de preview-Worker-config).
 
 Zie `.env.example`.

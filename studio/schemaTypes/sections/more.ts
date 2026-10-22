@@ -4,7 +4,8 @@ import { anchorIdField, contactLinksField, gradientField, plainText, titleField 
 /** Formulierkeuze (src/data/forms.ts) */
 export const formOptions = [
   { title: 'Contactformulier', value: 'contact' },
-  { title: 'Offerteformulier (uitgebreid)', value: 'offerte' },
+  { title: 'Offerteformulier Events (uitgebreid)', value: 'offerte' },
+  { title: 'Offerteformulier Business (uitgebreid)', value: 'offerte-business' },
   { title: 'Trouwfilmformulier (namen en pakket)', value: 'trouwfilm' },
 ];
 
@@ -100,7 +101,7 @@ export const contactSection = defineType({
   ],
   preview: {
     select: { content: 'content', form: 'form' },
-    prepare: ({ content, form }) => ({ title: `Contactblok (${form === 'offerte' ? 'offerte' : 'contact'})`, subtitle: plainText(content) }),
+    prepare: ({ content, form }) => ({ title: `Contactblok (${form === 'offerte' ? 'offerte' : form === 'offerte-business' ? 'offerte Business' : 'contact'})`, subtitle: plainText(content) }),
   },
 });
 

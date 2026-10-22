@@ -826,6 +826,18 @@ const nav = [
     </ContactSection>
 
     <Container>
+      <h3 class="sg-subtitle">ContactForm: Business-offerte</h3>
+      <p class="sg-note">
+        <code>getForm(&#123; name: 'offerte-business' &#125;)</code>: keuzelijst (<code>select</code>), meerkeuze in groepen
+        en verplicht (<code>required</code> = minstens één), hulptekst (<code>hint</code>) en een tekstveld bij "Anders"
+        (<code>other</code>; gedrag in <code>contact-form.ts</code>).
+      </p>
+    </Container>
+    <ContactSection {...contactSectionExample.props} id="sg-contact-business" formWidth="narrow">
+      <ContactForm slot="form" {...getForm({ name: 'offerte-business' })} name="Offerte Business styleguide" />
+    </ContactSection>
+
+    <Container>
       <h3 class="sg-subtitle">MapSection</h3>
       <p class="sg-note">
         <code>&lt;MapSection title gradient text src label /&gt;</code>: Google Maps-iframe, lazy geladen.
