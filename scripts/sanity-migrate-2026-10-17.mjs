@@ -107,7 +107,7 @@ if (home && !byId.get('page-events-home')) {
       eyebrow: home.backstageEyebrow,
       title: home.backstageTitle,
       gradient: home.backstageGradient,
-      photos: home.backstagePhotos,
+      photos: home.backstagePhotos?.map((photo) => ({ ...photo, _type: 'imageWithAlt' })),
     },
     {
       _type: 'textMediaSection',
