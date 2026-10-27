@@ -14,10 +14,6 @@ export const page: PageData = {
   slug: 'business/content/projectvideo',
   title: 'Projectvideo',
   meta: {
-    schema: {
-      type: 'service',
-      serviceType: 'Projectvideo Productie',
-    },
     title: 'Projectvideo laten maken | Van ontwerp tot oplevering | Bold Productions',
     description: 'Een projectvideo die laat zien hoe jullie werken, niet alleen wat jullie maakten. Bold filmt het hele traject, inclusief de mensen erachter.',
   },

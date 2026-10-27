@@ -16,11 +16,6 @@ export const page: PageData = {
   slug: 'events/organisatoren/fotografie',
   title: 'Fotografie',
   meta: {
-    schema: {
-      type: 'service',
-      serviceType: 'Professionele Eventfotografie',
-      name: 'Eventfotografie | Bold Productions',
-    },
     title: 'Evenement fotograaf | Bold Productions',
     description:
       "Leg de energie van je event vast. Professionele foto's, direct inzetbaar voor je socials en sponsoren. Boek Bold.",

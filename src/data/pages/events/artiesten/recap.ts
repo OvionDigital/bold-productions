@@ -16,7 +16,6 @@ export const page: PageData = {
   slug: 'events/artiesten/recap',
   title: 'Recap',
   meta: {
-    schema: { type: 'service', serviceType: 'Artist Recap Productie' },
     title: 'Recap laten maken? | Bold Productions',
     description:
       'Vang de energie van je show. Deel scherpe recaps terwijl het publiek nog bruist en overtuig boekers. Ontdek Bold.',

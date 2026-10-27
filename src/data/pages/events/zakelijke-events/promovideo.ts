@@ -16,7 +16,6 @@ export const page: PageData = {
   slug: 'events/zakelijke-events/promovideo',
   title: 'Promovideo',
   meta: {
-    schema: { type: 'service', serviceType: 'Zakelijke Promovideo Productie' },
     title: 'Zakelijke promovideo laten maken? | Bold Productions',
     description:
       "Zorg voor een volle zaal. Bold creëert high-end event-video's die jouw doelgroep activeren en de kaartverkoop versnellen.",

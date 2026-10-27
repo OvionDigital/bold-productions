@@ -14,10 +14,6 @@ export const page: PageData = {
   slug: 'business/fotografie/projectfotografie',
   title: 'Projectfotografie',
   meta: {
-    schema: {
-      type: 'service',
-      serviceType: 'Projectfotografie',
-    },
     title: 'Projectfotografie | Je volgende opdracht verkoop je met je vorige | Bold Productions',
     description: 'Projectfotografie die laat zien wat jullie neerzetten. Bold fotografeert het hele traject of alleen de oplevering, voor tenders, website, socials en pers.',
   },

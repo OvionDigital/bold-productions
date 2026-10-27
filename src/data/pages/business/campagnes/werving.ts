@@ -14,10 +14,6 @@ export const page: PageData = {
   slug: 'business/campagnes/werving',
   title: 'Werving',
   meta: {
-    schema: {
-      type: 'service',
-      serviceType: 'Wervingsvideo Productie',
-    },
     title: 'Wervingsvideo laten maken | Wervingscampagne | Bold Productions',
     description: 'Een wervingscampagne die ook de mensen bereikt die niet aan het zoeken zijn. Bold maakt wervingsvideo’s waarin kandidaten zien hoe het echt is.',
   },

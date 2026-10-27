@@ -14,10 +14,6 @@ export const page: PageData = {
   slug: 'business/fotografie/zakelijk-portret',
   title: "Portret- en teamfoto's",
   meta: {
-    schema: {
-      type: 'service',
-      serviceType: 'Zakelijke Portretfotografie',
-    },
     title: 'Zakelijk portret laten maken | Portret- en teamfoto’s | Bold Productions',
     description: 'Zakelijke portretfotografie waarin mensen eruitzien zoals ze zijn. Bold maakt portretten en teamfoto’s voor je website, LinkedIn en communicatie.',
   },

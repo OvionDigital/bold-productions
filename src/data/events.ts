@@ -28,14 +28,6 @@ import { clientLogos, trustedByTitle } from './logos';
 import { pickTestimonials } from './testimonials';
 
 export const meta: PageData['meta'] = {
-  schema: {
-    type: 'service',
-    serviceType: 'Event Videoproductie',
-    catalog: {
-      name: 'Event Content Diensten',
-      items: ["Promovideo's", "Eventvideo's", 'Aftermovies', 'Social Content', 'Event Fotografie'],
-    },
-  },
   title: 'Eventcontent laten maken? | Bold Productions',
   description:
     'Creëer FOMO en verkoop meer tickets. Strategische eventcontent voor, tijdens en na je event. Ontdek Bold.',

@@ -16,7 +16,6 @@ export const page: PageData = {
   slug: 'events/zakelijke-events/casevideo',
   title: 'Casevideo',
   meta: {
-    schema: { type: 'service', serviceType: 'Zakelijke Casevideo Productie' },
     title: 'Casevideo laten maken? | Bold Productions',
     description:
       'Maak van succesvolle projecten je beste verkoopargument. Overtuig nieuwe klanten met een ijzersterke casevideo.',

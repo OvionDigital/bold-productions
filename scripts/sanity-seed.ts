@@ -317,7 +317,7 @@ async function toBlock(section: PageSection): Promise<Record<string, unknown> | 
     }
     case 'polaroidStack': {
       const p = section.props;
-      return { _type: 'polaroidStackSection', eyebrow: p.eyebrow, title: p.title, gradient: p.gradient, photos: await Promise.all(p.photos.map((photo) => image(photo))) };
+      return { _type: 'polaroidStackSection', eyebrow: p.eyebrow, title: p.title, gradient: p.gradient, photos: await Promise.all(p.photos.map(async (photo) => ({ ...(await image(photo)), _type: 'imageWithAlt' }))) };
     }
     case 'textMedia': {
       const p = section.props;
@@ -432,26 +432,6 @@ async function toBlocks(sections: PageSection[]) {
   return blocks;
 }
 
-/** PageSchema → velden van het page-document (omgekeerde van toSchema in lib/sanity/pages.ts) */
-function schemaFields(schema: PageData['meta']['schema']): Record<string, unknown> {
-  if (!schema) return { schemaType: 'none' };
-  switch (schema.type) {
-    case 'service':
-      return {
-        schemaType: 'service',
-        serviceType: schema.serviceType,
-        serviceName: schema.name,
-        serviceDescription: schema.description,
-        catalogName: schema.catalog?.name,
-        catalogItems: schema.catalog?.items,
-      };
-    case 'webpage':
-      return { schemaType: schema.relation === 'publisher' ? 'webpage-publisher' : 'webpage-main' };
-    default:
-      return { schemaType: schema.type };
-  }
-}
-
 /**
  * Document-id per URL-pad. Bestaat er al een pagina met dat pad (ook na een URL-wijziging,
  * scripts/sanity-migrate-urls.ts), dan dat document; anders page-<pad>. Vaste id's: 'home' =
@@ -475,7 +455,6 @@ async function pageDoc(page: PageData): Promise<Doc> {
     metaDescription: page.meta.description,
     noindex: page.meta.noindex || undefined,
     ogImage: page.meta.ogImage && typeof page.meta.ogImage !== 'string' ? await image({ src: page.meta.ogImage }, false) : undefined,
-    ...schemaFields(page.meta.schema),
     sections: await toBlocks(page.sections),
     listOrder: LIST_ORDER[page.slug],
   };

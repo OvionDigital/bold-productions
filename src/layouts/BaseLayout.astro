@@ -11,13 +11,14 @@ import Analytics from '../components/layout/Analytics.astro';
 import PageBackground from '../components/layout/PageBackground.astro';
 import WhatsAppButton from '../components/layout/WhatsAppButton.astro';
 import type { Accent } from '../components/ui/Button.astro';
-import { buildStructuredData, type PageSchema, type Review } from '../lib/structured-data';
+import { buildStructuredData, type PageFacts } from '../lib/structured-data';
+import type { Crumb } from '../components/layout/Breadcrumbs.astro';
 import { sectionOf, skipLinkLabel } from '../data/navigation';
-import { getNavigation, getSocials } from '../lib/sanity/navigation';
+import { getContact, getNavigation, getSocials } from '../lib/sanity/navigation';
 import { isPreview } from '../lib/preview';
 import ogDefault from '../assets/seo/og-default.jpg';
 import logo from '../assets/brand/bold-productions-logo.png';
-import { contact, copyright, credit, kvk, footerLogoAlt, header, legalLinks } from '../data/navigation';
+import { copyright, credit, footerContact, footerLogoAlt, header, kvkLabel, legalLinks } from '../data/navigation';
 
 interface Props {
   title: string;
@@ -35,15 +36,17 @@ interface Props {
   headerRevealAfter?: string;
   /** Voor preloads van het LCP-beeld per pagina */
   preloadImage?: { src: string; srcset?: string; sizes?: string; type?: string };
-  /** Structured data (src/lib/structured-data.ts); niet op noindex-pagina's */
+  /** Structured data (src/lib/structured-data.ts); niet op noindex-pagina's en kopieën (canonicalPath) */
   structuredData?: {
-    schema?: PageSchema;
-    breadcrumbs?: { label: string; href?: string }[];
-    website?: boolean;
-    reviews?: Review[];
-    catalog?: { name: string; items: { name: string; path: string }[] };
-    employees?: string[];
-    customers?: string[];
+    /** URL-pad zonder slashes ('home' = /): bepaalt de soort pagina */
+    slug: string;
+    /** Naam van de pagina in het kruimelpad */
+    name: string;
+    /** Zichtbaar kruimelpad, alleen met stappen naar indexeerbare pagina's */
+    breadcrumbs?: Crumb[];
+    facts: PageFacts;
+    /** Hoofdfoto (case): absolute of site-relatieve URL */
+    primaryImage?: string;
   };
 }
 
@@ -66,20 +69,24 @@ const canonical = new URL(canonicalPath ?? currentPath, Astro.site);
 // Menu, CTA en footer van dit deel van de site (events, business of neutraal), uit Sanity of src/data
 const siteNav = (await getNavigation())[sectionOf(currentPath)];
 const socials = await getSocials();
+const siteContact = await getContact();
+const contact = footerContact(siteContact);
 // Preview (Sanity Presentation): noindex en zonder animaties (is-static), zodat alle inhoud direct
 // zichtbaar en aanklikbaar is en na elke wijziging op dezelfde plek terugkomt.
 // Zonder eigen keuze: de vaste Bold-deelafbeelding (zoals live)
 const ogImageUrl = new URL(ogImage ?? ogDefault.src, Astro.site).href;
+// Alle URL's in de JSON-LD op het productiedomein (Astro.site), ook op de testomgeving
 const jsonLd =
-  structuredData && !noindex
+  structuredData && !noindex && !canonicalPath
     ? buildStructuredData({
         site: Astro.site!,
-        path: currentPath,
+        canonical: canonical.href,
         title,
         description,
-        logoUrl: new URL(logo.src, Astro.site).href,
-        socials,
         ...structuredData,
+        primaryImage: structuredData.primaryImage && new URL(structuredData.primaryImage, Astro.site).href,
+        organization:
+          structuredData.slug === 'home' ? { logoUrl: new URL(logo.src, Astro.site).href, contact: siteContact, socials } : undefined,
       })
     : undefined;
 // '<' escapen zodat tekst in de JSON nooit een </script> kan vormen
@@ -172,7 +179,7 @@ const jsonLdHtml = jsonLd ? JSON.stringify(jsonLd).replaceAll('<', String.fromCh
             socials={socials}
             legalLinks={legalLinks}
             copyright={copyright}
-            kvk={kvk}
+            kvk={kvkLabel(siteContact.kvk)}
             credit={credit}
             logoAlt={footerLogoAlt}
           />

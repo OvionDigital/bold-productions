@@ -157,15 +157,43 @@ export const navigation: Record<SiteSection, SiteNavigation> = {
   },
 };
 
-export const contact = {
+/**
+ * Contactgegevens van Bold Productions: footer, WhatsApp-knop en de organisatie in de structured
+ * data. In Sanity aan te passen (Menu, footer & contact → Contactgegevens, getContact()); dit is de
+ * terugval per veld.
+ */
+export interface SiteContact {
+  email: string;
+  /** Zoals getoond, met landcode: '+31 6 233 286 55' */
+  phone: string;
+  street: string;
+  postalCode: string;
+  city: string;
+  kvk: string;
+}
+
+export const siteContact: SiteContact = {
+  email: 'mike@weareboldproductions.com',
+  phone: '+31 6 233 286 55',
+  street: 'Koopmanslaan 6',
+  postalCode: '7005 BK',
+  city: 'Doetinchem',
+  kvk: '80117686',
+};
+
+/** '+31 6 233 286 55' → '+31623328655' */
+export const phoneDigits = (phone: string) => phone.replace(/[^\d+]/g, '');
+
+/** Footerblok en WhatsApp-link uit de contactgegevens */
+export const footerContact = (c: SiteContact) => ({
   heading: 'Contactgegevens',
   addressLabel: 'Adresgegevens:',
-  address: ['Koopmanslaan 6,', '7005 BK Doetinchem'],
+  address: [`${c.street},`, `${c.postalCode} ${c.city}`],
   contactLabel: 'Contactgegevens:',
-  email: 'mike@weareboldproductions.com',
-  phone: { label: '+31 6 233 286 55', href: 'tel:+31623328655' },
-  whatsapp: { href: 'https://wa.me/31623328655?text=', label: 'Chat via WhatsApp' },
-};
+  email: c.email,
+  phone: { label: c.phone, href: `tel:${phoneDigits(c.phone)}` },
+  whatsapp: { href: `https://wa.me/${phoneDigits(c.phone).replace('+', '')}?text=`, label: 'Chat via WhatsApp' },
+});
 
 export interface Social {
   label: string;
@@ -182,7 +210,7 @@ export const socialPlatforms = [
   { value: 'tiktok', label: 'TikTok', icon: 'tiktok' },
 ] as const satisfies readonly { value: string; label: string; icon: IconName }[];
 
-/** Footer-iconen en sameAs; in Sanity aan te passen (Menu & footer → Social media, getSocials()) */
+/** Footer-iconen en sameAs; in Sanity aan te passen (Menu, footer & contact → Social media, getSocials()) */
 export const socials: readonly Social[] = [
   { label: 'LinkedIn', href: 'https://www.linkedin.com/company/weareboldproductions', icon: 'linkedin' },
   { label: 'Instagram', href: 'https://www.instagram.com/weareboldproductions/', icon: 'instagram' },
@@ -200,7 +228,7 @@ export const legalLinks: NavLink[] = [
 export const copyright = '© Bold Productions 2026';
 
 /** Onderin de footer, naast het copyright (geen btw-nummer) */
-export const kvk = 'KvK 80117686';
+export const kvkLabel = (kvk: string) => `KvK ${kvk}`;
 
 /** Onderin de footer, opent in een nieuw tabblad */
 export const credit = { label: 'Gebouwd door Ovion Digital', href: 'https://oviondigital.nl' };

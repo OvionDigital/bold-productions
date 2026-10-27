@@ -4,8 +4,8 @@ import type { StructureResolver } from 'sanity/structure';
  * "Pagina's": alle pagina's, ook de homepage (URL-pad "home" = /) en /events en /business;
  * die drie staan bovenaan (verborgen veld listOrder), de rest op URL-pad. Elke pagina is
  * vrij op te bouwen uit secties (src/pages/[...slug].astro). Testimonials, klantlogo's,
- * cases en team zijn herbruikbare inhoud die pagina's per sectie kiezen. "Menu & footer"
- * is een singleton (menu's per deel van de site).
+ * cases en team zijn herbruikbare inhoud die pagina's per sectie kiezen. "Menu, footer & contact"
+ * is een singleton (menu's per deel van de site, social media en contactgegevens).
  */
 export const structure: StructureResolver = (S) =>
   S.list()
@@ -22,7 +22,7 @@ export const structure: StructureResolver = (S) =>
             ]),
         ),
       S.listItem()
-        .title('Menu, footer & social media')
+        .title('Menu, footer & contact')
         .id('siteNavigation')
         .child(S.document().schemaType('siteNavigation').documentId('siteNavigation')),
       S.divider(),

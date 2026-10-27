@@ -14,10 +14,6 @@ export const page: PageData = {
   slug: 'business/fotografie/bedrijfsfotografie',
   title: 'Bedrijfsfotografie',
   meta: {
-    schema: {
-      type: 'service',
-      serviceType: 'Bedrijfsfotografie',
-    },
     title: 'Bedrijfsfotografie | Beelden van hoe het er echt aan toegaat | Bold Productions',
     description: 'Bedrijfsfotografie zonder geposeerde handdrukken. Bold fotografeert jullie mensen, werkvloer en product zoals het is. Bekijk de aanpak en de kosten.',
   },

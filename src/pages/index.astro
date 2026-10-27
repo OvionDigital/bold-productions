@@ -8,8 +8,10 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageSections from '../components/sections/PageSections.astro';
 import { getHomePage } from '../lib/pages';
+import { pageFacts } from '../lib/structured-data';
 
 const page = await getHomePage();
+const facts = await pageFacts('home', page.sections, Astro.site!);
 ---
 
 <BaseLayout
@@ -18,7 +20,7 @@ const page = await getHomePage();
   ogImage={page.meta.ogImage}
   accent={page.accent}
   noindex={page.meta.noindex}
-  structuredData={{ schema: page.meta.schema, website: true }}
+  structuredData={{ slug: page.slug, name: page.title, facts }}
   headerRevealAfter="[data-split-hero]"
 >
   <PageSections sections={page.sections} breadcrumbs={[]} />

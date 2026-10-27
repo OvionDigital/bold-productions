@@ -15,10 +15,6 @@ export const page: PageData = {
   slug: 'business/fundament',
   title: 'Fundament',
   meta: {
-    schema: {
-      type: 'service',
-      serviceType: 'Brandfilm, bedrijfsfilm en employer branding',
-    },
     title: 'Brandfilm, bedrijfsfilm en employer branding | Bold Productions',
     description: 'Campagnes komen en gaan, je fundament blijft staan. Bold maakt brandfilms, bedrijfsfilms en employer branding films die laten zien wie je bent.',
   },

@@ -14,10 +14,6 @@ export const page: PageData = {
   slug: 'business/fotografie/productfotografie',
   title: 'Productfotografie',
   meta: {
-    schema: {
-      type: 'service',
-      serviceType: 'Productfotografie',
-    },
     title: 'Productfotografie | Packshots en beeld dat verkoopt | Bold Productions',
     description: 'Productfotografie voor webshop, campagne en marketplace. Bold maakt packshots die voldoen aan de eisen en beeld dat mensen doet kopen.',
   },

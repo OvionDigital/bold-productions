@@ -14,10 +14,6 @@ export const page: PageData = {
   slug: 'business/fundament/employer-branding',
   title: 'Employer branding',
   meta: {
-    schema: {
-      type: 'service',
-      serviceType: 'Employer Branding Video Productie',
-    },
     title: 'Employer branding video laten maken | Werken bij film | Bold Productions',
     description: 'Een employer branding film die de juiste mensen aantrekt en de verkeerde afschrikt. Bold maakt werken-bij video’s die laten zien hoe het echt is.',
   },

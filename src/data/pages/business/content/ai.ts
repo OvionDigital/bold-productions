@@ -14,10 +14,6 @@ export const page: PageData = {
   slug: 'business/content/ai',
   title: 'AI',
   meta: {
-    schema: {
-      type: 'service',
-      serviceType: 'AI Video & Beeld Productie',
-    },
     title: 'AI-video en -beeld laten maken | Bold Productions',
     description: 'Beelden waarvan je dacht dat ze niet konden. Bold zet AI in waar het iets toevoegt, gefilmd, met AI of een mix, en zegt het eerlijk wanneer niet.',
   },

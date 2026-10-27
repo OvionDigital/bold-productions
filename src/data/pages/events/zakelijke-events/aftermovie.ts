@@ -16,7 +16,6 @@ export const page: PageData = {
   slug: 'events/zakelijke-events/aftermovie',
   title: 'Aftermovie',
   meta: {
-    schema: { type: 'service', serviceType: 'Zakelijke Aftermovie Productie' },
     title: 'Zakelijke aftermovie laten maken? | Bold Productions',
     description:
       'Maak het succes van je event tastbaar. Strategische aftermovies voor zakelijke events en employer branding. Ontdek Bold.',

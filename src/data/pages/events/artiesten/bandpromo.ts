@@ -16,7 +16,6 @@ export const page: PageData = {
   slug: 'events/artiesten/bandpromo',
   title: 'Bandpromo',
   meta: {
-    schema: { type: 'service', serviceType: 'Band Promovideo Productie' },
     title: 'Bandpromo laten maken? | Bold Productions',
     description:
       "Krijg meer boekingen als band. Wij vangen jullie sound in high-end video's voor EPK, website en socials. Eén productie, overal impact.",

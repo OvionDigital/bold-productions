@@ -14,10 +14,6 @@ export const page: PageData = {
   slug: 'business/fundament/bedrijfsfilm',
   title: 'Bedrijfsfilm',
   meta: {
-    schema: {
-      type: 'service',
-      serviceType: 'Bedrijfsfilm Productie',
-    },
     title: 'Bedrijfsfilm laten maken | Een die mensen afkijken | Bold Productions',
     description: 'De meeste bedrijfsfilms worden weggeklikt. Bold maakt bedrijfsfilms die uitleggen wie je bent zonder dat iemand afhaakt. Bekijk onze aanpak.',
   },

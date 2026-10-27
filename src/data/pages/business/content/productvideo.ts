@@ -14,10 +14,6 @@ export const page: PageData = {
   slug: 'business/content/productvideo',
   title: 'Productvideo',
   meta: {
-    schema: {
-      type: 'service',
-      serviceType: 'Productvideo Productie',
-    },
     title: 'Productvideo laten maken | Verkoopt wat een foto niet kan | Bold Productions',
     description: 'Een productvideo die laat zien hoe het werkt en waarom het beter is. Bold maakt productvideo’s voor webshops, campagnes en sales. Bekijk de aanpak.',
   },

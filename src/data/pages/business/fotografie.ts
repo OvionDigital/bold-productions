@@ -18,10 +18,6 @@ export const page: PageData = {
   slug: 'business/fotografie',
   title: 'Fotografie',
   meta: {
-    schema: {
-      type: 'service',
-      serviceType: 'Zakelijke Fotografie',
-    },
     title: 'Zakelijke fotografie | Een fotograaf voor je hele bedrijf | Bold Productions',
     description: 'Bedrijfsfotografie, productfotografie, portretten en projectfotografie. Bold legt vast wie jullie zijn en wat jullie maken, in één stijl.',
   },

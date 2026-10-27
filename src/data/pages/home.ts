@@ -5,7 +5,9 @@
  */
 import type { PageData } from '../../lib/sections';
 import { teamTiles } from '../team';
-import { contact } from '../navigation';
+import { footerContact, siteContact } from '../navigation';
+
+const contact = footerContact(siteContact);
 import splitEvents from '../../assets/images/events/hero-hrieps-festival.jpg';
 import splitBusiness from '../../assets/images/cases/mikexdeliveformule-finis-100-jaar-4.jpg';
 
@@ -16,7 +18,6 @@ export const page: PageData = {
     // Voorlopig: home-new heeft nog geen eigen SEO-titel en -beschrijving
     title: 'Bold Productions | Content voor events en bedrijven',
     description: 'Video en fotografie. Met Bold Events creëren we FOMO rondom jouw event, met Bold Business maken we jouw bedrijf bold in plaats van boring.',
-    schema: { type: 'webpage', relation: 'publisher' },
   },
   sections: [
     {

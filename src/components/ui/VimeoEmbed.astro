@@ -5,8 +5,8 @@
  * Met bediening (`background={false}`): een "gevel" — alleen een thumbnail met
  * afspeelknop; de echte speler (± 450 kB JavaScript en cookies van Vimeo) laadt pas bij
  * een klik en start dan meteen (scripts/vimeo-facade.ts). Zonder JS: link naar Vimeo.
- * Plus VideoObject-structured data (titel, thumbnail, duur, uploaddatum uit oEmbed,
- * src/lib/vimeo.ts), zodat Google de video kan indexeren.
+ * Thumbnail uit oEmbed (src/lib/vimeo.ts); de VideoObject-structured data (cases) maakt
+ * lib/structured-data.ts.
  *
  * `background` (standaard): decoratief, automatisch, gedempt en herhalend (Vimeo
  * background=1), lazy iframe, vullend bijgesneden op de eigen verhouding van de video (oEmbed),
@@ -16,7 +16,7 @@
  * `ratio`: vaste verhouding of een getal (hoogte / breedte, bijv. 0.5625 = 16:9).
  */
 import Icon from './Icon.astro';
-import { getVimeoMeta, isoDuration, thumbnailAt } from '../../lib/vimeo';
+import { getVimeoMeta, thumbnailAt } from '../../lib/vimeo';
 
 interface Props {
   id: string;
@@ -38,21 +38,6 @@ const meta = await getVimeoMeta(id, hash);
 const videoRatio = meta?.width && meta.height ? meta.width / meta.height : undefined;
 const watchUrl = `https://vimeo.com/${id}${hash ? `/${hash}` : ''}`;
 const thumbWidths = [480, 640, 960, 1280];
-
-const videoObject =
-  !background && meta?.uploadDate && meta.thumbnail
-    ? {
-        '@context': 'https://schema.org',
-        '@type': 'VideoObject',
-        name: meta.title || title,
-        description: meta.description || meta.title || title,
-        thumbnailUrl: thumbnailAt(meta.thumbnail, 1280),
-        uploadDate: meta.uploadDate,
-        ...(meta.duration ? { duration: isoDuration(meta.duration) } : {}),
-        embedUrl: `https://player.vimeo.com/video/${id}${hash ? `?h=${hash}` : ''}`,
-      }
-    : undefined;
-const videoObjectHtml = videoObject ? JSON.stringify(videoObject).replaceAll('<', String.fromCharCode(92) + 'u003c') : undefined;
 ---
 
 <div
@@ -90,7 +75,6 @@ const videoObjectHtml = videoObject ? JSON.stringify(videoObject).replaceAll('<'
       </a>
     )
   }
-  {videoObjectHtml && <script type="application/ld+json" is:inline set:html={videoObjectHtml} />}
 </div>
 
 <style>

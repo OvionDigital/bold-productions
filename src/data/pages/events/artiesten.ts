@@ -22,14 +22,6 @@ export const page: PageData = {
   slug: 'events/artiesten',
   title: 'Artiesten',
   meta: {
-    schema: {
-      type: 'service',
-      serviceType: 'Band & Artiesten Videoproduktie',
-      catalog: {
-        name: 'Artiesten Content Diensten',
-        items: ["Bandpromo's", "Artiestenpromo's", 'Recaps', 'Social content', 'Fotografie'],
-      },
-    },
     title: 'Band & artiestenpromo laten maken? | Bold Productions',
     description:
       'Overtuig boekers en vergroot je fanbase. De filmende roadie voor vette bandpromo’s, fotografie en social content. Ontdek Bold.',

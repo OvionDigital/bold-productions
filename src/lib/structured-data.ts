@@ -1,196 +1,294 @@
 /**
- * Structured data (JSON-LD) per pagina, gelijk aan de opbouw op de live site:
- * - altijd: Person (Mike, oprichter) + ProfessionalService (de organisatie)
- * - per pagina via `meta.schema`: Service (+ OfferCatalog), WebPage, ContactPage of profiel (Mike)
- * - homepage: WebSite + Reviews
- * - nieuw t.o.v. live: BreadcrumbList op elke pagina met kruimelpad
- * FAQPage staat bij de FAQ-sectie zelf (Faq.astro), gegenereerd uit de zichtbare vragen.
- * Vaste gegevens: src/data/seo.ts.
+ * Structured data (JSON-LD) per pagina, volgens de specificatie van de SEO-specialist (oktober 2026):
+ * één <script> met één @graph, server-side, alle URL's op het productiedomein (Astro.site, ook op de
+ * testomgeving) en elke `url` gelijk aan de canonical. Wat een pagina is volgt uit het URL-pad
+ * (pageKindOf), de waarden uit bestaande velden: titel, metabeschrijving, h1 (hero), foto's, video.
+ * - homepage: Organization (met de merken Bold Events en Bold Business), WebSite, WebPage
+ * - overige pagina's: eigen pagina-node (isPartOf #website, breadcrumb) + BreadcrumbList, plus
+ *   Service (dienstpagina), VideoObject (case met video) of Person (de Mike-pagina's)
+ * - FAQPage uit de zichtbare vragen (Faq-sectie), waar die er is
+ * - geen schema: juridische pagina's, 404, noindex-pagina's en kopieën met een andere canonical
  */
-import { areaServed, contactPoint, founder, organization } from '../data/seo';
+import { getImage } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import { brands, founder, organization } from '../data/seo';
+import { audiences, type Category } from '../data/taxonomy';
+import { breadcrumbLabels, phoneDigits, type SiteContact } from '../data/navigation';
+import { richToPlainText } from './rich';
+import { getVimeoMeta, isoDuration, thumbnailAt } from './vimeo';
+import { isRemoteImage, sanityImageUrl, type RemoteImage } from './sanity/image';
+import type { PageSection } from './sections';
+import type { Crumb } from '../components/layout/Breadcrumbs.astro';
 
-export type PageSchema =
-  /** Dienstpagina. name/description: leeg = paginatitel/metabeschrijving */
-  | { type: 'service'; serviceType: string; name?: string; description?: string; catalog?: { name: string; items: string[] } }
-  /** Gewone pagina over de organisatie: als hoofdonderwerp (mainEntity) of als uitgever (publisher) */
-  | { type: 'webpage'; relation?: 'mainEntity' | 'publisher' }
-  /** Contactpagina met contactpunt */
-  | { type: 'contact' }
-  /** Profielpagina van de oprichter (/over/mike) */
-  | { type: 'profile' };
+export type PageKind = 'home' | 'collection' | 'service' | 'case' | 'contact' | 'about' | 'profile' | 'webpage' | 'none';
 
-export interface Review {
-  body: string;
-  author: string;
-  authorType: 'Person' | 'Organization';
+/** Pagina's zonder schema (spec: juridisch; 404 is noindex) */
+const WITHOUT_SCHEMA = new Set(['privacyverklaring', 'cookiebeleid', 'algemene-voorwaarden', '404']);
+
+const isCategory = (value: string): value is Category => value === 'events' || value === 'business';
+
+/** Soort pagina uit het URL-pad (tabel "Schema per paginatype" in de specificatie) */
+export function pageKindOf(slug: string): PageKind {
+  if (slug === 'home') return 'home';
+  if (WITHOUT_SCHEMA.has(slug)) return 'none';
+  const [root, second, third] = slug.split('/');
+  // Losse pagina's buiten /events en /business: landingspagina's, sitemap
+  if (!isCategory(root)) return 'webpage';
+  if (!second) return 'collection';
+  if (second === 'cases') return third ? 'case' : 'collection';
+  if (second === 'contact' && !third) return 'contact';
+  if (second === 'over-bold') return !third ? 'about' : third === founder.slug ? 'profile' : 'webpage';
+  if (audiences[root].some((a) => a.value === second)) return third ? 'service' : 'collection';
+  return 'webpage';
+}
+
+const PAGE_TYPES: Record<Exclude<PageKind, 'home' | 'none'>, string> = {
+  collection: 'CollectionPage',
+  service: 'WebPage',
+  case: 'WebPage',
+  contact: 'ContactPage',
+  about: 'AboutPage',
+  profile: 'ProfilePage',
+  webpage: 'WebPage',
+};
+
+interface VideoInfo {
+  name: string;
+  description?: string;
+  thumbnailUrl: string;
+  uploadDate: string;
+  embedUrl: string;
+  duration?: string;
+}
+
+/** Wat de structured data uit de secties van een pagina haalt */
+export interface PageFacts {
+  /** Tekst van de h1 (hero: titel + accentregel) */
+  h1?: string;
+  faq?: { question: string; answer: string }[];
+  /** Eerste video met bediening (case), alleen als Vimeo een uploaddatum geeft */
+  video?: VideoInfo;
+  /** Portretfoto (Mike-pagina): eerste foto naast tekst */
+  portrait?: string;
+}
+
+/** Absolute URL van een lokale of Sanity-afbeelding */
+async function imageUrl(src: ImageMetadata | RemoteImage, site: URL, width: number): Promise<string> {
+  if (isRemoteImage(src)) return sanityImageUrl(src.src, { width, format: 'jpg' });
+  return new URL((await getImage({ src, width, format: 'jpg' })).src, site).href;
+}
+
+/** Alle Vimeo-video's met bediening, in volgorde: rich text `{ video }`, tijdlijnstap, videosectie.
+ * De hero-video en de video naast tekst (TextMedia) zijn decoratief en tellen niet mee. */
+function playableVideos(value: unknown, found: { id: string; hash?: string; title: string }[] = []) {
+  if (Array.isArray(value)) value.forEach((item) => playableVideos(item, found));
+  else if (value && typeof value === 'object' && Object.getPrototypeOf(value) === Object.prototype) {
+    for (const [key, child] of Object.entries(value)) {
+      if (key === 'video' && child && typeof (child as { id?: unknown }).id === 'string') found.push(child as (typeof found)[number]);
+      else playableVideos(child, found);
+    }
+  }
+  return found;
+}
+
+export async function pageFacts(kind: PageKind, sections: PageSection[], site: URL): Promise<PageFacts> {
+  const hero = sections.find((s) => s.type === 'hero');
+  const h1 = hero ? [hero.props.title, hero.props.titleAccent].join(' ').replace(/\s+/g, ' ').trim() : undefined;
+  const faq = sections.flatMap((s) =>
+    s.type === 'faq' ? s.props.items.map((item) => ({ question: item.question, answer: richToPlainText(item.answer) })) : [],
+  );
+
+  let video: VideoInfo | undefined;
+  if (kind === 'case') {
+    const first = playableVideos(sections.filter((s) => s.type !== 'hero' && s.type !== 'splitHero'))[0];
+    const meta = first ? await getVimeoMeta(first.id, first.hash) : null;
+    if (first && meta?.uploadDate && meta.thumbnail) {
+      video = {
+        name: meta.title || first.title,
+        // Zonder omschrijving bij Vimeo: de metabeschrijving van de pagina (buildStructuredData)
+        description: meta.description,
+        thumbnailUrl: thumbnailAt(meta.thumbnail, 1280),
+        uploadDate: meta.uploadDate,
+        embedUrl: `https://player.vimeo.com/video/${first.id}${first.hash ? `?h=${first.hash}` : ''}`,
+        ...(meta.duration ? { duration: isoDuration(meta.duration) } : {}),
+      };
+    }
+  }
+
+  let portrait: string | undefined;
+  if (kind === 'profile') {
+    const media = sections.find((s) => s.type === 'textMedia' && s.props.media.type === 'image');
+    if (media?.type === 'textMedia' && media.props.media.type === 'image') portrait = await imageUrl(media.props.media.src, site, 800);
+  }
+
+  return { h1: h1 || undefined, faq: faq.length ? faq : undefined, video, portrait };
 }
 
 interface Context {
   site: URL;
-  /** Pad van de pagina, bijv. '/events' of '/' */
-  path: string;
+  slug: string;
+  /** Absolute canonical van deze pagina */
+  canonical: string;
   title: string;
   description: string;
-  logoUrl: string;
-  schema?: PageSchema;
-  /** Kruimelpad zoals Breadcrumbs.astro: eerste = home van dit deel, laatste = huidige pagina */
-  breadcrumbs?: { label: string; href?: string }[];
-  /** Alleen op de homepage */
-  website?: boolean;
-  /** /events (de vroegere homepage): reviews + gemiddelde score op de organisatie */
-  reviews?: Review[];
-  /** Aanbod op de organisatie (hasOfferCatalog), zoals live op de homepage */
-  catalog?: { name: string; items: { name: string; path: string }[] };
-  /** Teamleden (behalve Mike) als employee op de organisatie, zoals live op /over */
-  employees?: string[];
-  /** Klanten (customer) op de organisatie, zoals live op de homepage */
-  customers?: string[];
-  /** Social-medialinks uit Sanity (getSocials); vervangen per platform de vaste sameAs uit seo.ts */
-  socials?: readonly { href: string }[];
+  /** Naam van de pagina in het kruimelpad */
+  name: string;
+  /** Zichtbaar kruimelpad (Breadcrumbs.astro); alleen stappen naar indexeerbare pagina's */
+  breadcrumbs?: Crumb[];
+  facts: PageFacts;
+  /** Absolute URL van de hoofdfoto (case: de casefoto) */
+  primaryImage?: string;
+  /** Homepage: gegevens van de organisatie */
+  organization?: { logoUrl: string; contact: SiteContact; socials: readonly { href: string }[] };
 }
-
-/** "Ralph buisman" → "Ralph Buisman" (zichtbaar blijft de tekst letterlijk); tussenvoegsels klein */
-const TUSSENVOEGSELS = new Set(['van', 'de', 'der', 'den', 'het', 'ter', 'ten', 'te', 'in', "'t"]);
-const personName = (name: string) =>
-  name
-    .split(' ')
-    .map((word, i) => (i > 0 && TUSSENVOEGSELS.has(word) ? word : word.charAt(0).toUpperCase() + word.slice(1)))
-    .join(' ');
 
 type Node = Record<string, unknown>;
 
-const host = (href: string) => {
-  try {
-    return new URL(href).hostname.replace(/^www\./, '');
-  } catch {
-    return href;
-  }
-};
+export function buildStructuredData(ctx: Context): Node | undefined {
+  const kind = pageKindOf(ctx.slug);
+  if (kind === 'none') return undefined;
 
-/** Links uit Sanity eerst; vaste sameAs-links van een ander platform (bijv. Facebook) blijven staan. */
-function mergeSameAs(fixed: readonly string[], socials: readonly { href: string }[] = []): string[] {
-  const hosts = new Set(socials.map((social) => host(social.href)));
-  return [...socials.map((social) => social.href), ...fixed.filter((href) => !hosts.has(host(href)))];
-}
-
-export function buildStructuredData(ctx: Context): Node {
   const base = ctx.site.origin;
-  const url = (path: string) => (path === '/' ? base : `${base}${path}`);
-  const pageUrl = url(ctx.path);
+  const url = (path: string) => new URL(path, ctx.site).href;
   const orgId = { '@id': `${base}/#organization` };
-  const founderId = { '@id': `${base}/#mikeampting` };
-  const s = ctx.schema;
-
-  const person: Node = {
-    '@type': 'Person',
-    ...founderId,
-    name: founder.name,
-    jobTitle: founder.jobTitle,
-    ...(s?.type === 'profile' ? { description: founder.description } : {}),
-    url: url(founder.path),
-    worksFor: orgId,
-    ...(s?.type === 'profile' ? { knowsAbout: founder.knowsAbout } : {}),
-    sameAs: founder.sameAs,
-  };
-
-  const org: Node = {
-    '@type': 'ProfessionalService',
-    ...orgId,
-    name: organization.name,
-    founder: founderId,
-    image: ctx.logoUrl,
-    logo: ctx.logoUrl,
-    url: base,
-    telephone: organization.telephone,
-    priceRange: organization.priceRange,
-    address: { '@type': 'PostalAddress', ...organization.address },
-    geo: { '@type': 'GeoCoordinates', ...organization.geo },
-    sameAs: mergeSameAs(organization.sameAs, ctx.socials),
-    ...(ctx.employees?.length ? { employee: ctx.employees.map((name) => ({ '@type': 'Person', name: personName(name) })) } : {}),
-    ...(ctx.customers?.length ? { customer: ctx.customers.map((name) => ({ '@type': 'Organization', name })) } : {}),
-    // Zoals live: gemiddelde score van de reviews op deze pagina (allemaal 5)
-    ...(ctx.reviews?.length
-      ? { aggregateRating: { '@type': 'AggregateRating', ratingValue: '5', reviewCount: String(ctx.reviews.length), bestRating: '5', worstRating: '1' } }
-      : {}),
-    ...(ctx.catalog
-      ? {
-          hasOfferCatalog: {
-            '@type': 'OfferCatalog',
-            name: ctx.catalog.name,
-            itemListElement: ctx.catalog.items.map((item) => ({ '@type': 'Offer', itemOffered: { '@type': 'Service', name: item.name, url: url(item.path) } })),
-          },
-        }
-      : {}),
-  };
-
+  const websiteId = { '@id': `${base}/#website` };
+  const brandId = (category: Category) => ({ '@id': `${base}/#brand-${category}` });
+  const pageId = { '@id': `${ctx.canonical}#webpage` };
+  const breadcrumbId = { '@id': `${ctx.canonical}#breadcrumb` };
+  const { facts } = ctx;
   const graph: Node[] = [];
-  if (ctx.website) graph.push({ '@type': 'WebSite', '@id': `${base}/#website`, url: base, name: organization.name, inLanguage: 'nl-NL', publisher: orgId });
-  graph.push(person, org);
 
-  if (s?.type === 'service') {
+  const faqPage = (): Node[] =>
+    facts.faq
+      ? [
+          {
+            '@type': 'FAQPage',
+            '@id': `${ctx.canonical}#faq`,
+            mainEntity: facts.faq.map((item) => ({ '@type': 'Question', name: item.question, acceptedAnswer: { '@type': 'Answer', text: item.answer } })),
+          },
+        ]
+      : [];
+
+  if (kind === 'home') {
+    const org = ctx.organization;
+    graph.push(
+      {
+        '@type': 'Organization',
+        ...orgId,
+        name: organization.name,
+        url: url('/'),
+        brand: [brandId('events'), brandId('business')],
+        ...(org
+          ? {
+              logo: { '@type': 'ImageObject', url: org.logoUrl },
+              email: org.contact.email,
+              telephone: phoneDigits(org.contact.phone),
+              identifier: { '@type': 'PropertyValue', propertyID: 'KvK', value: org.contact.kvk },
+              address: {
+                '@type': 'PostalAddress',
+                streetAddress: org.contact.street,
+                postalCode: org.contact.postalCode,
+                addressLocality: org.contact.city,
+                addressCountry: 'NL',
+              },
+              sameAs: org.socials.map((social) => social.href),
+            }
+          : {}),
+      },
+      ...(Object.entries(brands) as [Category, (typeof brands)[Category]][]).map(([category, brand]) => ({
+        '@type': 'Brand',
+        ...brandId(category),
+        name: brand.name,
+        url: url(brand.path),
+      })),
+      { '@type': 'WebSite', ...websiteId, url: url('/'), name: organization.name, inLanguage: 'nl-NL', publisher: orgId },
+      {
+        '@type': 'WebPage',
+        ...pageId,
+        url: ctx.canonical,
+        name: ctx.title,
+        description: ctx.description,
+        inLanguage: 'nl-NL',
+        isPartOf: websiteId,
+        about: orgId,
+      },
+      ...faqPage(),
+    );
+    return { '@context': 'https://schema.org', '@graph': graph };
+  }
+
+  const category = ctx.slug.split('/')[0];
+  const video = kind === 'case' ? facts.video : undefined;
+  const mainEntity =
+    kind === 'service'
+      ? { '@id': `${ctx.canonical}#service` }
+      : kind === 'profile'
+        ? { '@id': `${base}/#${founder.slug}` }
+        : video
+          ? { '@id': `${ctx.canonical}#video` }
+          : undefined;
+
+  graph.push({
+    '@type': PAGE_TYPES[kind],
+    ...pageId,
+    url: ctx.canonical,
+    name: ctx.title,
+    ...(ctx.description ? { description: ctx.description } : {}),
+    inLanguage: 'nl-NL',
+    isPartOf: websiteId,
+    breadcrumb: breadcrumbId,
+    ...(kind === 'about' || kind === 'contact' ? { about: orgId } : {}),
+    ...(kind === 'case' && ctx.primaryImage ? { primaryImageOfPage: { '@type': 'ImageObject', url: ctx.primaryImage } } : {}),
+    ...(mainEntity ? { mainEntity } : {}),
+  });
+
+  if (kind === 'service') {
     graph.push({
       '@type': 'Service',
-      name: s.name || ctx.title,
-      serviceType: s.serviceType,
-      description: s.description || ctx.description,
-      url: pageUrl,
+      '@id': `${ctx.canonical}#service`,
+      name: facts.h1 || ctx.name,
+      ...(ctx.description ? { description: ctx.description } : {}),
+      url: ctx.canonical,
       provider: orgId,
-      author: founderId,
-      areaServed: { '@type': 'Country', name: areaServed },
-      ...(s.catalog?.items.length
-        ? {
-            hasOfferCatalog: {
-              '@type': 'OfferCatalog',
-              name: s.catalog.name,
-              itemListElement: s.catalog.items.map((name) => ({ '@type': 'Offer', itemOffered: { '@type': 'Service', name } })),
-            },
-          }
-        : {}),
-    });
-  } else if (s?.type === 'webpage') {
-    graph.push({
-      '@type': 'WebPage',
-      name: ctx.title,
-      description: ctx.description,
-      url: pageUrl,
-      [s.relation === 'publisher' ? 'publisher' : 'mainEntity']: orgId,
-    });
-  } else if (s?.type === 'contact') {
-    graph.push({
-      '@type': 'ContactPage',
-      name: ctx.title,
-      description: ctx.description,
-      url: pageUrl,
-      mainEntity: orgId,
-      contactPoint: { '@type': 'ContactPoint', ...contactPoint },
-    });
-  } else if (s?.type === 'profile') {
-    graph.push({ '@type': 'WebPage', '@id': `${pageUrl}#webpage`, url: pageUrl, name: ctx.title, description: ctx.description, mainEntity: founderId });
-  }
-
-  for (const review of ctx.reviews ?? []) {
-    graph.push({
-      '@type': 'Review',
-      itemReviewed: orgId,
-      author: { '@type': review.authorType, name: review.author },
-      reviewBody: review.body,
-      reviewRating: { '@type': 'Rating', ratingValue: '5' },
+      ...(isCategory(category) ? { brand: brandId(category) } : {}),
     });
   }
 
-  if (ctx.breadcrumbs && ctx.breadcrumbs.length > 1) {
-    const items = ctx.breadcrumbs;
+  if (video) {
+    graph.push({ '@type': 'VideoObject', '@id': `${ctx.canonical}#video`, ...video, description: video.description || ctx.description || video.name });
+  }
+
+  if (kind === 'profile') {
     graph.push({
-      '@type': 'BreadcrumbList',
-      itemListElement: items.map((item, index) => ({
-        '@type': 'ListItem',
-        position: index + 1,
-        name: item.label,
-        // Laatste stap = deze pagina; tussenstappen zonder eigen pagina krijgen geen item
-        ...(index === items.length - 1 ? { item: pageUrl } : item.href ? { item: url(item.href) } : {}),
-      })),
+      '@type': 'Person',
+      '@id': `${base}/#${founder.slug}`,
+      name: founder.name,
+      jobTitle: founder.jobTitle,
+      ...(facts.portrait ? { image: facts.portrait } : {}),
+      worksFor: orgId,
+      sameAs: founder.sameAs,
     });
   }
 
+  // Kruimelpad volgens de URL: Home › Events/Business › … › deze pagina (laatste zonder item).
+  // Het zichtbare kruimelpad begint bij de home van het deel; op /events en /business is het leeg.
+  const visible = ctx.breadcrumbs ?? [];
+  const steps: Crumb[] = [
+    { label: breadcrumbLabels.home, href: '/' },
+    ...visible.slice(0, -1).filter((crumb) => crumb.href && crumb.href !== '/'),
+    { label: ctx.name },
+  ];
+  graph.push({
+    '@type': 'BreadcrumbList',
+    ...breadcrumbId,
+    itemListElement: steps.map((step, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: step.label,
+      ...(step.href && index < steps.length - 1 ? { item: url(step.href) } : {}),
+    })),
+  });
+
+  graph.push(...faqPage());
   return { '@context': 'https://schema.org', '@graph': graph };
 }

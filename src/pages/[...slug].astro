@@ -9,10 +9,8 @@
 import type { GetStaticPaths } from 'astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageSections from '../components/sections/PageSections.astro';
-import { EVENTS_SLUG, getRoutedPages, type BuiltPage } from '../lib/pages';
-import { eventsCatalog, eventsCustomers, founder, homepageReviews } from '../data/seo';
-import { testimonials } from '../data/testimonials';
-import type { Review } from '../lib/structured-data';
+import { getRoutedPages, type BuiltPage } from '../lib/pages';
+import { pageFacts, pageKindOf } from '../lib/structured-data';
 
 export const getStaticPaths = (async () => {
   const pages = await getRoutedPages();
@@ -33,19 +31,9 @@ if (!page) {
   }
 }
 
-/** /events (de vroegere homepage): reviews in de structured data, selectie van live (data/seo.ts) */
-const reviews: Review[] | undefined =
-  page.slug === EVENTS_SLUG
-    ? homepageReviews.map((id) => {
-        const t: { quote: string; name?: string; organisation?: string } = testimonials[id];
-        return { body: t.quote, author: t.name ?? t.organisation ?? '', authorType: t.name ? 'Person' : 'Organization' };
-      })
-    : undefined;
-
-/** Pagina over Bold met het team (Over Bold): de teamleden als employee, zoals live op /over */
-const team = page.sections.find((s) => s.type === 'serviceTiles' && s.props.variant === 'team');
-const employees =
-  page.meta.schema?.type === 'webpage' && team?.type === 'serviceTiles' ? team.props.items.map((item) => item.label).filter((name) => name !== founder.name) : undefined;
+/** Structured data: kruimelpad alleen via indexeerbare pagina's (geen noindex, geen kopie) */
+const indexable = new Set((await getRoutedPages()).filter((p) => !p.meta.noindex && !p.meta.canonical).map((p) => `/${p.slug}`));
+const facts = await pageFacts(pageKindOf(page.slug), page.sections, Astro.site!);
 ---
 
 <BaseLayout
@@ -55,7 +43,13 @@ const employees =
   accent={page.accent}
   noindex={page.meta.noindex}
   canonicalPath={page.meta.canonical}
-  structuredData={{ schema: page.meta.schema, breadcrumbs: page.breadcrumbs, reviews, catalog: reviews ? eventsCatalog : undefined, customers: reviews ? eventsCustomers : undefined, employees }}
+  structuredData={{
+    slug: page.slug,
+    name: page.title,
+    breadcrumbs: page.breadcrumbs.filter((crumb, i) => i === page.breadcrumbs.length - 1 || (crumb.href && indexable.has(crumb.href))),
+    facts,
+    primaryImage: pageKindOf(page.slug) === 'case' ? page.meta.ogImage : undefined,
+  }}
 >
   <PageSections sections={page.sections} breadcrumbs={page.breadcrumbs} />
 </BaseLayout>

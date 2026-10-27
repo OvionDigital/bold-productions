@@ -14,13 +14,12 @@ import { isPreview } from './preview';
 import { sitemapGroups } from './sitemap';
 import type { Crumb } from '../components/layout/Breadcrumbs.astro';
 import type { Accent } from '../components/ui/Button.astro';
-import type { PageSchema } from './structured-data';
 
 export interface BuiltPage {
   slug: string;
   title: string;
   updatedAt?: string;
-  meta: { title: string; description: string; ogImage?: string; noindex: boolean; canonical?: string; schema?: PageSchema };
+  meta: { title: string; description: string; ogImage?: string; noindex: boolean; canonical?: string };
   accent: Accent;
   breadcrumbs: Crumb[];
   sections: PageSection[];
@@ -76,7 +75,6 @@ async function buildAllPages(): Promise<BuiltPage[]> {
         ogImage: await ogImageFor(page),
         noindex: Boolean(page.meta.noindex),
         canonical: page.meta.canonical,
-        schema: page.meta.schema,
       },
       accent: page.accent ?? 'orange',
       breadcrumbs: buildBreadcrumbs(page, bySlug),

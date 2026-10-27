@@ -14,10 +14,6 @@ export const page: PageData = {
   slug: 'business/fundament/brandfilm',
   title: 'Brandfilm',
   meta: {
-    schema: {
-      type: 'service',
-      serviceType: 'Brandfilm Productie',
-    },
     title: 'Brandfilm laten maken | Merkfilm die blijft hangen | Bold Business',
     description: 'Een brandfilm die niet vertelt wat je doet, maar laat voelen waar je voor staat. Bold maakt merkfilms met een invalshoek die je concurrent over het hoofd ziet.',
   },

@@ -20,11 +20,6 @@ export const page: PageData = {
   slug: 'events/zakelijke-events',
   title: 'Zakelijke events',
   meta: {
-    schema: {
-      type: 'service',
-      serviceType: 'Zakelijke Videoproduktie & Contentstrategie',
-      catalog: { name: 'Zakelijke Content Diensten', items: ['Recaps', 'Aftermovies', 'Fotografie', "Casevideo's"] },
-    },
     title: 'Zakelijke eventcontent laten maken? | Bold Productions',
     description:
       'Bereik concrete doelen met strategische video en foto. De contentpartner voor eventbureaus en planners. Ontdek Bold.',

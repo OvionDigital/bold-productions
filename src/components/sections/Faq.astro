@@ -1,13 +1,13 @@
 ---
 /**
  * Veelgestelde vragen (Webflow faq_item): titel en accordeon met vragen.
- * Gedrag in scripts/accordion.ts. Inclusief FAQPage-structured data (JSON-LD).
+ * Gedrag in scripts/accordion.ts. De FAQPage-structured data maakt lib/structured-data.ts uit dezelfde vragen.
  */
 import Container from '../ui/Container.astro';
 import Heading, { type HeadingGradient } from '../ui/Heading.astro';
 import Icon from '../ui/Icon.astro';
 import RichText from '../ui/RichText.astro';
-import { richToPlainText, type Rich } from '../../lib/rich';
+import type { Rich } from '../../lib/rich';
 
 export interface FaqItem {
   question: string;
@@ -24,16 +24,6 @@ export interface FaqProps {
 type Props = FaqProps;
 
 const { id = 'faq', title, gradient = 'green', items } = Astro.props;
-
-const structuredData = {
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  mainEntity: items.map((item) => ({
-    '@type': 'Question',
-    name: item.question,
-    acceptedAnswer: { '@type': 'Answer', text: richToPlainText(item.answer) },
-  })),
-};
 ---
 
 <section class="faq" id={id}>
@@ -74,7 +64,6 @@ const structuredData = {
       </div>
     </div>
   </Container>
-  <script type="application/ld+json" set:html={JSON.stringify(structuredData)} is:inline />
 </section>
 
 <style>

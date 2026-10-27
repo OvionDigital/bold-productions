@@ -14,10 +14,6 @@ export const page: PageData = {
   slug: 'business/content/contentcreatie',
   title: 'Contentcreatie',
   meta: {
-    schema: {
-      type: 'service',
-      serviceType: 'Contentcreatie voor bedrijven',
-    },
     title: 'Contentcreatie voor bedrijven | Eén dag schieten, een jaar vooruit | Bold Productions',
     description: 'Eén opnamedag, honderden beelden. Bold maakt foto en video tegelijk, genoeg om je hele jaar mee te vullen. Bekijk onze aanpak.',
   },

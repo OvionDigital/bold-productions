@@ -24,7 +24,6 @@ export const page: PageData = {
     // Voorlopig: de Webflow-pagina heeft nog geen eigen SEO-titel en -beschrijving
     title: 'Bold Business | Videocontent voor bedrijven',
     description: 'Videocontent voor bedrijven die bold in plaats van boring (willen) zijn. Go Bold. Get your stuff sold.',
-    schema: { type: 'webpage', relation: 'mainEntity' },
   },
   sections: [
     {

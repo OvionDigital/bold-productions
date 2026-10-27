@@ -31,7 +31,6 @@ import type { Crumb } from '../components/layout/Breadcrumbs.astro';
 import { breadcrumbLabels } from '../data/navigation';
 import type { Accent } from '../components/ui/Button.astro';
 import type { ImageMetadata } from 'astro';
-import type { PageSchema } from './structured-data';
 
 /** Welk formulier (src/data/forms.ts) en eventueel een andere placeholder voor het berichtveld */
 export interface FormChoice {
@@ -87,8 +86,6 @@ export interface PageData {
     noindex?: boolean;
     /** Pad van de hoofdversie als deze pagina een kopie is (case in een tweede soort): canonical, niet in de sitemap */
     canonical?: string;
-    /** Structured data van deze pagina (src/lib/structured-data.ts) */
-    schema?: PageSchema;
   };
   sections: PageSection[];
 }

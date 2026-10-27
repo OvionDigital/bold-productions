@@ -11,11 +11,6 @@ export const page: PageData = {
   slug: 'events/cases',
   title: 'Cases',
   meta: {
-    schema: {
-      type: 'service',
-      serviceType: 'Videografie & Fotografie Portfolio',
-      catalog: { name: 'Bold Productions Portfolio', items: ['Event Cases', 'Artiesten Cases', 'Zakelijke Cases'] },
-    },
     title: 'Videografie & fotografie cases | Bold Productions',
     description:
       'Niet vertellen, maar laten zien. Bekijk ons werk voor artiesten, events en zakelijke klanten. Ontdek Bold.',

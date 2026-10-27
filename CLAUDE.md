@@ -57,14 +57,22 @@ npm run sanity:section-previews  # plaatjes per sectie voor "Sectie toevoegen" i
 
 ## SEO
 
-Overgenomen van de Webflow-site (SEO-specialist) en gecontroleerd tegen live: titels, metabeschrijvingen,
-h1's, alt-teksten en alle structured data zijn gelijk. Opbouw:
+Titels, metabeschrijvingen, h1's en alt-teksten overgenomen van de Webflow-site (SEO-specialist) en
+gecontroleerd tegen live. Structured data sinds 27 oktober 2026 volgens de nieuwe specificatie van de
+SEO-specialist (Rick). Opbouw:
 - `BaseLayout`: canonical (www), OG/Twitter (vaste Bold-afbeelding `assets/seo/og-default.jpg`, cases hun
-  casefoto, eigen keuze via `meta.ogImage`), `noindex` zonder nofollow, JSON-LD via `structuredData`.
-- `lib/structured-data.ts`: Person (Mike) + ProfessionalService op elke pagina; per pagina `meta.schema`
-  (`service` met serviceType/OfferCatalog, `webpage`, `contact`, `profile`); homepage WebSite + Reviews;
-  BreadcrumbList. FAQPage zit in `Faq.astro` (uit de zichtbare vragen), VideoObject in `VimeoEmbed`.
-- In Sanity: pagina → Instellingen & SEO → "Soort pagina (voor Google)".
+  casefoto, eigen keuze via `meta.ogImage`), `noindex` zonder nofollow, JSON-LD via `structuredData`
+  (één script, één `@graph`; niet op noindex-pagina's en kopieën met een andere canonical).
+- `lib/structured-data.ts`: soort pagina uit het URL-pad (`pageKindOf`, niets handmatig per pagina), waarden
+  uit titel, metabeschrijving, h1 (hero) en secties (`pageFacts`). Homepage: Organization (+ Brand Bold Events/
+  Bold Business), WebSite, WebPage. Overige pagina's: pagina-node (CollectionPage/WebPage/ContactPage/AboutPage/
+  ProfilePage) + BreadcrumbList (Home › … via indexeerbare pagina's); dienst + Service (brand per soort), case +
+  VideoObject (eerste video met bediening, alleen met uploaddatum), Mike-pagina's + Person. FAQPage uit de Faq-sectie.
+  Juridische pagina's en 404: geen schema. Alle URL's op www (Astro.site), ook op de testomgeving.
+- Organisatiegegevens (adres, telefoon, e-mail, KvK, socials) uit Sanity "Menu, footer & contact" (`getContact`,
+  `getSocials`), dezelfde bron als de footer.
+- `npm run check:schema` (na de build; `-- --base=<url>` tegen een omgeving, `-- --list` typen per pagina) loopt de
+  opleverlijst van de spec na.
 - `public/_headers`: noindex alleen op `*.pages.dev`; HSTS en andere beveiligingsheaders.
 
 ## Conventies
@@ -96,7 +104,7 @@ src/
   components/ui/                basiscomponenten
   components/layout/            Header, Footer, Analytics (en later MegaMenu, MenuPanel)
   components/sections/          één component per sectie, alle inhoud via props
-  data/                         home.ts, navigation.ts, cases.ts, team.ts, forms.ts, seo.ts (organisatie/Mike/reviews), …
+  data/                         home.ts, navigation.ts, cases.ts, team.ts, forms.ts, seo.ts (organisatie, merken, Mike), …
   data/pages/                   één bestand per pagina (PageData), opgesomd in data/pages/index.ts; events/… per URL,
                                 business.ts (Business: lijst van business/…, plus kopieën van Cases/Over/Contact), home.ts (/)
   data/taxonomy.ts              soorten, doelgroepen, diensten (+ URL's)
@@ -112,9 +120,10 @@ src/
   pages/sitemap.xml.ts, robots.txt.ts   sitemap (indexeerbare pagina's, lastmod uit Sanity) en robots
 public/fonts, public/video, public/favicons, public/_headers
 scripts/compare.mjs             visuele vergelijking
+scripts/check-structured-data.mjs  npm run check:schema: JSON-LD controleren (dist/ of --base=<url>)
 scripts/sanity-seed.ts          npm run sanity:seed: src/data naar Sanity (vult alleen aan; --force overschrijft,
                                 --dry-run controleert zonder te schrijven; bestaande pagina's op URL-pad herkend). Loader: scripts/sanity/
-scripts/sanity-migrate-*       eenmalige migraties (taxonomy, urls, 2026-10-17: /events als pagina, logo's, alt-teksten; 2026-10-20: Contentcreatie/zakelijk-portret; 2026-10-22: Business-offerteformulier; al gedraaid)
+scripts/sanity-migrate-*       eenmalige migraties (taxonomy, urls, 2026-10-17: /events als pagina, logo's, alt-teksten; 2026-10-20: Contentcreatie/zakelijk-portret; 2026-10-22: Business-offerteformulier; 2026-10-26: polaroidfoto's `imageWithAlt`; 2026-10-27: contactgegevens in Sanity, oude schema-velden weg; al gedraaid)
 functions/api/form.ts           Pages Function: alle formulieren → mail via Resend (zie README)
 scripts/section-previews.mjs    npm run sanity:section-previews: screenshot per sectie → studio/static/sections/
 astro.preview.config.mjs        live voorbeeld voor Sanity (SSR, Worker; wrangler.preview.jsonc)
@@ -140,7 +149,7 @@ tekst vandaan komt. Beelden uit Sanity: gebruik `CmsPicture` (niet `<Picture>`),
 breedte in de CSS van de sectie en geef bij een vaste uitsnede `aspectRatio` mee. **Alt-tekst** staat op de
 afbeelding zelf (Studio-tool Media, `sanity-plugin-media`, `sanity.imageAsset.altText`, geldt overal); het veld
 op de plek is een optionele afwijking (`imageProjection`: `coalesce(alt, asset->altText)`).
-Menu, footer en social media (één lijst voor de hele site: footer-iconen + sameAs, `getSocials()`) komen uit de singleton `siteNavigation` (`src/lib/sanity/navigation.ts`, terugval
+Menu, footer, social media (één lijst voor de hele site: footer-iconen + sameAs, `getSocials()`) en contactgegevens (footer, WhatsApp-knop, Organization; `getContact()`) komen uit de singleton `siteNavigation` ("Menu, footer & contact") (`src/lib/sanity/navigation.ts`, terugval
 per deel op `src/data/navigation.ts`). **Live voorbeeld** (Presentation Tool in Studio): aparte
 build `astro.preview.config.mjs` (SSR op een Cloudflare Worker, concepten, stega, overlays uit
 `scripts/visual-editing.ts`); `isPreview` (`src/lib/preview.ts`) schakelt caches en animaties uit.

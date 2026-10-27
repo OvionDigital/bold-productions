@@ -14,10 +14,6 @@ export const page: PageData = {
   slug: 'business/content/social-content',
   title: 'Social content',
   meta: {
-    schema: {
-      type: 'service',
-      serviceType: 'Social Media Content voor bedrijven',
-    },
     title: 'Social content voor bedrijven | Drie pilaren, één plan | Bold Productions',
     description: 'Meer posten is geen strategie. Bold maakt social content vanuit drie pilaren: entertainment, persoonlijkheid en promotie. Van één sessie per kwartaal tot maandelijks.',
   },

@@ -15,10 +15,6 @@ export const page: PageData = {
   slug: 'business/campagnes',
   title: 'Campagnes',
   meta: {
-    schema: {
-      type: 'service',
-      serviceType: 'Videocampagnes voor bedrijven',
-    },
     title: 'Videocampagnes voor bedrijven | Commercial, merkactivatie en meer',
     description: 'Een campagne met een doel en een einddatum. Bold maakt commercials, merkactivaties, productvideo’s en wervingscampagnes die iets in beweging zetten.',
   },

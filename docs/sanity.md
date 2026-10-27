@@ -47,10 +47,10 @@ vanuit `src/data/`). Wat de klant in Studio kan:
 - Studio is in het Nederlands (`@sanity/locale-nl-nl`), Sanity Studio v6 (React 19, Node ≥ 22.12).
   Vision (GROQ-testtool voor ontwikkelaars) is eruit; lokaal kan een query met `npx sanity documents query`.
 - **SEO per pagina** (tab Instellingen & SEO): paginatitel, metabeschrijving, deelafbeelding
-  (leeg = vaste Bold-afbeelding), verbergen voor Google en "Soort pagina (voor Google)": dienst
-  (met soort dienst en optioneel aanbod), pagina over/van Bold, contactpagina of profiel van Mike.
-  Daaruit maakt de site de structured data; organisatie, Mike, FAQ, video's en kruimelpad gaan
-  automatisch. `/sitemap.xml` gebruikt de wijzigingsdatum uit Sanity.
+  (leeg = vaste Bold-afbeelding) en verbergen voor Google. De structured data gaat helemaal
+  automatisch (soort pagina uit het URL-pad, zie CLAUDE.md → SEO); de gegevens van de organisatie
+  komen uit "Menu, footer & contact" → Contactgegevens en Social media. `/sitemap.xml` gebruikt de
+  wijzigingsdatum uit Sanity.
 
 ## Hoe het werkt
 

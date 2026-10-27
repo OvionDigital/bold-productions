@@ -14,10 +14,6 @@ export const page: PageData = {
   slug: 'business/campagnes/merkactivatie',
   title: 'Merkactivatie',
   meta: {
-    schema: {
-      type: 'service',
-      serviceType: 'Merkactivatie & Content',
-    },
     title: 'Merkactivatie laten maken | Activatie én beeld | Bold Productions',
     description: 'Een merkactivatie die mensen meemaken en de rest ook ziet. Bold bedenkt de activatie én het beeld, voor beurs, festival of de stad. Bekijk onze aanpak.',
   },

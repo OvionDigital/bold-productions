@@ -14,10 +14,6 @@ export const page: PageData = {
   slug: 'business/content/referentievideo',
   title: 'Referentievideo',
   meta: {
-    schema: {
-      type: 'service',
-      serviceType: 'Testimonial Video Productie',
-    },
     title: 'Testimonial video laten maken | Klantverhalen die overtuigen | Bold Productions',
     description: 'Een testimonial video waarin je klant iets zegt wat ertoe doet. Bold maakt klantverhalen die twijfelende prospects over de streep trekken.',
   },

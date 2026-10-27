@@ -15,10 +15,6 @@ export const page: PageData = {
   slug: 'business/campagnes/commercial',
   title: 'Commercial',
   meta: {
-    schema: {
-      type: 'service',
-      serviceType: 'Commercial Productie',
-    },
     title: 'Commercial laten maken? TV, online en social | Bold Productions',
     description: 'Een commercial laten maken die mensen niet wegklikken. Bold bedenkt een concept en werkt dat helemaal uit. Voor tv, online en social. Bekijk onze aanpak.',
   },

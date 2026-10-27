@@ -2,12 +2,12 @@ import { defineType, defineField, defineArrayMember, type SanityClient } from 's
 import { accentOptions } from '../fields';
 
 /**
- * Singleton "Menu & footer" (structure.ts, documentId 'siteNavigation'). Drie delen van de site,
- * elk met eigen menu en footer — gelijk aan src/data/navigation.ts (dat geldt zolang een deel hier
- * leeg is). Gelezen door src/lib/sanity/navigation.ts. Het logo linkt altijd naar de homepage van
- * dat deel; contactgegevens en juridische links staan (nog) vast in de code. Social media
- * (`socials`) is één lijst voor de hele site: footer-iconen en sameAs voor Google
- * (src/lib/sanity/navigation.ts getSocials; platforms gelijk aan socialPlatforms in src/data/navigation.ts).
+ * Singleton "Menu, footer & contact" (structure.ts, documentId 'siteNavigation'). Drie delen van de
+ * site, elk met eigen menu en footer — gelijk aan src/data/navigation.ts (dat geldt zolang een deel
+ * hier leeg is). Gelezen door src/lib/sanity/navigation.ts. Het logo linkt altijd naar de homepage
+ * van dat deel; juridische links staan vast in de code. Social media (`socials`) en contactgegevens
+ * (`contact`) gelden voor de hele site: footer, WhatsApp-knop en de organisatie in de structured
+ * data (getSocials/getContact; platforms gelijk aan socialPlatforms in src/data/navigation.ts).
  */
 
 const socialPlatforms = [
@@ -147,13 +147,14 @@ const menuFields = () => [
 
 export const siteNavigation = defineType({
   name: 'siteNavigation',
-  title: 'Menu & footer',
+  title: 'Menu, footer & contact',
   type: 'document',
   groups: [
     { name: 'events', title: 'Events', default: true },
     { name: 'business', title: 'Business' },
     { name: 'neutral', title: 'Homepage & algemeen' },
     { name: 'socials', title: 'Social media' },
+    { name: 'contact', title: 'Contactgegevens' },
   ],
   fields: [
     defineField({
@@ -256,6 +257,29 @@ export const siteNavigation = defineType({
           return new Set(platforms).size === platforms.length ? true : 'Elk platform maar één keer.';
         }),
     }),
+    defineField({
+      name: 'contact',
+      title: 'Contactgegevens',
+      type: 'object',
+      group: 'contact',
+      options: { collapsible: false },
+      description:
+        'Geldt voor de hele site: de footer, de WhatsApp-knop en de gegevens van Bold Productions voor Google. Leeg veld = de vaste waarde.',
+      fields: [
+        defineField({ name: 'email', title: 'E-mailadres', type: 'string', validation: (r) => r.email() }),
+        defineField({
+          name: 'phone',
+          title: 'Telefoonnummer',
+          type: 'string',
+          description: 'Zoals in de footer, bijv. +31 6 233 286 55. Ook het nummer achter de WhatsApp-knop.',
+          validation: (r) => r.regex(/^\+\d[\d ]{7,}$/).error('Begin met + en de landcode, bijv. +31 6 233 286 55.'),
+        }),
+        defineField({ name: 'street', title: 'Straat en huisnummer', type: 'string' }),
+        defineField({ name: 'postalCode', title: 'Postcode', type: 'string' }),
+        defineField({ name: 'city', title: 'Plaats', type: 'string' }),
+        defineField({ name: 'kvk', title: 'KvK-nummer', type: 'string', validation: (r) => r.regex(/^\d{8}$/).error('Acht cijfers.') }),
+      ],
+    }),
   ],
-  preview: { prepare: () => ({ title: 'Menu, footer & social media' }) },
+  preview: { prepare: () => ({ title: 'Menu, footer & contact' }) },
 });

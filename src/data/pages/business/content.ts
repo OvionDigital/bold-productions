@@ -18,10 +18,6 @@ export const page: PageData = {
   slug: 'business/content',
   title: 'Content',
   meta: {
-    schema: {
-      type: 'service',
-      serviceType: 'Doorlopende content voor bedrijven',
-    },
     title: 'Contentcreatie voor bedrijven | Doorlopend beeld dat werkt | Bold Productions',
     description: 'Contentcreatie, social content, klantverhalen en AI. Bold zorgt dat je doorlopend beeld hebt om mee naar buiten te treden, zonder elke week opnieuw te bedenken wat.',
   },

@@ -16,7 +16,6 @@ export const page: PageData = {
   slug: 'events/organisatoren/social-content',
   title: 'Social content',
   meta: {
-    schema: { type: 'service', serviceType: 'Social Media Content Creatie' },
     title: 'Social content voor events | Bold Productions',
     description:
       'Creëer live FOMO en verkoop meer tickets. Snappy social content voor je event, van plan tot publicatie. Ontdek Bold.',
