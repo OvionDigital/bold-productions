@@ -181,6 +181,8 @@ export function buildStructuredData(ctx: Context): Node | undefined {
         ...(org
           ? {
               logo: { '@type': 'ImageObject', url: org.logoUrl },
+              // Anders meldt de Rich Results Test (Lokale bedrijven) "ontbrekend veld image"
+              image: org.logoUrl,
               email: org.contact.email,
               telephone: phoneDigits(org.contact.phone),
               identifier: { '@type': 'PropertyValue', propertyID: 'KvK', value: org.contact.kvk },
