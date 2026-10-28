@@ -91,6 +91,28 @@
 /dienstenpagina/zakelijke-events-aftermovie/ /events/zakelijke-events/aftermovie 301
 /campagnes/ /business/campagnes 301
 
+# Oude Webflow-redirects (export Webflow 2026-10-28), direct naar de nieuwe plek in plaats van
+# via de oude URL's (geen ketens)
+/events/events /events 301
+/events-aftermovie /events/organisatoren/aftermovie 301
+/events/events-aftermovie /events/organisatoren/aftermovie 301
+/offerte /events/offerte-aanvragen 301
+/zakelijke-events/eventvideos /events/zakelijke-events/casevideo 301
+/privacybeleid /privacyverklaring 301
+/work /events/cases 301
+/work/* /events/cases 301
+/work-item/* /events/cases/:splat 301
+/dienstenpagina/zakelijke-events-fotografie /events/zakelijke-events/fotografie 301
+/dienstenpagina/zakelijke-events-aftermovie /events/zakelijke-events/aftermovie 301
+/home-new / 301
+/campagnes /business/campagnes 301
+/events/events/ /events 301
+/events-aftermovie/ /events/organisatoren/aftermovie 301
+/events/events-aftermovie/ /events/organisatoren/aftermovie 301
+/offerte/ /events/offerte-aanvragen 301
+/zakelijke-events/eventvideos/ /events/zakelijke-events/casevideo 301
+/privacybeleid/ /privacyverklaring 301
+
 # Vangnet voor paden die niet in het plan staan (src/lib/url-migration.ts)
 /artiesten/* /events/artiesten/:splat 301
 /zakelijke-events/* /events/zakelijke-events/:splat 301
@@ -100,10 +122,3 @@
 # Testomgeving: hernoemd op 28 oktober 2026 (redirects zijn hoofdlettergevoelig)
 /events/zakelijke-events/promovideo /events/zakelijke-events/promovideos 301
 /business/cases/TimestampArnhem /business/cases/timestamp-arnhem 301
-
-# Oude Webflow-paden (direct naar de nieuwe plek, geen ketens)
-# TODO(livegang): volledige lijst overnemen uit Webflow → Site settings → Publishing → 301 redirects.
-/dienstenpagina/zakelijke-events-fotografie /events/zakelijke-events/fotografie 301
-/dienstenpagina/zakelijke-events-aftermovie /events/zakelijke-events/aftermovie 301
-/home-new / 301
-/campagnes /business/campagnes 301
