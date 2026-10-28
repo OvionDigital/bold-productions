@@ -20,6 +20,8 @@ export interface RichVideo {
   id: string;
   hash?: string;
   title: string;
+  /** Korte omschrijving voor de VideoObject-structured data (casepagina) */
+  description?: string;
   /** Hoogte / breedte, bijv. 0.5625 voor 16:9 */
   ratio: number;
   /** Breedte in procenten van de tekstkolom (standaard 100) */

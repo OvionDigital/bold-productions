@@ -1,29 +1,69 @@
 # Cloudflare Pages redirects — https://developers.cloudflare.com/pages/configuration/redirects/
 # Redirects gaan vóór bestanden: nooit een regel op een pad dat nu een pagina is.
-# TODO(livegang): volledige lijst overnemen uit Webflow → Site settings → Publishing → 301 redirects.
+# Eerste regel die past wint. Een query string gaat mee (/cases?filter=artiesten →
+# /events/cases?filter=artiesten); ?filter=events kiest in case-filter.ts organisatoren.
 
-# Oude Webflow-paden (direct naar de nieuwe plek, geen ketens)
-/dienstenpagina/zakelijke-events-fotografie /events/zakelijke-events/fotografie 301
-/dienstenpagina/zakelijke-events-aftermovie /events/zakelijke-events/aftermovie 301
+# Redirectplan van de SEO-specialist (Redirectplan.xlsx, oktober 2026): één stap, geen ketens.
+# Niet in deze lijst (blijven gelijk): /events, /privacyverklaring, /cookiebeleid,
+# /algemene-voorwaarden, /sitemap, /, /promotievideo-laten-maken, /aftermovie-laten-maken,
+# /videograaf-doetinchem, /trouwfilm.
 
-# Herstructurering oktober 2026 (src/lib/url-migration.ts): alles onder /events,
-# Events heet Organisatoren. /events zelf is nu de Events-homepage (geen redirect).
+# Algemene pagina's
+/contact /events/contact 301
+/offerte-aanvragen /events/offerte-aanvragen 301
+/over/mike /events/over-bold/mike 301
+/over /events/over-bold 301
+/cases /events/cases 301
+
+# Organisatoren (vroeger "Events")
 /events/promovideos /events/organisatoren/promovideos 301
 /events/eventvideos /events/organisatoren/eventvideos 301
 /events/aftermovie /events/organisatoren/aftermovie 301
 /events/social-content /events/organisatoren/social-content 301
 /events/fotografie /events/organisatoren/fotografie 301
-/artiesten /events/artiesten 301
-/artiesten/* /events/artiesten/:splat 301
-/zakelijke-events /events/zakelijke-events 301
-/zakelijke-events/* /events/zakelijke-events/:splat 301
-/cases /events/cases 301
-/cases/* /events/cases/:splat 301
-/over /events/over-bold 301
-/over/* /events/over-bold/:splat 301
-/contact /events/contact 301
-/offerte-aanvragen /events/offerte-aanvragen 301
 
-# Webflow-paden van de nieuwe homepage en Business (oktober 2026)
+# Artiesten
+/artiesten /events/artiesten 301
+/artiesten/bandpromo /events/artiesten/bandpromo 301
+/artiesten/artiestenpromo /events/artiesten/artiestenpromo 301
+/artiesten/recap /events/artiesten/recap 301
+/artiesten/social-content /events/artiesten/social-content 301
+/artiesten/fotografie /events/artiesten/fotografie 301
+
+# Zakelijke events (promovideo → promovideos, meervoud zoals bij Organisatoren)
+/zakelijke-events /events/zakelijke-events 301
+/zakelijke-events/promovideo /events/zakelijke-events/promovideos 301
+/zakelijke-events/aftermovie /events/zakelijke-events/aftermovie 301
+/zakelijke-events/fotografie /events/zakelijke-events/fotografie 301
+/zakelijke-events/casevideo /events/zakelijke-events/casevideo 301
+
+# Cases (detailpagina's)
+/cases/pluggerz-x-zwarte-cross-2026 /events/cases/pluggerz-x-zwarte-cross-2026 301
+/cases/doetinchemse-kade-feesten /events/cases/doetinchemse-kade-feesten 301
+/cases/paella-party /events/cases/paella-party 301
+/cases/doorgedraaid-feestival /events/cases/doorgedraaid-feestival 301
+/cases/dorpsfeest-wehl /events/cases/dorpsfeest-wehl 301
+/cases/rhbfoto /events/cases/rhbfoto 301
+/cases/drift /events/cases/drift 301
+/cases/de-live-formule /events/cases/de-live-formule 301
+/cases/proost-band /events/cases/proost-band 301
+/cases/saxypianoshow /events/cases/saxypianoshow 301
+/cases/superminds /events/cases/superminds 301
+/cases/waterschap-rijn-ijssel /events/cases/waterschap-rijn-ijssel 301
+/cases/why-go-home /events/cases/why-go-home 301
+
+# Vangnet voor paden die niet in het plan staan (src/lib/url-migration.ts)
+/artiesten/* /events/artiesten/:splat 301
+/zakelijke-events/* /events/zakelijke-events/:splat 301
+/cases/* /events/cases/:splat 301
+/over/* /events/over-bold/:splat 301
+
+# Testomgeving: dienst hernoemd op 28 oktober 2026
+/events/zakelijke-events/promovideo /events/zakelijke-events/promovideos 301
+
+# Oude Webflow-paden (direct naar de nieuwe plek, geen ketens)
+# TODO(livegang): volledige lijst overnemen uit Webflow → Site settings → Publishing → 301 redirects.
+/dienstenpagina/zakelijke-events-fotografie /events/zakelijke-events/fotografie 301
+/dienstenpagina/zakelijke-events-aftermovie /events/zakelijke-events/aftermovie 301
 /home-new / 301
 /campagnes /business/campagnes 301

@@ -263,7 +263,7 @@ export const page: PageData = {
         items: [
           {
             label: "Promovideo's",
-            href: '/events/zakelijke-events/promovideo',
+            href: '/events/zakelijke-events/promovideos',
             image: {
               src: mikeSkndag137,
               alt: 'Sfeerbeeld tijdens een bedrijfsfeest. Foto door Bold Productions contentspecialist voor Events & Artiesten.',

@@ -25,5 +25,13 @@ export const vimeoVideo = defineType({
       type: 'string',
       validation: (r) => r.required(),
     }),
+    defineField({
+      name: 'description',
+      title: 'Omschrijving voor zoekmachines (optioneel)',
+      type: 'text',
+      rows: 2,
+      description:
+        'Alleen voor de eerste video met bediening op een casepagina: in één of twee zinnen wat de video laat zien. Google en AI-zoekers lezen dit. Leeg = de omschrijving uit Vimeo, anders de metabeschrijving van de pagina.',
+    }),
   ],
 });

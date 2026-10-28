@@ -1,5 +1,5 @@
 /**
- * /zakelijke-events/promovideo — teksten letterlijk van www.weareboldproductions.com/zakelijke-events/promovideo.
+ * /events/zakelijke-events/promovideos (live: /zakelijke-events/promovideo) — teksten letterlijk van www.weareboldproductions.com/zakelijke-events/promovideo.
  * Gegenereerd uit de live pagina; daarna vrij te bewerken (of in Sanity).
  */
 import type { PageData } from '../../../../lib/sections';
@@ -13,7 +13,7 @@ import rhbfoto135 from '../../../../assets/images/zakelijke-events/promovideo/rh
 import mikeAftermovie from '../../../../assets/images/events/mike-aftermovie.jpg';
 
 export const page: PageData = {
-  slug: 'events/zakelijke-events/promovideo',
+  slug: 'events/zakelijke-events/promovideos',
   title: 'Promovideo',
   meta: {
     title: 'Zakelijke promovideo laten maken? | Bold Productions',

@@ -64,11 +64,16 @@ SEO-specialist (Rick). Opbouw:
   casefoto, eigen keuze via `meta.ogImage`), `noindex` zonder nofollow, JSON-LD via `structuredData`
   (één script, één `@graph`; niet op noindex-pagina's en kopieën met een andere canonical).
 - `lib/structured-data.ts`: soort pagina uit het URL-pad (`pageKindOf`, niets handmatig per pagina), waarden
-  uit titel, metabeschrijving, h1 (hero) en secties (`pageFacts`). Homepage: Organization (+ Brand Bold Events/
+  uit titel, metabeschrijving en secties (`pageFacts`). Homepage: Organization (+ Brand Bold Events/
   Bold Business), WebSite, WebPage. Overige pagina's: pagina-node (CollectionPage/WebPage/ContactPage/AboutPage/
-  ProfilePage) + BreadcrumbList (Home › … via indexeerbare pagina's); dienst + Service (brand per soort), case +
-  VideoObject (eerste video met bediening, alleen met uploaddatum), Mike-pagina's + Person. FAQPage uit de Faq-sectie.
-  Juridische pagina's en 404: geen schema. Alle URL's op www (Astro.site), ook op de testomgeving.
+  ProfilePage) + BreadcrumbList zoals het zichtbare kruimelpad (onder /events en /business vanaf Events/Business,
+  zonder Home; daarbuiten Home › pagina; op /events en /business zelf geen); dienst + Service (naam = paginatitel
+  zonder "| Bold Productions", niet de h1-slogan; brand per soort), case + VideoObject (eerste video met bediening,
+  alleen met uploaddatum; omschrijving uit Studio-veld "Omschrijving voor zoekmachines", anders Vimeo, anders de
+  metabeschrijving), Mike-pagina's + Person. FAQPage uit de Faq-sectie. Juridische pagina's en 404: geen schema;
+  `?filter=`-kopieën van het casesoverzicht: schema weg via `case-filter.ts`. Alle URL's op www (Astro.site), ook
+  op de testomgeving.
+- Redirects: redirectplan van de SEO-specialist in `public/_redirects` (Cloudflare Pages; een query string gaat mee).
 - Organisatiegegevens (adres, telefoon, e-mail, KvK, socials) uit Sanity "Menu, footer & contact" (`getContact`,
   `getSocials`), dezelfde bron als de footer.
 - `npm run check:schema` (na de build; `-- --base=<url>` tegen een omgeving, `-- --list` typen per pagina) loopt de
@@ -123,7 +128,7 @@ scripts/compare.mjs             visuele vergelijking
 scripts/check-structured-data.mjs  npm run check:schema: JSON-LD controleren (dist/ of --base=<url>)
 scripts/sanity-seed.ts          npm run sanity:seed: src/data naar Sanity (vult alleen aan; --force overschrijft,
                                 --dry-run controleert zonder te schrijven; bestaande pagina's op URL-pad herkend). Loader: scripts/sanity/
-scripts/sanity-migrate-*       eenmalige migraties (taxonomy, urls, 2026-10-17: /events als pagina, logo's, alt-teksten; 2026-10-20: Contentcreatie/zakelijk-portret; 2026-10-22: Business-offerteformulier; 2026-10-26: polaroidfoto's `imageWithAlt`; 2026-10-27: contactgegevens in Sanity, oude schema-velden weg; al gedraaid)
+scripts/sanity-migrate-*       eenmalige migraties (taxonomy, urls, 2026-10-17: /events als pagina, logo's, alt-teksten; 2026-10-20: Contentcreatie/zakelijk-portret; 2026-10-22: Business-offerteformulier; 2026-10-26: polaroidfoto's `imageWithAlt`; 2026-10-27: contactgegevens in Sanity, oude schema-velden weg; 2026-10-28: zakelijke-events/promovideos, case-URL's in kleine letters; al gedraaid)
 functions/api/form.ts           Pages Function: alle formulieren → mail via Resend (zie README)
 scripts/section-previews.mjs    npm run sanity:section-previews: screenshot per sectie → studio/static/sections/
 astro.preview.config.mjs        live voorbeeld voor Sanity (SSR, Worker; wrangler.preview.jsonc)
@@ -243,7 +248,7 @@ Houd dit bij bij elk nieuw component.
 | `accordion.ts`         | Generiek accordeon: `[data-accordion-trigger]` + aria-controls; zet aria-expanded en `data-open` (animatie in CSS: grid-rows 0fr ↔ 1fr). Houdt de aangeklikte vraag exact op dezelfde plek (scrollcorrectie, ook onder Lenis); `html { overflow-anchor: none }`. |
 | `contact-form.ts`      | Formulier via fetch versturen, knop "Verzenden...", succes- of foutmelding; "Anders"-velden tonen/verplichten, meerkeuze minstens één (paneel opent bij de melding). |
 | `multiselect.ts`       | Meerkeuze-dropdown in formulieren (`[data-multiselect]`, `<details>` met checkboxes): samenvatting, sluiten bij klik buiten/Escape. |
-| `case-filter.ts`       | Casesoverzicht filteren (`[data-case-grid]`) per doelgroep en dienst; `?filter=` kiest vooraf; melding bij geen resultaat. |
+| `case-filter.ts`       | Casesoverzicht filteren (`[data-case-grid]`) per doelgroep en dienst; `?filter=` kiest vooraf (en haalt de JSON-LD weg: kopie met canonical naar het overzicht); melding bij geen resultaat. |
 | `draw-shapes.ts`       | B-outlines op de achtergrond één keer tekenen zodra ze in beeld komen (masker + stroke-dashoffset, `--duration-draw`). |
 | `vimeo-facade.ts`       | Vimeo-gevel: bij klik de thumbnail vervangen door de speler (autoplay) en focus erop. |
 | `hover-video.ts`       | Teamtegels: video laadt bij eerste hover en speelt, pauzeert bij verlaten (alleen muis, motion aan). |

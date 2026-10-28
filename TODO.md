@@ -43,6 +43,12 @@ betekent: geregeld.
 
 ## Bij en na livegang
 
+- [ ] SEO-specialist (Rick) een seintje geven zodra de site live is: hij test de redirects
+- [ ] Logo-URL in de structured data van `/` (Organization `logo`/`image`, bestandsnaam met hash
+      onder `/_astro/`) geeft een afbeelding op www.weareboldproductions.com
+- [ ] Redirects uit `public/_redirects` op het echte domein nalopen (301 → 200, ook met `/` aan het eind
+      en `/cases?filter=…`)
+
 - [ ] `PUBLIC_ENABLE_TRACKING=true` en de consenttest op het echte domein
 - [ ] Livegangdatum in het register (`livegang_zeker` = ja, `status` = live)
 - [ ] PageSpeed opnieuw met dezelfde bron (psi), voor de vergelijking met de nulmeting

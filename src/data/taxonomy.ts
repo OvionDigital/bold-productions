@@ -67,7 +67,7 @@ export const services: Record<Audience, Service[]> = {
     { value: 'Fotografie', title: 'Fotografie', slug: 'fotografie' },
   ],
   'zakelijke-events': [
-    { value: 'Promovideo', title: "Promovideo's", slug: 'promovideo' },
+    { value: 'Promovideo', title: "Promovideo's", slug: 'promovideos' },
     { value: 'Aftermovie', title: 'Aftermovie', slug: 'aftermovie' },
     { value: 'Fotografie', title: 'Fotografie', slug: 'fotografie' },
     { value: 'Casevideo', title: 'Casevideo', slug: 'casevideo' },

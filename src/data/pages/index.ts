@@ -20,7 +20,7 @@ import { page as p12 } from './events/zakelijke-events';
 import { page as p13 } from './events/zakelijke-events/aftermovie';
 import { page as p14 } from './events/zakelijke-events/casevideo';
 import { page as p15 } from './events/zakelijke-events/fotografie';
-import { page as p16 } from './events/zakelijke-events/promovideo';
+import { page as p16 } from './events/zakelijke-events/promovideos';
 import { page as p17 } from './events/cases';
 import { page as p18 } from './events/over-bold';
 import { page as p19 } from './events/over-bold/mike';

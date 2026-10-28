@@ -7,7 +7,8 @@ import Container from '../ui/Container.astro';
 import VimeoEmbed from '../ui/VimeoEmbed.astro';
 
 export interface VideoFeatureProps {
-  video: { id: string; hash?: string; title: string };
+  /** `description`: korte omschrijving voor de VideoObject-structured data (casepagina) */
+  video: { id: string; hash?: string; title: string; description?: string };
   ratio?: number;
 }
 

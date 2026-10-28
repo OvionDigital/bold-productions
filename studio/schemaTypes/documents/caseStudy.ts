@@ -26,8 +26,22 @@ export const caseStudy = defineType({
       title: 'URL-pad (na /events/cases/ of /business/cases/)',
       type: 'slug',
       group: 'card',
-      options: { source: 'title' },
-      validation: (r) => r.required(),
+      options: {
+        source: 'title',
+        slugify: (input: string) =>
+          input
+            .toLowerCase()
+            .normalize('NFD')
+            .replace(/[̀-ͯ]/g, '')
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/^-+|-+$/g, '')
+            .slice(0, 96),
+      },
+      // Hoofdletters in de URL geven dubbele versies (TimestampArnhem/timestamparnhem)
+      validation: (r) =>
+        r.required().custom((value?: { current?: string }) =>
+          !value?.current || /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(value.current) ? true : 'Alleen kleine letters, cijfers en streepjes, bijv. timestamp-arnhem.',
+        ),
     }),
     defineField({
       name: 'intro',

@@ -6,13 +6,15 @@
  * - homepage: Organization (met de merken Bold Events en Bold Business), WebSite, WebPage
  * - overige pagina's: eigen pagina-node (isPartOf #website, breadcrumb) + BreadcrumbList, plus
  *   Service (dienstpagina), VideoObject (case met video) of Person (de Mike-pagina's)
+ * - kruimelpad zoals het zichtbare: onder /events en /business vanaf Events/Business (zonder Home),
+ *   daarbuiten Home › pagina; op /events en /business zelf geen BreadcrumbList
  * - FAQPage uit de zichtbare vragen (Faq-sectie), waar die er is
  * - geen schema: juridische pagina's, 404, noindex-pagina's en kopieën met een andere canonical
  */
 import { getImage } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 import { brands, founder, organization } from '../data/seo';
-import { audiences, type Category } from '../data/taxonomy';
+import { audiences, categories, type Category } from '../data/taxonomy';
 import { breadcrumbLabels, phoneDigits, type SiteContact } from '../data/navigation';
 import { richToPlainText } from './rich';
 import { getVimeoMeta, isoDuration, thumbnailAt } from './vimeo';
@@ -26,6 +28,15 @@ export type PageKind = 'home' | 'collection' | 'service' | 'case' | 'contact' | 
 const WITHOUT_SCHEMA = new Set(['privacyverklaring', 'cookiebeleid', 'algemene-voorwaarden', '404']);
 
 const isCategory = (value: string): value is Category => value === 'events' || value === 'business';
+
+/** Naam van de dienst: de paginatitel zonder " | Bold Productions" en vraagteken
+ * ("Aftermovie laten maken? | Bold Productions" → "Aftermovie laten maken"), niet de slogan uit de h1 */
+const serviceName = (title: string) =>
+  title
+    .replace(/\s*\|\s*Bold Productions\s*$/i, '')
+    .replace(/[\s?]+$/, '')
+    .replace(/\s+/g, ' ')
+    .trim();
 
 /** Soort pagina uit het URL-pad (tabel "Schema per paginatype" in de specificatie) */
 export function pageKindOf(slug: string): PageKind {
@@ -63,8 +74,6 @@ interface VideoInfo {
 
 /** Wat de structured data uit de secties van een pagina haalt */
 export interface PageFacts {
-  /** Tekst van de h1 (hero: titel + accentregel) */
-  h1?: string;
   faq?: { question: string; answer: string }[];
   /** Eerste video met bediening (case), alleen als Vimeo een uploaddatum geeft */
   video?: VideoInfo;
@@ -80,7 +89,7 @@ async function imageUrl(src: ImageMetadata | RemoteImage, site: URL, width: numb
 
 /** Alle Vimeo-video's met bediening, in volgorde: rich text `{ video }`, tijdlijnstap, videosectie.
  * De hero-video en de video naast tekst (TextMedia) zijn decoratief en tellen niet mee. */
-function playableVideos(value: unknown, found: { id: string; hash?: string; title: string }[] = []) {
+function playableVideos(value: unknown, found: { id: string; hash?: string; title: string; description?: string }[] = []) {
   if (Array.isArray(value)) value.forEach((item) => playableVideos(item, found));
   else if (value && typeof value === 'object' && Object.getPrototypeOf(value) === Object.prototype) {
     for (const [key, child] of Object.entries(value)) {
@@ -92,8 +101,6 @@ function playableVideos(value: unknown, found: { id: string; hash?: string; titl
 }
 
 export async function pageFacts(kind: PageKind, sections: PageSection[], site: URL): Promise<PageFacts> {
-  const hero = sections.find((s) => s.type === 'hero');
-  const h1 = hero ? [hero.props.title, hero.props.titleAccent].join(' ').replace(/\s+/g, ' ').trim() : undefined;
   const faq = sections.flatMap((s) =>
     s.type === 'faq' ? s.props.items.map((item) => ({ question: item.question, answer: richToPlainText(item.answer) })) : [],
   );
@@ -105,8 +112,8 @@ export async function pageFacts(kind: PageKind, sections: PageSection[], site: U
     if (first && meta?.uploadDate && meta.thumbnail) {
       video = {
         name: meta.title || first.title,
-        // Zonder omschrijving bij Vimeo: de metabeschrijving van de pagina (buildStructuredData)
-        description: meta.description,
+        // Eigen omschrijving uit Studio, anders die van Vimeo, anders de metabeschrijving (buildStructuredData)
+        description: first.description || meta.description,
         thumbnailUrl: thumbnailAt(meta.thumbnail, 1280),
         uploadDate: meta.uploadDate,
         embedUrl: `https://player.vimeo.com/video/${first.id}${first.hash ? `?h=${first.hash}` : ''}`,
@@ -121,7 +128,7 @@ export async function pageFacts(kind: PageKind, sections: PageSection[], site: U
     if (media?.type === 'textMedia' && media.props.media.type === 'image') portrait = await imageUrl(media.props.media.src, site, 800);
   }
 
-  return { h1: h1 || undefined, faq: faq.length ? faq : undefined, video, portrait };
+  return { faq: faq.length ? faq : undefined, video, portrait };
 }
 
 interface Context {
@@ -220,6 +227,9 @@ export function buildStructuredData(ctx: Context): Node | undefined {
   }
 
   const category = ctx.slug.split('/')[0];
+  const root = isCategory(category) ? category : undefined;
+  // Op /events en /business zelf zou het kruimelpad maar één stap hebben
+  const hasTrail = ctx.slug !== root;
   const video = kind === 'case' ? facts.video : undefined;
   const mainEntity =
     kind === 'service'
@@ -238,7 +248,7 @@ export function buildStructuredData(ctx: Context): Node | undefined {
     ...(ctx.description ? { description: ctx.description } : {}),
     inLanguage: 'nl-NL',
     isPartOf: websiteId,
-    breadcrumb: breadcrumbId,
+    ...(hasTrail ? { breadcrumb: breadcrumbId } : {}),
     ...(kind === 'about' || kind === 'contact' ? { about: orgId } : {}),
     ...(kind === 'case' && ctx.primaryImage ? { primaryImageOfPage: { '@type': 'ImageObject', url: ctx.primaryImage } } : {}),
     ...(mainEntity ? { mainEntity } : {}),
@@ -248,11 +258,11 @@ export function buildStructuredData(ctx: Context): Node | undefined {
     graph.push({
       '@type': 'Service',
       '@id': `${ctx.canonical}#service`,
-      name: facts.h1 || ctx.name,
+      name: serviceName(ctx.title) || ctx.name,
       ...(ctx.description ? { description: ctx.description } : {}),
       url: ctx.canonical,
       provider: orgId,
-      ...(isCategory(category) ? { brand: brandId(category) } : {}),
+      ...(root ? { brand: brandId(root) } : {}),
     });
   }
 
@@ -272,24 +282,29 @@ export function buildStructuredData(ctx: Context): Node | undefined {
     });
   }
 
-  // Kruimelpad volgens de URL: Home › Events/Business › … › deze pagina (laatste zonder item).
-  // Het zichtbare kruimelpad begint bij de home van het deel; op /events en /business is het leeg.
-  const visible = ctx.breadcrumbs ?? [];
-  const steps: Crumb[] = [
-    { label: breadcrumbLabels.home, href: '/' },
-    ...visible.slice(0, -1).filter((crumb) => crumb.href && crumb.href !== '/'),
-    { label: ctx.name },
-  ];
-  graph.push({
-    '@type': 'BreadcrumbList',
-    ...breadcrumbId,
-    itemListElement: steps.map((step, index) => ({
-      '@type': 'ListItem',
-      position: index + 1,
-      name: step.label,
-      ...(step.href && index < steps.length - 1 ? { item: url(step.href) } : {}),
-    })),
-  });
+  // Kruimelpad zoals het zichtbare (Breadcrumbs.astro): onder /events en /business vanaf de home van
+  // dat deel (Events › … › deze pagina, zonder Home), daarbuiten Home › deze pagina. Laatste stap zonder item.
+  if (hasTrail) {
+    const first: Crumb = root
+      ? { label: categories.find((c) => c.value === root)?.title ?? root, href: `/${root}` }
+      : { label: breadcrumbLabels.home, href: '/' };
+    const visible = ctx.breadcrumbs ?? [];
+    const steps: Crumb[] = [
+      first,
+      ...visible.slice(0, -1).filter((crumb) => crumb.href && crumb.href !== '/' && crumb.href !== first.href),
+      { label: ctx.name },
+    ];
+    graph.push({
+      '@type': 'BreadcrumbList',
+      ...breadcrumbId,
+      itemListElement: steps.map((step, index) => ({
+        '@type': 'ListItem',
+        position: index + 1,
+        name: step.label,
+        ...(step.href && index < steps.length - 1 ? { item: url(step.href) } : {}),
+      })),
+    });
+  }
 
   graph.push(...faqPage());
   return { '@context': 'https://schema.org', '@graph': graph };

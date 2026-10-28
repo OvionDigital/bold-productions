@@ -25,7 +25,7 @@ interface PortableTextBlock {
 
 interface PortableTextVideo {
   _type: 'richVideo';
-  video?: { id?: string; hash?: string; title?: string };
+  video?: { id?: string; hash?: string; title?: string; description?: string };
   ratio?: number;
   width?: number;
 }
@@ -57,7 +57,7 @@ export function portableTextToRich(blocks: unknown): Rich {
       list = null;
       if (raw.video?.id) {
         result.push({
-          video: { id: raw.video.id, hash: raw.video.hash || undefined, title: raw.video.title ?? '', ratio: raw.ratio ?? 0.5625, width: raw.width ?? undefined },
+          video: { id: raw.video.id, hash: raw.video.hash || undefined, title: raw.video.title ?? '', description: raw.video.description || undefined, ratio: raw.ratio ?? 0.5625, width: raw.width ?? undefined },
         });
       }
       continue;

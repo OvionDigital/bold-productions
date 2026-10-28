@@ -79,10 +79,24 @@ for (const [p, page] of pages) {
   if (p !== '/' && (types.includes('Organization') || types.includes('WebSite'))) err('Organization/WebSite buiten de homepage');
   if (!/\/over-bold\/mike$/.test(p) && types.includes('Person')) err('Person buiten de Mike-pagina’s');
   const crumbs = page.graph.find((n) => n['@type'] === 'BreadcrumbList');
-  if (p !== '/' && !crumbs) err('geen BreadcrumbList');
+  // Kruimelpad: onder /events en /business vanaf Events/Business (geen Home), daarbuiten vanaf Home;
+  // op /, /events en /business zelf geen
+  const branch = /^\/(events|business)(\/|$)/.exec(p)?.[1];
+  const branchRoot = branch && p === `/${branch}`;
+  if (p === '/' || branchRoot) {
+    if (crumbs) err('BreadcrumbList op een startpagina');
+    if (pageNode?.breadcrumb) err('breadcrumb op een startpagina');
+  } else if (!crumbs) err('geen BreadcrumbList');
+  else {
+    const first = crumbs.itemListElement[0]?.item;
+    const expected = branch ? `${ORIGIN}/${branch}` : `${ORIGIN}/`;
+    if (first !== expected) err(`kruimelpad begint bij ${first}, verwacht ${expected}`);
+  }
   for (const item of crumbs?.itemListElement ?? []) {
     if (item.item && !indexable.has(item.item)) err(`kruimelpadstap ${item.item} is geen indexeerbare pagina`);
   }
+  const service = page.graph.find((n) => n['@type'] === 'Service');
+  if (service && /\||\?$/.test(service.name)) err(`Service-naam "${service.name}" is geen dienstnaam`);
   const video = page.graph.find((n) => n['@type'] === 'VideoObject');
   if (video && !(video.uploadDate && video.thumbnailUrl && video.name && video.embedUrl)) err('VideoObject mist velden');
 }

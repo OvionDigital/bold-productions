@@ -24,7 +24,7 @@ export interface TimelineStep {
   text: Rich;
   /** Foto, of anders een Vimeo-video (16:9, met bediening) */
   image?: { src: ImageMetadata | RemoteImage; alt: string };
-  video?: { id: string; hash?: string; title: string };
+  video?: { id: string; hash?: string; title: string; description?: string };
   cta?: { label: string; href: string };
 }
 

@@ -119,7 +119,7 @@ export const sectionsProjection = `{
 }`;
 
 type Cta = { label?: string; href?: string; accent?: Accent };
-type Vimeo = { id?: string; hash?: string; title?: string };
+type Vimeo = { id?: string; hash?: string; title?: string; description?: string };
 type Img = SanityImageRef | null | undefined;
 
 /** Ruwe vorm van één sectie na `sectionsProjection` (alle velden optioneel: CMS-inhoud). */
@@ -147,7 +147,8 @@ const contactLinks = (links: { label?: string; href?: string }[] | null | undefi
   const list = (links ?? []).filter((l) => l.label && l.href).map((l) => ({ label: l.label!, href: l.href! }));
   return list.length ? list : undefined;
 };
-const vimeo = (v: Vimeo | null | undefined, fallbackTitle: string) => (v?.id ? { id: v.id, hash: opt(v.hash) || undefined, title: v.title || fallbackTitle } : undefined);
+const vimeo = (v: Vimeo | null | undefined, fallbackTitle: string) =>
+  v?.id ? { id: v.id, hash: opt(v.hash) || undefined, title: v.title || fallbackTitle, description: opt(v.description) || undefined } : undefined;
 const formChoice = (name: unknown, messagePlaceholder: unknown): FormChoice => ({
   name: name === 'offerte' || name === 'offerte-business' || name === 'trouwfilm' ? name : 'contact',
   messagePlaceholder: typeof messagePlaceholder === 'string' && messagePlaceholder ? messagePlaceholder : undefined,

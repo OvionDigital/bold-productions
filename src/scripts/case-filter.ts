@@ -47,6 +47,9 @@ export function initCaseFilters(): void {
 
     // ?filter=events was vóór de herstructurering de doelgroep organisatoren (oude links)
     const raw = new URLSearchParams(window.location.search).get('filter');
+    // ?filter= is een kopie van het overzicht (canonical zonder filter): zonder structured data,
+    // zodat zoekmachines die alleen bij het overzicht zelf zien. Statisch is het dezelfde HTML.
+    if (raw !== null) document.querySelectorAll('script[type="application/ld+json"]').forEach((script) => script.remove());
     const preset = raw === 'events' ? 'organisatoren' : raw;
     const audience = groups.find((g) => g.dataset.caseFilter === 'audience');
     if (preset && audience) {
