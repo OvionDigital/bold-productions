@@ -246,6 +246,7 @@ Houd dit bij bij elk nieuw component.
 | `carousel.ts`          | `.is-scrollable` als niet alles past (alleen dan knoppen en slepen); pijlknoppen scrollen één item, disabled aan begin/eind; slepen met de muis (snap bij loslaten). |
 | `cinema-cursor.ts`     | Popcorn-cursor + spoor, alleen bij een sectie met id="cinema" en een muis.  |
 | `accordion.ts`         | Generiek accordeon: `[data-accordion-trigger]` + aria-controls; zet aria-expanded en `data-open` (animatie in CSS: grid-rows 0fr ↔ 1fr). Houdt de aangeklikte vraag exact op dezelfde plek (scrollcorrectie, ook onder Lenis); `html { overflow-anchor: none }`. |
+| `tracking.ts`          | Meetevents naar de GTM-dataLayer: `pushEvent`; `klik_telefoon`/`klik_email`/`klik_whatsapp` bij een klik op tel:/mailto:/WhatsApp-links. `formulier_verzonden` (+ `formulier`, `gevonden_via`) komt uit contact-form.ts. |
 | `contact-form.ts`      | Formulier via fetch versturen, knop "Verzenden...", succes- of foutmelding; "Anders"-velden tonen/verplichten, meerkeuze minstens één (paneel opent bij de melding). |
 | `multiselect.ts`       | Meerkeuze-dropdown in formulieren (`[data-multiselect]`, `<details>` met checkboxes): samenvatting, sluiten bij klik buiten/Escape. |
 | `case-filter.ts`       | Casesoverzicht filteren (`[data-case-grid]`) per doelgroep en dienst; `?filter=` kiest vooraf (en haalt de JSON-LD weg: kopie met canonical naar het overzicht); melding bij geen resultaat. |

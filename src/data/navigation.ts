@@ -91,8 +91,8 @@ function generalGroups(category: Category): NavGroup[] {
 
 /** Wissel onderaan het menupaneel (kleuren als in de split-hero) */
 const switchButtons: Record<Category, NavButton> = {
-  events: { label: 'Naar Bold Business', href: '/business', accent: 'yellow' },
-  business: { label: 'Naar Bold Events', href: '/events', accent: 'green' },
+  events: { label: 'Naar Bold Business', href: '/business', accent: 'green' },
+  business: { label: 'Naar Bold Events', href: '/events', accent: 'orange' },
 };
 
 /** Footerkolom "Bold Productions" */

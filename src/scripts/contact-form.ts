@@ -9,6 +9,7 @@
  * het paneel gaat open zodat de browser de melding kan tonen).
  */
 import { scrollToTarget } from './lenis';
+import { pushEvent } from './tracking';
 
 const REQUIRED_CHOICE_MESSAGE = 'Kies minstens één optie.';
 
@@ -98,6 +99,12 @@ export function initContactForms(): void {
       try {
         const response = await fetch(endpoint, { method: 'POST', body: data, headers: { Accept: 'application/json' } });
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        // Alleen keuzewaarden, geen vrije tekst (kan persoonsgegevens bevatten)
+        const foundVia = data.get('Gevonden via');
+        pushEvent('formulier_verzonden', {
+          formulier: String(data.get('_formulier') ?? ''),
+          gevonden_via: typeof foundVia === 'string' && foundVia ? foundVia : undefined,
+        });
         form.hidden = true;
         success.hidden = false;
         success.focus({ preventScroll: true });

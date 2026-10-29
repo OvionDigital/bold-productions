@@ -73,7 +73,7 @@ export function initMenu(): void {
     panel.querySelector<HTMLElement>(FOCUSABLE)?.focus({ preventScroll: true });
   };
 
-  const close = ({ returnFocus = true } = {}) => {
+  const close = ({ returnFocus = true, instant = false } = {}) => {
     if (!isOpen) return;
     isOpen = false;
     toggle.setAttribute("aria-expanded", "false");
@@ -81,7 +81,7 @@ export function initMenu(): void {
     gsap.to(panel, {
       opacity: 0,
       scale: 0,
-      duration: scaleDuration,
+      duration: instant ? 0 : scaleDuration,
       ease: "power2.inOut",
       onComplete: () => {
         panel.hidden = true;
@@ -89,7 +89,7 @@ export function initMenu(): void {
     });
     gsap.to(overlay, {
       opacity: 0,
-      duration: overlayDuration,
+      duration: instant ? 0 : overlayDuration,
       ease: "power2.inOut",
       onComplete: () => {
         overlay.hidden = true;
@@ -129,9 +129,25 @@ export function initMenu(): void {
     }
   });
 
-  // Klik op een link in het paneel sluit het menu (ook bij anchors op dezelfde pagina)
+  // Klik op een anchor naar deze pagina sluit het menu. Naar een andere pagina blijft het
+  // menu open staan: de paginaovergang maakt een momentopname van de oude pagina, en die
+  // zou anders een half gesloten (bevroren) paneel tonen tijdens de veeg.
   panel.querySelectorAll<HTMLAnchorElement>("a[href]").forEach((link) => {
-    link.addEventListener("click", () => close({ returnFocus: false }));
+    link.addEventListener("click", (event) => {
+      if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      const url = new URL(link.href, location.href);
+      const samePage =
+        url.origin === location.origin &&
+        url.pathname === location.pathname &&
+        url.search === location.search &&
+        url.hash !== "";
+      if (samePage) close({ returnFocus: false });
+    });
+  });
+
+  // Terug via de back/forward-cache: menu meteen dicht
+  window.addEventListener("pageshow", (event) => {
+    if (event.persisted) close({ returnFocus: false, instant: true });
   });
 
   initAccordion(panel);

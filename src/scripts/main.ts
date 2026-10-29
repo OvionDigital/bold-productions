@@ -15,6 +15,7 @@ import { initCarousels } from './carousel';
 import { initCinemaCursor } from './cinema-cursor';
 import { initAccordions } from './accordion';
 import { initContactForms } from './contact-form';
+import { initClickTracking } from './tracking';
 import { initMultiselects } from './multiselect';
 import { initCaseFilters } from './case-filter';
 import { initHoverVideos } from './hover-video';
@@ -52,6 +53,7 @@ const modules: [string, () => unknown][] = [
   ['cinema-cursor', initCinemaCursor],
   ['accordion', initAccordions],
   ['contact-form', initContactForms],
+  ['click-tracking', initClickTracking],
   ['multiselect', initMultiselects],
   ['case-filter', initCaseFilters],
   ['hover-video', initHoverVideos],

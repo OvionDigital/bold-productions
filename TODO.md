@@ -22,17 +22,18 @@ betekent: geregeld.
 - [x] `FORM_TO_EMAIL` = mike@weareboldproductions.com (Cloudflare, preview + production, 2026-10-22)
 - [ ] Bij de livegang: weareboldproductions.com in Resend verifiëren en `FORM_FROM_EMAIL` op dat
       domein zetten (nu noreply@oviondigital.nl)
-- [ ] `formulier_verzonden` naar de `dataLayer` na een geslaagde verzending, in
+- [x] `formulier_verzonden` naar de `dataLayer` na een geslaagde verzending, in
       `src/scripts/contact-form.ts` na `response.ok` (niet op de klik op de knop: die telt
       ook fouten en dubbel klikken). Met het soort formulier (contact, offerte,
       trouwfilm) als parameter.
-- [ ] `klik_telefoon`, `klik_email` en `klik_whatsapp` naar de `dataLayer` bij een klik op
+- [x] `klik_telefoon`, `klik_email` en `klik_whatsapp` naar de `dataLayer` bij een klik op
       `tel:`, `mailto:` en `wa.me`-links (WhatsAppButton, ContactLinks). Eigen module in
       `src/scripts/` via `main.ts`, zoals de rest.
 - [ ] Directe telling: in de formulierfunctie per maand en per formulier een teller
       ophogen zonder persoonsgegevens, zodat GA4 niet de enige bron is
-- [ ] "Hoe heb je ons gevonden?" staat in beide offerteformulieren (Business: `Gevonden via`);
-      waarde ook als `gevonden_via` bij `formulier_verzonden`
+- [x] "Hoe heb je ons gevonden?" als `gevonden_via` bij `formulier_verzonden` (2026-10-29, `src/scripts/tracking.ts`):
+      alleen de keuzelijst van het Business-offerteformulier; het Events-formulier heeft een vrij
+      tekstveld, dat gaat bewust niet naar GA4 (kan persoonsgegevens bevatten)
 
 ## Afstemmen met de SEO-specialist
 
