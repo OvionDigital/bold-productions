@@ -131,6 +131,7 @@ scripts/sanity-seed.ts          npm run sanity:seed: src/data naar Sanity (vult 
 scripts/sanity-migrate-*       eenmalige migraties (taxonomy, urls, 2026-10-17: /events als pagina, logo's, alt-teksten; 2026-10-20: Contentcreatie/zakelijk-portret; 2026-10-22: Business-offerteformulier; 2026-10-26: polaroidfoto's `imageWithAlt`; 2026-10-27: contactgegevens in Sanity, oude schema-velden weg; 2026-10-28: zakelijke-events/promovideos, case-URL's in kleine letters; al gedraaid)
 functions/api/form.ts           Pages Function: alle formulieren → mail via Resend (zie README)
 functions/events/cases.ts       Pages Function: /events/cases?filter=events → 301 ?filter=organisatoren
+redirects/mikeampting/          Cloudflare Worker: oude site mikeampting.nl → 301 naar de passende pagina (eigen deploy: npx wrangler deploy --config wrangler.jsonc)
 scripts/section-previews.mjs    npm run sanity:section-previews: screenshot per sectie → studio/static/sections/
 astro.preview.config.mjs        live voorbeeld voor Sanity (SSR, Worker; wrangler.preview.jsonc)
 studio/                         Sanity Studio (losse app, eigen package.json; presentation.ts, actions.ts)
