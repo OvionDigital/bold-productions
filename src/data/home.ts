@@ -41,7 +41,7 @@ export const hero: HeroProps = {
     src: heroImage,
     alt: 'Actiefoto van een live-optreden tijdens een festival. Vastgelegd door Bold Productions, contentspecialist voor Events & Artiesten.',
   },
-  video: { id: '1180112930', hash: '2fa6fd18b8', title: 'Sfeervideo Bold Productions', loadOnMobile: true },
+  video: { id: '1180112930', hash: '2fa6fd18b8', title: 'Sfeervideo Bold Productions' },
 };
 
 export const trustedBy: LogoMarqueeProps = {
