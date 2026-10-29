@@ -1,0 +1,11 @@
+// Worker met de redirects van mikeampting.nl (zie index.js). Deploy: npx wrangler deploy (in deze map).
+{
+  "name": "mikeampting-redirects",
+  "main": "index.js",
+  "compatibility_date": "2026-10-01",
+  "workers_dev": false,
+  "routes": [
+    { "pattern": "mikeampting.nl/*", "zone_name": "mikeampting.nl" },
+    { "pattern": "www.mikeampting.nl/*", "zone_name": "mikeampting.nl" }
+  ]
+}

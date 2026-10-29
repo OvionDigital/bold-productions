@@ -53,3 +53,17 @@ betekent: geregeld.
 - [ ] `PUBLIC_ENABLE_TRACKING=true` (staat aan sinds 2026-10-29) en de consenttest op het echte domein
 - [ ] Livegangdatum in het register (`livegang_zeker` = ja, `status` = live)
 - [ ] PageSpeed opnieuw met dezelfde bron (psi), voor de vergelijking met de nulmeting
+
+## mikeampting.nl (oude site van Mike, WordPress bij Mijn Domein)
+
+Redirectplan goedgekeurd door de klant op 2026-10-29: alle oude pagina's 301 naar de passende pagina op
+www.weareboldproductions.com (code en tabel: `redirects/mikeampting/`). DNS gaat naar Cloudflare.
+
+- [ ] **Mike:** mikeampting.nl opzetten/afronden (reminder van Simon, 2026-10-29)
+- [ ] **E-mail niet kwijtraken:** Mike heeft actieve mail op @mikeampting.nl bij Mijn Domein (MX
+      mx1/mx2.mijndomein.nl, `mail`, `webmail`, `autodiscover`). Die records staan ook in Cloudflare. Vóór het
+      opzeggen van de WordPress-hosting bij Mijn Domein navragen of de mail in hetzelfde pakket zit; zo ja:
+      mailpakket houden of mail eerst verhuizen.
+- [ ] **Search Console:** mikeampting.nl heeft een Google-verificatie (TXT `google-site-verification=8mwI…`,
+      staat ook in Cloudflare). Na de redirects in Search Console de property mikeampting.nl houden en de tool
+      "Adreswijziging" gebruiken (mikeampting.nl → weareboldproductions.com): hier is het wél een ander domein.
