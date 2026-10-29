@@ -2,7 +2,9 @@
  * Cloudflare Worker op mikeampting.nl en www.mikeampting.nl (oude WordPress-site van Mike):
  * elke oude pagina 301 naar de passende pagina op www.weareboldproductions.com, de rest naar
  * de homepage. Redirectplan goedgekeurd door de klant op 2026-10-29 (zie TODO.md).
- * Deploy: `npx wrangler deploy` in deze map (los van de site, niet in de Astro-build).
+ * Deploy: `npx wrangler deploy --config wrangler.jsonc` in deze map (los van de site).
+ * Zolang de DNS nog bij Mijn Domein staat (DNSSEC-probleem, 2026-10-29): dezelfde regels als
+ * redirection-import.csv in de WordPress-plugin Redirection.
  */
 
 const TARGET = 'https://www.weareboldproductions.com';
