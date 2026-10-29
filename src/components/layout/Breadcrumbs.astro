@@ -1,8 +1,9 @@
 ---
 /**
- * Kruimelpad onder de hero (Webflow .breadcrumbs): home-icoon, tussenstappen en de
- * huidige pagina. Het eerste item is "home" (icoon; /events, /business of /), het laatste
- * de huidige pagina (zonder link). Opbouw: buildBreadcrumbs in lib/sections.ts.
+ * Kruimelpad onder de hero (Webflow .breadcrumbs): beginpunt, tussenstappen en de
+ * huidige pagina. Het eerste item is de home van het deel: "Events" of "Business" als tekst,
+ * daarbuiten een home-icoon naar /. Het laatste is de huidige pagina (zonder link).
+ * Opbouw: buildBreadcrumbs in lib/sections.ts.
  */
 import Icon from '../ui/Icon.astro';
 
@@ -12,7 +13,7 @@ export interface Crumb {
 }
 
 interface Props {
-  /** Eerste item = home (icoon), laatste = de huidige pagina */
+  /** Eerste item = home van het deel (tekst) of van de site (icoon), laatste = de huidige pagina */
   items: Crumb[];
   label: string;
   /** Bovenaan de pagina zonder hero: ruimte voor de vaste navbar (Webflow .breadcrumbs) */
@@ -21,14 +22,24 @@ interface Props {
 
 const { items, label, standalone = false } = Astro.props;
 const [home, ...steps] = items;
+// Home van de hele site (/): icoon; home van een deel (/events, /business): de naam als tekst
+const isSiteHome = !home?.href || home.href === '/';
 ---
 
 <nav class:list={['breadcrumbs', { 'breadcrumbs--standalone': standalone }]} aria-label={label}>
   <ol class="breadcrumbs__list" role="list">
     <li class="breadcrumbs__item">
-      <a href={home?.href ?? '/'} class="breadcrumbs__link" aria-label={home?.label}>
-        <Icon name="home" size="var(--icon-lg)" />
-      </a>
+      {
+        isSiteHome ? (
+          <a href="/" class="breadcrumbs__link" aria-label={home?.label}>
+            <Icon name="home" size="var(--icon-lg)" />
+          </a>
+        ) : (
+          <a href={home?.href} class="breadcrumbs__link">
+            {home?.label}
+          </a>
+        )
+      }
     </li>
     {
       steps.map((item, index) => {

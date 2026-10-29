@@ -1,7 +1,8 @@
 # Cloudflare Pages redirects — https://developers.cloudflare.com/pages/configuration/redirects/
 # Redirects gaan vóór bestanden: nooit een regel op een pad dat nu een pagina is.
 # Eerste regel die past wint. Een query string gaat mee (/cases?filter=artiesten →
-# /events/cases?filter=artiesten); ?filter=events kiest in case-filter.ts organisatoren.
+# /events/cases?filter=artiesten); ?filter=events → ?filter=organisatoren: functions/events/cases.ts
+# (een query string kan hier niet gematcht worden).
 
 # Redirectplan van de SEO-specialist (Redirectplan.xlsx, oktober 2026): één stap, geen ketens.
 # Niet in deze lijst (blijven gelijk): /events, /privacyverklaring, /cookiebeleid,

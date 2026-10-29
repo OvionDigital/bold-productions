@@ -130,6 +130,7 @@ scripts/sanity-seed.ts          npm run sanity:seed: src/data naar Sanity (vult 
                                 --dry-run controleert zonder te schrijven; bestaande pagina's op URL-pad herkend). Loader: scripts/sanity/
 scripts/sanity-migrate-*       eenmalige migraties (taxonomy, urls, 2026-10-17: /events als pagina, logo's, alt-teksten; 2026-10-20: Contentcreatie/zakelijk-portret; 2026-10-22: Business-offerteformulier; 2026-10-26: polaroidfoto's `imageWithAlt`; 2026-10-27: contactgegevens in Sanity, oude schema-velden weg; 2026-10-28: zakelijke-events/promovideos, case-URL's in kleine letters; al gedraaid)
 functions/api/form.ts           Pages Function: alle formulieren → mail via Resend (zie README)
+functions/events/cases.ts       Pages Function: /events/cases?filter=events → 301 ?filter=organisatoren
 scripts/section-previews.mjs    npm run sanity:section-previews: screenshot per sectie → studio/static/sections/
 astro.preview.config.mjs        live voorbeeld voor Sanity (SSR, Worker; wrangler.preview.jsonc)
 studio/                         Sanity Studio (losse app, eigen package.json; presentation.ts, actions.ts)
@@ -196,7 +197,7 @@ Houd dit bij bij elk nieuw component.
 | Component          | Uitleg                                                                      |
 | ------------------ | --------------------------------------------------------------------------- |
 | `Header.astro`     | Vaste navigatiebalk: logo (`home`), MegaMenu, CTA (optioneel) en menuknop (+ MenuPanel); menu per deel van de site (`navigation.ts`). Leeg `nav` + `buttons` = neutraal: alleen de knoppen Bold Events/Bold Business (≤767 korte labels, compacter), geen menu. `revealAfter`: verborgen tot dat element voorbij is (homepage: split-hero). Verbergt bij scrollen omlaag, verschijnt bij scrollen omhoog (gedrag: `navbar-autohide.ts`). |
-| `Breadcrumbs.astro` | Kruimelpad onder de hero: home-icoon = home van het deel (/events, /business, anders /), stappen, huidige pagina (`buildBreadcrumbs` in `lib/sections.ts`). Niet op /events en /business zelf. |
+| `Breadcrumbs.astro` | Kruimelpad onder de hero: begint met "Events"/"Business" (tekst, link naar /events of /business), daarbuiten een home-icoon naar /, stappen, huidige pagina (`buildBreadcrumbs` in `lib/sections.ts`). Niet op /events en /business zelf. |
 | `MegaMenu.astro`   | Desktop-dropdowns (≥1280px), CSS hover/focus-within; groep zonder kinderen = gewone link. |
 | `MenuPanel.astro`  | Volledig menupaneel met overlay en accordeongroepen (gedrag: `menu.ts`); groep zonder kinderen = losse link. Onderaan `switchTo`: knop naar het andere deel (Events ↔ Business, vast in `data/navigation.ts`). |
 | `Footer.astro`     | Footer: linkkolommen (data), contact, logo + socials, juridische links, copyright, KvK-nummer. ≤991 onderrij links uitgelijnd onder elkaar; ≤767 extra ruimte onderaan voor de WhatsApp-knop. |
