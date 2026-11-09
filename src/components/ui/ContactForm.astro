@@ -18,6 +18,7 @@
 import Button from './Button.astro';
 import RichText from './RichText.astro';
 import type { Rich } from '../../lib/rich';
+import { TURNSTILE_SITE_KEY } from '../../data/forms';
 
 export interface ContactFormInput {
   name: string;
@@ -237,6 +238,7 @@ const page = Astro.url.pathname.replace(/\.html$/, '');
       <label for={`${formId}-website`}>Website</label>
       <input id={`${formId}-website`} type="text" name="website" tabindex="-1" autocomplete="off" />
     </div>
+    {TURNSTILE_SITE_KEY && <div class="cf-turnstile contact-form__turnstile" data-sitekey={TURNSTILE_SITE_KEY} data-language="nl" data-theme="dark" />}
     <Button label={submitLabel} type="submit" icon={null} attrs={{ 'data-contact-form-submit': '' }} />
   </form>
 
@@ -249,6 +251,8 @@ const page = Astro.url.pathname.replace(/\.html$/, '');
     {error}
   </div>
 </div>
+
+{TURNSTILE_SITE_KEY && <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>}
 
 <style>
   /* Webflow .w-form: 15px ondermarge (telt mee bij het centreren in de rij) */
@@ -464,6 +468,10 @@ const page = Astro.url.pathname.replace(/\.html$/, '');
   .contact-form__input--textarea {
     height: auto;
     resize: vertical;
+  }
+
+  .contact-form__turnstile {
+    margin-bottom: var(--space-32);
   }
 
   .contact-form__honeypot {

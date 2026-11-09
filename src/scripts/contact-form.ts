@@ -13,6 +13,12 @@ import { pushEvent } from './tracking';
 
 const REQUIRED_CHOICE_MESSAGE = 'Kies minstens één optie.';
 
+declare global {
+  interface Window {
+    turnstile?: { reset: (widget?: string | HTMLElement) => void };
+  }
+}
+
 function initOtherFields(form: HTMLFormElement): void {
   form.querySelectorAll<HTMLElement>('[data-form-other]').forEach((wrapper) => {
     const input = wrapper.querySelector<HTMLInputElement>('input');
@@ -112,6 +118,7 @@ export function initContactForms(): void {
         if (success.getBoundingClientRect().top < 0) scrollToTarget(success, -160);
       } catch {
         error.hidden = false;
+        window.turnstile?.reset(); // een token werkt maar één keer
       } finally {
         submit.disabled = false;
         if (label) label.textContent = idleText;

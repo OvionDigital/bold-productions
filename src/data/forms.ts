@@ -23,6 +23,9 @@ const success = (first: string): ContactFormProps['success'] => ({
 
 const error = 'Er is iets misgegaan met het verzenden van het formulier. Probeer het opnieuw.';
 
+/** Cloudflare Turnstile site key (openbaar). Leeg = uit. Hoort bij TURNSTILE_SECRET_KEY in Cloudflare Pages. */
+export const TURNSTILE_SITE_KEY = '0x4AAAAAAF5_6Xoo902OyUJ1';
+
 export const contactForm: ContactFormProps = {
   name: 'Contact',
   action,

@@ -15,12 +15,15 @@
  *   RESEND_API_KEY   verplicht (secret)
  *   FORM_TO_EMAIL    ontvanger; standaard simon@ (testfase), bij de livegang mike@
  *   FORM_FROM_EMAIL  afzender; domein moet in Resend geverifieerd zijn
+ *   TURNSTILE_SECRET_KEY  secret bij TURNSTILE_SITE_KEY (src/data/forms.ts). Staat hij erin,
+ *                    dan is Turnstile verplicht; zet hem dus pas als de site key live staat.
  */
 
 interface Env {
   RESEND_API_KEY?: string;
   FORM_TO_EMAIL?: string;
   FORM_FROM_EMAIL?: string;
+  TURNSTILE_SECRET_KEY?: string;
 }
 
 interface Context {
@@ -33,6 +36,7 @@ const DEFAULT_FROM = 'Bold Productions <noreply@oviondigital.nl>';
 const MAX_BODY_BYTES = 64 * 1024;
 const MAX_VALUE_LENGTH = 5000;
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const TURNSTILE_FIELD = 'cf-turnstile-response';
 
 const json = (body: object, status = 200) =>
   new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' } });
@@ -59,7 +63,7 @@ function rowsOf(data: FormData): Row[] {
       rows.push({ heading: value });
       continue;
     }
-    if (name.startsWith('_') || name === 'website' || !value) continue;
+    if (name.startsWith('_') || name === 'website' || name === TURNSTILE_FIELD || !value) continue;
     const existing = byName.get(name);
     if (existing) {
       existing.value += `, ${value}`;
@@ -79,6 +83,17 @@ function sectionOf(path: string): string {
   return '';
 }
 
+async function turnstileValid(token: string, secret: string, ip: string | null): Promise<boolean> {
+  if (!token) return false;
+  const body = new FormData();
+  body.append('secret', secret);
+  body.append('response', token);
+  if (ip) body.append('remoteip', ip);
+  const response = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', { method: 'POST', body });
+  const result = (await response.json()) as { success?: boolean };
+  return result.success === true;
+}
+
 export const onRequestPost = async ({ request, env }: Context): Promise<Response> => {
   // Alleen vanaf de eigen site (zelfde domein: www, *.pages.dev of localhost)
   const origin = request.headers.get('Origin');
@@ -96,6 +111,17 @@ export const onRequestPost = async ({ request, env }: Context): Promise<Response
   const field = (name: string) => String(data.get(name) ?? '').trim();
   const email = field('E-mailadres');
   if (!EMAIL_PATTERN.test(email) || !field('Naam')) return json({ ok: false, error: 'fields' }, 400);
+
+  if (env.TURNSTILE_SECRET_KEY) {
+    try {
+      if (!(await turnstileValid(field(TURNSTILE_FIELD), env.TURNSTILE_SECRET_KEY, request.headers.get('CF-Connecting-IP')))) {
+        return json({ ok: false, error: 'turnstile' }, 400);
+      }
+    } catch (error) {
+      console.error('[form] Turnstile niet bereikbaar', error);
+      return json({ ok: false, error: 'turnstile' }, 502);
+    }
+  }
 
   if (!env.RESEND_API_KEY) {
     console.error('[form] RESEND_API_KEY ontbreekt');
