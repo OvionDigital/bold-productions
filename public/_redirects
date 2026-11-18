@@ -105,6 +105,8 @@
 /work-item/* /events/cases/:splat 301
 /dienstenpagina/zakelijke-events-fotografie /events/zakelijke-events/fotografie 301
 /dienstenpagina/zakelijke-events-aftermovie /events/zakelijke-events/aftermovie 301
+/dienstenpagina/artiesten-recap /events/artiesten/recap 301
+/dienstenpagina/artiesten-recap/ /events/artiesten/recap 301
 /home-new / 301
 /campagnes /business/campagnes 301
 /events/events/ /events 301
